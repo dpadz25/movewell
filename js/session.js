@@ -1,0 +1,376 @@
+// MoveWell session mode: guided exercise flow, set logging, timers, celebration
+(function () {
+
+  // ---------- gentle beep ----------
+  let audioCtx = null;
+  function beep(freq, dur, when) {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const t = audioCtx.currentTime + (when || 0);
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.18, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + (dur || 0.25));
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + (dur || 0.25) + 0.05);
+    } catch (e) { /* sound is optional */ }
+  }
+  App.chime = function () { beep(660, 0.2); beep(880, 0.3, 0.18); };
+  App.tickBeep = function () { beep(520, 0.12); };
+
+  // ---------- session lifecycle ----------
+  App.startSession = function (rid) {
+    const r = this.state.routines.find(x => x.id === rid);
+    if (!r || r.items.length === 0) { this.toast("Add some exercises to this routine first"); return; }
+    this.closeModal();
+    this._sess = {
+      routineId: r.id, routineName: r.name,
+      start: Date.now(), idx: 0,
+      items: r.items.map(it => ({ ...it, logged: [], skipped: false }))
+    };
+    document.getElementById("session").classList.add("open");
+    clearInterval(this._sessClockT);
+    this._sessClockT = setInterval(() => {
+      const el = document.getElementById("session-clock");
+      if (el && this._sess) el.textContent = this.fmtClock(Math.floor((Date.now() - this._sess.start) / 1000));
+    }, 1000);
+    this.renderSessionStep();
+  };
+
+  App.exitSession = function () {
+    this.confirm("Leave this session?", "Progress in this session will not be saved.", () => {
+      this.teardownSession();
+    }, "Leave");
+  };
+  App.teardownSession = function () {
+    clearInterval(this._sessClockT);
+    this.stopHoldTimer();
+    this._sess = null;
+    document.getElementById("session").classList.remove("open");
+    document.getElementById("rest-overlay").classList.remove("open");
+    this.refresh();
+  };
+
+  // ---------- previous performance ----------
+  App.lastPerformance = function (exId) {
+    for (let i = this.state.logs.length - 1; i >= 0; i--) {
+      const item = this.state.logs[i].items.find(x => x.exId === exId && x.sets && x.sets.length);
+      if (item) return { date: this.state.logs[i].date, sets: item.sets };
+    }
+    return null;
+  };
+
+  // ---------- step rendering ----------
+  App.renderSessionStep = function () {
+    const s = this._sess;
+    if (!s) return;
+    const it = s.items[s.idx];
+    const ex = this.ex(it.exId);
+    const t = this.typeMeta(ex.type);
+    const total = s.items.length;
+    const isTimed = it.timeSec > 0 || (it.hold > 0 && (!it.reps || it.reps <= 1));
+    const timerTarget = it.timeSec > 0 ? it.timeSec : it.hold;
+    const targetSets = it.sets * (it.perSide ? 2 : 1);
+    const done = it.logged.length;
+    const prev = this.lastPerformance(it.exId);
+    const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " exercise how to");
+
+    document.getElementById("session-progress-text").textContent = "Exercise " + (s.idx + 1) + " of " + total;
+    document.getElementById("session-progressbar-fill").style.width = ((s.idx) / total * 100) + "%";
+
+    let loggerHtml = "";
+    if (isTimed) {
+      loggerHtml = `
+        <div class="set-log-card">
+          <div class="set-log-title"><span>Timer: ${done} of ${targetSets} done</span></div>
+          <div class="hold-timer" id="hold-timer">
+            <div class="hold-timer-display" id="hold-display">${this.fmtClock(timerTarget)}</div>
+            <div class="hold-timer-sub">${it.timeSec > 0 ? "keep going until the chime" : "hold the position until the chime"}${it.perSide ? " · alternate sides each round" : ""}</div>
+            <div class="btn-row">
+              <button class="btn big" id="hold-start">▶ Start Timer</button>
+            </div>
+            <button class="btn secondary small" id="hold-manual" style="margin-top:0.7rem">✓ Mark one done without timer</button>
+          </div>
+          <div id="sets-done">${this.setsDoneHtml(it)}</div>
+        </div>`;
+    } else {
+      loggerHtml = `
+        <div class="set-log-card">
+          <div class="set-log-title"><span>Log your sets: ${done} of ${targetSets} done</span></div>
+          ${prev ? `<div class="prev-hint">Last time: ${prev.sets.map(x => (x.reps || "") + (x.weight ? "×" + x.weight + "lb" : "")).filter(Boolean).join(", ") || prev.sets.length + " sets"} · ${this.fmtDate(prev.date)}</div>` : ""}
+          <div class="stepper-row">
+            <div class="stepper-label">Reps</div>
+            <div class="stepper"><button id="rep-minus">−</button><span class="stepper-val" id="rep-val">${it.reps || 10}</span><button id="rep-plus">＋</button></div>
+          </div>
+          <div class="stepper-row">
+            <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">leave 0 for bodyweight or band</span></div>
+            <div class="stepper"><button id="wt-minus">−</button><span class="stepper-val" id="wt-val">${this._lastWeight && this._lastWeight[it.exId] || 0}</span><button id="wt-plus">＋</button></div>
+          </div>
+          <button class="btn big" id="log-set">✓ Log Set ${done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
+          <div id="sets-done">${this.setsDoneHtml(it)}</div>
+        </div>`;
+    }
+
+    document.getElementById("session-body").innerHTML = `
+      <span class="tag ${t.color} session-ex-type">${t.name}</span>
+      <div class="session-ex-name">${this.esc(ex.name)}</div>
+      <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
+      <button class="session-howto-toggle" id="howto-toggle"><span>📖 Show me how to do it</span><span id="howto-chev">▾</span></button>
+      <div class="session-howto" id="howto">
+        <a class="video-link" href="${yt}" target="_blank" rel="noopener">▶ Watch a video demonstration</a>
+        <ol class="exd-steps">${ex.howTo.map(x => `<li>${this.esc(x)}</li>`).join("")}</ol>
+        ${ex.tips && ex.tips.length ? `<div class="exd-tip" style="margin-top:0.6rem"><span>💡</span><span>${this.esc(ex.tips[0])}</span></div>` : ""}
+        ${ex.caution ? `<div class="exd-caution" style="margin-top:0.5rem"><span>⚠️</span><span>${this.esc(ex.caution)}</span></div>` : ""}
+        ${ex.variations && ex.variations.length ? `<div style="margin-top:0.6rem">${ex.variations.map(v => `<div class="exd-variation"><strong>${this.esc(v.name)}</strong><span>${this.esc(v.note)}</span></div>`).join("")}</div>` : ""}
+      </div>
+      ${loggerHtml}
+    `;
+
+    document.getElementById("session-nav").innerHTML = `
+      <button class="btn secondary" id="sess-back" ${s.idx === 0 ? "disabled" : ""}>← Back</button>
+      <button class="btn secondary" id="sess-skip">Skip</button>
+      <button class="btn" id="sess-next">${s.idx === total - 1 ? "Finish 🎉" : "Next →"}</button>
+    `;
+
+    // bindings
+    const body = document.getElementById("session-body");
+    body.querySelector("#howto-toggle").onclick = () => {
+      const h = body.querySelector("#howto");
+      h.classList.toggle("open");
+      body.querySelector("#howto-chev").textContent = h.classList.contains("open") ? "▴" : "▾";
+    };
+
+    if (isTimed) {
+      body.querySelector("#hold-start").onclick = () => this.startHoldTimer(timerTarget, it);
+      body.querySelector("#hold-manual").onclick = () => this.logTimedSet(it, timerTarget, true);
+    } else {
+      const repVal = body.querySelector("#rep-val"), wtVal = body.querySelector("#wt-val");
+      body.querySelector("#rep-minus").onclick = () => repVal.textContent = Math.max(1, Number(repVal.textContent) - 1);
+      body.querySelector("#rep-plus").onclick = () => repVal.textContent = Number(repVal.textContent) + 1;
+      body.querySelector("#wt-minus").onclick = () => wtVal.textContent = Math.max(0, Number(wtVal.textContent) - (Number(wtVal.textContent) > 20 ? 5 : 1));
+      body.querySelector("#wt-plus").onclick = () => wtVal.textContent = Number(wtVal.textContent) + (Number(wtVal.textContent) >= 20 ? 5 : 1);
+      body.querySelector("#log-set").onclick = () => {
+        const reps = Number(repVal.textContent), weight = Number(wtVal.textContent);
+        it.logged.push({ reps, weight: weight || 0 });
+        this._lastWeight = this._lastWeight || {};
+        this._lastWeight[it.exId] = weight;
+        this.afterSetLogged(it);
+      };
+    }
+
+    document.getElementById("sess-back").onclick = () => { if (s.idx > 0) { this.stopHoldTimer(); s.idx--; this.renderSessionStep(); } };
+    document.getElementById("sess-skip").onclick = () => { it.skipped = it.logged.length === 0; this.advance(); };
+    document.getElementById("sess-next").onclick = () => this.advance();
+  };
+
+  App.setsDoneHtml = function (it) {
+    if (!it.logged.length) return "";
+    return it.logged.map((x, i) => `
+      <div class="set-done-row"><span class="set-check">✓</span>
+        <span>Set ${i + 1}${it.perSide ? (i % 2 === 0 ? " · first side" : " · other side") : ""}:
+        ${x.sec ? this.fmtDur(x.sec) : (x.reps + " reps" + (x.weight ? " × " + x.weight + " lbs" : ""))}</span>
+      </div>`).join("");
+  };
+
+  App.afterSetLogged = function (it) {
+    const targetSets = it.sets * (it.perSide ? 2 : 1);
+    this.chime();
+    if (it.logged.length >= targetSets) {
+      this.toast("Exercise complete! 🎉");
+      this.advance();
+    } else {
+      this.openRest(60);
+    }
+  };
+
+  App.advance = function () {
+    const s = this._sess;
+    this.stopHoldTimer();
+    document.getElementById("rest-overlay").classList.remove("open");
+    clearInterval(this._restT);
+    if (s.idx >= s.items.length - 1) this.finishSession();
+    else { s.idx++; this.renderSessionStep(); }
+  };
+
+  // ---------- hold / timed set timer ----------
+  App.startHoldTimer = function (target, it) {
+    this.stopHoldTimer();
+    const holdEl = document.getElementById("hold-timer");
+    const disp = document.getElementById("hold-display");
+    const startBtn = document.getElementById("hold-start");
+    let remaining = target;
+    holdEl.classList.add("running");
+    startBtn.textContent = "⏸ Pause";
+    disp.textContent = this.fmtClock(remaining);
+    let paused = false;
+    startBtn.onclick = () => {
+      paused = !paused;
+      startBtn.textContent = paused ? "▶ Resume" : "⏸ Pause";
+    };
+    this._holdT = setInterval(() => {
+      if (paused) return;
+      remaining--;
+      if (remaining <= 3 && remaining > 0) this.tickBeep();
+      if (remaining <= 0) {
+        this.stopHoldTimer();
+        this.logTimedSet(it, target, false);
+        return;
+      }
+      const d = document.getElementById("hold-display");
+      if (d) d.textContent = this.fmtClock(remaining);
+    }, 1000);
+  };
+  App.stopHoldTimer = function () { clearInterval(this._holdT); this._holdT = null; };
+
+  App.logTimedSet = function (it, sec, manual) {
+    it.logged.push({ sec });
+    const targetSets = it.sets * (it.perSide ? 2 : 1);
+    if (!manual) this.chime();
+    if (it.logged.length >= targetSets) {
+      this.toast("Exercise complete! 🎉");
+      this.advance();
+    } else {
+      this.renderSessionStep();
+      this.toast("Nice! " + (targetSets - it.logged.length) + " to go");
+    }
+  };
+
+  // ---------- rest timer ----------
+  App.openRest = function (sec) {
+    const ov = document.getElementById("rest-overlay");
+    ov.classList.add("open");
+    let remaining = sec;
+    const disp = document.getElementById("rest-display");
+    disp.textContent = this.fmtClock(remaining);
+    clearInterval(this._restT);
+    this._restT = setInterval(() => {
+      remaining--;
+      if (remaining <= 3 && remaining > 0) this.tickBeep();
+      if (remaining <= 0) {
+        clearInterval(this._restT);
+        this.chime();
+        ov.classList.remove("open");
+        this.renderSessionStep();
+        return;
+      }
+      disp.textContent = this.fmtClock(remaining);
+    }, 1000);
+    ov.querySelectorAll("[data-rest]").forEach(b => b.onclick = () => { remaining = Number(b.dataset.rest); disp.textContent = this.fmtClock(remaining); });
+    document.getElementById("rest-skip").onclick = () => {
+      clearInterval(this._restT);
+      ov.classList.remove("open");
+      this.renderSessionStep();
+    };
+  };
+
+  // ---------- finish + celebration ----------
+  App.finishSession = function () {
+    const s = this._sess;
+    clearInterval(this._sessClockT);
+    this.stopHoldTimer();
+    const durationSec = Math.floor((Date.now() - s.start) / 1000);
+    const doneItems = s.items.filter(i => i.logged.length > 0);
+    const totalSets = s.items.reduce((a, i) => a + i.logged.length, 0);
+
+    this._pendingLog = {
+      id: this.uid(), date: new Date().toISOString(),
+      routineId: s.routineId, routineName: s.routineName,
+      durationSec, exercisesDone: doneItems.length, setsDone: totalSets,
+      items: s.items.map(i => ({ exId: i.exId, name: (this.ex(i.exId) || {}).name || i.exId, sets: i.logged, skipped: i.skipped })),
+      feel: null, pain: null, note: ""
+    };
+
+    document.getElementById("session").classList.remove("open");
+    const cel = document.getElementById("celebrate");
+    cel.classList.add("open");
+    this.launchConfetti();
+
+    const name = this.state.profile.name;
+    document.getElementById("celebrate-card").innerHTML = `
+      <span class="celebrate-emoji">🎉</span>
+      <div class="celebrate-title">Wonderful${name ? ", " + this.esc(name) : ""}!</div>
+      <div class="celebrate-sub">You completed <strong>${this.esc(s.routineName)}</strong>.<br>Every session is a deposit in your recovery.</div>
+      <div class="celebrate-stats">
+        <div class="celebrate-stat"><div class="celebrate-stat-num">${doneItems.length}</div><div class="celebrate-stat-label">Exercises</div></div>
+        <div class="celebrate-stat"><div class="celebrate-stat-num">${totalSets}</div><div class="celebrate-stat-label">Sets</div></div>
+        <div class="celebrate-stat"><div class="celebrate-stat-num">${this.fmtClock(durationSec)}</div><div class="celebrate-stat-label">Time</div></div>
+      </div>
+      <div class="feel-title">How do you feel now?</div>
+      <div class="feel-btns" id="cel-feel">
+        ${["😣", "😕", "😐", "🙂", "😄"].map((e, i) => `<button class="feel-btn" data-f="${i + 1}">${e}</button>`).join("")}
+      </div>
+      <div class="feel-title" style="font-size:0.9rem">Pain level right now (0 = none)</div>
+      <div class="pain-scale" id="cel-pain">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num" data-p="${i}">${i}</button>`).join("")}</div>
+      <div class="pain-scale-labels"><span>No pain</span><span>Worst</span></div>
+      <input type="text" id="cel-note" placeholder="Optional note about today" style="margin-bottom:0.9rem">
+      <button class="btn big" id="cel-save">Save & Done ✓</button>
+    `;
+    const card = document.getElementById("celebrate-card");
+    card.querySelectorAll("#cel-feel .feel-btn").forEach(b => b.onclick = () => {
+      card.querySelectorAll("#cel-feel .feel-btn").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
+      this._pendingLog.feel = Number(b.dataset.f);
+    });
+    card.querySelectorAll("#cel-pain .pain-num").forEach(b => b.onclick = () => {
+      card.querySelectorAll("#cel-pain .pain-num").forEach(x => { x.classList.remove("on"); x.style.background = ""; });
+      b.classList.add("on");
+      const p = Number(b.dataset.p);
+      b.style.background = p <= 3 ? "var(--accent)" : p <= 6 ? "var(--yellow)" : "var(--red)";
+      this._pendingLog.pain = p;
+    });
+    card.querySelector("#cel-save").onclick = () => {
+      this._pendingLog.note = card.querySelector("#cel-note").value.trim();
+      this.state.logs.push(this._pendingLog);
+      this.save();
+      this._pendingLog = null;
+      document.getElementById("celebrate").classList.remove("open");
+      this.stopConfetti();
+      this._sess = null;
+      this.showPage("home");
+      this.toast("Session saved. See you next time! 💪");
+    };
+    this.chime();
+    setTimeout(() => this.chime(), 400);
+  };
+
+  // ---------- confetti ----------
+  App.launchConfetti = function () {
+    const canvas = document.getElementById("confetti-canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    const colors = ["#557a4d", "#3d7a72", "#a1762c", "#b3663a", "#4a6c9a", "#a84a45", "#84cc16"];
+    const parts = Array.from({ length: 140 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * canvas.height * 0.5,
+      w: 6 + Math.random() * 7, h: 8 + Math.random() * 8,
+      vy: 1.6 + Math.random() * 2.6, vx: -1.2 + Math.random() * 2.4,
+      rot: Math.random() * Math.PI, vr: -0.1 + Math.random() * 0.2,
+      color: colors[Math.floor(Math.random() * colors.length)]
+    }));
+    const start = Date.now();
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      parts.forEach(p => {
+        p.y += p.vy; p.x += p.vx + Math.sin(p.y / 40); p.rot += p.vr;
+        if (p.y > canvas.height + 20 && Date.now() - start < 6000) { p.y = -20; p.x = Math.random() * canvas.width; }
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      if (Date.now() - start < 9000) this._confettiT = requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+    draw();
+  };
+  App.stopConfetti = function () { cancelAnimationFrame(this._confettiT); };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("session-exit").onclick = () => App.exitSession();
+  });
+})();
