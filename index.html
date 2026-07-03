@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>MoveWell: Your Recovery Companion</title>
-  <meta name="description" content="A friendly physical therapy companion: build routines, log exercises, and track how your body feels.">
+  <title>MoveWell, Your Movement Companion</title>
+  <meta name="description" content="A friendly movement companion. Build routines, log exercises from therapy stretches to gym lifts, and track how your body feels.">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -14,9 +14,9 @@
   <header class="header">
     <div>
       <div class="header-title" id="header-title">Move<span>Well</span></div>
-      <div class="header-sub" id="header-sub">Your recovery companion</div>
+      <div class="header-sub" id="header-sub">Your movement companion</div>
     </div>
-    <button class="icon-btn" id="btn-settings" title="Settings" aria-label="Settings">⚙️</button>
+    <button class="icon-btn" id="btn-settings" title="Settings" aria-label="Settings"><span data-icon="gear"></span></button>
   </header>
 
   <!-- PAGES -->
@@ -28,11 +28,11 @@
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" data-page="home"><span class="nav-icon">🏠</span>Home</button>
-    <button class="nav-btn" data-page="routines"><span class="nav-icon">📋</span>Routines</button>
-    <button class="nav-btn" data-page="library"><span class="nav-icon">📚</span>Exercises</button>
-    <button class="nav-btn" data-page="bodymap"><span class="nav-icon">🧍</span>Body Map</button>
-    <button class="nav-btn" data-page="progress"><span class="nav-icon">📈</span>Progress</button>
+    <button class="nav-btn active" data-page="home"><span class="nav-icon" data-icon="home"></span>Home</button>
+    <button class="nav-btn" data-page="routines"><span class="nav-icon" data-icon="clipboard"></span>Routines</button>
+    <button class="nav-btn" data-page="library"><span class="nav-icon" data-icon="book"></span>Exercises</button>
+    <button class="nav-btn" data-page="bodymap"><span class="nav-icon" data-icon="person"></span>Body Map</button>
+    <button class="nav-btn" data-page="progress"><span class="nav-icon" data-icon="chart"></span>Progress</button>
   </nav>
 
   <!-- ONBOARDING -->
@@ -43,7 +43,7 @@
   <!-- SESSION MODE -->
   <div class="session" id="session">
     <div class="session-top">
-      <button class="icon-btn" id="session-exit" title="Exit session">✕</button>
+      <button class="icon-btn" id="session-exit" title="Exit session"><span data-icon="close"></span></button>
       <div class="session-progress-text" id="session-progress-text"></div>
       <div class="session-clock" id="session-clock">0:00</div>
     </div>
@@ -78,7 +78,7 @@
     <div class="modal-sheet">
       <div class="modal-head">
         <div class="modal-title" id="modal-title"></div>
-        <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+        <button class="modal-close" id="modal-close" aria-label="Close"><span data-icon="close"></span></button>
       </div>
       <div class="modal-body" id="modal-body"></div>
     </div>
@@ -99,10 +99,12 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- DATA -->
+  <!-- ICONS + DATA -->
+  <script src="js/icons.js"></script>
   <script src="js/data/exercises-upper.js"></script>
   <script src="js/data/exercises-lower.js"></script>
   <script src="js/data/exercises-core.js"></script>
+  <script src="js/data/exercises-gym.js"></script>
   <script src="js/data/templates.js"></script>
   <!-- APP -->
   <script src="js/core.js"></script>

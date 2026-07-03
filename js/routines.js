@@ -4,10 +4,10 @@
   App.renderRoutines = function () {
     const s = this.state;
     document.getElementById("routines-scroll").innerHTML = `
-      <span class="page-tag">Your Plan</span>
+      <span class="page-tag">${this.icon("clipboard")} Your Plan</span>
       <div class="page-title">Routines</div>
-      <div class="page-sub">A routine is a set of exercises done together, like a session your therapist would give you.</div>
-      <button class="btn big" onclick="App.openNewRoutineChooser()">＋ New Routine</button>
+      <div class="page-sub">A routine is a set of exercises done together, like a session your therapist or coach would give you.</div>
+      <button class="btn big grad" onclick="App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>
       <div class="section-label">${s.routines.length ? "My Routines" : ""}</div>
       ${s.routines.length ? s.routines.map(r => `
         <div class="routine-card">
@@ -15,29 +15,29 @@
             <div class="routine-card-name">${this.esc(r.name)}</div>
             <div class="routine-card-meta">${r.items.length} exercises · tap to view or edit</div>
           </div>
-          <button class="routine-start-btn" onclick="App.startSession('${r.id}')">▶ Start</button>
+          <button class="routine-start-btn" onclick="App.startSession('${r.id}')">${this.icon("play")} Start</button>
         </div>`).join("")
-      : `<div class="empty-state"><div class="empty-icon">📋</div><p>No routines yet.<br>Start from a ready-made plan or build your own.</p></div>`}
+      : `<div class="empty-state"><div class="empty-icon">${this.icon("clipboard")}</div><p>No routines yet.<br>Start from a ready-made plan or build your own.</p></div>`}
     `;
   };
 
   // ----- create flow -----
   App.openNewRoutineChooser = function () {
     this.openModal("New Routine", `
-      <p style="color:var(--muted);font-size:0.92rem;margin-bottom:1rem">Start from a ready-made plan designed around a problem area, or build your own from scratch.</p>
+      <p style="color:var(--muted);font-size:0.92rem;margin-bottom:1rem">Start from a ready-made plan, from recovery programs to push / pull / legs, or build your own from scratch.</p>
       <div class="section-label" style="margin-top:0">Ready-Made Plans</div>
       ${window.TEMPLATES.map(t => `
         <div class="ex-item" data-t="${t.id}">
-          <div class="ex-item-icon">🩺</div>
+          <div class="ex-item-icon tile ${t.conditions.includes("strength-training") ? "purple" : "accent"}">${this.icon(t.conditions.includes("strength-training") ? "dumbbell" : "medical")}</div>
           <div class="ex-item-info">
             <div class="ex-item-name">${this.esc(t.name)}</div>
             <div class="ex-item-meta"><span class="tag">${t.items.length} exercises</span>
               ${t.conditions.slice(0, 2).map(c => `<span class="tag accent">${this.esc(this.condition(c).name)}</span>`).join("")}
             </div>
           </div>
-          <div class="ex-item-chev">＋</div>
+          <div class="ex-item-chev">${this.icon("plus")}</div>
         </div>`).join("")}
-      <button class="btn ghost big" id="new-blank" style="margin-top:0.8rem">✏️ Build My Own From Scratch</button>
+      <button class="btn ghost big" id="new-blank" style="margin-top:0.8rem">${this.icon("pencil")} Build My Own From Scratch</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".ex-item[data-t]").forEach(n => n.onclick = () => {
@@ -45,7 +45,7 @@
       const r = this.routineFromTemplate(t);
       this.state.routines.push(r);
       this.save(); this.closeModal();
-      this.toast("Routine added ✓");
+      this.toast("Routine added");
       this.openRoutineEditor(r.id);
     });
     body.querySelector("#new-blank").onclick = () => { this.closeModal(); this.createBlankRoutine(); };
@@ -60,7 +60,7 @@
     this.openModal("Name Your Routine", `
       <label class="field-label">Routine name</label>
       <input type="text" id="new-routine-name" placeholder="e.g. Morning Neck Care" autocomplete="off">
-      <button class="btn big" id="new-routine-go" style="margin-top:1rem">Create Routine</button>
+      <button class="btn big grad" id="new-routine-go" style="margin-top:1rem">Create Routine</button>
     `);
     const body = document.getElementById("modal-body");
     const input = body.querySelector("#new-routine-name");
@@ -85,10 +85,10 @@
       ${r.desc ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem">${this.esc(r.desc)}</p>` : ""}
       <div class="section-label">Exercises (${r.items.length})</div>
       <div id="re-items">${r.items.map((it, i) => this.routineItemHtml(r, it, i)).join("") || `<p style="color:var(--muted);font-size:0.9rem">No exercises yet. Add some below.</p>`}</div>
-      <button class="btn big" id="re-add" style="margin-top:0.6rem">＋ Add Exercises</button>
+      <button class="btn big" id="re-add" style="margin-top:0.6rem">${this.icon("plus")} Add Exercises</button>
       <div class="btn-row" style="margin-top:0.8rem">
-        <button class="btn secondary" id="re-start">▶ Start This Routine</button>
-        <button class="btn danger" id="re-delete">🗑 Delete</button>
+        <button class="btn secondary" id="re-start">${this.icon("play")} Start This Routine</button>
+        <button class="btn danger" id="re-delete">${this.icon("trash")} Delete</button>
       </div>
     `);
     const body = document.getElementById("modal-body");
@@ -114,9 +114,9 @@
           <div class="routine-item-name">${i + 1}. ${this.esc(ex.name)}</div>
           <div class="routine-item-dose">${this.doseText(it)} · tap to adjust</div>
         </div>
-        <button class="mini-btn" data-act="up" title="Move up" ${i === 0 ? "disabled style='opacity:0.3'" : ""}>↑</button>
-        <button class="mini-btn" data-act="down" title="Move down" ${i === r.items.length - 1 ? "disabled style='opacity:0.3'" : ""}>↓</button>
-        <button class="mini-btn danger" data-act="remove" title="Remove">✕</button>
+        <button class="mini-btn" data-act="up" title="Move up" ${i === 0 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowUp")}</button>
+        <button class="mini-btn" data-act="down" title="Move down" ${i === r.items.length - 1 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowDown")}</button>
+        <button class="mini-btn danger" data-act="remove" title="Remove">${this.icon("close")}</button>
       </div>`;
   };
 
@@ -142,30 +142,30 @@
     const ex = this.ex(it.exId);
     const timed = it.timeSec > 0;
     this.openModal(ex.name, `
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Adjust the amounts to match what your therapist prescribed.</p>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Adjust the amounts to match your plan.</p>
       <div class="stepper-row">
         <div class="stepper-label">Sets</div>
-        <div class="stepper"><button data-k="sets" data-d="-1">−</button><span class="stepper-val" id="dv-sets">${it.sets}</span><button data-k="sets" data-d="1">＋</button></div>
+        <div class="stepper"><button data-k="sets" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="dv-sets">${it.sets}</span><button data-k="sets" data-d="1">${this.icon("plus")}</button></div>
       </div>
       ${timed ? `
       <div class="stepper-row">
         <div class="stepper-label">Time (seconds)</div>
-        <div class="stepper"><button data-k="timeSec" data-d="-15">−</button><span class="stepper-val" id="dv-timeSec">${it.timeSec}</span><button data-k="timeSec" data-d="15">＋</button></div>
+        <div class="stepper"><button data-k="timeSec" data-d="-15">${this.icon("minus")}</button><span class="stepper-val" id="dv-timeSec">${it.timeSec}</span><button data-k="timeSec" data-d="15">${this.icon("plus")}</button></div>
       </div>` : `
       <div class="stepper-row">
         <div class="stepper-label">Reps</div>
-        <div class="stepper"><button data-k="reps" data-d="-1">−</button><span class="stepper-val" id="dv-reps">${it.reps}</span><button data-k="reps" data-d="1">＋</button></div>
+        <div class="stepper"><button data-k="reps" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="dv-reps">${it.reps}</span><button data-k="reps" data-d="1">${this.icon("plus")}</button></div>
       </div>
       <div class="stepper-row">
         <div class="stepper-label">Hold (seconds)</div>
-        <div class="stepper"><button data-k="hold" data-d="-5">−</button><span class="stepper-val" id="dv-hold">${it.hold}</span><button data-k="hold" data-d="5">＋</button></div>
+        <div class="stepper"><button data-k="hold" data-d="-5">${this.icon("minus")}</button><span class="stepper-val" id="dv-hold">${it.hold}</span><button data-k="hold" data-d="5">${this.icon("plus")}</button></div>
       </div>`}
       <div class="toggle-row">
         <div class="stepper-label">Do each side separately</div>
         <label class="switch"><input type="checkbox" id="dv-perside" ${it.perSide ? "checked" : ""}><span class="slider"></span></label>
       </div>
-      <button class="btn secondary big" id="dv-detail" style="margin-bottom:0.6rem">📖 View Exercise Instructions</button>
-      <button class="btn big" id="dv-done">Done ✓</button>
+      <button class="btn secondary big" id="dv-detail" style="margin-bottom:0.6rem">${this.icon("book")} View Exercise Instructions</button>
+      <button class="btn big grad" id="dv-done">${this.icon("check")} Done</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".stepper button").forEach(b => b.onclick = () => {
@@ -194,12 +194,12 @@
       const inR = new Set(r.items.map(i => i.exId));
       document.getElementById("pick-list").innerHTML = list.map(ex => `
         <div class="ex-item" data-ex="${ex.id}" style="${inR.has(ex.id) ? "opacity:0.55" : ""}">
-          <div class="ex-item-icon">${this.region(ex.region).icon}</div>
+          <div class="ex-item-icon tile ${this.region(ex.region).color || ""}">${this.icon(this.region(ex.region).icon)}</div>
           <div class="ex-item-info">
             <div class="ex-item-name">${this.esc(ex.name)}</div>
-            <div class="ex-item-meta"><span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>
+            <div class="ex-item-meta">${ex.custom ? `<span class="tag pink">Custom</span>` : ""}<span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>
           </div>
-          <div class="ex-item-chev">${inR.has(ex.id) ? "✓" : "＋"}</div>
+          <div class="ex-item-chev">${inR.has(ex.id) ? this.icon("check") : this.icon("plus")}</div>
         </div>`).join("");
       document.getElementById("pick-list").querySelectorAll(".ex-item").forEach(n => n.onclick = () => {
         const exId = n.dataset.ex;
@@ -207,18 +207,18 @@
         const ex = this.ex(exId);
         r.items.push({ exId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide });
         this.save();
-        this.toast(ex.name + " added ✓");
+        this.toast(ex.name + " added");
         render();
       });
     };
     this.openModal("Add to “" + r.name + "”", `
-      <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="pick-search" placeholder="Search exercises"></div>
-      <div class="filter-bar" id="pick-regions">
+      <div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="pick-search" placeholder="Search exercises"></div>
+      <div class="filter-wrap"><div class="filter-bar" id="pick-regions">
         <button class="chip on" data-v="">All</button>
-        ${window.REGIONS.map(rg => `<button class="chip" data-v="${rg.id}">${rg.icon} ${rg.name}</button>`).join("")}
-      </div>
+        ${window.REGIONS.map(rg => `<button class="chip" data-v="${rg.id}">${this.icon(rg.icon)} ${rg.name}</button>`).join("")}
+      </div></div>
       <div id="pick-list"></div>
-      <button class="btn big" id="pick-done" style="margin-top:0.8rem">Done, Back to Routine</button>
+      <button class="btn big" id="pick-done" style="margin-top:0.8rem">${this.icon("check")} Done, Back to Routine</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelector("#pick-search").oninput = (e) => { this._pick.q = e.target.value; render(); };

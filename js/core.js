@@ -6,12 +6,23 @@
     state: null,
     charts: {},
 
+    // ---------- icons ----------
+    icon(name, cls) {
+      const body = window.ICONS[name] || window.ICONS.sparkle;
+      return `<svg class="icn${cls ? " " + cls : ""}" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
+    },
+
     // ---------- storage ----------
     defaultState() {
       return {
         onboarded: false,
-        profile: { name: "", textSize: "normal", conditions: [] },
+        profile: {
+          name: "", textSize: "normal", conditions: [],
+          sex: "", heightFt: 0, heightIn: 0, weightLb: 0,
+          theme: "forest", dark: false
+        },
         routines: [],
+        customExercises: [],
         logs: [],       // completed sessions
         bodyLogs: []    // body-feel entries from the body map
       };
@@ -20,20 +31,29 @@
       try {
         const raw = localStorage.getItem(STORE_KEY);
         this.state = raw ? Object.assign(this.defaultState(), JSON.parse(raw)) : this.defaultState();
+        this.state.profile = Object.assign(this.defaultState().profile, this.state.profile);
+        if (!Array.isArray(this.state.customExercises)) this.state.customExercises = [];
       } catch (e) {
         this.state = this.defaultState();
       }
+      this.syncCustomExercises();
     },
     save() {
       localStorage.setItem(STORE_KEY, JSON.stringify(this.state));
     },
     uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); },
 
+    // merge user-created exercises into the live library
+    syncCustomExercises() {
+      window.EXERCISES = window.EXERCISES.filter(e => !e.custom);
+      this.state.customExercises.forEach(ex => window.EXERCISES.push(ex));
+    },
+
     // ---------- lookups ----------
     ex(id) { return window.EXERCISES.find(e => e.id === id); },
-    region(id) { return window.REGIONS.find(r => r.id === id) || { id, name: id, icon: "🔹" }; },
+    region(id) { return window.REGIONS.find(r => r.id === id) || { id, name: id, icon: "core", color: "" }; },
     condition(id) { return window.CONDITIONS.find(c => c.id === id) || { id, name: id, blurb: "" }; },
-    equip(id) { return window.EQUIPMENT.find(q => q.id === id) || { id, name: id, icon: "" }; },
+    equip(id) { return window.EQUIPMENT.find(q => q.id === id) || { id, name: id, icon: "bodyweight" }; },
     typeMeta(id) { return window.EX_TYPES.find(t => t.id === id) || { id, name: id, color: "" }; },
 
     esc(s) {
@@ -105,8 +125,24 @@
       document.getElementById("modal-body").innerHTML = bodyHtml;
       document.getElementById("modal").classList.add("open");
       document.getElementById("modal-body").scrollTop = 0;
+      this.bindFilterFades(document.getElementById("modal-body"));
     },
     closeModal() { document.getElementById("modal").classList.remove("open"); },
+
+    // fade hints on horizontally scrolling filter bars
+    bindFilterFades(root) {
+      (root || document).querySelectorAll(".filter-wrap").forEach(wrap => {
+        const bar = wrap.querySelector(".filter-bar");
+        if (!bar) return;
+        const update = () => {
+          const max = bar.scrollWidth - bar.clientWidth;
+          wrap.classList.toggle("at-end", max <= 4 || bar.scrollLeft >= max - 4);
+          wrap.classList.toggle("scrolled", bar.scrollLeft > 4);
+        };
+        bar.addEventListener("scroll", update, { passive: true });
+        update();
+      });
+    },
 
     // ---------- navigation ----------
     showPage(name) {
@@ -125,9 +161,11 @@
     },
     refresh() { this.renderPage(this.currentPage || "home"); },
 
-    applyTextSize() {
-      const ts = this.state.profile.textSize;
-      document.documentElement.setAttribute("data-textsize", ts === "normal" ? "" : ts);
+    applyAppearance() {
+      const p = this.state.profile;
+      document.documentElement.setAttribute("data-textsize", p.textSize === "normal" ? "" : p.textSize);
+      document.documentElement.setAttribute("data-theme", p.theme || "forest");
+      document.documentElement.setAttribute("data-dark", p.dark ? "1" : "");
     },
 
     // ---------- HOME ----------
@@ -149,16 +187,16 @@
         const d = new Date(weekStart); d.setDate(weekStart.getDate() + i);
         const done = doneDays.has(this.todayKey(d));
         const isToday = this.todayKey(d) === this.todayKey();
-        dots += `<div class="week-dot ${done ? "done" : ""}"><div class="dot">${done ? "✓" : ""}</div><div class="dot-label" style="${isToday ? "font-weight:800;color:var(--accent-strong)" : ""}">${dayNames[i]}</div></div>`;
+        dots += `<div class="week-dot ${done ? "done" : ""}"><div class="dot">${done ? this.icon("check") : ""}</div><div class="dot-label" style="${isToday ? "font-weight:800;color:var(--accent-strong)" : ""}">${dayNames[i]}</div></div>`;
       }
 
       let routinesHtml = "";
       if (s.routines.length === 0) {
         routinesHtml = `
           <div class="empty-state card">
-            <div class="empty-icon">🌱</div>
+            <div class="empty-icon">${this.icon("leaf")}</div>
             <p>You don't have any routines yet.<br>Let's set one up. It only takes a minute.</p>
-            <button class="btn big" onclick="App.showPage('routines');App.openNewRoutineChooser()">Create My First Routine</button>
+            <button class="btn big grad" onclick="App.showPage('routines');App.openNewRoutineChooser()">Create My First Routine</button>
           </div>`;
       } else {
         routinesHtml = s.routines.map(r => `
@@ -167,22 +205,22 @@
               <div class="routine-card-name">${this.esc(r.name)}</div>
               <div class="routine-card-meta">${r.items.length} exercises · ~${Math.max(5, Math.round(r.items.length * 2.5))} min</div>
             </div>
-            <button class="routine-start-btn" onclick="App.startSession('${r.id}')">▶ Start</button>
+            <button class="routine-start-btn" onclick="App.startSession('${r.id}')">${this.icon("play")} Start</button>
           </div>`).join("");
       }
 
       document.getElementById("home-scroll").innerHTML = `
-        <div class="greeting">${greet}${name} 👋</div>
-        <div class="greeting-sub">${streak > 0 ? "You're on a roll. Keep it gentle and steady." : "A little movement today is a win."}</div>
+        <div class="greeting">${greet}${name}</div>
+        <div class="greeting-sub">${streak > 0 ? "You're on a roll. Keep it steady." : "A little movement today is a win."}</div>
         <div class="streak-card">
-          <div class="streak-flame">${streak > 0 ? "🔥" : "🌤️"}</div>
+          <div class="streak-flame">${this.icon(streak > 0 ? "flame" : "sun")}</div>
           <div>
             <div class="streak-num">${streak} day${streak === 1 ? "" : "s"}</div>
             <div class="streak-label">current streak</div>
           </div>
           <div style="flex:1"></div>
           <div style="text-align:right">
-            <div class="streak-num" style="color:var(--blue)">${weekLogs.length}</div>
+            <div class="streak-num">${weekLogs.length}</div>
             <div class="streak-label">sessions this week</div>
           </div>
         </div>
@@ -197,16 +235,38 @@
         </div>
         <div class="section-label">Your Routines</div>
         ${routinesHtml}
-        ${s.routines.length > 0 ? `<button class="btn ghost big" style="margin-top:0.3rem" onclick="App.showPage('routines');App.openNewRoutineChooser()">＋ New Routine</button>` : ""}
+        ${s.routines.length > 0 ? `<button class="btn ghost big" style="margin-top:0.3rem" onclick="App.showPage('routines');App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>` : ""}
       `;
     },
 
     // ---------- SETTINGS ----------
     openSettings() {
       const p = this.state.profile;
+      const themes = [["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"]];
       this.openModal("Settings", `
         <label class="field-label">Your name</label>
         <input type="text" id="set-name" value="${this.esc(p.name)}" placeholder="Your name">
+        <label class="field-label">Sex</label>
+        <div class="sex-options" id="set-sex">
+          <button class="sex-option ${p.sex === "male" ? "on" : ""}" data-sex="male">${this.icon("person")}Male</button>
+          <button class="sex-option ${p.sex === "female" ? "on" : ""}" data-sex="female">${this.icon("person")}Female</button>
+        </div>
+        <div class="ob-field-grid">
+          <div><label>Height (ft)</label><input type="number" id="set-hft" min="0" max="8" value="${p.heightFt || ""}" placeholder="5"></div>
+          <div><label>Height (in)</label><input type="number" id="set-hin" min="0" max="11" value="${p.heightIn || ""}" placeholder="10"></div>
+          <div><label>Weight (lbs)</label><input type="number" id="set-wt" min="0" max="900" value="${p.weightLb || ""}" placeholder="165"></div>
+        </div>
+        <label class="field-label">Color theme</label>
+        <div class="theme-options" id="set-theme">
+          ${themes.map(([id, label]) => `
+            <button class="theme-option ${p.theme === id ? "on" : ""}" data-theme="${id}">
+              <span class="sw sw-${id}"></span><span class="sw-label">${label}</span>
+            </button>`).join("")}
+        </div>
+        <div class="toggle-row">
+          <div class="stepper-label" style="display:flex;align-items:center;gap:0.45rem">${this.icon("moon")} Dark mode</div>
+          <label class="switch"><input type="checkbox" id="set-dark" ${p.dark ? "checked" : ""}><span class="slider"></span></label>
+        </div>
         <label class="field-label">Text size</label>
         <div class="textsize-options">
           ${["normal", "large", "huge"].map(ts => `
@@ -215,16 +275,16 @@
               <span class="ts-label">${ts === "normal" ? "Normal" : ts === "large" ? "Large" : "Extra Large"}</span>
             </button>`).join("")}
         </div>
-        <button class="btn big" id="set-save" style="margin-top:0.5rem">Save Settings</button>
+        <button class="btn big grad" id="set-save" style="margin-top:0.5rem">Save Settings</button>
         <div class="section-label">Your Data</div>
         <div class="btn-row">
-          <button class="btn secondary" id="set-export">⬇ Export Backup</button>
-          <button class="btn secondary" id="set-import">⬆ Import Backup</button>
+          <button class="btn secondary" id="set-export">${this.icon("download")} Export Backup</button>
+          <button class="btn secondary" id="set-import">${this.icon("upload")} Import Backup</button>
         </div>
         <input type="file" id="set-import-file" accept=".json" style="display:none">
         <button class="btn danger big" id="set-reset" style="margin-top:1.4rem">Erase Everything & Start Over</button>
         <p style="font-size:0.75rem;color:var(--muted2);text-align:center;margin-top:1rem">
-          MoveWell keeps all data on this device only.<br>This app supports your therapy plan. It is not medical advice.<br>Always follow your physical therapist's or doctor's guidance.
+          MoveWell keeps all data on this device only.<br>This app supports your training and therapy plan. It is not medical advice.<br>Always follow your physical therapist's or doctor's guidance.
         </p>
       `);
       const body = document.getElementById("modal-body");
@@ -232,12 +292,31 @@
         body.querySelectorAll(".textsize-option").forEach(x => x.classList.remove("on"));
         b.classList.add("on");
         this.state.profile.textSize = b.dataset.ts;
-        this.applyTextSize();
+        this.applyAppearance();
       });
+      body.querySelectorAll("#set-sex .sex-option").forEach(b => b.onclick = () => {
+        body.querySelectorAll("#set-sex .sex-option").forEach(x => x.classList.remove("on"));
+        b.classList.add("on");
+        this.state.profile.sex = b.dataset.sex;
+      });
+      body.querySelectorAll("#set-theme .theme-option").forEach(b => b.onclick = () => {
+        body.querySelectorAll("#set-theme .theme-option").forEach(x => x.classList.remove("on"));
+        b.classList.add("on");
+        this.state.profile.theme = b.dataset.theme;
+        this.applyAppearance();
+      });
+      body.querySelector("#set-dark").onchange = (e) => {
+        this.state.profile.dark = e.target.checked;
+        this.applyAppearance();
+      };
       body.querySelector("#set-save").onclick = () => {
-        this.state.profile.name = body.querySelector("#set-name").value.trim();
-        this.save(); this.applyTextSize(); this.closeModal(); this.refresh();
-        this.toast("Settings saved ✓");
+        const p2 = this.state.profile;
+        p2.name = body.querySelector("#set-name").value.trim();
+        p2.heightFt = Number(body.querySelector("#set-hft").value) || 0;
+        p2.heightIn = Number(body.querySelector("#set-hin").value) || 0;
+        p2.weightLb = Number(body.querySelector("#set-wt").value) || 0;
+        this.save(); this.applyAppearance(); this.closeModal(); this.refresh();
+        this.toast("Settings saved");
       };
       body.querySelector("#set-export").onclick = () => {
         const blob = new Blob([JSON.stringify(this.state, null, 2)], { type: "application/json" });
@@ -245,7 +324,7 @@
         a.href = URL.createObjectURL(blob);
         a.download = "movewell-backup-" + this.todayKey() + ".json";
         a.click();
-        this.toast("Backup downloaded ✓");
+        this.toast("Backup downloaded");
       };
       body.querySelector("#set-import").onclick = () => body.querySelector("#set-import-file").click();
       body.querySelector("#set-import-file").onchange = (e) => {
@@ -257,15 +336,18 @@
             if (!data.profile) throw new Error("bad file");
             this.confirm("Import backup?", "This replaces everything currently in the app with the backup file.", () => {
               this.state = Object.assign(this.defaultState(), data);
-              this.save(); this.applyTextSize(); this.closeModal(); this.refresh();
-              this.toast("Backup restored ✓");
+              this.state.profile = Object.assign(this.defaultState().profile, this.state.profile);
+              if (!Array.isArray(this.state.customExercises)) this.state.customExercises = [];
+              this.syncCustomExercises();
+              this.save(); this.applyAppearance(); this.closeModal(); this.refresh();
+              this.toast("Backup restored");
             }, "Import");
           } catch (err) { this.toast("That file doesn't look like a MoveWell backup."); }
         };
         reader.readAsText(f);
       };
       body.querySelector("#set-reset").onclick = () => {
-        this.confirm("Erase everything?", "This deletes your name, routines, and all history from this device. This cannot be undone.", () => {
+        this.confirm("Erase everything?", "This deletes your profile, routines, custom exercises, and all history from this device. This cannot be undone.", () => {
           localStorage.removeItem(STORE_KEY);
           location.reload();
         }, "Erase All");
@@ -276,18 +358,22 @@
     startOnboarding() {
       const ob = document.getElementById("onboard");
       ob.classList.add("open");
-      this._obData = { name: "", conditions: [], textSize: "normal" };
+      this._obData = { name: "", conditions: [], textSize: "normal", sex: "", heightFt: 0, heightIn: 0, weightLb: 0, theme: "forest" };
       this.onboardStep(1);
+    },
+    obDots(n) {
+      return `<div class="onboard-step-dots">${[1, 2, 3, 4].map(i => `<i class="${i === n ? "on" : ""}"></i>`).join("")}</div>`;
     },
     onboardStep(n) {
       const inner = document.getElementById("onboard-inner");
       if (n === 1) {
         inner.innerHTML = `
-          <div class="onboard-logo">🌿</div>
+          <div class="onboard-logo">${this.icon("leaf")}</div>
+          ${this.obDots(1)}
           <h1>Welcome to Move<span style="color:var(--accent)">Well</span></h1>
-          <p>Your personal recovery companion.<br>First things first: what should we call you?</p>
+          <p>Your personal movement companion, from therapy stretches to gym lifts.<br>First things first, what should we call you?</p>
           <input type="text" id="ob-name" placeholder="Your first name" autocomplete="off">
-          <button class="btn big" id="ob-next1">Continue →</button>
+          <button class="btn big grad" id="ob-next1">Continue ${this.icon("arrowRight")}</button>
         `;
         const go = () => {
           this._obData.name = inner.querySelector("#ob-name").value.trim();
@@ -298,39 +384,86 @@
         inner.querySelector("#ob-name").focus();
       }
       if (n === 2) {
+        const d = this._obData;
         inner.innerHTML = `
-          <div class="onboard-logo">🩺</div>
-          <h1>What brings you here?</h1>
-          <p>Tap everything that applies. We'll suggest ready-made routines for each one. You can skip this and build your own later.</p>
-          <div class="chip-row" id="ob-conds">
-            ${window.CONDITIONS.map(c => `<button class="chip" data-c="${c.id}">${this.esc(c.name)}</button>`).join("")}
+          <div class="onboard-logo">${this.icon("scale")}</div>
+          ${this.obDots(2)}
+          <h1>A little about you</h1>
+          <p>This helps tailor the body map and keep your stats in one place. You can change it any time in Settings.</p>
+          <div class="sex-options" id="ob-sex">
+            <button class="sex-option ${d.sex === "male" ? "on" : ""}" data-sex="male">${this.icon("person")}Male</button>
+            <button class="sex-option ${d.sex === "female" ? "on" : ""}" data-sex="female">${this.icon("person")}Female</button>
           </div>
-          <button class="btn big" id="ob-next2">Continue →</button>
+          <div class="ob-field-grid">
+            <div><label>Height (ft)</label><input type="number" id="ob-hft" min="0" max="8" placeholder="5" value="${d.heightFt || ""}"></div>
+            <div><label>Height (in)</label><input type="number" id="ob-hin" min="0" max="11" placeholder="10" value="${d.heightIn || ""}"></div>
+            <div><label>Weight (lbs)</label><input type="number" id="ob-wt" min="0" max="900" placeholder="165" value="${d.weightLb || ""}"></div>
+          </div>
+          <button class="btn big grad" id="ob-next2">Continue ${this.icon("arrowRight")}</button>
           <button class="btn secondary big" id="ob-skip2" style="margin-top:0.6rem">Skip for now</button>
+        `;
+        inner.querySelectorAll("#ob-sex .sex-option").forEach(b => b.onclick = () => {
+          inner.querySelectorAll("#ob-sex .sex-option").forEach(x => x.classList.remove("on"));
+          b.classList.add("on");
+          d.sex = b.dataset.sex;
+        });
+        const grab = () => {
+          d.heightFt = Number(inner.querySelector("#ob-hft").value) || 0;
+          d.heightIn = Number(inner.querySelector("#ob-hin").value) || 0;
+          d.weightLb = Number(inner.querySelector("#ob-wt").value) || 0;
+        };
+        inner.querySelector("#ob-next2").onclick = () => { grab(); this.onboardStep(3); };
+        inner.querySelector("#ob-skip2").onclick = () => this.onboardStep(3);
+      }
+      if (n === 3) {
+        inner.innerHTML = `
+          <div class="onboard-logo">${this.icon("medical")}</div>
+          ${this.obDots(3)}
+          <h1>What brings you here?</h1>
+          <p>Tap everything that applies, from recovery goals to gym training. We'll suggest ready-made routines for each one.</p>
+          <div class="chip-row" id="ob-conds">
+            ${window.CONDITIONS.map(c => `<button class="chip ${this._obData.conditions.includes(c.id) ? "on" : ""}" data-c="${c.id}">${this.esc(c.name)}</button>`).join("")}
+          </div>
+          <button class="btn big grad" id="ob-next3">Continue ${this.icon("arrowRight")}</button>
+          <button class="btn secondary big" id="ob-skip3" style="margin-top:0.6rem">Skip for now</button>
         `;
         inner.querySelectorAll("#ob-conds .chip").forEach(ch => ch.onclick = () => {
           ch.classList.toggle("on");
           this._obData.conditions = [...inner.querySelectorAll("#ob-conds .chip.on")].map(x => x.dataset.c);
         });
-        inner.querySelector("#ob-next2").onclick = () => this.onboardStep(3);
-        inner.querySelector("#ob-skip2").onclick = () => { this._obData.conditions = []; this.onboardStep(3); };
+        inner.querySelector("#ob-next3").onclick = () => this.onboardStep(4);
+        inner.querySelector("#ob-skip3").onclick = () => { this._obData.conditions = []; this.onboardStep(4); };
       }
-      if (n === 3) {
+      if (n === 4) {
+        const d = this._obData;
         inner.innerHTML = `
-          <div class="onboard-logo">🔍</div>
-          <h1>Comfortable reading size</h1>
-          <p>Pick the text size that's easiest on your eyes. You can change it any time in Settings.</p>
-          <div class="textsize-options" id="ob-ts">
-            <button class="textsize-option on" data-ts="normal"><span class="ts-a" style="font-size:1.1rem">Aa</span><span class="ts-label">Normal</span></button>
-            <button class="textsize-option" data-ts="large"><span class="ts-a" style="font-size:1.4rem">Aa</span><span class="ts-label">Large</span></button>
-            <button class="textsize-option" data-ts="huge"><span class="ts-a" style="font-size:1.8rem">Aa</span><span class="ts-label">Extra Large</span></button>
+          <div class="onboard-logo">${this.icon("palette")}</div>
+          ${this.obDots(4)}
+          <h1>Make it yours</h1>
+          <p>Pick a color theme and a comfortable reading size. Both can change any time in Settings.</p>
+          <div class="theme-options" id="ob-theme">
+            ${[["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"]].map(([id, label]) => `
+              <button class="theme-option ${d.theme === id ? "on" : ""}" data-theme="${id}">
+                <span class="sw sw-${id}"></span><span class="sw-label">${label}</span>
+              </button>`).join("")}
           </div>
-          <button class="btn big" id="ob-finish">Let's Go! 🎉</button>
+          <div class="textsize-options" id="ob-ts">
+            <button class="textsize-option ${d.textSize === "normal" ? "on" : ""}" data-ts="normal"><span class="ts-a" style="font-size:1.1rem">Aa</span><span class="ts-label">Normal</span></button>
+            <button class="textsize-option ${d.textSize === "large" ? "on" : ""}" data-ts="large"><span class="ts-a" style="font-size:1.4rem">Aa</span><span class="ts-label">Large</span></button>
+            <button class="textsize-option ${d.textSize === "huge" ? "on" : ""}" data-ts="huge"><span class="ts-a" style="font-size:1.8rem">Aa</span><span class="ts-label">Extra Large</span></button>
+          </div>
+          <button class="btn big grad" id="ob-finish">Let's Go ${this.icon("sparkle")}</button>
         `;
+        inner.querySelectorAll("#ob-theme .theme-option").forEach(b => b.onclick = () => {
+          inner.querySelectorAll("#ob-theme .theme-option").forEach(x => x.classList.remove("on"));
+          b.classList.add("on");
+          d.theme = b.dataset.theme;
+          document.documentElement.setAttribute("data-theme", d.theme);
+        });
         inner.querySelectorAll("#ob-ts .textsize-option").forEach(b => b.onclick = () => {
           inner.querySelectorAll("#ob-ts .textsize-option").forEach(x => x.classList.remove("on"));
           b.classList.add("on");
-          this._obData.textSize = b.dataset.ts;
+          d.textSize = b.dataset.ts;
           document.documentElement.setAttribute("data-textsize", b.dataset.ts === "normal" ? "" : b.dataset.ts);
         });
         inner.querySelector("#ob-finish").onclick = () => this.finishOnboarding();
@@ -339,9 +472,15 @@
     finishOnboarding() {
       if (this.state.onboarded) return; // guard against double-taps
       const d = this._obData;
-      this.state.profile.name = d.name;
-      this.state.profile.conditions = d.conditions;
-      this.state.profile.textSize = d.textSize;
+      const p = this.state.profile;
+      p.name = d.name;
+      p.conditions = d.conditions;
+      p.textSize = d.textSize;
+      p.sex = d.sex;
+      p.heightFt = d.heightFt;
+      p.heightIn = d.heightIn;
+      p.weightLb = d.weightLb;
+      p.theme = d.theme;
       // build suggested routines from templates matching chosen conditions
       const added = new Set();
       d.conditions.forEach(cid => {
@@ -353,10 +492,10 @@
         });
       });
       this.state.onboarded = true;
-      this.save(); this.applyTextSize();
+      this.save(); this.applyAppearance();
       document.getElementById("onboard").classList.remove("open");
       this.showPage("home");
-      if (added.size > 0) this.toast(added.size + " routine" + (added.size === 1 ? "" : "s") + " ready for you ✓");
+      if (added.size > 0) this.toast(added.size + " routine" + (added.size === 1 ? "" : "s") + " ready for you");
     },
     routineFromTemplate(t) {
       return {
@@ -381,7 +520,8 @@
   // ---------- boot ----------
   document.addEventListener("DOMContentLoaded", () => {
     App.load();
-    App.applyTextSize();
+    App.applyAppearance();
+    document.querySelectorAll("[data-icon]").forEach(el => { el.innerHTML = App.icon(el.dataset.icon); });
     document.querySelectorAll(".nav-btn").forEach(b => b.onclick = () => App.showPage(b.dataset.page));
     document.getElementById("btn-settings").onclick = () => App.openSettings();
     document.getElementById("modal-close").onclick = () => App.closeModal();

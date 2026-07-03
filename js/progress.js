@@ -10,8 +10,9 @@
     // exercises that have logged data (for the per-exercise chart)
     const exWithData = [...new Set(logs.flatMap(l => l.items.filter(i => i.sets && i.sets.length).map(i => i.exId)))];
 
+    const feelIcon = (f) => this.icon("face" + f);
     document.getElementById("progress-scroll").innerHTML = `
-      <span class="page-tag">Progress</span>
+      <span class="page-tag">${this.icon("chart")} Progress</span>
       <div class="page-title">Your Journey</div>
       <div class="page-sub">Consistency beats intensity. Look how far you've come.</div>
       <div class="home-stats">
@@ -20,14 +21,14 @@
         <div class="home-stat"><div class="home-stat-num">${totalMin}</div><div class="home-stat-label">Minutes</div></div>
       </div>
       ${logs.length === 0 ? `
-        <div class="empty-state card"><div class="empty-icon">📈</div>
+        <div class="empty-state card"><div class="empty-icon">${this.icon("chart")}</div>
         <p>No sessions yet.<br>Complete your first routine and your progress will appear here.</p>
-        <button class="btn big" onclick="App.showPage('home')">Go Start One</button></div>` : `
-        <div class="chart-card"><h3>📅 Sessions per week</h3><div class="chart-holder"><canvas id="chart-weeks"></canvas></div></div>
-        <div class="chart-card"><h3>😊 How you felt after sessions</h3><div class="chart-holder"><canvas id="chart-feel"></canvas></div></div>
+        <button class="btn big grad" onclick="App.showPage('home')">Go Start One</button></div>` : `
+        <div class="chart-card"><h3>${this.icon("calendar")} Sessions per week</h3><div class="chart-holder"><canvas id="chart-weeks"></canvas></div></div>
+        <div class="chart-card"><h3>${this.icon("face4")} How you felt after sessions</h3><div class="chart-holder"><canvas id="chart-feel"></canvas></div></div>
         ${exWithData.length ? `
           <div class="chart-card">
-            <h3>💪 Exercise progress</h3>
+            <h3>${this.icon("arms")} Exercise progress</h3>
             <select id="ex-progress-select" style="margin-bottom:0.7rem">
               ${exWithData.map(id => `<option value="${id}">${this.esc((this.ex(id) || { name: id }).name)}</option>`).join("")}
             </select>
@@ -41,9 +42,9 @@
               <div class="history-item-date">${this.fmtDate(l.date)}</div>
             </div>
             <div class="history-item-meta">
-              <span>⏱ ${this.fmtClock(l.durationSec || 0)}</span>
-              <span>✅ ${l.exercisesDone} exercises</span>
-              ${l.feel ? `<span>${["", "😣", "😕", "😐", "🙂", "😄"][l.feel]}</span>` : ""}
+              <span>${this.icon("clock")} ${this.fmtClock(l.durationSec || 0)}</span>
+              <span>${this.icon("check")} ${l.exercisesDone} exercises</span>
+              ${l.feel ? `<span>${feelIcon(l.feel)}</span>` : ""}
               ${l.pain != null ? `<span>pain ${l.pain}/10</span>` : ""}
             </div>
             ${l.note ? `<div class="history-item-meta" style="margin-top:0.2rem"><span>“${this.esc(l.note)}”</span></div>` : ""}
@@ -152,18 +153,18 @@
     if (!l) return;
     this.openModal(l.routineName, `
       <div class="history-item-meta" style="margin-bottom:1rem">
-        <span>📅 ${this.fmtDate(l.date)}</span>
-        <span>⏱ ${this.fmtClock(l.durationSec || 0)}</span>
-        ${l.feel ? `<span>felt ${["", "😣", "😕", "😐", "🙂", "😄"][l.feel]}</span>` : ""}
+        <span>${this.icon("calendar")} ${this.fmtDate(l.date)}</span>
+        <span>${this.icon("clock")} ${this.fmtClock(l.durationSec || 0)}</span>
+        ${l.feel ? `<span>felt ${this.icon("face" + l.feel)}</span>` : ""}
         ${l.pain != null ? `<span>pain ${l.pain}/10</span>` : ""}
       </div>
-      ${l.note ? `<div class="exd-tip" style="margin-bottom:1rem"><span>📝</span><span>${this.esc(l.note)}</span></div>` : ""}
+      ${l.note ? `<div class="exd-tip" style="margin-bottom:1rem">${this.icon("note")}<span>${this.esc(l.note)}</span></div>` : ""}
       ${l.items.map(i => `
         <div class="exd-variation">
           <strong>${this.esc(i.name)} ${i.skipped ? "· skipped" : ""}</strong>
           ${(i.sets && i.sets.length) ? `<span>${i.sets.map((x, n) => "Set " + (n + 1) + ": " + (x.sec ? App.fmtDur(x.sec) : x.reps + " reps" + (x.weight ? " × " + x.weight + " lbs" : ""))).join(" · ")}</span>` : `<span>${i.skipped ? "Skipped this time. That's okay." : "No sets logged"}</span>`}
         </div>`).join("")}
-      <button class="btn danger big" id="log-delete" style="margin-top:1rem">🗑 Delete This Entry</button>
+      <button class="btn danger big" id="log-delete" style="margin-top:1rem">${this.icon("trash")} Delete This Entry</button>
     `);
     document.getElementById("modal-body").querySelector("#log-delete").onclick = () => {
       this.confirm("Delete this session entry?", "This removes it from your history and charts. It cannot be undone.", () => {

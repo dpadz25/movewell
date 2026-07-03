@@ -1,17 +1,20 @@
 // MoveWell conditions, regions, equipment labels, and prebuilt routine templates
+// icon fields reference keys in window.ICONS (js/icons.js)
 
 window.REGIONS = [
-  { id: "neck", name: "Neck", icon: "🦴" },
-  { id: "shoulder", name: "Shoulder", icon: "💪" },
-  { id: "upper-back", name: "Upper Back & Posture", icon: "🧍" },
-  { id: "elbow", name: "Elbow", icon: "💪" },
-  { id: "wrist", name: "Wrist & Hand", icon: "✋" },
-  { id: "lower-back", name: "Lower Back", icon: "🦴" },
-  { id: "hip", name: "Hip", icon: "🦵" },
-  { id: "knee", name: "Knee", icon: "🦵" },
-  { id: "ankle-foot", name: "Ankle & Foot", icon: "🦶" },
-  { id: "core", name: "Core", icon: "⭕" },
-  { id: "balance", name: "Balance & Whole Body", icon: "⚖️" }
+  { id: "neck", name: "Neck", icon: "neck", color: "teal" },
+  { id: "shoulder", name: "Shoulder", icon: "shoulder", color: "blue" },
+  { id: "upper-back", name: "Upper Back & Posture", icon: "upper-back", color: "purple" },
+  { id: "chest", name: "Chest", icon: "chest", color: "red" },
+  { id: "arms", name: "Arms", icon: "arms", color: "orange" },
+  { id: "elbow", name: "Elbow", icon: "elbow", color: "yellow" },
+  { id: "wrist", name: "Wrist & Hand", icon: "wrist", color: "pink" },
+  { id: "lower-back", name: "Lower Back", icon: "lower-back", color: "accent" },
+  { id: "hip", name: "Hip", icon: "hip", color: "teal" },
+  { id: "knee", name: "Knee", icon: "knee", color: "blue" },
+  { id: "ankle-foot", name: "Ankle & Foot", icon: "ankle-foot", color: "orange" },
+  { id: "core", name: "Core", icon: "core", color: "purple" },
+  { id: "balance", name: "Balance & Whole Body", icon: "balance", color: "accent" }
 ];
 
 window.CONDITIONS = [
@@ -21,7 +24,7 @@ window.CONDITIONS = [
   { id: "headache", name: "Tension Headaches", regions: ["neck"], blurb: "Headaches that start at the base of the skull or feel like a tight band, often driven by neck muscle tension and posture." },
   { id: "shoulder-pain", name: "General Shoulder Pain", regions: ["shoulder"], blurb: "Aching or pinching shoulder with reaching or lifting. Building rotator cuff and shoulder blade strength usually calms it." },
   { id: "rotator-cuff", name: "Rotator Cuff Injury / Impingement", regions: ["shoulder"], blurb: "The small stabilizing muscles of the shoulder are irritated, torn, or weak. Progressive cuff and shoulder-blade strengthening is the gold standard." },
-  { id: "frozen-shoulder", name: "Frozen Shoulder", regions: ["shoulder"], blurb: "The shoulder capsule tightens, badly limiting motion. Recovery is slow but steady: frequent gentle stretching within tolerable limits." },
+  { id: "frozen-shoulder", name: "Frozen Shoulder", regions: ["shoulder"], blurb: "The shoulder capsule tightens, badly limiting motion. Recovery is slow but steady, with frequent gentle stretching within tolerable limits." },
   { id: "tennis-elbow", name: "Tennis Elbow (Outer)", regions: ["elbow", "wrist"], blurb: "Irritated tendon on the outside of the elbow from gripping and wrist work. Slow 'lowering-only' strengthening rebuilds the tendon." },
   { id: "golfers-elbow", name: "Golfer's Elbow (Inner)", regions: ["elbow", "wrist"], blurb: "The inner-elbow cousin of tennis elbow. Same slow strengthening approach, opposite side." },
   { id: "carpal-tunnel", name: "Carpal Tunnel Syndrome", regions: ["wrist"], blurb: "The median nerve is compressed at the wrist, causing numb or tingly fingers. Tendon glides, nerve glides, and gentle stretches keep things moving." },
@@ -32,31 +35,37 @@ window.CONDITIONS = [
   { id: "disc", name: "Disc-Related Back Pain", regions: ["lower-back"], blurb: "Back pain influenced by a bulging or irritated disc. Extension-based movements (McKenzie) help many people. Follow your therapist's direction preference." },
   { id: "hip-pain", name: "Hip Pain / Bursitis / Arthritis", regions: ["hip"], blurb: "Aching in the groin, side hip, or buttock. Strengthening the gluteals, especially the side hip, is usually the core of care." },
   { id: "knee-pain", name: "Kneecap / General Knee Pain", regions: ["knee", "hip"], blurb: "Pain around or behind the kneecap with stairs, squatting, or sitting. Quad and hip strengthening are proven treatment." },
-  { id: "knee-oa", name: "Knee Arthritis", regions: ["knee"], blurb: "Wear-related knee change. Motion is lotion: strengthening and regular walking reduce pain better than rest." },
+  { id: "knee-oa", name: "Knee Arthritis", regions: ["knee"], blurb: "Wear-related knee change. Motion is lotion. Strengthening and regular walking reduce pain better than rest." },
   { id: "post-surgery", name: "Post-Surgery Recovery (General)", regions: ["knee", "ankle-foot", "balance"], blurb: "Early-stage gentle motion and activation after joint surgery. Always follow your surgeon's specific protocol first." },
   { id: "itb", name: "IT Band / Outer Thigh Pain", regions: ["knee", "hip"], blurb: "Pain along the outer thigh or outer knee, common in walkers and runners. Side-hip strengthening plus targeted stretching." },
-  { id: "ankle-sprain", name: "Ankle Sprain Recovery", regions: ["ankle-foot", "balance"], blurb: "After a rolled ankle: restore motion, rebuild strength in all four directions, then retrain balance so it does not happen again." },
+  { id: "ankle-sprain", name: "Ankle Sprain Recovery", regions: ["ankle-foot", "balance"], blurb: "After a rolled ankle, restore motion, rebuild strength in all four directions, then retrain balance so it does not happen again." },
   { id: "achilles", name: "Achilles Tendon Pain", regions: ["ankle-foot"], blurb: "Pain in the cord above the heel. Slow, heavy heel work (eccentrics) is the research-backed fix." },
   { id: "plantar-fasciitis", name: "Plantar Fasciitis (Heel Pain)", regions: ["ankle-foot"], blurb: "Sharp heel pain, worst with the first morning steps. Calf and arch stretching plus foot strengthening." },
   { id: "posture", name: "Posture Improvement", regions: ["upper-back", "neck", "core"], blurb: "Standing and sitting taller with less effort. Open the front, strengthen the back, and move often." },
   { id: "balance-falls", name: "Balance & Fall Prevention", regions: ["balance", "ankle-foot", "hip"], blurb: "Balance is a trainable skill at any age. Programs like these reduce falls by 30 to 40 percent." },
-  { id: "general", name: "General Strength & Mobility", regions: ["balance", "core"], blurb: "Overall conditioning: getting stronger, moving easier, and keeping independence." }
+  { id: "general", name: "General Strength & Mobility", regions: ["balance", "core"], blurb: "Overall conditioning, getting stronger, moving easier, and keeping independence." },
+  { id: "strength-training", name: "Strength & Muscle Building", regions: ["chest", "arms", "upper-back", "shoulder", "hip", "knee", "core"], blurb: "Classic gym training to build muscle and strength. Think push, pull, and leg days with barbells, dumbbells, kettlebells, cables, and machines. Start lighter than you think and progress gradually." }
 ];
 
 window.EQUIPMENT = [
-  { id: "none", name: "No Equipment", icon: "🙌" },
-  { id: "band", name: "Resistance Band", icon: "➰" },
-  { id: "dumbbell", name: "Dumbbell / Weight", icon: "🏋️" },
-  { id: "chair", name: "Chair", icon: "🪑" },
-  { id: "wall", name: "Wall", icon: "🧱" },
-  { id: "towel", name: "Towel / Strap", icon: "🧻" },
-  { id: "doorway", name: "Doorway", icon: "🚪" },
-  { id: "table", name: "Table / Counter", icon: "🛋️" },
-  { id: "foam-roller", name: "Foam Roller", icon: "🛢️" },
-  { id: "step", name: "Step / Stairs", icon: "🪜" },
-  { id: "ball", name: "Ball / Cushion", icon: "🥎" },
-  { id: "stick", name: "Stick / Hammer", icon: "🥢" },
-  { id: "machine", name: "Gym Machine", icon: "⚙️" }
+  { id: "none", name: "No Equipment", icon: "bodyweight" },
+  { id: "band", name: "Resistance Band", icon: "band" },
+  { id: "dumbbell", name: "Dumbbell", icon: "dumbbell" },
+  { id: "barbell", name: "Barbell", icon: "barbell" },
+  { id: "kettlebell", name: "Kettlebell", icon: "kettlebell" },
+  { id: "cable", name: "Cable Station", icon: "cable" },
+  { id: "machine", name: "Gym Machine", icon: "machine" },
+  { id: "bench", name: "Bench", icon: "bench" },
+  { id: "pullup-bar", name: "Pull-Up Bar", icon: "pullup-bar" },
+  { id: "chair", name: "Chair", icon: "chair" },
+  { id: "wall", name: "Wall", icon: "wall" },
+  { id: "towel", name: "Towel / Strap", icon: "towel" },
+  { id: "doorway", name: "Doorway", icon: "doorway" },
+  { id: "table", name: "Table / Counter", icon: "table" },
+  { id: "foam-roller", name: "Foam Roller", icon: "foam-roller" },
+  { id: "step", name: "Step / Stairs", icon: "step" },
+  { id: "ball", name: "Ball / Cushion", icon: "ball" },
+  { id: "stick", name: "Stick / Hammer", icon: "stick" }
 ];
 
 window.EX_TYPES = [
@@ -64,7 +73,8 @@ window.EX_TYPES = [
   { id: "strengthen", name: "Strengthen", color: "accent" },
   { id: "mobility", name: "Mobility", color: "blue" },
   { id: "nerve-glide", name: "Nerve Glide", color: "orange" },
-  { id: "balance", name: "Balance", color: "yellow" }
+  { id: "balance", name: "Balance", color: "yellow" },
+  { id: "lift", name: "Gym Lift", color: "purple" }
 ];
 
 // Routine templates. Items may override the exercise's default dose.
@@ -76,7 +86,7 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-upper-cross", name: "Posture Reset (Upper Body)", conditions: ["upper-cross", "posture"],
-    desc: "The classic recipe for rounded shoulders and forward head: stretch the tight front, strengthen the sleepy back.",
+    desc: "The classic recipe for rounded shoulders and forward head. Stretch the tight front, strengthen the sleepy back.",
     items: ["doorway-pec-stretch", "upper-trap-stretch", "scm-stretch", "thoracic-extension-foam-roller", "chin-tuck", "wall-angels", "band-pull-apart", "face-pull", "prone-cobra"]
   },
   {
@@ -91,7 +101,7 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-frozen-shoulder", name: "Frozen Shoulder Mobility", conditions: ["frozen-shoulder"],
-    desc: "Frequent, gentle range work. Patience wins: expect progress across months.",
+    desc: "Frequent, gentle range work. Patience wins. Expect progress across months.",
     items: ["pendulum", "shoulder-flexion-wall-walk", "wall-slides", "behind-back-towel-stretch", "cross-body-stretch", "isometric-shoulder-abduction"]
   },
   {
@@ -143,5 +153,35 @@ window.TEMPLATES = [
     id: "tpl-gentle-full", name: "Gentle Full-Body Start", conditions: ["general", "post-surgery"],
     desc: "A kind first routine for rebuilding after illness, surgery, or a long break. Every exercise has an easier variation.",
     items: ["breathing-diaphragm", "seated-thoracic-extension-chair", "shoulder-shrug-roll", "ankle-pumps", "quad-set", "glute-bridge", "sit-to-stand", "marching-in-place", "walking-program"]
+  },
+  {
+    id: "tpl-push", name: "Push Day (Chest, Shoulders, Triceps)", conditions: ["strength-training"],
+    desc: "The classic push session. Press movements for chest and shoulders, then triceps to finish.",
+    items: ["barbell-bench-press", "incline-dumbbell-press", "seated-dumbbell-shoulder-press", "cable-fly", "lateral-raise", "tricep-pushdown", "overhead-tricep-extension"]
+  },
+  {
+    id: "tpl-pull", name: "Pull Day (Back & Biceps)", conditions: ["strength-training"],
+    desc: "Rows and pulldowns for a strong back, finished with curls for the biceps.",
+    items: ["lat-pulldown", "barbell-row", "seated-cable-row", "single-arm-dumbbell-row", "rear-delt-fly", "barbell-curl", "hammer-curl"]
+  },
+  {
+    id: "tpl-legs", name: "Leg Day (Quads, Glutes, Hamstrings)", conditions: ["strength-training"],
+    desc: "Squat, hinge, lunge, and isolate. The full lower-body recipe plus calves.",
+    items: ["barbell-back-squat", "romanian-deadlift", "leg-press", "walking-lunge", "leg-extension", "lying-leg-curl", "standing-calf-raise-machine"]
+  },
+  {
+    id: "tpl-upper", name: "Upper Body Day", conditions: ["strength-training"],
+    desc: "Everything above the waist in one session, for an upper / lower split.",
+    items: ["barbell-bench-press", "lat-pulldown", "seated-dumbbell-shoulder-press", "seated-cable-row", "lateral-raise", "barbell-curl", "tricep-pushdown"]
+  },
+  {
+    id: "tpl-lower", name: "Lower Body Day", conditions: ["strength-training"],
+    desc: "Everything below the waist in one session, for an upper / lower split.",
+    items: ["barbell-back-squat", "hip-thrust", "romanian-deadlift", "bulgarian-split-squat", "leg-extension", "lying-leg-curl", "standing-calf-raise-machine"]
+  },
+  {
+    id: "tpl-kettlebell", name: "Kettlebell Full Body", conditions: ["strength-training", "general"],
+    desc: "One kettlebell, whole body. Swings, squats, and carries build strength and conditioning together.",
+    items: ["kettlebell-swing", "goblet-squat", "kettlebell-deadlift", "single-arm-dumbbell-row", "plank", "russian-twist"]
   }
 ];

@@ -89,9 +89,9 @@
             <div class="hold-timer-display" id="hold-display">${this.fmtClock(timerTarget)}</div>
             <div class="hold-timer-sub">${it.timeSec > 0 ? "keep going until the chime" : "hold the position until the chime"}${it.perSide ? " · alternate sides each round" : ""}</div>
             <div class="btn-row">
-              <button class="btn big" id="hold-start">▶ Start Timer</button>
+              <button class="btn big grad" id="hold-start">${this.icon("play")} Start Timer</button>
             </div>
-            <button class="btn secondary small" id="hold-manual" style="margin-top:0.7rem">✓ Mark one done without timer</button>
+            <button class="btn secondary small" id="hold-manual" style="margin-top:0.7rem">${this.icon("check")} Mark one done without timer</button>
           </div>
           <div id="sets-done">${this.setsDoneHtml(it)}</div>
         </div>`;
@@ -108,7 +108,7 @@
             <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">leave 0 for bodyweight or band</span></div>
             <div class="stepper"><button id="wt-minus">−</button><span class="stepper-val" id="wt-val">${this._lastWeight && this._lastWeight[it.exId] || 0}</span><button id="wt-plus">＋</button></div>
           </div>
-          <button class="btn big" id="log-set">✓ Log Set ${done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
+          <button class="btn big grad" id="log-set">${this.icon("check")} Log Set ${done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
           <div id="sets-done">${this.setsDoneHtml(it)}</div>
         </div>`;
     }
@@ -117,21 +117,21 @@
       <span class="tag ${t.color} session-ex-type">${t.name}</span>
       <div class="session-ex-name">${this.esc(ex.name)}</div>
       <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
-      <button class="session-howto-toggle" id="howto-toggle"><span>📖 Show me how to do it</span><span id="howto-chev">▾</span></button>
+      <button class="session-howto-toggle" id="howto-toggle"><span style="display:inline-flex;align-items:center;gap:0.45rem">${this.icon("book")} Show me how to do it</span><span id="howto-chev" style="display:inline-flex">${this.icon("chevD")}</span></button>
       <div class="session-howto" id="howto">
-        <a class="video-link" href="${yt}" target="_blank" rel="noopener">▶ Watch a video demonstration</a>
+        <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video demonstration</a>
         <ol class="exd-steps">${ex.howTo.map(x => `<li>${this.esc(x)}</li>`).join("")}</ol>
-        ${ex.tips && ex.tips.length ? `<div class="exd-tip" style="margin-top:0.6rem"><span>💡</span><span>${this.esc(ex.tips[0])}</span></div>` : ""}
-        ${ex.caution ? `<div class="exd-caution" style="margin-top:0.5rem"><span>⚠️</span><span>${this.esc(ex.caution)}</span></div>` : ""}
+        ${ex.tips && ex.tips.length ? `<div class="exd-tip" style="margin-top:0.6rem">${this.icon("bulb")}<span>${this.esc(ex.tips[0])}</span></div>` : ""}
+        ${ex.caution ? `<div class="exd-caution" style="margin-top:0.5rem">${this.icon("alert")}<span>${this.esc(ex.caution)}</span></div>` : ""}
         ${ex.variations && ex.variations.length ? `<div style="margin-top:0.6rem">${ex.variations.map(v => `<div class="exd-variation"><strong>${this.esc(v.name)}</strong><span>${this.esc(v.note)}</span></div>`).join("")}</div>` : ""}
       </div>
       ${loggerHtml}
     `;
 
     document.getElementById("session-nav").innerHTML = `
-      <button class="btn secondary" id="sess-back" ${s.idx === 0 ? "disabled" : ""}>← Back</button>
+      <button class="btn secondary" id="sess-back" ${s.idx === 0 ? "disabled" : ""}>${this.icon("arrowLeft")} Back</button>
       <button class="btn secondary" id="sess-skip">Skip</button>
-      <button class="btn" id="sess-next">${s.idx === total - 1 ? "Finish 🎉" : "Next →"}</button>
+      <button class="btn grad" id="sess-next">${s.idx === total - 1 ? `Finish ${this.icon("party")}` : `Next ${this.icon("arrowRight")}`}</button>
     `;
 
     // bindings
@@ -139,7 +139,7 @@
     body.querySelector("#howto-toggle").onclick = () => {
       const h = body.querySelector("#howto");
       h.classList.toggle("open");
-      body.querySelector("#howto-chev").textContent = h.classList.contains("open") ? "▴" : "▾";
+      body.querySelector("#howto-chev").innerHTML = h.classList.contains("open") ? this.icon("chevU") : this.icon("chevD");
     };
 
     if (isTimed) {
@@ -168,7 +168,7 @@
   App.setsDoneHtml = function (it) {
     if (!it.logged.length) return "";
     return it.logged.map((x, i) => `
-      <div class="set-done-row"><span class="set-check">✓</span>
+      <div class="set-done-row"><span class="set-check">${App.icon("check")}</span>
         <span>Set ${i + 1}${it.perSide ? (i % 2 === 0 ? " · first side" : " · other side") : ""}:
         ${x.sec ? this.fmtDur(x.sec) : (x.reps + " reps" + (x.weight ? " × " + x.weight + " lbs" : ""))}</span>
       </div>`).join("");
@@ -178,7 +178,7 @@
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     this.chime();
     if (it.logged.length >= targetSets) {
-      this.toast("Exercise complete! 🎉");
+      this.toast("Exercise complete!");
       this.advance();
     } else {
       this.openRest(60);
@@ -202,12 +202,12 @@
     const startBtn = document.getElementById("hold-start");
     let remaining = target;
     holdEl.classList.add("running");
-    startBtn.textContent = "⏸ Pause";
+    startBtn.innerHTML = App.icon("pause") + " Pause";
     disp.textContent = this.fmtClock(remaining);
     let paused = false;
     startBtn.onclick = () => {
       paused = !paused;
-      startBtn.textContent = paused ? "▶ Resume" : "⏸ Pause";
+      startBtn.innerHTML = paused ? App.icon("play") + " Resume" : App.icon("pause") + " Pause";
     };
     this._holdT = setInterval(() => {
       if (paused) return;
@@ -229,7 +229,7 @@
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     if (!manual) this.chime();
     if (it.logged.length >= targetSets) {
-      this.toast("Exercise complete! 🎉");
+      this.toast("Exercise complete!");
       this.advance();
     } else {
       this.renderSessionStep();
@@ -289,9 +289,9 @@
 
     const name = this.state.profile.name;
     document.getElementById("celebrate-card").innerHTML = `
-      <span class="celebrate-emoji">🎉</span>
+      <span class="celebrate-emoji">${this.icon("party")}</span>
       <div class="celebrate-title">Wonderful${name ? ", " + this.esc(name) : ""}!</div>
-      <div class="celebrate-sub">You completed <strong>${this.esc(s.routineName)}</strong>.<br>Every session is a deposit in your recovery.</div>
+      <div class="celebrate-sub">You completed <strong>${this.esc(s.routineName)}</strong>.<br>Every session is a deposit in your progress.</div>
       <div class="celebrate-stats">
         <div class="celebrate-stat"><div class="celebrate-stat-num">${doneItems.length}</div><div class="celebrate-stat-label">Exercises</div></div>
         <div class="celebrate-stat"><div class="celebrate-stat-num">${totalSets}</div><div class="celebrate-stat-label">Sets</div></div>
@@ -299,13 +299,13 @@
       </div>
       <div class="feel-title">How do you feel now?</div>
       <div class="feel-btns" id="cel-feel">
-        ${["😣", "😕", "😐", "🙂", "😄"].map((e, i) => `<button class="feel-btn" data-f="${i + 1}">${e}</button>`).join("")}
+        ${[1, 2, 3, 4, 5].map(i => `<button class="feel-btn" data-f="${i}">${this.icon("face" + i)}</button>`).join("")}
       </div>
       <div class="feel-title" style="font-size:0.9rem">Pain level right now (0 = none)</div>
       <div class="pain-scale" id="cel-pain">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num" data-p="${i}">${i}</button>`).join("")}</div>
       <div class="pain-scale-labels"><span>No pain</span><span>Worst</span></div>
       <input type="text" id="cel-note" placeholder="Optional note about today" style="margin-bottom:0.9rem">
-      <button class="btn big" id="cel-save">Save & Done ✓</button>
+      <button class="btn big grad" id="cel-save">${this.icon("check")} Save & Done</button>
     `;
     const card = document.getElementById("celebrate-card");
     card.querySelectorAll("#cel-feel .feel-btn").forEach(b => b.onclick = () => {
@@ -329,7 +329,7 @@
       this.stopConfetti();
       this._sess = null;
       this.showPage("home");
-      this.toast("Session saved. See you next time! 💪");
+      this.toast("Session saved. See you next time!");
     };
     this.chime();
     setTimeout(() => this.chime(), 400);
