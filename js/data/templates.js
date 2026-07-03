@@ -44,7 +44,8 @@ window.CONDITIONS = [
   { id: "posture", name: "Posture Improvement", regions: ["upper-back", "neck", "core"], blurb: "Standing and sitting taller with less effort. Open the front, strengthen the back, and move often." },
   { id: "balance-falls", name: "Balance & Fall Prevention", regions: ["balance", "ankle-foot", "hip"], blurb: "Balance is a trainable skill at any age. Programs like these reduce falls by 30 to 40 percent." },
   { id: "general", name: "General Strength & Mobility", regions: ["balance", "core"], blurb: "Overall conditioning, getting stronger, moving easier, and keeping independence." },
-  { id: "strength-training", name: "Strength & Muscle Building", regions: ["chest", "arms", "upper-back", "shoulder", "hip", "knee", "core"], blurb: "Classic gym training to build muscle and strength. Think push, pull, and leg days with barbells, dumbbells, kettlebells, cables, and machines. Start lighter than you think and progress gradually." }
+  { id: "strength-training", name: "Strength & Muscle Building", regions: ["chest", "arms", "upper-back", "shoulder", "hip", "knee", "core"], blurb: "Classic gym training to build muscle and strength. Think push, pull, and leg days with barbells, dumbbells, kettlebells, cables, and machines. Start lighter than you think and progress gradually." },
+  { id: "conditioning", name: "Cardio & Conditioning", regions: ["balance", "hip", "knee"], blurb: "Heart and lung fitness. Treadmill, bike, rower, stairs, and intervals. Cardio improves recovery between lifting sessions, and 150 minutes a week of moderate work is the widely recommended target." }
 ];
 
 window.EQUIPMENT = [
@@ -55,6 +56,9 @@ window.EQUIPMENT = [
   { id: "kettlebell", name: "Kettlebell", icon: "kettlebell" },
   { id: "cable", name: "Cable Station", icon: "cable" },
   { id: "machine", name: "Gym Machine", icon: "machine" },
+  { id: "smith-machine", name: "Smith Machine", icon: "smith-machine" },
+  { id: "cardio-machine", name: "Cardio Machine", icon: "run" },
+  { id: "jump-rope", name: "Jump Rope", icon: "jump-rope" },
   { id: "bench", name: "Bench", icon: "bench" },
   { id: "pullup-bar", name: "Pull-Up Bar", icon: "pullup-bar" },
   { id: "chair", name: "Chair", icon: "chair" },
@@ -74,7 +78,8 @@ window.EX_TYPES = [
   { id: "mobility", name: "Mobility", color: "blue" },
   { id: "nerve-glide", name: "Nerve Glide", color: "orange" },
   { id: "balance", name: "Balance", color: "yellow" },
-  { id: "lift", name: "Gym Lift", color: "purple" }
+  { id: "lift", name: "Gym Lift", color: "purple" },
+  { id: "cardio", name: "Cardio", color: "red" }
 ];
 
 // Routine templates. Items may override the exercise's default dose.
@@ -156,18 +161,18 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-push", name: "Push Day (Chest, Shoulders, Triceps)", conditions: ["strength-training"],
-    desc: "The classic push session. Press movements for chest and shoulders, then triceps to finish.",
-    items: ["barbell-bench-press", "incline-dumbbell-press", "seated-dumbbell-shoulder-press", "cable-fly", "lateral-raise", "tricep-pushdown", "overhead-tricep-extension"]
+    desc: "The classic push session. Press movements for chest and shoulders, triceps to finish, and a cardio cool-down.",
+    items: ["barbell-bench-press", "incline-dumbbell-press", "seated-dumbbell-shoulder-press", "cable-fly", "lateral-raise", "tricep-pushdown", "overhead-tricep-extension", "incline-treadmill-walk"]
   },
   {
     id: "tpl-pull", name: "Pull Day (Back & Biceps)", conditions: ["strength-training"],
-    desc: "Rows and pulldowns for a strong back, finished with curls for the biceps.",
-    items: ["lat-pulldown", "barbell-row", "seated-cable-row", "single-arm-dumbbell-row", "rear-delt-fly", "barbell-curl", "hammer-curl"]
+    desc: "Rows and pulldowns for a strong back, finished with curls and a cardio cool-down.",
+    items: ["lat-pulldown", "t-bar-row", "seated-cable-row", "chest-supported-db-row", "rear-delt-fly", "barbell-curl", "incline-dumbbell-curl", "incline-treadmill-walk"]
   },
   {
     id: "tpl-legs", name: "Leg Day (Quads, Glutes, Hamstrings)", conditions: ["strength-training"],
-    desc: "Squat, hinge, lunge, and isolate. The full lower-body recipe plus calves.",
-    items: ["barbell-back-squat", "romanian-deadlift", "leg-press", "walking-lunge", "leg-extension", "lying-leg-curl", "standing-calf-raise-machine"]
+    desc: "Squat, hinge, lunge, and isolate. The full lower-body recipe plus calves and a bike cool-down.",
+    items: ["barbell-back-squat", "romanian-deadlift", "leg-press", "walking-lunge", "leg-extension", "seated-leg-curl", "standing-calf-raise-machine", "stationary-bike"]
   },
   {
     id: "tpl-upper", name: "Upper Body Day", conditions: ["strength-training"],
@@ -182,6 +187,16 @@ window.TEMPLATES = [
   {
     id: "tpl-kettlebell", name: "Kettlebell Full Body", conditions: ["strength-training", "general"],
     desc: "One kettlebell, whole body. Swings, squats, and carries build strength and conditioning together.",
-    items: ["kettlebell-swing", "goblet-squat", "kettlebell-deadlift", "single-arm-dumbbell-row", "plank", "russian-twist"]
+    items: ["kettlebell-swing", "goblet-squat", "kettlebell-deadlift", "single-arm-dumbbell-row", "suitcase-carry", "plank"]
+  },
+  {
+    id: "tpl-cardio", name: "Cardio & Conditioning Day", conditions: ["conditioning"],
+    desc: "A complete cardio session. Warm up easy, pick your main machine, then finish with intervals if you have gas left.",
+    items: ["incline-treadmill-walk", "stationary-bike", "rowing-machine", "stair-climber", "sprint-intervals"]
+  },
+  {
+    id: "tpl-abs", name: "Core & Abs Day", conditions: ["strength-training"],
+    desc: "Science-backed ab training. Weighted flexion, hanging work, anti-rotation, and a carry to finish.",
+    items: ["cable-crunch", "decline-sit-up", "hanging-leg-raise", "bicycle-crunch", "pallof-press", "suitcase-carry"]
   }
 ];

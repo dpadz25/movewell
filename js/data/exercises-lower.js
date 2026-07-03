@@ -756,5 +756,62 @@ window.EXERCISES.push(
   tips: ["The wobbly surface retrains the ankle's position sensors after a sprain."],
   caution: "Always have support within reach.",
   variations: []
+},
+{
+  id: "pigeon-stretch", name: "Pigeon Stretch", region: "hip", type: "stretch",
+  equipment: ["none"], position: "On the floor, one leg folded in front", level: 2,
+  muscles: "Glutes, piriformis, deep hip rotators",
+  helps: ["hip-pain", "sciatica", "low-back-pain", "general", "strength-training"],
+  dose: { sets: 2, reps: 1, hold: 45, perSide: true },
+  howTo: [
+    "From hands and knees, slide your right knee forward toward your right wrist.",
+    "Angle the right shin across your body and extend the left leg straight back.",
+    "Square your hips toward the floor and settle your weight down.",
+    "Fold forward over the front leg for a deeper stretch, breathe, then switch."
+  ],
+  tips: ["One of the deepest glute stretches there is, and a favorite for desk-tight hips.", "A pillow under the front-side hip makes it far more comfortable."],
+  caution: "The front knee should feel nothing. If it does, do the Figure-4 version on your back instead.",
+  variations: [
+    { name: "Figure-4 Pigeon (On Back)", note: "Lying on your back with ankle over knee. All the stretch, none of the knee pressure." },
+    { name: "Bench Pigeon", note: "Front shin resting on a bench or bed, standing behind it. Easy to control the depth." }
+  ]
+},
+{
+  id: "couch-stretch", name: "Couch Stretch", region: "hip", type: "stretch",
+  equipment: ["wall", "chair"], position: "Kneeling, back foot up a wall or couch", level: 2,
+  muscles: "Hip flexors and quads together (rectus femoris)",
+  helps: ["hip-pain", "low-back-pain", "knee-pain", "posture", "general", "strength-training"],
+  dose: { sets: 2, reps: 1, hold: 45, perSide: true },
+  howTo: [
+    "Kneel with your back to a wall or couch, and place one shin up the wall, knee in the corner.",
+    "Step the other foot forward into a lunge stance.",
+    "Squeeze the glute of the back leg and lift your chest tall.",
+    "You will feel a deep stretch down the front of the back thigh and hip."
+  ],
+  tips: ["Because the knee is bent, this reaches the rectus femoris, the one hip flexor a regular lunge stretch misses.", "Padding under the down knee is not optional. Use a cushion."],
+  caution: "Intense by design. Start upright and only lean back over weeks. Skip during acute kneecap pain.",
+  variations: [
+    { name: "Half Couch (Foot on Chair)", note: "Back foot on a low chair instead of the wall. Much gentler angle." },
+    { name: "With Side Reach", note: "Reach the same-side arm overhead and lean slightly away to add the hip's front-side fascia." }
+  ]
+},
+{
+  id: "frog-stretch", name: "Frog Stretch (Adductor Rock-Back)", region: "hip", type: "stretch",
+  equipment: ["none"], position: "On hands and knees, knees wide", level: 2,
+  muscles: "Inner thighs (adductors), groin",
+  helps: ["hip-pain", "low-back-pain", "general", "strength-training"],
+  dose: { sets: 2, reps: 10, hold: 3 },
+  howTo: [
+    "From hands and knees, walk your knees out wide, shins parallel and feet turned out.",
+    "Keep your back flat and forearms on the floor if comfortable.",
+    "Slowly rock your hips back toward your heels until you feel the inner thighs pull.",
+    "Rock forward to ease off, then repeat in slow waves."
+  ],
+  tips: ["The rocking version doubles as a warm-up before squats and leg day.", "Let the stretch build over reps rather than forcing the first one."],
+  caution: "Keep the movement in the hips, not the lower back. Pad the knees well.",
+  variations: [
+    { name: "Static Frog Hold", note: "Settle into the back position and hold 30 to 60 seconds, breathing slowly." },
+    { name: "Cossack Squat", note: "The standing cousin: shift side to side over one bent leg with the other straight. Strength and stretch in one." }
+  ]
 }
 );

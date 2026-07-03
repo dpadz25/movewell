@@ -201,6 +201,15 @@ label.field-label { display: block; font-size: 0.8rem; font-weight: 700; color: 
   cursor: pointer; min-height: 2.5rem; display: inline-flex; align-items: center; gap: 0.4rem;
 }
 .chip .icn { width: 1.05em; height: 1.05em; }
+.chip.small-chip { min-height: 2rem; padding: 0.3rem 0.75rem; font-size: 0.78rem; }
+input.stepper-input, .stepper input.stepper-input {
+  width: 4.2rem; flex: 0 0 auto; text-align: center; font-weight: 800; font-size: 1.05rem;
+  border: 2px solid var(--border2); border-radius: 10px; padding: 0.4rem 0.15rem;
+  background: var(--surface); color: var(--text); font-variant-numeric: tabular-nums;
+  outline: none; -moz-appearance: textfield; appearance: textfield; font-family: inherit;
+}
+input.stepper-input:focus { border-color: var(--accent); }
+input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .chip.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .chip:active { transform: scale(0.97); }
 

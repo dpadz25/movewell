@@ -75,7 +75,9 @@
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     const done = it.logged.length;
     const prev = this.lastPerformance(it.exId);
-    const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " exercise how to");
+    const displayName = it.variant || ex.name;
+    const variantNote = it.variant ? (ex.variations.find(v => v.name === it.variant) || {}).note : "";
+    const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(displayName + " exercise how to");
 
     document.getElementById("session-progress-text").textContent = "Exercise " + (s.idx + 1) + " of " + total;
     document.getElementById("session-progressbar-fill").style.width = ((s.idx) / total * 100) + "%";
@@ -102,11 +104,11 @@
           ${prev ? `<div class="prev-hint">Last time: ${prev.sets.map(x => (x.reps || "") + (x.weight ? "×" + x.weight + "lb" : "")).filter(Boolean).join(", ") || prev.sets.length + " sets"} · ${this.fmtDate(prev.date)}</div>` : ""}
           <div class="stepper-row">
             <div class="stepper-label">Reps</div>
-            <div class="stepper"><button id="rep-minus">−</button><span class="stepper-val" id="rep-val">${it.reps || 10}</span><button id="rep-plus">＋</button></div>
+            <div class="stepper"><button id="rep-minus">${this.icon("minus")}</button><span class="stepper-val" id="rep-val">${it.reps || 10}</span><button id="rep-plus">${this.icon("plus")}</button></div>
           </div>
           <div class="stepper-row">
-            <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">leave 0 for bodyweight or band</span></div>
-            <div class="stepper"><button id="wt-minus">−</button><span class="stepper-val" id="wt-val">${this._lastWeight && this._lastWeight[it.exId] || 0}</span><button id="wt-plus">＋</button></div>
+            <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">tap the number to type it</span></div>
+            <div class="stepper"><button id="wt-minus">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus">${this.icon("plus")}</button></div>
           </div>
           <button class="btn big grad" id="log-set">${this.icon("check")} Log Set ${done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
           <div id="sets-done">${this.setsDoneHtml(it)}</div>
@@ -115,8 +117,14 @@
 
     document.getElementById("session-body").innerHTML = `
       <span class="tag ${t.color} session-ex-type">${t.name}</span>
-      <div class="session-ex-name">${this.esc(ex.name)}</div>
+      <div class="session-ex-name">${this.esc(displayName)}</div>
+      ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:-0.1rem 0 0.3rem">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}
       <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
+      ${(ex.variations && ex.variations.length) ? `
+      <div class="filter-wrap" style="margin-bottom:0.7rem"><div class="filter-bar" style="padding-bottom:0.2rem" id="sess-variants">
+        <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
+        ${ex.variations.map(v => `<button class="chip small-chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
+      </div></div>` : ""}
       <button class="session-howto-toggle" id="howto-toggle"><span style="display:inline-flex;align-items:center;gap:0.45rem">${this.icon("book")} Show me how to do it</span><span id="howto-chev" style="display:inline-flex">${this.icon("chevD")}</span></button>
       <div class="session-howto" id="howto">
         <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video demonstration</a>
@@ -136,6 +144,23 @@
 
     // bindings
     const body = document.getElementById("session-body");
+    const variantBar = body.querySelector("#sess-variants");
+    if (variantBar) {
+      this.bindFilterFades(body);
+      variantBar.querySelectorAll(".chip").forEach(ch => ch.onclick = () => {
+        it.variant = ch.dataset.v || "";
+        if (!it.variant) delete it.variant;
+        // persist the choice back to the routine itself
+        const routine = this.state.routines.find(x => x.id === s.routineId);
+        if (routine && routine.items[s.idx] && routine.items[s.idx].exId === it.exId) {
+          if (it.variant) routine.items[s.idx].variant = it.variant;
+          else delete routine.items[s.idx].variant;
+          this.save();
+        }
+        this.stopHoldTimer();
+        this.renderSessionStep();
+      });
+    }
     body.querySelector("#howto-toggle").onclick = () => {
       const h = body.querySelector("#howto");
       h.classList.toggle("open");
@@ -149,10 +174,10 @@
       const repVal = body.querySelector("#rep-val"), wtVal = body.querySelector("#wt-val");
       body.querySelector("#rep-minus").onclick = () => repVal.textContent = Math.max(1, Number(repVal.textContent) - 1);
       body.querySelector("#rep-plus").onclick = () => repVal.textContent = Number(repVal.textContent) + 1;
-      body.querySelector("#wt-minus").onclick = () => wtVal.textContent = Math.max(0, Number(wtVal.textContent) - (Number(wtVal.textContent) > 20 ? 5 : 1));
-      body.querySelector("#wt-plus").onclick = () => wtVal.textContent = Number(wtVal.textContent) + (Number(wtVal.textContent) >= 20 ? 5 : 1);
+      body.querySelector("#wt-minus").onclick = () => wtVal.value = Math.max(0, (Number(wtVal.value) || 0) - ((Number(wtVal.value) || 0) > 20 ? 5 : 1));
+      body.querySelector("#wt-plus").onclick = () => wtVal.value = (Number(wtVal.value) || 0) + ((Number(wtVal.value) || 0) >= 20 ? 5 : 1);
       body.querySelector("#log-set").onclick = () => {
-        const reps = Number(repVal.textContent), weight = Number(wtVal.textContent);
+        const reps = Number(repVal.textContent), weight = Number(wtVal.value) || 0;
         it.logged.push({ reps, weight: weight || 0 });
         this._lastWeight = this._lastWeight || {};
         this._lastWeight[it.exId] = weight;
@@ -278,7 +303,7 @@
       id: this.uid(), date: new Date().toISOString(),
       routineId: s.routineId, routineName: s.routineName,
       durationSec, exercisesDone: doneItems.length, setsDone: totalSets,
-      items: s.items.map(i => ({ exId: i.exId, name: (this.ex(i.exId) || {}).name || i.exId, sets: i.logged, skipped: i.skipped })),
+      items: s.items.map(i => ({ exId: i.exId, name: i.variant || (this.ex(i.exId) || {}).name || i.exId, sets: i.logged, skipped: i.skipped })),
       feel: null, pain: null, note: ""
     };
 

@@ -60,6 +60,24 @@
       return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     },
 
+    // realistic routine length: work time + rest between sets + setup between exercises
+    estimateRoutineMin(r) {
+      let sec = 0;
+      r.items.forEach(it => {
+        const ex = this.ex(it.exId);
+        if (!ex) return;
+        const sets = (it.sets || 1) * (it.perSide ? 2 : 1);
+        let work;
+        if (it.timeSec) work = it.timeSec;
+        else if (it.hold && (!it.reps || it.reps <= 1)) work = it.hold + 5;
+        else work = (it.reps || 10) * ((it.hold || 0) + 4);
+        const rest = ex.type === "cardio" ? 0 : ex.type === "lift" ? 90 : 20;
+        const setup = ex.type === "lift" ? 45 : 25;
+        sec += sets * work + Math.max(0, sets - 1) * rest + setup;
+      });
+      return Math.max(3, Math.round(sec / 60));
+    },
+
     doseText(d) {
       if (!d) return "";
       const parts = [];
@@ -203,7 +221,7 @@
           <div class="routine-card">
             <div class="routine-card-info" onclick="App.openRoutineEditor('${r.id}')">
               <div class="routine-card-name">${this.esc(r.name)}</div>
-              <div class="routine-card-meta">${r.items.length} exercises · ~${Math.max(5, Math.round(r.items.length * 2.5))} min</div>
+              <div class="routine-card-meta">${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min</div>
             </div>
             <button class="routine-start-btn" onclick="App.startSession('${r.id}')">${this.icon("play")} Start</button>
           </div>`).join("");

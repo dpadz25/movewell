@@ -798,5 +798,368 @@ window.EXERCISES.push(
     { name: "Wall Rollout", note: "Roll toward a wall that stops the wheel, limiting the range safely." },
     { name: "Standing Rollout", note: "From the feet instead of knees. Extremely advanced." }
   ]
+},
+
+// ============ MORE MACHINES & SMITH MACHINE ============
+{
+  id: "t-bar-row", name: "T-Bar Row", region: "upper-back", type: "lift",
+  equipment: ["machine", "barbell"], position: "Standing, hinged over the bar", level: 2,
+  muscles: "Lats, mid-back, rear delts, biceps",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Straddle the bar and grab the handles with a neutral grip.",
+    "Hinge to about 45 degrees with a flat back and soft knees.",
+    "Pull the handles to your chest, driving your elbows back.",
+    "Squeeze your shoulder blades together, then lower with control."
+  ],
+  tips: ["The chest-pad version removes lower back strain entirely.", "Think about pulling with your elbows, not your hands."],
+  caution: "Keep your back flat. If it rounds, lower the weight.",
+  variations: [
+    { name: "Chest-Supported T-Bar Row", note: "Lying on the machine's pad takes the lower back out of it." },
+    { name: "Landmine Row", note: "Same movement using a barbell wedged in a corner." }
+  ]
+},
+{
+  id: "chest-supported-db-row", name: "Chest-Supported Incline Dumbbell Row", region: "upper-back", type: "lift",
+  equipment: ["dumbbell", "bench"], position: "Chest down on an incline bench", level: 2,
+  muscles: "Lats, mid-back, rear delts, biceps",
+  helps: ["strength-training", "posture"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Set a bench to about 30 to 45 degrees and lie chest-down on it.",
+    "Let the dumbbells hang straight down with your arms long.",
+    "Row both dumbbells up until your elbows pass your torso.",
+    "Squeeze the shoulder blades, then lower slowly."
+  ],
+  tips: ["Because the bench holds your torso, every rep is pure back work with zero cheating.", "Great choice when your lower back is tired from squats or deadlifts."],
+  caution: "Keep your neck relaxed. Look at the floor, not the mirror.",
+  variations: [
+    { name: "Single Arm Version", note: "One side at a time to fix left-right imbalances." },
+    { name: "Rear Delt Emphasis", note: "Row with elbows flared wide to hit the rear shoulders more." }
+  ]
+},
+{
+  id: "scapular-pulldown", name: "Scapular Pull-Down", region: "upper-back", type: "strengthen",
+  equipment: ["cable", "machine"], position: "Seated at a lat pulldown station", level: 1,
+  muscles: "Lower traps, lats (scapular depression)",
+  helps: ["posture", "tos", "shoulder-pain", "strength-training", "upper-cross"],
+  dose: { sets: 3, reps: 12 },
+  howTo: [
+    "Sit at a lat pulldown and hold the bar with straight arms.",
+    "Without bending your elbows, pull your shoulder blades down and back.",
+    "The bar moves a few inches as your shoulders drop away from your ears.",
+    "Hold one second, then let the blades glide back up."
+  ],
+  tips: ["This teaches your shoulder blades to move before your arms do, the foundation of healthy pulling.", "Do these before pull-ups or pulldowns as a primer."],
+  caution: "The movement is small. If your elbows bend, you are turning it into a pulldown.",
+  variations: [
+    { name: "Hanging Scapular Pull", note: "Same motion hanging from a pull-up bar. Harder, and builds grip too." }
+  ]
+},
+{
+  id: "hack-squat", name: "Hack Squat", region: "knee", type: "lift",
+  equipment: ["machine"], position: "Back against the machine pad", level: 2,
+  muscles: "Quads, glutes",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Set your back and shoulders against the pads, feet shoulder-width on the platform.",
+    "Release the safeties and lower under control until your thighs are at least parallel.",
+    "Drive through your whole foot to press back up.",
+    "Keep your knees tracking over your toes the whole way."
+  ],
+  tips: ["The machine locks in your torso, so it isolates the quads more than a free squat.", "Lower foot placement hits more quad, higher placement hits more glute."],
+  caution: "Do not let your hips tuck under at the bottom. Cut the depth where your form holds.",
+  variations: [
+    { name: "Narrow Stance", note: "More outer quad emphasis." },
+    { name: "Reverse Hack Squat", note: "Facing the pad shifts work toward the glutes." }
+  ]
+},
+{
+  id: "machine-hip-thrust", name: "Machine Hip Thrust", region: "hip", type: "lift",
+  equipment: ["machine"], position: "Seated in the hip thrust machine", level: 1,
+  muscles: "Glutes, hamstrings",
+  helps: ["strength-training", "hip-pain"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Set your upper back against the pad and the belt or pad across your hips.",
+    "Plant your feet flat, shins vertical at the top position.",
+    "Drive through your heels and squeeze your glutes to full hip extension.",
+    "Pause one second at the top, then lower with control."
+  ],
+  tips: ["The machine is faster to set up than a barbell hip thrust and easier on the hip bones.", "Tuck your chin slightly and keep your ribs down for a stronger squeeze."],
+  caution: "Do not arch your lower back at the top. The finish comes from the glutes, not the spine.",
+  variations: [
+    { name: "Single Leg Version", note: "One foot at a time doubles the challenge without more weight." },
+    { name: "Pause Reps", note: "Hold 3 seconds at the top for extra glute time under tension." }
+  ]
+},
+{
+  id: "seated-leg-curl", name: "Seated Leg Curl", region: "knee", type: "lift",
+  equipment: ["machine"], position: "Seated in the leg curl machine", level: 1,
+  muscles: "Hamstrings",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Sit with the pad on the back of your lower calves and the thigh pad locked down.",
+    "Curl your heels down and under you as far as they go.",
+    "Squeeze the hamstrings hard at the bottom.",
+    "Return slowly, resisting the weight the whole way up."
+  ],
+  tips: ["Research favors the seated version over lying: the hamstrings work at a longer length here, which grows them faster.", "Slow negatives (3 seconds up) make a light stack feel heavy."],
+  caution: "Do not let the weight yank your legs back up. Control both directions.",
+  variations: [
+    { name: "Lying Leg Curl", note: "The face-down machine version. Fine if seated is taken." },
+    { name: "Single Leg Version", note: "One leg at a time to catch imbalances." }
+  ]
+},
+{
+  id: "smith-squat", name: "Smith Machine Squat", region: "knee", type: "lift",
+  equipment: ["smith-machine"], position: "Bar across the upper back, feet slightly forward", level: 2,
+  muscles: "Quads, glutes",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Set the bar at shoulder height and duck under it, bar across your upper traps.",
+    "Walk your feet slightly forward of the bar, about shoulder-width.",
+    "Unhook the bar and squat down until thighs reach parallel.",
+    "Drive up through your whole foot, then re-hook when done."
+  ],
+  tips: ["The fixed bar path means no balancing act, so you can push the legs hard safely.", "Feet forward turns it into more of a quad and glute slide, which is the point."],
+  caution: "Always know where the safety hooks are before your first rep.",
+  variations: [
+    { name: "Smith Split Squat", note: "One foot forward, one back. A very stable Bulgarian split squat." },
+    { name: "Smith Calf Raise", note: "Bar on your back, press up onto your toes off a small plate or block." },
+    { name: "Smith Romanian Deadlift", note: "Hold the bar at your thighs and hinge. A guided hamstring hinge." }
+  ]
+},
+{
+  id: "smith-incline-press", name: "Smith Machine Incline Press", region: "chest", type: "lift",
+  equipment: ["smith-machine", "bench"], position: "On an incline bench under the bar", level: 2,
+  muscles: "Upper chest, front shoulders, triceps",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 8 },
+  howTo: [
+    "Set an incline bench at about 30 degrees under the Smith bar.",
+    "Line the bar up with your upper chest, just below the collarbones.",
+    "Unhook, lower the bar to a light touch on your chest.",
+    "Press up and slightly back until your arms are long."
+  ],
+  tips: ["The guided bar lets you chase upper-chest growth without a spotter.", "Set the safety stops just below chest level so you can always bail out."],
+  caution: "Get the bench position right before loading weight. A bar path over your neck or belly ruins the lift.",
+  variations: [
+    { name: "Smith Flat Bench Press", note: "Flat bench under the bar for the classic press with training wheels." },
+    { name: "Close Grip Version", note: "Hands shoulder-width shifts the work to the triceps." }
+  ]
+},
+{
+  id: "incline-dumbbell-curl", name: "Incline Dumbbell Curl", region: "arms", type: "lift",
+  equipment: ["dumbbell", "bench"], position: "Lying back on an incline bench", level: 2,
+  muscles: "Biceps (long head, stretched position)",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Set a bench to about 45 to 60 degrees and lie back with a dumbbell in each hand.",
+    "Let your arms hang straight down and slightly behind you.",
+    "Curl both dumbbells up without letting your elbows drift forward.",
+    "Lower all the way to a full stretch each rep."
+  ],
+  tips: ["Training the biceps at a long muscle length like this is one of the best-supported tricks in hypertrophy research.", "Go lighter than your standing curl. The stretch position is humbling."],
+  caution: "If the hanging stretch bothers your shoulder, raise the bench angle a notch.",
+  variations: [
+    { name: "Alternating Version", note: "One arm at a time for better focus." },
+    { name: "Incline Hammer Curl", note: "Neutral grip shifts work to the brachialis and forearms." }
+  ]
+},
+
+// ============ MORE ABS ============
+{
+  id: "decline-sit-up", name: "Decline Sit-Up", region: "core", type: "lift",
+  equipment: ["bench"], position: "On a decline bench, feet hooked", level: 2,
+  muscles: "Rectus abdominis (six-pack), hip flexors",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 12 },
+  howTo: [
+    "Hook your feet under the pads of a decline bench and lie back.",
+    "Cross your arms over your chest or hold a plate against it.",
+    "Curl your torso up, ribs toward hips, until you are most of the way up.",
+    "Lower yourself slowly, one vertebra at a time."
+  ],
+  tips: ["The decline adds range and resistance that floor sit-ups cannot match.", "Once 15 reps feel easy, hold a plate on your chest instead of adding reps. Abs grow with load like any muscle."],
+  caution: "Do not yank your neck with your hands. If your lower back complains, reduce the decline angle.",
+  variations: [
+    { name: "Weighted Decline Sit-Up", note: "Hug a plate or dumbbell to your chest for progressive overload." },
+    { name: "Twisting Decline Sit-Up", note: "Rotate a shoulder toward the opposite knee at the top to involve the obliques." }
+  ]
+},
+{
+  id: "bicycle-crunch", name: "Bicycle Crunch", region: "core", type: "strengthen",
+  equipment: ["none"], position: "Lying on your back", level: 1,
+  muscles: "Abs and obliques together",
+  helps: ["strength-training", "general"],
+  dose: { sets: 3, reps: 20 },
+  howTo: [
+    "Lie on your back, hands lightly behind your head, knees up.",
+    "Bring one knee in while extending the other leg out.",
+    "Rotate your opposite elbow toward the bent knee.",
+    "Switch sides in a slow pedaling rhythm."
+  ],
+  tips: ["In classic EMG research this ranked among the highest activation moves for both abs and obliques.", "Slower is stronger. Racing through reps turns it into a neck exercise."],
+  caution: "Do not pull on your head. Elbows stay wide.",
+  variations: [
+    { name: "Feet-Down Version", note: "Tap the free heel to the floor between reps to make it easier." },
+    { name: "Slow Count Version", note: "Three seconds per side. Brutal and effective." }
+  ]
+},
+
+// ============ CARDIO ============
+{
+  id: "incline-treadmill-walk", name: "Incline Treadmill Walk", region: "balance", type: "cardio",
+  equipment: ["cardio-machine"], position: "Treadmill at 5 to 12 percent incline", level: 1,
+  muscles: "Heart and lungs, calves, glutes",
+  helps: ["conditioning", "general", "knee-oa"],
+  dose: { sets: 1, timeSec: 900 },
+  howTo: [
+    "Set the treadmill to a comfortable walking speed, around 2.5 to 3.5 mph.",
+    "Raise the incline until it feels like a purposeful hill, 5 to 12 percent.",
+    "Walk tall without hanging onto the rails.",
+    "You should be able to talk, but not sing."
+  ],
+  tips: ["Incline walking gives running-level heart work with a fraction of the joint impact.", "A favorite cool-down after lifting: 10 to 15 minutes torches extra calories without eating into recovery."],
+  caution: "Holding the rails and leaning back cancels most of the incline. Lower it instead.",
+  variations: [
+    { name: "12-3-30 Style", note: "The popular recipe: 12 percent incline, 3 mph, 30 minutes." },
+    { name: "Outdoor Hill Walk", note: "Same idea on real hills." }
+  ]
+},
+{
+  id: "treadmill-run", name: "Treadmill Jog / Run", region: "balance", type: "cardio",
+  equipment: ["cardio-machine"], position: "Treadmill, flat or 1 percent incline", level: 2,
+  muscles: "Heart and lungs, whole lower body",
+  helps: ["conditioning", "general"],
+  dose: { sets: 1, timeSec: 1200 },
+  howTo: [
+    "Warm up with 3 to 5 minutes of brisk walking.",
+    "Increase to an easy jog where you could still hold a conversation.",
+    "Keep your steps short and quick, landing under your body.",
+    "Finish with 2 to 3 minutes of walking to cool down."
+  ],
+  tips: ["A 1 percent incline best mimics outdoor running.", "Most of your running should feel easy. Speed comes from consistency, not heroics."],
+  caution: "Build running time gradually, no more than about 10 percent per week, or shins and knees will complain.",
+  variations: [
+    { name: "Walk-Jog Intervals", note: "Alternate 1 minute jogging with 2 minutes walking when starting out." }
+  ]
+},
+{
+  id: "stationary-bike", name: "Stationary Bike", region: "balance", type: "cardio",
+  equipment: ["cardio-machine"], position: "Seated, saddle at hip height", level: 1,
+  muscles: "Heart and lungs, quads, glutes",
+  helps: ["conditioning", "general", "knee-oa", "knee-pain"],
+  dose: { sets: 1, timeSec: 1200 },
+  howTo: [
+    "Set the saddle so your knee has a slight bend at the bottom of the pedal stroke.",
+    "Pedal at a smooth, steady rhythm, around 80 to 100 rpm.",
+    "Adjust resistance so your legs feel worked but not burning.",
+    "Stay tall through your spine rather than slumping over the bars."
+  ],
+  tips: ["The bike is the most knee-friendly cardio there is, and physical therapists prescribe it for knee arthritis on purpose.", "Zero impact makes it the perfect leg-day cool-down."],
+  caution: "Saddle too low is the number one cause of bike knee pain. When in doubt, raise it.",
+  variations: [
+    { name: "Recumbent Bike", note: "The chair-style bike. Easier on the back and hips." },
+    { name: "Spin Intervals", note: "30 seconds hard, 90 seconds easy, repeated." }
+  ]
+},
+{
+  id: "rowing-machine", name: "Rowing Machine", region: "balance", type: "cardio",
+  equipment: ["cardio-machine"], position: "Seated on the rower", level: 2,
+  muscles: "Heart and lungs, legs, back, arms. About 85 percent of your muscle in one machine",
+  helps: ["conditioning", "general", "strength-training"],
+  dose: { sets: 1, timeSec: 600 },
+  howTo: [
+    "Strap in and grab the handle with straight arms, shins vertical.",
+    "Drive with your legs first, then lean back slightly, then pull the handle to your ribs.",
+    "Reverse it: arms away, lean forward, then bend the knees.",
+    "Aim for a steady 20 to 26 strokes per minute."
+  ],
+  tips: ["The order is legs, body, arms on the way back, and arms, body, legs on the return.", "Rowing trains the upper back while doing cardio, a rare two-for-one."],
+  caution: "Keep your back tall through the drive. Rounding under fatigue is the main rowing mistake.",
+  variations: [
+    { name: "500m Repeats", note: "Row 500 meters at effort, rest 90 seconds, repeat 4 to 6 times." }
+  ]
+},
+{
+  id: "elliptical", name: "Elliptical", region: "balance", type: "cardio",
+  equipment: ["cardio-machine"], position: "Standing on the pedals", level: 1,
+  muscles: "Heart and lungs, whole body, zero impact",
+  helps: ["conditioning", "general", "post-surgery"],
+  dose: { sets: 1, timeSec: 1200 },
+  howTo: [
+    "Step on and start pedaling in a smooth forward motion.",
+    "Use the moving handles to involve your upper body.",
+    "Set resistance so the effort feels steady, about a 5 to 7 out of 10.",
+    "Stand tall. Avoid leaning your weight on the handles."
+  ],
+  tips: ["Great choice on days your joints want a break but your heart still needs work.", "Pedaling backward for a few minutes shifts the work toward the hamstrings and glutes."],
+  caution: "If your toes go numb, wiggle them and shift your feet occasionally. It is a common quirk of the machine.",
+  variations: [
+    { name: "No-Hands Version", note: "Let go of the handles to challenge balance and posture." }
+  ]
+},
+{
+  id: "stair-climber", name: "Stair Climber", region: "balance", type: "cardio",
+  equipment: ["cardio-machine"], position: "Standing on the rotating stairs", level: 2,
+  muscles: "Heart and lungs, glutes, quads, calves",
+  helps: ["conditioning", "general", "strength-training"],
+  dose: { sets: 1, timeSec: 600 },
+  howTo: [
+    "Start at a slow step rate and find your rhythm.",
+    "Place your whole foot on each step and push through the heel.",
+    "Rest your fingertips on the rails for balance only.",
+    "Increase speed gradually as you warm up."
+  ],
+  tips: ["Minute for minute, one of the hardest-working cardio machines in the gym, and it doubles as glute training.", "Skipping a step (every other stair) turns it into a serious glute session."],
+  caution: "Death-gripping the rails and hunching over cuts the work in half. Slow down and stand tall instead.",
+  variations: [
+    { name: "Sideways Steps", note: "A minute facing each side works the outer hips." }
+  ]
+},
+{
+  id: "jump-rope-cardio", name: "Jump Rope", region: "balance", type: "cardio",
+  equipment: ["jump-rope"], position: "Standing, rope in both hands", level: 2,
+  muscles: "Heart and lungs, calves, coordination",
+  helps: ["conditioning", "general"],
+  dose: { sets: 3, timeSec: 60 },
+  howTo: [
+    "Size the rope: standing on its middle, the handles should reach your armpits.",
+    "Jump just an inch or two off the ground, landing softly on the balls of your feet.",
+    "Spin the rope from your wrists, not your shoulders.",
+    "Work in short rounds with rest between."
+  ],
+  tips: ["Ten minutes of rope work is a serious conditioning session, and it builds bouncy, resilient calves and ankles.", "Trip on the rope? That is normal. Reset and keep the rounds short."],
+  caution: "High impact. Skip it if you have active foot, achilles, or shin pain, and jump on forgiving floors, not concrete.",
+  variations: [
+    { name: "Boxer Skip", note: "Shift weight foot to foot instead of jumping with both. Easier to sustain." },
+    { name: "Double Unders", note: "Two rope spins per jump. An advanced conditioning skill." }
+  ]
+},
+{
+  id: "sprint-intervals", name: "Sprint Intervals (HIIT)", region: "balance", type: "cardio",
+  equipment: ["cardio-machine"], position: "Bike, rower, treadmill, or hill", level: 3,
+  muscles: "Heart and lungs, maximal effort systems",
+  helps: ["conditioning", "strength-training"],
+  dose: { sets: 6, timeSec: 30 },
+  howTo: [
+    "Warm up thoroughly for at least 5 minutes first.",
+    "Go hard for 30 seconds, around an 8 or 9 out of 10 effort.",
+    "Recover easy for 90 seconds or more.",
+    "Repeat 4 to 8 rounds, then cool down."
+  ],
+  tips: ["Interval training improves cardio fitness in roughly half the session time of steady work, which is why it is so well studied.", "The bike and rower are the safest places to sprint. Treadmill sprints demand caution."],
+  caution: "This is the spiciest cardio there is. Build a base of easy cardio for a few weeks before adding sprints, and skip it if you have heart or blood pressure concerns without clearance.",
+  variations: [
+    { name: "Beginner Intervals", note: "20 seconds brisk, 100 seconds easy. Same idea, gentler dose." },
+    { name: "Norwegian 4x4", note: "4 minutes hard, 3 minutes easy, 4 rounds. A research favorite for building VO2 max." }
+  ]
 }
 );

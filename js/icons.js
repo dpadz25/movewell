@@ -85,5 +85,8 @@ window.ICONS = {
   ball: '<circle cx="12" cy="12" r="8.3"/><path d="M4.5 8.8c5-2 10-2 15 0M4.5 15.2c5 2 10 2 15 0"/>',
   stick: '<path d="M4.5 19.5 19.5 4.5"/><path d="m3.5 16.5 4 4M16.5 3.5l4 4"/>',
   bench: '<path d="M3 11h18v3.5H3z"/><path d="M6 14.5V19M18 14.5V19M12 11V7.5h6"/>',
+  "smith-machine": '<path d="M5 3v18M19 3v18M3 21h18M3 3h18"/><path d="M5 9.5h14"/><path d="M7 7.5v4M17 7.5v4"/>',
+  run: '<circle cx="14.5" cy="4.5" r="2"/><path d="M13.5 8 9.5 11l1.5 3.5L8 19.5"/><path d="M13.5 8l1 4 3.5 2"/><path d="M9.5 11 6 10.5M11 14.5l3.5 1.5 1 4.5"/>',
+  "jump-rope": '<path d="M5 8.5C5 5.5 8 3.5 12 3.5s7 2 7 5"/><path d="M4 8.5h2v6H4zM18 8.5h2v6h-2z"/><path d="M5 14.5v2M19 14.5v2"/>',
   "pullup-bar": '<path d="M3 4.5h18M6.5 4.5v5M17.5 4.5v5"/><circle cx="12" cy="9.5" r="1.9"/><path d="M12 11.4v3.6M12 12.5l-3 2M12 12.5l3 2"/>'
 };

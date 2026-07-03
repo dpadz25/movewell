@@ -16,6 +16,7 @@
       if (q) {
         const hay = (ex.name + " " + ex.muscles + " " + this.region(ex.region).name + " " +
           ex.helps.map(h => this.condition(h).name).join(" ") + " " +
+          ex.equipment.map(q => this.equip(q).name).join(" ") + " " +
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase();
         if (!hay.includes(q)) return false;
       }

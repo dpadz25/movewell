@@ -59,9 +59,11 @@ window.EXERCISES.push(
     "Place your left hand gently on the back of your head and let its weight guide the stretch.",
     "Hold and breathe, then switch sides."
   ],
-  tips: ["Reaching your other hand toward the floor deepens the stretch.", "Move slowly in and out of the stretch."],
+  tips: ["Reaching your other hand toward the floor deepens the stretch.", "Move slowly in and out of the stretch.", "PTs nickname this one the 'armpit sniffer': nose toward armpit is the whole cue."],
   caution: "Keep it gentle. Do not force the head down.",
-  variations: []
+  variations: [
+    { name: "Armpit Sniffer", note: "The classic clinic cue. Turn your nose directly toward your armpit and nod down, letting your hand add gentle weight." }
+  ]
 },
 {
   id: "scalene-stretch", name: "Scalene Stretch", region: "neck", type: "stretch",
@@ -271,6 +273,7 @@ window.EXERCISES.push(
   caution: "Keep your neck relaxed. If your arms tingle in the Y, skip that letter for now.",
   variations: [
     { name: "Wall Y-T-W", note: "Standing against a wall version. Easier and great for beginners or anyone who cannot lie down." },
+    { name: "Y-T-A", note: "Swap the W for an 'A': arms down along your sides, thumbs out, lifting toward the ceiling. Targets the lower traps hard." },
     { name: "Y-T-W-L", note: "Add an 'L': elbows bent 90 degrees, rotate forearms up while keeping elbows still." },
     { name: "With Light Dumbbells", note: "Add one-pound weights once bodyweight feels easy." }
   ]
@@ -345,6 +348,7 @@ window.EXERCISES.push(
   tips: ["Keep ribs down, do not arch the lower back as arms rise."],
   caution: "Stay below any painful pinch. Range improves with weeks of practice.",
   variations: [
+    { name: "Unilateral Wall Slide", note: "One arm at a time. Perfect when one shoulder is further along than the other, and it lets you focus on clean shoulder-blade motion." },
     { name: "Wall Angels", note: "Back against the wall instead, sliding arms like a snow angel. Harder than it looks." },
     { name: "With Band Around Wrists", note: "Push gently outward into a mini-band while sliding to wake up the cuff." }
   ]
@@ -510,19 +514,22 @@ window.EXERCISES.push(
   variations: []
 },
 {
-  id: "forearm-rotation", name: "Hammer Rotations", region: "elbow", type: "strengthen",
+  id: "forearm-rotation", name: "Forearm Pronation & Supination", region: "elbow", type: "strengthen",
   equipment: ["dumbbell", "stick"], position: "Sitting, elbow at side", level: 1,
   muscles: "Forearm rotators (pronators and supinators)",
   helps: ["tennis-elbow", "golfers-elbow", "wrist-pain"],
   dose: { sets: 2, reps: 10, perSide: true },
   howTo: [
     "Hold a hammer or a dumbbell by one end, elbow bent 90 degrees at your side.",
-    "Slowly rotate your palm up, then slowly palm down.",
+    "Slowly rotate your palm up (supination), then slowly palm down (pronation).",
     "Control the speed the whole way."
   ],
   tips: ["Holding the far end of the hammer makes it harder, choking up makes it easier."],
   caution: "Keep the elbow tucked so the rotation comes from the forearm.",
-  variations: []
+  variations: [
+    { name: "No-Weight Version", note: "Just the rotation, palm up to palm down, when a hammer is still too much." },
+    { name: "Isometric Holds", note: "Hold the hammer halfway rotated for 10 seconds each direction." }
+  ]
 },
 {
   id: "elbow-flexion-extension", name: "Elbow Bend & Straighten", region: "elbow", type: "mobility",
@@ -756,6 +763,7 @@ window.EXERCISES.push(
   tips: ["A stiff upper back forces the neck and lower back to overwork. This frees the middle.", "Exhale as you extend."],
   caution: "Keep the arch in the upper back, not the lower back. Skip if you have osteoporosis unless cleared by your clinician.",
   variations: [
+    { name: "Segmental Thoracic Mobility", note: "Work one level at a time: extend over the roller, come back up, move the roller one inch, repeat from the bottom of the ribcage to the base of the neck." },
     { name: "Chair Thoracic Extension", note: "Sit in a chair, hands behind head, arch your upper back over the chair's backrest. No floor needed." },
     { name: "Towel Roll Version", note: "Use a firmly rolled towel instead of a roller for a gentler arch." }
   ]
@@ -911,6 +919,65 @@ window.EXERCISES.push(
   caution: "If you feel lightheaded, breathe normally for a bit.",
   variations: [
     { name: "Crocodile Breathing", note: "Face down, forehead on hands, breathe into the floor. Strong belly feedback." }
+  ]
+},
+{
+  id: "push-up-plus", name: "Push-Up Plus (Scapular Push-Up)", region: "shoulder", type: "strengthen",
+  equipment: ["none", "wall"], position: "Plank or hands on wall", level: 2,
+  muscles: "Serratus anterior",
+  helps: ["shoulder-pain", "rotator-cuff", "upper-cross", "tos", "posture", "strength-training"],
+  dose: { sets: 3, reps: 10 },
+  howTo: [
+    "Set up in a push-up position with arms straight.",
+    "Without bending your elbows, let your chest sink as the shoulder blades pinch together.",
+    "Then push the floor away hard, spreading the blades and rounding the upper back slightly. That extra push is the 'plus'.",
+    "Move slowly between the two positions."
+  ],
+  tips: ["EMG research consistently ranks the push-up plus among the very best serratus anterior exercises, and a strong serratus keeps the shoulder blade gliding smoothly.", "All the magic is in the 'plus' at the top. Do not rush it."],
+  caution: "Keep your hips in line with your shoulders. If your wrists complain, do it on fists or against a wall.",
+  variations: [
+    { name: "Wall Push-Up Plus", note: "Hands on a wall. The gentlest entry point, great early in rehab." },
+    { name: "Knee Push-Up Plus", note: "From the knees, halfway between wall and floor." },
+    { name: "Beast Push-Up Plus", note: "From the beast position (hands and toes, knees hovering an inch up). The hover adds a huge core and serratus demand." },
+    { name: "Full Push-Up Plus", note: "Add the plus to the top of every regular push-up." }
+  ]
+},
+{
+  id: "prone-swimmers", name: "Prone Swimmers", region: "shoulder", type: "strengthen",
+  equipment: ["none"], position: "Lying face down", level: 2,
+  muscles: "Lower traps, mid traps, rotator cuff, shoulder mobility",
+  helps: ["shoulder-pain", "rotator-cuff", "upper-cross", "posture", "frozen-shoulder"],
+  dose: { sets: 2, reps: 6 },
+  howTo: [
+    "Lie face down, forehead on a towel, arms overhead in a 'Y', thumbs up.",
+    "Lift both arms an inch off the floor.",
+    "Keeping them hovering, sweep the arms in a wide arc down toward your hips, rotating palms toward the ceiling.",
+    "Sweep back overhead without letting anything touch down. That is one rep."
+  ],
+  tips: ["It is a full lap of shoulder-blade control: every muscle that positions the blade takes a turn.", "Fewer clean reps beat many sloppy ones. Six is plenty at first."],
+  caution: "Keep your neck long and relaxed. Shrink the arc if anything pinches.",
+  variations: [
+    { name: "Bent-Elbow Swimmers", note: "Sweep with elbows bent to shorten the lever and make it easier." },
+    { name: "Swimmer Hovers", note: "Just hold the arms hovering in each position for 5 seconds instead of sweeping." }
+  ]
+},
+{
+  id: "shoulder-extension-scap-tilt", name: "Shoulder Extension (Anterior Scapular Tilt)", region: "shoulder", type: "mobility",
+  equipment: ["none", "stick"], position: "Standing, arms behind you", level: 1,
+  muscles: "Pec minor, front of shoulder, scapular tilt control",
+  helps: ["upper-cross", "tos", "posture", "shoulder-pain"],
+  dose: { sets: 2, reps: 8, hold: 5 },
+  howTo: [
+    "Stand tall with your arms at your sides, palms facing back.",
+    "Reach both arms straight behind you as far as comfortable.",
+    "As you reach, let the shoulder blades tip and squeeze together without slumping forward.",
+    "Hold, feeling a stretch across the front of the shoulders and chest, then return."
+  ],
+  tips: ["A tight pec minor tips the shoulder blade forward all day. This drill moves the blade the opposite way and stretches the culprit.", "Holding a stick or towel between your hands behind you deepens the reach."],
+  caution: "Keep standing tall. If your hands tingle, shrink the range, especially with thoracic outlet syndrome.",
+  variations: [
+    { name: "With Stick or Towel", note: "Hold a stick behind you with both hands and lift it gently away from your body." },
+    { name: "Chest Opener Hold", note: "Interlace your fingers behind your back and hold the open position for 20 to 30 seconds as a stretch." }
   ]
 }
 );

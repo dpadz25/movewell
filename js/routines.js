@@ -13,7 +13,7 @@
         <div class="routine-card">
           <div class="routine-card-info" onclick="App.openRoutineEditor('${r.id}')">
             <div class="routine-card-name">${this.esc(r.name)}</div>
-            <div class="routine-card-meta">${r.items.length} exercises · tap to view or edit</div>
+            <div class="routine-card-meta">${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min · tap to edit</div>
           </div>
           <button class="routine-start-btn" onclick="App.startSession('${r.id}')">${this.icon("play")} Start</button>
         </div>`).join("")
@@ -83,6 +83,7 @@
       <label class="field-label">Routine name</label>
       <input type="text" id="re-name" value="${this.esc(r.name)}">
       ${r.desc ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem">${this.esc(r.desc)}</p>` : ""}
+      <p style="font-size:0.85rem;color:var(--muted2);margin-top:0.4rem">Estimated session: ~${this.estimateRoutineMin(r)} min including rest</p>
       <div class="section-label">Exercises (${r.items.length})</div>
       <div id="re-items">${r.items.map((it, i) => this.routineItemHtml(r, it, i)).join("") || `<p style="color:var(--muted);font-size:0.9rem">No exercises yet. Add some below.</p>`}</div>
       <button class="btn big" id="re-add" style="margin-top:0.6rem">${this.icon("plus")} Add Exercises</button>
@@ -111,8 +112,8 @@
     return `
       <div class="routine-item" data-i="${i}">
         <div class="routine-item-info" data-act="dose">
-          <div class="routine-item-name">${i + 1}. ${this.esc(ex.name)}</div>
-          <div class="routine-item-dose">${this.doseText(it)} · tap to adjust</div>
+          <div class="routine-item-name">${i + 1}. ${this.esc(it.variant || ex.name)}</div>
+          <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)} · tap to adjust</div>
         </div>
         <button class="mini-btn" data-act="up" title="Move up" ${i === 0 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowUp")}</button>
         <button class="mini-btn" data-act="down" title="Move down" ${i === r.items.length - 1 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowDown")}</button>
@@ -141,16 +142,24 @@
     const it = r.items[i];
     const ex = this.ex(it.exId);
     const timed = it.timeSec > 0;
+    const hasVariations = ex.variations && ex.variations.length > 0;
     this.openModal(ex.name, `
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Adjust the amounts to match your plan.</p>
+      ${hasVariations ? `
+      <div class="section-label" style="margin-top:0">Which version are you doing?</div>
+      <p style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.5rem">Pick the variation you actually use and it will show by that name in this routine and during sessions.</p>
+      <div class="chip-row" id="dv-variant" style="margin-bottom:1rem">
+        <button class="chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
+        ${ex.variations.map(v => `<button class="chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
+      </div>` : ""}
       <div class="stepper-row">
         <div class="stepper-label">Sets</div>
         <div class="stepper"><button data-k="sets" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="dv-sets">${it.sets}</span><button data-k="sets" data-d="1">${this.icon("plus")}</button></div>
       </div>
       ${timed ? `
       <div class="stepper-row">
-        <div class="stepper-label">Time (seconds)</div>
-        <div class="stepper"><button data-k="timeSec" data-d="-15">${this.icon("minus")}</button><span class="stepper-val" id="dv-timeSec">${it.timeSec}</span><button data-k="timeSec" data-d="15">${this.icon("plus")}</button></div>
+        <div class="stepper-label">Time</div>
+        <div class="stepper"><button data-k="timeSec" data-d="-15">${this.icon("minus")}</button><span class="stepper-val" id="dv-timeSec" style="min-width:4.4rem">${this.fmtDur(it.timeSec)}</span><button data-k="timeSec" data-d="15">${this.icon("plus")}</button></div>
       </div>` : `
       <div class="stepper-row">
         <div class="stepper-label">Reps</div>
@@ -169,10 +178,20 @@
     `);
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".stepper button").forEach(b => b.onclick = () => {
-      const k = b.dataset.k, d = Number(b.dataset.d);
+      const k = b.dataset.k;
+      let d = Number(b.dataset.d);
+      // long cardio blocks step by a full minute instead of 15 seconds
+      if (k === "timeSec" && (it.timeSec || 0) >= 300) d = d > 0 ? 60 : -60;
       const mins = { sets: 1, reps: 0, hold: 0, timeSec: 15 };
       it[k] = Math.max(mins[k], (it[k] || 0) + d);
-      body.querySelector("#dv-" + k).textContent = it[k];
+      body.querySelector("#dv-" + k).textContent = k === "timeSec" ? this.fmtDur(it[k]) : it[k];
+      this.save();
+    });
+    body.querySelectorAll("#dv-variant .chip").forEach(ch => ch.onclick = () => {
+      body.querySelectorAll("#dv-variant .chip").forEach(x => x.classList.remove("on"));
+      ch.classList.add("on");
+      it.variant = ch.dataset.v || "";
+      if (!it.variant) delete it.variant;
       this.save();
     });
     body.querySelector("#dv-perside").onchange = (e) => { it.perSide = e.target.checked; this.save(); };
@@ -188,7 +207,8 @@
       const q = this._pick.q.toLowerCase();
       const list = window.EXERCISES.filter(ex => {
         if (this._pick.region && ex.region !== this._pick.region) return false;
-        if (q && !(ex.name + " " + ex.muscles).toLowerCase().includes(q)) return false;
+        if (q && !(ex.name + " " + ex.muscles + " " + ex.equipment.map(x => this.equip(x).name).join(" ") + " " +
+          (ex.variations || []).map(v => v.name).join(" ")).toLowerCase().includes(q)) return false;
         return true;
       });
       const inR = new Set(r.items.map(i => i.exId));
