@@ -59,13 +59,21 @@
 
     const scroll = document.getElementById("library-scroll");
     this.bindFilterFades(scroll);
+    // if a selected chip sits off-screen, bring it into view
+    scroll.querySelectorAll(".filter-bar").forEach(bar => {
+      const on = bar.querySelector(".chip.on");
+      if (on && on.offsetLeft + on.offsetWidth > bar.clientWidth) bar.scrollLeft = on.offsetLeft - 16;
+    });
     scroll.querySelector("#lib-create").onclick = () => this.openExerciseBuilder();
     const search = scroll.querySelector("#lib-search");
     search.oninput = () => { f.q = search.value; this.renderLibraryListOnly(); };
+    // update chips in place and re-render only the list, so the filter bar
+    // never snaps back to the start when a chip is tapped
     const bindChips = (id, key, isNum) => {
       scroll.querySelectorAll("#" + id + " .chip").forEach(ch => ch.onclick = () => {
         f[key] = isNum ? Number(ch.dataset.v) : ch.dataset.v;
-        this.renderLibrary();
+        scroll.querySelectorAll("#" + id + " .chip").forEach(x => x.classList.toggle("on", x === ch));
+        this.renderLibraryListOnly();
       });
     };
     bindChips("lib-regions", "region");
@@ -76,12 +84,18 @@
     if (clear) clear.onclick = (e) => { e.preventDefault(); App._lib = { q: "", region: "", type: "", equip: "", level: 0 }; this.renderLibrary(); };
   };
 
-  // re-render just count + list while typing (keeps keyboard focus)
+  // re-render just count + list (keeps keyboard focus and filter bar scroll)
   App.renderLibraryListOnly = function () {
     const scroll = document.getElementById("library-scroll");
+    const f = this._lib;
     const list = this.filteredExercises();
     const count = scroll.querySelector(".filter-count");
-    if (count) count.innerHTML = `${list.length} exercise${list.length === 1 ? "" : "s"} found`;
+    if (count) {
+      count.innerHTML = `${list.length} exercise${list.length === 1 ? "" : "s"} found` +
+        ((f.q || f.region || f.type || f.equip || f.level) ? ` · <a href="#" id="lib-clear" style="color:var(--accent-strong)">clear filters</a>` : "");
+      const clear = count.querySelector("#lib-clear");
+      if (clear) clear.onclick = (e) => { e.preventDefault(); App._lib = { q: "", region: "", type: "", equip: "", level: 0 }; this.renderLibrary(); };
+    }
     scroll.querySelectorAll(".ex-item, .empty-state").forEach(n => n.remove());
     scroll.insertAdjacentHTML("beforeend",
       list.map(ex => this.exItemHtml(ex)).join("") ||
@@ -110,10 +124,20 @@
       </div>`;
   };
 
+  // annotate everyday muscle names with their anatomical names
+  App.muscleDetail = function (str) {
+    return String(str || "").split(/,\s*/).map(part => {
+      if (part.includes("(")) return this.esc(part);
+      const anat = window.MUSCLE_MAP[part.toLowerCase().trim()];
+      return anat ? `${this.esc(part)} <span class="anat">(${this.esc(anat)})</span>` : this.esc(part);
+    }).join(", ");
+  };
+
   App.openExerciseDetail = function (id, opts) {
     const ex = this.ex(id);
     if (!ex) return;
     opts = opts || {};
+    this.pushView("exd:" + id + (opts.hideAdd ? ":h" : ""), () => this.openExerciseDetail(id, opts));
     const t = this.typeMeta(ex.type);
     const r = this.region(ex.region);
     const levelNames = { 1: "Gentle", 2: "Moderate", 3: "Advanced" };
@@ -128,8 +152,8 @@
         ${ex.equipment.map(q => `<span class="tag">${this.icon(this.equip(q).icon)} ${this.equip(q).name}</span>`).join("")}
       </div>
       <div class="exd-block">
-        <h3>Works On</h3>
-        <div style="font-size:0.95rem">${this.esc(ex.muscles)}${ex.position ? ` · <span style="color:var(--muted)">${this.esc(ex.position)}</span>` : ""}</div>
+        <h3>Muscles Targeted</h3>
+        <div style="font-size:0.95rem">${this.muscleDetail(ex.muscles)}${ex.position ? ` · <span style="color:var(--muted)">${this.esc(ex.position)}</span>` : ""}</div>
       </div>
       <div class="exd-block">
         <h3>Suggested Amount</h3>
@@ -179,6 +203,7 @@
   // ---------- CUSTOM EXERCISE BUILDER ----------
   // Build or edit a user-created exercise with every field the built-in ones have.
   App.openExerciseBuilder = function (editId) {
+    this.pushView("builder:" + (editId || "new"), () => this.openExerciseBuilder(editId));
     const editing = editId ? this.ex(editId) : null;
     const d = editing ? JSON.parse(JSON.stringify(editing)) : {
       name: "", region: "", type: "strengthen", equipment: [], position: "", level: 2,
@@ -336,6 +361,8 @@
       this.save();
       this.toast(editing ? "Exercise updated" : "Added to your library");
       this.refresh();
+      // the builder step is done; back from the detail view should skip past it
+      this._modalStack.pop();
       this.openExerciseDetail(d.id);
     };
   };
@@ -343,6 +370,7 @@
   // choose which routine to add an exercise to
   App.pickRoutineFor = function (exId) {
     const ex = this.ex(exId);
+    this.pushView("pickfor:" + exId, () => this.pickRoutineFor(exId));
     const routines = this.state.routines;
     this.openModal("Add “" + ex.name + "” to…", `
       ${routines.length ? routines.map(r => `
@@ -366,9 +394,6 @@
       this.toast("Added to " + r.name);
       this.refresh();
     });
-    body.querySelector("#pick-new-routine").onclick = () => {
-      this.closeModal();
-      this.createBlankRoutine(exId);
-    };
+    body.querySelector("#pick-new-routine").onclick = () => this.createBlankRoutine(exId);
   };
 })();

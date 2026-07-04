@@ -147,10 +147,45 @@
       document.getElementById("modal-title").textContent = title;
       document.getElementById("modal-body").innerHTML = bodyHtml;
       document.getElementById("modal").classList.add("open");
-      document.getElementById("modal-body").scrollTop = 0;
+      document.getElementById("modal-body").scrollTop = this._keepScroll || 0;
+      this._keepScroll = 0;
+      const back = document.getElementById("modal-back");
+      if (back) back.style.display = this._modalStack.length > 1 ? "inline-flex" : "none";
       this.bindFilterFades(document.getElementById("modal-body"));
     },
-    closeModal() { document.getElementById("modal").classList.remove("open"); },
+    closeModal() {
+      this._modalStack = [];
+      document.getElementById("modal").classList.remove("open");
+    },
+
+    // ---------- modal navigation stack ----------
+    // Every modal screen registers itself with pushView(key, renderFn) so the
+    // back arrow can return to the previous screen at its old scroll position.
+    _modalStack: [],
+    pushView(key, fn) {
+      if (this._viewRestoring) return;
+      const isOpen = document.getElementById("modal").classList.contains("open");
+      if (!isOpen) this._modalStack = [];
+      const top = this._modalStack[this._modalStack.length - 1];
+      if (top && top.key === key) {
+        // same screen re-rendering (e.g. reorder, stepper): keep place, keep scroll
+        top.fn = fn;
+        this._keepScroll = document.getElementById("modal-body").scrollTop;
+        return;
+      }
+      if (top && isOpen) top.scroll = document.getElementById("modal-body").scrollTop;
+      this._modalStack.push({ key, fn, scroll: 0 });
+    },
+    modalBack() {
+      if (this._modalStack.length < 2) { this.closeModal(); return; }
+      this._modalStack.pop();
+      const v = this._modalStack[this._modalStack.length - 1];
+      this._viewRestoring = true;
+      try { v.fn(); } finally { this._viewRestoring = false; }
+      document.getElementById("modal-body").scrollTop = v.scroll || 0;
+      const back = document.getElementById("modal-back");
+      if (back) back.style.display = this._modalStack.length > 1 ? "inline-flex" : "none";
+    },
 
     // fade hints on horizontally scrolling filter bars
     bindFilterFades(root) {
@@ -182,7 +217,15 @@
       if (name === "bodymap") this.renderBodymap();
       if (name === "progress") this.renderProgress();
     },
-    refresh() { this.renderPage(this.currentPage || "home"); },
+    refresh() {
+      // re-render the current page without losing the user's scroll position
+      const name = this.currentPage || "home";
+      const el = document.querySelector("#page-" + name + " .scroll");
+      const st = el ? el.scrollTop : 0;
+      this.renderPage(name);
+      const el2 = document.querySelector("#page-" + name + " .scroll");
+      if (el2) el2.scrollTop = st;
+    },
 
     applyAppearance() {
       const p = this.state.profile;
@@ -394,6 +437,7 @@
 
     // ---------- SETTINGS ----------
     openSettings() {
+      this.pushView("settings", () => this.openSettings());
       const p = this.state.profile;
       const themes = [["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"]];
       this.openModal("Settings", `
@@ -435,6 +479,7 @@
           <button class="btn secondary" id="set-import">${this.icon("upload")} Import Backup</button>
         </div>
         <input type="file" id="set-import-file" accept=".json" style="display:none">
+        <button class="btn secondary big" id="set-tour" style="margin-top:0.6rem">${this.icon("sparkle")} Replay the App Tour</button>
         <button class="btn danger big" id="set-reset" style="margin-top:1.4rem">Erase Everything & Start Over</button>
         <p style="font-size:0.75rem;color:var(--muted2);text-align:center;margin-top:1rem">
           MoveWell keeps all data on this device only.<br>This app supports your training and therapy plan. It is not medical advice.<br>Always follow your physical therapist's or doctor's guidance.
@@ -498,6 +543,11 @@
           } catch (err) { this.toast("That file doesn't look like a MoveWell backup."); }
         };
         reader.readAsText(f);
+      };
+      body.querySelector("#set-tour").onclick = () => {
+        this.closeModal();
+        this.showPage("home");
+        this.startTour();
       };
       body.querySelector("#set-reset").onclick = () => {
         this.confirm("Erase everything?", "This deletes your profile, routines, custom exercises, and all history from this device. This cannot be undone.", () => {
@@ -569,23 +619,57 @@
         inner.querySelector("#ob-skip2").onclick = () => this.onboardStep(3);
       }
       if (n === 3) {
-        inner.innerHTML = `
-          <div class="onboard-logo">${this.icon("medical")}</div>
-          ${this.obDots(3)}
-          <h1>What brings you here?</h1>
-          <p>Tap everything that applies, from recovery goals to gym training. We'll suggest ready-made routines for each one.</p>
-          <div class="chip-row" id="ob-conds">
-            ${window.CONDITIONS.map(c => `<button class="chip ${this._obData.conditions.includes(c.id) ? "on" : ""}" data-c="${c.id}">${this.esc(c.name)}</button>`).join("")}
-          </div>
-          <button class="btn big grad" id="ob-next3">Continue ${this.icon("arrowRight")}</button>
-          <button class="btn secondary big" id="ob-skip3" style="margin-top:0.6rem">Skip for now</button>
-        `;
-        inner.querySelectorAll("#ob-conds .chip").forEach(ch => ch.onclick = () => {
-          ch.classList.toggle("on");
-          this._obData.conditions = [...inner.querySelectorAll("#ob-conds .chip.on")].map(x => x.dataset.c);
-        });
-        inner.querySelector("#ob-next3").onclick = () => this.onboardStep(4);
-        inner.querySelector("#ob-skip3").onclick = () => { this._obData.conditions = []; this.onboardStep(4); };
+        // one simple list of body areas; tap an area to reveal its specifics
+        const d = this._obData;
+        d._openGroup = d._openGroup || "";
+        const renderStep3 = () => {
+          inner.innerHTML = `
+            <div class="onboard-logo">${this.icon("medical")}</div>
+            ${this.obDots(3)}
+            <h1>What brings you here?</h1>
+            <p>Tap an area of the body to see the specifics. Choose everything that applies, or skip for now.</p>
+            <div class="ob-groups">
+              ${window.CONDITION_GROUPS.map(g => {
+                const selCount = g.conditions.filter(c => d.conditions.includes(c)).length;
+                const open = d._openGroup === g.id;
+                return `
+                  <div class="ob-group ${open ? "open" : ""}">
+                    <button class="ob-group-head" data-g="${g.id}">
+                      <span class="ex-item-icon tile ${g.color}">${this.icon(g.icon)}</span>
+                      <span class="ob-group-info">
+                        <span class="ob-group-name">${this.esc(g.name)}</span>
+                        <span class="ob-group-blurb ${selCount ? "picked" : ""}">${selCount ? selCount + " selected" : this.esc(g.blurb)}</span>
+                      </span>
+                      <span class="ex-item-chev">${this.icon(open ? "chevU" : "chevD")}</span>
+                    </button>
+                    ${open ? `<div class="chip-row ob-group-chips">
+                      ${g.conditions.map(cid => `<button class="chip ${d.conditions.includes(cid) ? "on" : ""}" data-c="${cid}">${this.esc(this.condition(cid).name)}</button>`).join("")}
+                    </div>` : ""}
+                  </div>`;
+              }).join("")}
+            </div>
+            <button class="btn big grad" id="ob-next3">Continue ${this.icon("arrowRight")}</button>
+            <button class="btn secondary big" id="ob-skip3" style="margin-top:0.6rem">Skip for now</button>
+          `;
+          inner.querySelectorAll(".ob-group-head").forEach(h => h.onclick = () => {
+            d._openGroup = d._openGroup === h.dataset.g ? "" : h.dataset.g;
+            renderStep3();
+          });
+          inner.querySelectorAll(".ob-group-chips .chip").forEach(ch => ch.onclick = () => {
+            ch.classList.toggle("on");
+            const cid = ch.dataset.c;
+            if (ch.classList.contains("on")) { if (!d.conditions.includes(cid)) d.conditions.push(cid); }
+            else d.conditions = d.conditions.filter(x => x !== cid);
+            const g = window.CONDITION_GROUPS.find(x => x.id === d._openGroup);
+            const blurb = ch.closest(".ob-group").querySelector(".ob-group-blurb");
+            const selCount = g.conditions.filter(c => d.conditions.includes(c)).length;
+            blurb.textContent = selCount ? selCount + " selected" : g.blurb;
+            blurb.classList.toggle("picked", selCount > 0);
+          });
+          inner.querySelector("#ob-next3").onclick = () => this.onboardStep(4);
+          inner.querySelector("#ob-skip3").onclick = () => { d.conditions = []; this.onboardStep(4); };
+        };
+        renderStep3();
       }
       if (n === 4) {
         const d = this._obData;
@@ -649,6 +733,7 @@
       document.getElementById("onboard").classList.remove("open");
       this.showPage("home");
       if (added.size > 0) this.toast(added.size + " routine" + (added.size === 1 ? "" : "s") + " ready for you");
+      setTimeout(() => this.startTour(), 700);
     },
     routineFromTemplate(t) {
       return {
@@ -680,6 +765,7 @@
     document.querySelectorAll(".nav-btn").forEach(b => b.onclick = () => App.showPage(b.dataset.page));
     document.getElementById("btn-settings").onclick = () => App.openSettings();
     document.getElementById("modal-close").onclick = () => App.closeModal();
+    document.getElementById("modal-back").onclick = () => App.modalBack();
     document.getElementById("modal-backdrop").onclick = () => App.closeModal();
     if (!App.state.onboarded) App.startOnboarding();
     else App.showPage("home");

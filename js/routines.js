@@ -46,36 +46,59 @@
   };
 
   // ----- create flow -----
+  // Two levels: pick a simple body area first, then the specific plan.
   App.openNewRoutineChooser = function () {
+    this.pushView("chooser", () => this.openNewRoutineChooser());
     this.openModal("New Routine", `
-      <p style="color:var(--muted);font-size:0.92rem;margin-bottom:1rem">Start from a ready-made plan, from recovery programs to push / pull / legs, or build your own from scratch.</p>
-      <div class="section-label" style="margin-top:0">Ready-Made Plans</div>
-      ${window.TEMPLATES.map(t => `
+      <button class="btn big grad" id="new-blank">${this.icon("pencil")} Build My Own From Scratch</button>
+      <div class="section-label">Or start from a ready-made plan</div>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.7rem">Pick the part of the body you want to work on and we'll show you the plans for it.</p>
+      ${window.TEMPLATE_GROUPS.map(g => `
+        <div class="cat-card" data-g="${g.id}">
+          <div class="ex-item-icon tile ${g.color}">${this.icon(g.icon)}</div>
+          <div class="ex-item-info">
+            <div class="ex-item-name">${this.esc(g.name)}</div>
+            <div class="cat-card-blurb">${this.esc(g.blurb)} · ${g.templates.length} plan${g.templates.length === 1 ? "" : "s"}</div>
+          </div>
+          <div class="ex-item-chev">${this.icon("chevR")}</div>
+        </div>`).join("")}
+    `);
+    const body = document.getElementById("modal-body");
+    body.querySelector("#new-blank").onclick = () => this.createBlankRoutine();
+    body.querySelectorAll(".cat-card").forEach(n => n.onclick = () => this.openTemplateGroup(n.dataset.g));
+  };
+
+  App.openTemplateGroup = function (gid) {
+    this.pushView("tgroup:" + gid, () => this.openTemplateGroup(gid));
+    const g = window.TEMPLATE_GROUPS.find(x => x.id === gid);
+    if (!g) return;
+    const tpls = g.templates.map(id => window.TEMPLATES.find(t => t.id === id)).filter(Boolean);
+    this.openModal(g.name, `
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.9rem">Tap a plan to add it to your routines. You can rename it or change any exercise afterward.</p>
+      ${tpls.map(t => `
         <div class="ex-item" data-t="${t.id}">
-          <div class="ex-item-icon tile ${t.conditions.includes("strength-training") ? "purple" : "accent"}">${this.icon(t.conditions.includes("strength-training") ? "dumbbell" : "medical")}</div>
+          <div class="ex-item-icon tile ${g.color}">${this.icon(g.icon)}</div>
           <div class="ex-item-info">
             <div class="ex-item-name">${this.esc(t.name)}</div>
-            <div class="ex-item-meta"><span class="tag">${t.items.length} exercises</span>
-              ${t.conditions.slice(0, 2).map(c => `<span class="tag accent">${this.esc(this.condition(c).name)}</span>`).join("")}
-            </div>
+            <div class="cat-card-blurb">${this.esc(t.desc)}</div>
+            <div class="ex-item-meta" style="margin-top:0.35rem"><span class="tag">${t.items.length} exercises</span></div>
           </div>
           <div class="ex-item-chev">${this.icon("plus")}</div>
         </div>`).join("")}
-      <button class="btn ghost big" id="new-blank" style="margin-top:0.8rem">${this.icon("pencil")} Build My Own From Scratch</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".ex-item[data-t]").forEach(n => n.onclick = () => {
       const t = window.TEMPLATES.find(x => x.id === n.dataset.t);
       const r = this.routineFromTemplate(t);
       this.state.routines.push(r);
-      this.save(); this.closeModal();
+      this.save();
       this.toast("Routine added");
       this.openRoutineEditor(r.id);
     });
-    body.querySelector("#new-blank").onclick = () => { this.closeModal(); this.createBlankRoutine(); };
   };
 
   App.createBlankRoutine = function (firstExId) {
+    this.pushView("blank-name", () => this.createBlankRoutine(firstExId));
     const r = { id: this.uid(), name: "", desc: "", onHome: true, archived: false, items: [] };
     if (firstExId) {
       const ex = this.ex(firstExId);
@@ -91,7 +114,9 @@
     const go = () => {
       r.name = input.value.trim() || "My Routine";
       this.state.routines.push(r);
-      this.save(); this.closeModal();
+      this.save();
+      // the naming step is done; back from the editor should skip past it
+      this._modalStack.pop();
       this.openRoutineEditor(r.id);
     };
     body.querySelector("#new-routine-go").onclick = go;
@@ -103,6 +128,7 @@
   App.openRoutineEditor = function (rid) {
     const r = this.state.routines.find(x => x.id === rid);
     if (!r) return;
+    this.pushView("editor:" + rid, () => this.openRoutineEditor(rid));
     this.openModal("Edit Routine", `
       <label class="field-label">Routine name</label>
       <input type="text" id="re-name" value="${this.esc(r.name)}">
@@ -214,6 +240,7 @@
     const r = this.state.routines.find(x => x.id === rid);
     const it = r.items[i];
     const ex = this.ex(it.exId);
+    this.pushView("dose:" + rid + ":" + i, () => this.openDoseEditor(rid, i));
     const timed = it.timeSec > 0;
     const hasVariations = ex.variations && ex.variations.length > 0;
     this.openModal(ex.name, `
@@ -269,12 +296,13 @@
     });
     body.querySelector("#dv-perside").onchange = (e) => { it.perSide = e.target.checked; this.save(); };
     body.querySelector("#dv-detail").onclick = () => this.openExerciseDetail(it.exId, { hideAdd: true });
-    body.querySelector("#dv-done").onclick = () => this.openRoutineEditor(rid);
+    body.querySelector("#dv-done").onclick = () => this.modalBack();
   };
 
   // ----- picker: add exercises to a routine -----
   App.openExercisePicker = function (rid) {
     const r = this.state.routines.find(x => x.id === rid);
+    this.pushView("picker:" + rid, () => this.openExercisePicker(rid));
     this._pick = { q: "", region: "" };
     const render = () => {
       const q = this._pick.q.toLowerCase();
@@ -321,7 +349,7 @@
       this._pick.region = ch.dataset.v;
       render();
     });
-    body.querySelector("#pick-done").onclick = () => this.openRoutineEditor(rid);
+    body.querySelector("#pick-done").onclick = () => this.modalBack();
     render();
   };
 })();

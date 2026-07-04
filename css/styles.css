@@ -719,6 +719,70 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 }
 .ss-link-inline .icn { width: 0.9rem; height: 0.9rem; }
 
+/* ============ CATEGORY CARDS (routine chooser) ============ */
+.cat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 0.85rem 1rem; margin-bottom: 0.6rem; cursor: pointer;
+  display: flex; align-items: center; gap: 0.8rem; box-shadow: var(--shadow);
+}
+.cat-card:active { background: var(--surface2); }
+.cat-card-blurb { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+
+/* ============ ONBOARDING CONDITION GROUPS ============ */
+.ob-groups { text-align: left; margin-bottom: 1.1rem; }
+.ob-group {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  margin-bottom: 0.55rem; overflow: hidden;
+}
+.ob-group.open { border-color: var(--accent); }
+.ob-group-head {
+  display: flex; align-items: center; gap: 0.75rem; width: 100%;
+  background: none; border: 0; padding: 0.8rem 0.95rem; cursor: pointer;
+  font-family: inherit; text-align: left; color: inherit;
+}
+.ob-group-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ob-group-name { font-size: 0.98rem; font-weight: 800; }
+.ob-group-blurb { font-size: 0.76rem; color: var(--muted); margin-top: 0.1rem; }
+.ob-group-blurb.picked { color: var(--accent-strong); font-weight: 700; }
+.ob-group-chips { padding: 0 0.95rem 0.9rem; }
+
+/* ============ MUSCLE NOTES ============ */
+.anat { color: var(--muted); font-size: 0.86em; }
+.bm-muscle-note, .sess-muscles {
+  display: flex; align-items: flex-start; gap: 0.5rem;
+  background: var(--blue-dim); color: var(--blue); border-radius: 12px;
+  padding: 0.65rem 0.85rem; font-size: 0.85rem; margin-bottom: 0.9rem;
+}
+.bm-muscle-note .icn, .sess-muscles .icn { width: 1.05rem; height: 1.05rem; margin-top: 0.1rem; flex-shrink: 0; }
+.sess-muscles .anat { color: var(--blue); opacity: 0.75; }
+
+/* ============ GUIDED TOUR ============ */
+.tour { position: fixed; inset: 0; z-index: 600; display: none; }
+.tour.open { display: block; }
+.tour-hole {
+  position: absolute; border-radius: 18px;
+  box-shadow: 0 0 0 9999px rgba(20, 20, 14, 0.62);
+  border: 2px solid var(--accent);
+  transition: top .3s ease, left .3s ease, width .3s ease, height .3s ease;
+  pointer-events: auto;
+}
+.tour-card {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: min(420px, calc(100vw - 2rem));
+  background: var(--card); border-radius: 18px; padding: 1.1rem 1.2rem;
+  box-shadow: var(--shadow-big); transition: top .3s ease;
+}
+.tour-step-num { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-strong); margin-bottom: 0.25rem; }
+.tour-title { font-size: 1.15rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; margin-bottom: 0.3rem; }
+.tour-text { font-size: 0.92rem; color: var(--muted); margin-bottom: 0.9rem; line-height: 1.45; }
+.tour-btns { display: flex; gap: 0.6rem; }
+.tour-btns .btn { flex: 1; min-height: 2.8rem; }
+@keyframes tour-nudge-anim {
+  0%, 100% { transform: translateX(0); }
+  35%, 65% { transform: translateX(-70px); }
+}
+.tour-nudge { animation: tour-nudge-anim 1.8s ease-in-out infinite; }
+
 @media (min-width: 561px) {
   body { box-shadow: 0 0 40px rgba(0,0,0,0.08); }
 }

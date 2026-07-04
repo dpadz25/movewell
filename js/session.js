@@ -136,6 +136,7 @@
       </div></div>` : ""}
       <button class="session-howto-toggle" id="howto-toggle"><span style="display:inline-flex;align-items:center;gap:0.45rem">${this.icon("book")} Show me how to do it</span><span id="howto-chev" style="display:inline-flex">${this.icon("chevD")}</span></button>
       <div class="session-howto" id="howto">
+        <div class="sess-muscles">${this.icon("person")}<span><strong>Muscles targeted:</strong> ${this.muscleDetail(ex.muscles)}</span></div>
         <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video demonstration</a>
         <ol class="exd-steps">${ex.howTo.map(x => `<li>${this.esc(x)}</li>`).join("")}</ol>
         ${ex.tips && ex.tips.length ? `<div class="exd-tip" style="margin-top:0.6rem">${this.icon("bulb")}<span>${this.esc(ex.tips[0])}</span></div>` : ""}

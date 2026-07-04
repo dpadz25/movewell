@@ -3,41 +3,54 @@
 (function () {
   App._bmView = "front";
 
-  // zones: [cx, cy, rx, ry, regionId, label]
+  // zones: [cx, cy, rx, ry, regionId, label, muscles]
   const FRONT_ZONES = [
-    [100, 57, 16, 11, "neck", "Neck"],
-    [60, 76, 15, 12, "shoulder", "Left Shoulder"],
-    [140, 76, 15, 12, "shoulder", "Right Shoulder"],
-    [100, 97, 30, 16, "chest", "Chest"],
-    [50, 136, 11, 12, "elbow", "Left Elbow"],
-    [150, 136, 11, 12, "elbow", "Right Elbow"],
-    [48, 196, 11, 13, "wrist", "Left Wrist & Hand"],
-    [152, 196, 11, 13, "wrist", "Right Wrist & Hand"],
-    [100, 145, 27, 18, "core", "Stomach / Core"],
-    [76, 194, 14, 13, "hip", "Left Hip"],
-    [124, 194, 14, 13, "hip", "Right Hip"],
-    [81, 306, 13, 14, "knee", "Left Knee"],
-    [119, 306, 13, 14, "knee", "Right Knee"],
-    [80, 402, 14, 13, "ankle-foot", "Left Ankle & Foot"],
-    [120, 402, 14, 13, "ankle-foot", "Right Ankle & Foot"]
+    [100, 57, 16, 11, "neck", "Neck (Front)", "Scalenes, sternocleidomastoid (SCM), deep neck flexors"],
+    [60, 76, 15, 12, "shoulder", "Left Shoulder", "Deltoid, rotator cuff (supraspinatus, infraspinatus, subscapularis)"],
+    [140, 76, 15, 12, "shoulder", "Right Shoulder", "Deltoid, rotator cuff (supraspinatus, infraspinatus, subscapularis)"],
+    [100, 97, 30, 16, "chest", "Chest", "Pectoralis major & minor"],
+    [50, 105, 10, 16, "arms", "Left Upper Arm (Biceps)", "Biceps brachii, brachialis"],
+    [150, 105, 10, 16, "arms", "Right Upper Arm (Biceps)", "Biceps brachii, brachialis"],
+    [50, 136, 11, 10, "elbow", "Left Elbow", "Wrist extensor & flexor tendons (tennis / golfer's elbow)"],
+    [150, 136, 11, 10, "elbow", "Right Elbow", "Wrist extensor & flexor tendons (tennis / golfer's elbow)"],
+    [47, 163, 9, 15, "wrist", "Left Forearm", "Wrist flexors & extensors, forearm rotators"],
+    [153, 163, 9, 15, "wrist", "Right Forearm", "Wrist flexors & extensors, forearm rotators"],
+    [48, 196, 11, 13, "wrist", "Left Wrist & Hand", "Finger flexors & extensors, thumb muscles, carpal tunnel"],
+    [152, 196, 11, 13, "wrist", "Right Wrist & Hand", "Finger flexors & extensors, thumb muscles, carpal tunnel"],
+    [100, 145, 27, 18, "core", "Stomach / Core", "Rectus abdominis (six-pack), obliques, transverse abdominis"],
+    [76, 194, 14, 13, "hip", "Left Hip / Groin", "Hip flexors (iliopsoas), adductors (inner thigh)"],
+    [124, 194, 14, 13, "hip", "Right Hip / Groin", "Hip flexors (iliopsoas), adductors (inner thigh)"],
+    [81, 258, 13, 24, "knee", "Left Thigh (Quads)", "Quadriceps femoris (rectus femoris + vastus muscles)"],
+    [119, 258, 13, 24, "knee", "Right Thigh (Quads)", "Quadriceps femoris (rectus femoris + vastus muscles)"],
+    [81, 306, 13, 12, "knee", "Left Knee", "Quadriceps & patellar tendons, joint stabilizers"],
+    [119, 306, 13, 12, "knee", "Right Knee", "Quadriceps & patellar tendons, joint stabilizers"],
+    [81, 350, 11, 18, "ankle-foot", "Left Shin", "Tibialis anterior"],
+    [119, 350, 11, 18, "ankle-foot", "Right Shin", "Tibialis anterior"],
+    [80, 402, 14, 13, "ankle-foot", "Left Ankle & Foot", "Ankle stabilizers, foot arch (plantar) muscles"],
+    [120, 402, 14, 13, "ankle-foot", "Right Ankle & Foot", "Ankle stabilizers, foot arch (plantar) muscles"]
   ];
   const BACK_ZONES = [
-    [100, 57, 16, 11, "neck", "Neck"],
-    [100, 100, 34, 22, "upper-back", "Upper Back"],
-    [60, 76, 15, 12, "shoulder", "Left Shoulder"],
-    [140, 76, 15, 12, "shoulder", "Right Shoulder"],
-    [100, 152, 27, 16, "lower-back", "Lower Back"],
-    [100, 195, 33, 17, "hip", "Hips & Buttocks"],
-    [50, 136, 11, 12, "elbow", "Left Elbow"],
-    [150, 136, 11, 12, "elbow", "Right Elbow"],
-    [81, 258, 13, 22, "hip", "Left Thigh"],
-    [119, 258, 13, 22, "hip", "Right Thigh"],
-    [81, 306, 13, 14, "knee", "Left Knee"],
-    [119, 306, 13, 14, "knee", "Right Knee"],
-    [81, 352, 12, 20, "ankle-foot", "Left Calf"],
-    [119, 352, 12, 20, "ankle-foot", "Right Calf"],
-    [80, 402, 14, 13, "ankle-foot", "Left Ankle & Foot"],
-    [120, 402, 14, 13, "ankle-foot", "Right Ankle & Foot"]
+    [100, 57, 16, 11, "neck", "Neck (Back)", "Upper trapezius, levator scapulae, suboccipitals"],
+    [60, 76, 15, 12, "shoulder", "Left Shoulder (Back)", "Posterior deltoid, infraspinatus, teres minor"],
+    [140, 76, 15, 12, "shoulder", "Right Shoulder (Back)", "Posterior deltoid, infraspinatus, teres minor"],
+    [100, 95, 30, 17, "upper-back", "Upper Back", "Trapezius, rhomboids"],
+    [100, 128, 33, 13, "upper-back", "Mid Back (Lats)", "Latissimus dorsi, lower trapezius"],
+    [50, 105, 10, 16, "arms", "Left Upper Arm (Triceps)", "Triceps brachii"],
+    [150, 105, 10, 16, "arms", "Right Upper Arm (Triceps)", "Triceps brachii"],
+    [50, 136, 11, 10, "elbow", "Left Elbow", "Triceps tendon, wrist extensor tendons"],
+    [150, 136, 11, 10, "elbow", "Right Elbow", "Triceps tendon, wrist extensor tendons"],
+    [47, 163, 9, 15, "wrist", "Left Forearm", "Wrist & finger extensors"],
+    [153, 163, 9, 15, "wrist", "Right Forearm", "Wrist & finger extensors"],
+    [100, 158, 27, 14, "lower-back", "Lower Back", "Erector spinae, quadratus lumborum, multifidus"],
+    [100, 195, 33, 17, "hip", "Glutes & Buttocks", "Gluteus maximus & medius, piriformis"],
+    [81, 258, 13, 24, "hip", "Left Hamstring", "Biceps femoris, semitendinosus, semimembranosus"],
+    [119, 258, 13, 24, "hip", "Right Hamstring", "Biceps femoris, semitendinosus, semimembranosus"],
+    [81, 306, 13, 12, "knee", "Left Knee (Back)", "Hamstring tendons, calf attachment (popliteal area)"],
+    [119, 306, 13, 12, "knee", "Right Knee (Back)", "Hamstring tendons, calf attachment (popliteal area)"],
+    [81, 352, 12, 20, "ankle-foot", "Left Calf", "Gastrocnemius, soleus"],
+    [119, 352, 12, 20, "ankle-foot", "Right Calf", "Gastrocnemius, soleus"],
+    [80, 402, 14, 13, "ankle-foot", "Left Ankle (Achilles)", "Achilles tendon, ankle stabilizers"],
+    [120, 402, 14, 13, "ankle-foot", "Right Ankle (Achilles)", "Achilles tendon, ankle stabilizers"]
   ];
 
   // two silhouettes: broader shoulders (male) vs narrower shoulders and wider hips (female)
@@ -79,7 +92,7 @@
 
   function bodySvg(zones, hurtRegions, sex) {
     const zonesHtml = zones.map(z =>
-      `<ellipse class="bm-zone ${hurtRegions.has(z[4]) ? "hurt" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-label="${z[5]}"><title>${z[5]}</title></ellipse>`
+      `<ellipse class="bm-zone ${hurtRegions.has(z[4]) ? "hurt" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-label="${z[5]}" data-muscles="${z[6] || ""}"><title>${z[5]} — ${z[6] || ""}</title></ellipse>`
     ).join("");
     return `
     <svg class="bodymap-svg" viewBox="0 0 200 430" xmlns="http://www.w3.org/2000/svg">
@@ -123,18 +136,20 @@
           </div>`).join("")}` : ""}
     `;
     const scroll = document.getElementById("bodymap-scroll");
-    scroll.querySelector("#bm-front").onclick = () => { this._bmView = "front"; this.renderBodymap(); };
-    scroll.querySelector("#bm-back").onclick = () => { this._bmView = "back"; this.renderBodymap(); };
-    scroll.querySelectorAll(".bm-zone").forEach(z => z.onclick = () => this.openRegionSheet(z.dataset.region, z.dataset.label));
+    scroll.querySelector("#bm-front").onclick = () => { this._bmView = "front"; this.refresh(); };
+    scroll.querySelector("#bm-back").onclick = () => { this._bmView = "back"; this.refresh(); };
+    scroll.querySelectorAll(".bm-zone").forEach(z => z.onclick = () => this.openRegionSheet(z.dataset.region, z.dataset.label, z.dataset.muscles));
   };
 
-  App.openRegionSheet = function (regionId, label) {
+  App.openRegionSheet = function (regionId, label, muscles) {
     const r = this.region(regionId);
+    this.pushView("region:" + regionId + ":" + (label || ""), () => this.openRegionSheet(regionId, label, muscles));
     const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId));
     const exs = window.EXERCISES.filter(e => e.region === regionId);
     let painVal = null;
 
     this.openModal(label || r.name, `
+      ${muscles ? `<div class="bm-muscle-note">${this.icon("person")}<span><strong>Muscles in this area:</strong> ${this.esc(muscles)}</span></div>` : ""}
       <div class="card" style="margin-bottom:1rem">
         <div class="feel-title">How does this area feel right now?</div>
         <div class="pain-scale" id="rs-pain">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num" data-p="${i}">${i}</button>`).join("")}</div>
@@ -168,7 +183,7 @@
         date: new Date().toISOString(), region: regionId, label: label || r.name,
         pain: painVal, note: body.querySelector("#rs-note").value.trim()
       });
-      this.save(); this.closeModal(); this.renderBodymap();
+      this.save(); this.closeModal(); this.refresh();
       this.toast("Body note saved");
     };
     body.querySelectorAll(".region-issue").forEach(n => n.onclick = () => this.openConditionSheet(n.dataset.c, regionId, label));
@@ -180,7 +195,7 @@
       if (tpl) routine = this.routineFromTemplate(tpl);
       else {
         routine = {
-          id: this.uid(), name: r.name + " Care", desc: "",
+          id: this.uid(), name: r.name + " Care", desc: "", onHome: true, archived: false,
           items: exs.slice().sort((a, b) => a.level - b.level).slice(0, 7).map(ex => ({
             exId: ex.id, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0,
             timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide
@@ -196,6 +211,7 @@
 
   App.openConditionSheet = function (condId, regionId, backLabel) {
     const c = this.condition(condId);
+    this.pushView("cond:" + condId, () => this.openConditionSheet(condId, regionId, backLabel));
     const exs = window.EXERCISES.filter(e => e.helps.includes(condId));
     const tpls = window.TEMPLATES.filter(t => t.conditions.includes(condId));
     this.openModal(c.name, `

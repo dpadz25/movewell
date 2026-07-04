@@ -48,6 +48,89 @@ window.CONDITIONS = [
   { id: "conditioning", name: "Cardio & Conditioning", regions: ["balance", "hip", "knee"], blurb: "Heart and lung fitness. Treadmill, bike, rower, stairs, and intervals. Cardio improves recovery between lifting sessions, and 150 minutes a week of moderate work is the widely recommended target." }
 ];
 
+// Broad categories so long lists (onboarding conditions, routine templates)
+// can be browsed as "pick an area first, then the specifics".
+window.CONDITION_GROUPS = [
+  { id: "grp-neck-shoulder", name: "Neck & Shoulders", icon: "shoulder", color: "blue", blurb: "Neck pain, headaches, posture, shoulder trouble", conditions: ["neck-pain", "headache", "tos", "upper-cross", "posture", "shoulder-pain", "rotator-cuff", "frozen-shoulder"] },
+  { id: "grp-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbow tendon pain, carpal tunnel, stiff hands", conditions: ["tennis-elbow", "golfers-elbow", "carpal-tunnel", "wrist-pain", "arthritis-hand"] },
+  { id: "grp-back", name: "Back", icon: "lower-back", color: "accent", blurb: "Low back pain, sciatica, disc trouble", conditions: ["low-back-pain", "sciatica", "disc"] },
+  { id: "grp-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip and knee pain, arthritis, IT band", conditions: ["hip-pain", "knee-pain", "knee-oa", "itb"] },
+  { id: "grp-foot", name: "Feet & Ankles", icon: "ankle-foot", color: "orange", blurb: "Sprains, achilles, heel pain", conditions: ["ankle-sprain", "achilles", "plantar-fasciitis"] },
+  { id: "grp-balance", name: "Balance & Recovery", icon: "balance", color: "yellow", blurb: "Steadiness, after surgery, getting moving again", conditions: ["balance-falls", "post-surgery", "general"] },
+  { id: "grp-gym", name: "Gym & Fitness", icon: "dumbbell", color: "purple", blurb: "Building muscle, strength, and cardio fitness", conditions: ["strength-training", "conditioning"] }
+];
+
+window.TEMPLATE_GROUPS = [
+  { id: "tg-neck", name: "Neck, Shoulders & Posture", icon: "shoulder", color: "blue", blurb: "Neck pain, rounded shoulders, rotator cuff", templates: ["tpl-neck", "tpl-tos", "tpl-upper-cross", "tpl-rotator-cuff", "tpl-frozen-shoulder"] },
+  { id: "tg-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Tennis elbow, carpal tunnel, grip", templates: ["tpl-tennis-elbow", "tpl-carpal"] },
+  { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Low back care, sciatica, core strength", templates: ["tpl-low-back", "tpl-sciatica", "tpl-abs"] },
+  { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength, knee pain, arthritis", templates: ["tpl-hip", "tpl-knee"] },
+  { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Sprains, heel pain, steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
+  { id: "tg-gentle", name: "Gentle Full-Body Start", icon: "leaf", color: "yellow", blurb: "A kind first routine after a long break", templates: ["tpl-gentle-full"] },
+  { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
+  { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness on the machines", templates: ["tpl-cardio"] }
+];
+
+// Everyday muscle names -> precise anatomical names, shown in exercise details.
+// Terms that already carry a parenthetical or are anatomical stay untouched.
+window.MUSCLE_MAP = {
+  "chest": "pectoralis major",
+  "upper chest": "clavicular pectoralis major",
+  "lower chest": "sternal pectoralis major",
+  "shoulders": "deltoids",
+  "shoulder": "deltoid, rotator cuff",
+  "front shoulders": "anterior deltoids",
+  "front of shoulder": "anterior deltoid",
+  "rear shoulders": "posterior deltoids",
+  "rear delts": "posterior deltoids",
+  "posterior shoulder": "posterior deltoid, infraspinatus",
+  "triceps": "triceps brachii",
+  "biceps": "biceps brachii",
+  "forearms": "wrist flexors & extensors",
+  "grip": "forearm flexors, hand intrinsics",
+  "lats": "latissimus dorsi",
+  "lat": "latissimus dorsi",
+  "back": "latissimus dorsi, trapezius, spinal erectors",
+  "entire back": "latissimus dorsi, trapezius, rhomboids, erector spinae",
+  "upper back": "trapezius, rhomboids",
+  "mid back": "middle trapezius, rhomboids",
+  "mid-back": "middle trapezius, rhomboids",
+  "especially mid-back": "middle trapezius, rhomboids",
+  "mid traps": "middle trapezius",
+  "lower traps": "lower trapezius",
+  "lower back": "erector spinae, quadratus lumborum",
+  "back extensors": "erector spinae",
+  "spinal extensors": "erector spinae",
+  "serratus": "serratus anterior",
+  "rotator cuff": "supraspinatus, infraspinatus, teres minor, subscapularis",
+  "core": "rectus abdominis, obliques, transverse abdominis",
+  "deep core": "transverse abdominis",
+  "deep abdominals": "transverse abdominis",
+  "lower abs": "lower rectus abdominis",
+  "obliques": "internal & external obliques",
+  "side core": "obliques, quadratus lumborum",
+  "anti-rotation core": "obliques, transverse abdominis",
+  "glutes": "gluteus maximus",
+  "side hip": "gluteus medius",
+  "side hips": "gluteus medius",
+  "hip abductors": "gluteus medius & minimus, TFL",
+  "hip flexors": "iliopsoas, rectus femoris",
+  "deep hip rotators": "piriformis, obturators, gemelli",
+  "hips": "gluteals, hip flexors",
+  "groin": "hip adductors",
+  "hamstrings": "biceps femoris, semitendinosus, semimembranosus",
+  "quads": "quadriceps femoris",
+  "front of thigh": "quadriceps femoris",
+  "calves": "gastrocnemius, soleus",
+  "calf": "gastrocnemius, soleus",
+  "shin": "tibialis anterior",
+  "legs": "quadriceps, hamstrings, gluteals, calves",
+  "whole lower body": "quadriceps, gluteals, hamstrings, calves",
+  "deep neck flexors": "longus colli, longus capitis",
+  "neck rotators": "SCM, splenius muscles",
+  "postural muscles": "deep spinal stabilizers, lower trapezius"
+};
+
 window.EQUIPMENT = [
   { id: "none", name: "No Equipment", icon: "bodyweight" },
   { id: "band", name: "Resistance Band", icon: "band" },
