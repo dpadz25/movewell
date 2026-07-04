@@ -15,7 +15,7 @@
     if (hasRoutines) {
       steps.push({
         target: ".swipe-wrap .routine-card", page: "home", title: "Your routines",
-        text: "These are your routines. Tap the green Start button for a guided session with timers, rest breaks, and set logging."
+        text: "These are the routines on your Home screen. Tap Start on any of them for a guided session with timers, rest breaks, and set logging."
       });
       steps.push({
         target: ".swipe-wrap", page: "home", title: "Swipe for options", nudge: true,
@@ -27,26 +27,27 @@
         text: "You don't have a routine yet. This button walks you through creating your first one in under a minute."
       });
     }
+    // the tour visits each tab so new users see the real thing, not just a button
     steps.push(
       {
-        target: ".nav-btn[data-page='routines']", page: "home", title: "Routine library",
-        text: "The Routines tab holds every routine you have, including archived ones. Choose which ones show on your Home screen."
+        target: "#routines-scroll .btn.grad", page: "routines", title: "The Routines tab",
+        text: "Every routine you own lives here, including archived ones. Tap New Routine to build your own or pick a ready-made plan by body area."
       },
       {
-        target: ".nav-btn[data-page='library']", page: "home", title: "Exercise library",
-        text: "Browse every exercise with step-by-step instructions, target muscles, and easier or harder variations."
+        target: "#library-scroll .search-wrap", page: "library", title: "The Exercises tab",
+        text: "The full exercise library. Search or filter by body area, and every exercise comes with step-by-step instructions and the exact muscles it works."
       },
       {
-        target: ".nav-btn[data-page='bodymap']", page: "home", title: "Body map",
-        text: "Tap where it hurts on a body outline to log how it feels and see exercises made for that exact spot."
+        target: ".bodymap-svg", page: "bodymap", title: "The Body Map",
+        text: "Tap the spot that bothers you to log how it feels, learn which muscles live there, and get exercises made for that exact area."
       },
       {
-        target: ".nav-btn[data-page='progress']", page: "home", title: "Your progress",
-        text: "Sessions, streaks, and pain trends over time, so you can see your work paying off."
+        target: "#progress-scroll .chart-card, #progress-scroll .empty-state", page: "progress", title: "Your progress",
+        text: "Sessions, streaks, and pain trends collect here over time, so you can watch your work paying off."
       },
       {
         target: "#btn-settings", page: "home", title: "Make it yours",
-        text: "Change your name, colors, text size, and dark mode here. You can also back up your data or replay this tour."
+        text: "Change your name, theme, text size, and dark mode here. You can also back up your data or replay this tour."
       }
     );
     return steps;
@@ -69,6 +70,8 @@
     window.removeEventListener("resize", this._tourResize);
     document.querySelectorAll(".tour-nudge").forEach(n => n.classList.remove("tour-nudge"));
     if (!this.state.toured) { this.state.toured = true; this.save(); }
+    // the tour wanders through the tabs, so bring the user back home
+    if (this.currentPage !== "home") this.showPage("home");
   };
 
   App.tourShowStep = function () {
