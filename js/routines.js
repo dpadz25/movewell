@@ -3,22 +3,46 @@
 
   App.renderRoutines = function () {
     const s = this.state;
+    const active = s.routines.filter(r => !r.archived);
+    const archived = s.routines.filter(r => r.archived);
     document.getElementById("routines-scroll").innerHTML = `
       <span class="page-tag">${this.icon("clipboard")} Your Plan</span>
-      <div class="page-title">Routines</div>
-      <div class="page-sub">A routine is a set of exercises done together, like a session your therapist or coach would give you.</div>
+      <div class="page-title">Routine Library</div>
+      <div class="page-sub">All of your routines live here. Tap the home button on a card (swipe left) to choose which ones show on your Home screen.</div>
       <button class="btn big grad" onclick="App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>
-      <div class="section-label">${s.routines.length ? "My Routines" : ""}</div>
-      ${s.routines.length ? s.routines.map(r => `
-        <div class="routine-card">
-          <div class="routine-card-info" onclick="App.openRoutineEditor('${r.id}')">
-            <div class="routine-card-name">${this.esc(r.name)}</div>
-            <div class="routine-card-meta">${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min · tap to edit</div>
-          </div>
-          <button class="routine-start-btn" onclick="App.startSession('${r.id}')">${this.icon("play")} Start</button>
-        </div>`).join("")
+      <div class="section-label">${active.length ? "All Routines" : ""}</div>
+      ${active.length ? `<div class="swipe-hint">Swipe a card left to add to Home, edit, or archive</div>` +
+        active.map(r => this.routineCardHtml(r, "library")).join("")
       : `<div class="empty-state"><div class="empty-icon">${this.icon("clipboard")}</div><p>No routines yet.<br>Start from a ready-made plan or build your own.</p></div>`}
+      ${archived.length ? `
+        <div class="section-label">Archived (${archived.length})</div>
+        ${archived.map(r => `
+          <div class="routine-card archived-card" data-arid="${r.id}">
+            <div class="routine-card-info">
+              <div class="routine-card-name">${this.esc(r.name)}</div>
+              <div class="routine-card-meta">${r.items.length} exercises · archived</div>
+            </div>
+            <button class="btn secondary small" data-act="restore">${this.icon("upload")} Restore</button>
+            <button class="mini-btn danger" data-act="destroy" aria-label="Delete forever">${this.icon("trash")}</button>
+          </div>`).join("")}` : ""}
     `;
+    const root = document.getElementById("routines-scroll");
+    this.bindRoutineCards(root, "library");
+    root.querySelectorAll("[data-arid]").forEach(card => {
+      const r = s.routines.find(x => x.id === card.dataset.arid);
+      card.querySelector("[data-act='restore']").onclick = () => {
+        r.archived = false;
+        this.save(); this.refresh();
+        this.toast("Routine restored");
+      };
+      card.querySelector("[data-act='destroy']").onclick = () => {
+        this.confirm("Delete forever?", "“" + r.name + "” will be permanently removed. Your past session history is kept.", () => {
+          this.state.routines = this.state.routines.filter(x => x.id !== r.id);
+          this.save(); this.refresh();
+          this.toast("Routine deleted");
+        }, "Delete");
+      };
+    });
   };
 
   // ----- create flow -----
@@ -52,7 +76,7 @@
   };
 
   App.createBlankRoutine = function (firstExId) {
-    const r = { id: this.uid(), name: "", desc: "", items: [] };
+    const r = { id: this.uid(), name: "", desc: "", onHome: true, archived: false, items: [] };
     if (firstExId) {
       const ex = this.ex(firstExId);
       r.items.push({ exId: firstExId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide });
@@ -85,6 +109,7 @@
       ${r.desc ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem">${this.esc(r.desc)}</p>` : ""}
       <p style="font-size:0.85rem;color:var(--muted2);margin-top:0.4rem">Estimated session: ~${this.estimateRoutineMin(r)} min including rest</p>
       <div class="section-label">Exercises (${r.items.length})</div>
+      ${r.items.length > 1 ? `<p style="font-size:0.78rem;color:var(--muted2);margin:-0.2rem 0 0.5rem">Tap the link between two exercises to pair them as a superset. You'll alternate between them during the session, resting after each round.</p>` : ""}
       <div id="re-items">${r.items.map((it, i) => this.routineItemHtml(r, it, i)).join("") || `<p style="color:var(--muted);font-size:0.9rem">No exercises yet. Add some below.</p>`}</div>
       <button class="btn big" id="re-add" style="margin-top:0.6rem">${this.icon("plus")} Add Exercises</button>
       <div class="btn-row" style="margin-top:0.8rem">
@@ -109,16 +134,60 @@
   App.routineItemHtml = function (r, it, i) {
     const ex = this.ex(it.exId);
     if (!ex) return "";
+    const next = r.items[i + 1];
+    const linked = !!(it.groupId && next && next.groupId === it.groupId);
+    const inGroup = !!it.groupId;
     return `
-      <div class="routine-item" data-i="${i}">
+      <div class="routine-item ${inGroup ? "ss-grouped" : ""}" data-i="${i}">
         <div class="routine-item-info" data-act="dose">
-          <div class="routine-item-name">${i + 1}. ${this.esc(it.variant || ex.name)}</div>
+          <div class="routine-item-name">${i + 1}. ${this.esc(it.variant || ex.name)}${inGroup ? ` <span class="ss-tag">${this.icon("link")} superset</span>` : ""}</div>
           <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)} · tap to adjust</div>
         </div>
         <button class="mini-btn" data-act="up" title="Move up" ${i === 0 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowUp")}</button>
         <button class="mini-btn" data-act="down" title="Move down" ${i === r.items.length - 1 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowDown")}</button>
         <button class="mini-btn danger" data-act="remove" title="Remove">${this.icon("close")}</button>
-      </div>`;
+      </div>
+      ${next ? `<button class="ss-connector ${linked ? "linked" : ""}" data-link="${i}">${this.icon("link")} ${linked ? "Superset linked · tap to unlink" : "Superset with next"}</button>` : ""}`;
+  };
+
+  // supersets: consecutive items sharing a groupId alternate during a session.
+  // after any reorder or removal, groups must stay contiguous and have 2+ members.
+  App.normalizeGroups = function (r) {
+    const used = new Set();
+    let prevOrig = null, curGid = null;
+    r.items.forEach(it => {
+      const orig = it.groupId || null;
+      if (!orig) { prevOrig = null; curGid = null; return; }
+      if (orig !== prevOrig) {
+        curGid = used.has(orig) ? this.uid() : orig;
+        used.add(orig); used.add(curGid);
+        prevOrig = orig;
+      }
+      it.groupId = curGid;
+    });
+    const counts = {};
+    r.items.forEach(it => { if (it.groupId) counts[it.groupId] = (counts[it.groupId] || 0) + 1; });
+    r.items.forEach(it => { if (it.groupId && counts[it.groupId] < 2) delete it.groupId; });
+  };
+
+  App.toggleSupersetLink = function (r, i) {
+    const a = r.items[i], b = r.items[i + 1];
+    if (!a || !b) return;
+    if (a.groupId && a.groupId === b.groupId) {
+      // unlink: split the group after item i
+      const gid = a.groupId, ng = this.uid();
+      for (let j = i + 1; j < r.items.length && r.items[j].groupId === gid; j++) r.items[j].groupId = ng;
+    } else if (a.groupId && b.groupId) {
+      // both already lead groups: merge b's group into a's
+      const old = b.groupId;
+      r.items.forEach(x => { if (x.groupId === old) x.groupId = a.groupId; });
+    } else {
+      const gid = a.groupId || b.groupId || this.uid();
+      a.groupId = gid; b.groupId = gid;
+    }
+    this.normalizeGroups(r);
+    this.save();
+    this.openRoutineEditor(r.id);
   };
 
   App.bindRoutineItemButtons = function (r) {
@@ -128,11 +197,15 @@
       node.querySelectorAll("[data-act]").forEach(btn => btn.onclick = (e) => {
         e.stopPropagation();
         const act = btn.dataset.act;
-        if (act === "up" && i > 0) { [r.items[i - 1], r.items[i]] = [r.items[i], r.items[i - 1]]; this.save(); this.openRoutineEditor(r.id); }
-        if (act === "down" && i < r.items.length - 1) { [r.items[i + 1], r.items[i]] = [r.items[i], r.items[i + 1]]; this.save(); this.openRoutineEditor(r.id); }
-        if (act === "remove") { r.items.splice(i, 1); this.save(); this.openRoutineEditor(r.id); }
+        if (act === "up" && i > 0) { [r.items[i - 1], r.items[i]] = [r.items[i], r.items[i - 1]]; this.normalizeGroups(r); this.save(); this.openRoutineEditor(r.id); }
+        if (act === "down" && i < r.items.length - 1) { [r.items[i + 1], r.items[i]] = [r.items[i], r.items[i + 1]]; this.normalizeGroups(r); this.save(); this.openRoutineEditor(r.id); }
+        if (act === "remove") { r.items.splice(i, 1); this.normalizeGroups(r); this.save(); this.openRoutineEditor(r.id); }
         if (act === "dose") this.openDoseEditor(r.id, i);
       });
+    });
+    body.querySelectorAll("[data-link]").forEach(btn => btn.onclick = (e) => {
+      e.stopPropagation();
+      this.toggleSupersetLink(r, Number(btn.dataset.link));
     });
   };
 

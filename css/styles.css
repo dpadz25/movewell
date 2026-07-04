@@ -664,6 +664,61 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .confirm-card h3 { font-size: 1.15rem; margin-bottom: 0.5rem; }
 .confirm-card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.2rem; }
 
+/* ============ SWIPE-TO-REVEAL ROUTINE CARDS ============ */
+.swipe-wrap { position: relative; margin-bottom: 0.75rem; }
+.swipe-wrap .routine-card { margin-bottom: 0; }
+.swipe-card { position: relative; z-index: 1; touch-action: pan-y; will-change: transform; user-select: none; -webkit-user-select: none; }
+.swipe-actions {
+  position: absolute; top: 0; bottom: 0; right: 0;
+  display: flex; align-items: stretch; gap: 0.35rem; padding: 0.25rem 0;
+}
+.swipe-btn {
+  background: var(--surface2); border: 1px solid var(--border2); border-radius: 14px;
+  width: 3.3rem; color: var(--muted); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem;
+  font-size: 0.56rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.swipe-btn .icn { width: 1.15rem; height: 1.15rem; }
+.swipe-btn:active { background: var(--border); }
+.swipe-btn.danger { color: var(--red); background: var(--red-dim); border-color: var(--red-dim); }
+.swipe-btn.on { color: var(--accent-strong); background: var(--accent-dim); border-color: var(--accent); }
+.swipe-hint { font-size: 0.74rem; color: var(--muted2); margin: -0.2rem 0 0.6rem; }
+.onhome-flag { color: var(--accent-strong); font-weight: 700; }
+.onhome-flag .icn { width: 0.8rem; height: 0.8rem; vertical-align: -0.1em; }
+.routine-card.archived-card { opacity: 0.8; border-left-color: var(--muted2); }
+.routine-card.archived-card .btn.small { flex-shrink: 0; }
+
+/* ============ SUPERSETS ============ */
+.routine-item.ss-grouped { border-left: 3px solid var(--purple); }
+.ss-tag {
+  display: inline-flex; align-items: center; gap: 0.2rem; vertical-align: 0.1em;
+  background: var(--purple-dim); color: var(--purple); border-radius: 999px;
+  font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 0.1rem 0.5rem;
+}
+.ss-tag .icn { width: 0.75rem; height: 0.75rem; }
+.ss-connector {
+  display: flex; align-items: center; gap: 0.35rem; margin: -0.15rem auto 0.45rem;
+  background: none; border: 1px dashed var(--border2); color: var(--muted2);
+  border-radius: 999px; padding: 0.28rem 0.75rem; font-size: 0.72rem; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+.ss-connector .icn { width: 0.85rem; height: 0.85rem; }
+.ss-connector.linked { border: 1px solid var(--purple); background: var(--purple-dim); color: var(--purple); }
+.ss-session-note {
+  display: flex; align-items: flex-start; gap: 0.45rem;
+  background: var(--purple-dim); color: var(--purple); border-radius: 12px;
+  padding: 0.6rem 0.8rem; font-size: 0.85rem; margin-bottom: 0.7rem;
+}
+.ss-session-note .icn { width: 1rem; height: 1rem; margin-top: 0.1rem; flex-shrink: 0; }
+.ss-link-inline {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: none; border: 1px dashed var(--purple); color: var(--purple);
+  border-radius: 999px; padding: 0.4rem 0.8rem; font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; margin-bottom: 0.7rem; font-family: inherit;
+}
+.ss-link-inline .icn { width: 0.9rem; height: 0.9rem; }
+
 @media (min-width: 561px) {
   body { box-shadow: 0 0 40px rgba(0,0,0,0.08); }
 }

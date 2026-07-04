@@ -36,6 +36,11 @@
       } catch (e) {
         this.state = this.defaultState();
       }
+      // older saves predate the Home/Library split and archiving
+      this.state.routines.forEach(r => {
+        if (r.onHome === undefined) r.onHome = true;
+        if (r.archived === undefined) r.archived = false;
+      });
       this.syncCustomExercises();
     },
     save() {
@@ -208,6 +213,7 @@
         dots += `<div class="week-dot ${done ? "done" : ""}"><div class="dot">${done ? this.icon("check") : ""}</div><div class="dot-label" style="${isToday ? "font-weight:800;color:var(--accent-strong)" : ""}">${dayNames[i]}</div></div>`;
       }
 
+      const homeRoutines = s.routines.filter(r => r.onHome && !r.archived);
       let routinesHtml = "";
       if (s.routines.length === 0) {
         routinesHtml = `
@@ -216,15 +222,16 @@
             <p>You don't have any routines yet.<br>Let's set one up. It only takes a minute.</p>
             <button class="btn big grad" onclick="App.showPage('routines');App.openNewRoutineChooser()">Create My First Routine</button>
           </div>`;
+      } else if (homeRoutines.length === 0) {
+        routinesHtml = `
+          <div class="empty-state card">
+            <div class="empty-icon">${this.icon("home")}</div>
+            <p>Nothing on your Home screen yet.<br>Pick which routines live here from your library.</p>
+            <button class="btn big grad" onclick="App.showPage('routines')">Open My Routine Library</button>
+          </div>`;
       } else {
-        routinesHtml = s.routines.map(r => `
-          <div class="routine-card">
-            <div class="routine-card-info" onclick="App.openRoutineEditor('${r.id}')">
-              <div class="routine-card-name">${this.esc(r.name)}</div>
-              <div class="routine-card-meta">${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min</div>
-            </div>
-            <button class="routine-start-btn" onclick="App.startSession('${r.id}')">${this.icon("play")} Start</button>
-          </div>`).join("");
+        routinesHtml = `<div class="swipe-hint">Swipe a card left to reorder, edit, or archive</div>` +
+          homeRoutines.map(r => this.routineCardHtml(r, "home")).join("");
       }
 
       document.getElementById("home-scroll").innerHTML = `
@@ -255,6 +262,134 @@
         ${routinesHtml}
         ${s.routines.length > 0 ? `<button class="btn ghost big" style="margin-top:0.3rem" onclick="App.showPage('routines');App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>` : ""}
       `;
+      this.bindRoutineCards(document.getElementById("home-scroll"), "home");
+    },
+
+    // ---------- routine cards (shared by Home and Routines library) ----------
+    routineCardHtml(r, mode) {
+      const meta = `${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min`;
+      const actions = mode === "home" ? `
+          <button class="swipe-btn" data-act="up" aria-label="Move up">${this.icon("arrowUp")}<span>Up</span></button>
+          <button class="swipe-btn" data-act="down" aria-label="Move down">${this.icon("arrowDown")}<span>Down</span></button>
+          <button class="swipe-btn" data-act="edit" aria-label="Edit">${this.icon("pencil")}<span>Edit</span></button>
+          <button class="swipe-btn danger" data-act="archive" aria-label="Archive">${this.icon("archive")}<span>Archive</span></button>`
+        : `
+          <button class="swipe-btn ${r.onHome ? "on" : ""}" data-act="home" aria-label="${r.onHome ? "Remove from Home" : "Add to Home"}">${this.icon("home")}<span>${r.onHome ? "On Home" : "Add"}</span></button>
+          <button class="swipe-btn" data-act="edit" aria-label="Edit">${this.icon("pencil")}<span>Edit</span></button>
+          <button class="swipe-btn danger" data-act="archive" aria-label="Archive">${this.icon("archive")}<span>Archive</span></button>`;
+      return `
+        <div class="swipe-wrap" data-rid="${r.id}">
+          <div class="swipe-actions">${actions}</div>
+          <div class="routine-card swipe-card">
+            <div class="routine-card-info" data-act="open">
+              <div class="routine-card-name">${this.esc(r.name)}</div>
+              <div class="routine-card-meta">${meta}${mode === "library" && r.onHome ? ` · <span class="onhome-flag">${this.icon("home")} on Home</span>` : ""}</div>
+            </div>
+            <button class="routine-start-btn" data-act="start">${this.icon("play")} Start</button>
+          </div>
+        </div>`;
+    },
+
+    bindRoutineCards(root, mode) {
+      this.bindSwipeCards(root);
+      root.querySelectorAll(".swipe-wrap[data-rid]").forEach(wrap => {
+        const rid = wrap.dataset.rid;
+        wrap.querySelectorAll("[data-act]").forEach(el => el.onclick = (e) => {
+          e.stopPropagation();
+          const r = this.state.routines.find(x => x.id === rid);
+          if (!r) return;
+          const act = el.dataset.act;
+          if (act === "open" || act === "edit") this.openRoutineEditor(rid);
+          if (act === "start") this.startSession(rid);
+          if (act === "up" || act === "down") this.moveRoutine(r, act === "up" ? -1 : 1);
+          if (act === "archive") {
+            r.archived = true;
+            this.save(); this.refresh();
+            this.toast("Archived. Find it at the bottom of Routines.");
+          }
+          if (act === "home") {
+            r.onHome = !r.onHome;
+            this.save(); this.refresh();
+            this.toast(r.onHome ? "Added to your Home screen" : "Removed from your Home screen");
+          }
+        });
+      });
+    },
+
+    // reorder within the routines that are visible on Home
+    moveRoutine(r, dir) {
+      const arr = this.state.routines;
+      const idx = arr.indexOf(r);
+      let j = idx + dir;
+      while (j >= 0 && j < arr.length && !(arr[j].onHome && !arr[j].archived)) j += dir;
+      if (j < 0 || j >= arr.length) return;
+      [arr[idx], arr[j]] = [arr[j], arr[idx]];
+      this.save(); this.refresh();
+    },
+
+    // swipe left on a card to reveal its action tray
+    bindSwipeCards(root) {
+      const closeOthers = (except) => root.querySelectorAll(".swipe-wrap.open").forEach(w => {
+        if (w === except) return;
+        w.classList.remove("open");
+        const c = w.querySelector(".swipe-card");
+        c.style.transition = "transform .2s ease";
+        c.style.transform = "translateX(0)";
+      });
+      root.querySelectorAll(".swipe-wrap").forEach(wrap => {
+        const card = wrap.querySelector(".swipe-card");
+        if (!card) return;
+        const trayW = () => wrap.querySelector(".swipe-actions").offsetWidth + 6;
+        const apply = (x, anim) => {
+          card.style.transition = anim ? "transform .2s ease" : "none";
+          card.style.transform = `translateX(${x}px)`;
+        };
+        let startX = 0, startY = 0, tracking = false, dragging = false, wasOpen = false, suppress = false;
+        card.addEventListener("pointerdown", e => {
+          tracking = true; dragging = false;
+          startX = e.clientX; startY = e.clientY;
+          wasOpen = wrap.classList.contains("open");
+        });
+        card.addEventListener("pointermove", e => {
+          if (!tracking) return;
+          const dx = e.clientX - startX, dy = e.clientY - startY;
+          if (!dragging) {
+            if (Math.abs(dx) < 8) return;
+            if (Math.abs(dy) > Math.abs(dx)) { tracking = false; return; }
+            dragging = true;
+            try { card.setPointerCapture(e.pointerId); } catch (err) { }
+            closeOthers(wrap);
+          }
+          let x = (wasOpen ? -trayW() : 0) + dx;
+          x = Math.min(0, Math.max(-trayW() - 18, x));
+          apply(x, false);
+        });
+        const finish = e => {
+          if (!tracking) return;
+          tracking = false;
+          if (!dragging) return;
+          suppress = true;
+          const dx = e.clientX - startX;
+          const open = wasOpen ? dx < trayW() * 0.4 : dx < -trayW() * 0.4;
+          wrap.classList.toggle("open", open);
+          apply(open ? -trayW() : 0, true);
+        };
+        card.addEventListener("pointerup", finish);
+        card.addEventListener("pointercancel", () => {
+          if (!tracking) return;
+          tracking = false;
+          if (dragging) apply(wrap.classList.contains("open") ? -trayW() : 0, true);
+        });
+        // a drag should not also fire the tap actions underneath
+        card.addEventListener("click", e => {
+          if (suppress) { e.stopPropagation(); e.preventDefault(); suppress = false; return; }
+          if (wrap.classList.contains("open")) {
+            e.stopPropagation(); e.preventDefault();
+            wrap.classList.remove("open");
+            apply(0, true);
+          }
+        }, true);
+      });
     },
 
     // ---------- SETTINGS ----------
@@ -520,6 +655,8 @@
         id: this.uid(),
         name: t.name,
         desc: t.desc,
+        onHome: true,
+        archived: false,
         items: t.items.filter(id => this.ex(id)).map(id => {
           const ex = this.ex(id);
           return {

@@ -76,6 +76,12 @@
     const done = it.logged.length;
     const prev = this.lastPerformance(it.exId);
     const displayName = it.variant || ex.name;
+    // superset context
+    const gMembers = it.groupId ? s.items.map((x, j) => ({ x, j })).filter(o => o.x.groupId === it.groupId) : null;
+    const gPos = gMembers ? gMembers.findIndex(o => o.j === s.idx) : -1;
+    const partnerNames = gMembers ? gMembers.filter(o => o.j !== s.idx).map(o => this.esc(o.x.variant || (this.ex(o.x.exId) || {}).name)).join(" + ") : "";
+    const nxt = s.items[s.idx + 1];
+    const canLinkNext = !it.groupId && nxt && !nxt.groupId;
     const variantNote = it.variant ? (ex.variations.find(v => v.name === it.variant) || {}).note : "";
     const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(displayName + " exercise how to");
 
@@ -117,9 +123,12 @@
 
     document.getElementById("session-body").innerHTML = `
       <span class="tag ${t.color} session-ex-type">${t.name}</span>
+      ${gMembers ? `<span class="tag purple session-ex-type">${this.icon("link")} Superset ${gPos + 1} of ${gMembers.length}</span>` : ""}
       <div class="session-ex-name">${this.esc(displayName)}</div>
       ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:-0.1rem 0 0.3rem">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}
       <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
+      ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between partners, rest after each round.</span></div>` : ""}
+      ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Superset with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}
       ${(ex.variations && ex.variations.length) ? `
       <div class="filter-wrap" style="margin-bottom:0.7rem"><div class="filter-bar" style="padding-bottom:0.2rem" id="sess-variants">
         <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
@@ -161,6 +170,21 @@
         this.renderSessionStep();
       });
     }
+    const ssLink = body.querySelector("#sess-ss-link");
+    if (ssLink) ssLink.onclick = () => {
+      const gid = this.uid();
+      it.groupId = gid; nxt.groupId = gid;
+      // persist the pairing back to the routine itself
+      const routine = this.state.routines.find(x => x.id === s.routineId);
+      if (routine && routine.items[s.idx] && routine.items[s.idx].exId === it.exId &&
+        routine.items[s.idx + 1] && routine.items[s.idx + 1].exId === nxt.exId) {
+        routine.items[s.idx].groupId = gid;
+        routine.items[s.idx + 1].groupId = gid;
+        this.save();
+      }
+      this.renderSessionStep();
+      this.toast("Superset linked. You'll alternate between the two.");
+    };
     body.querySelector("#howto-toggle").onclick = () => {
       const h = body.querySelector("#howto");
       h.classList.toggle("open");
@@ -202,11 +226,42 @@
   App.afterSetLogged = function (it) {
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     this.chime();
+    it.skipped = false;
+    if (it.groupId) return this.supersetNext(it);
     if (it.logged.length >= targetSets) {
       this.toast("Exercise complete!");
       this.advance();
     } else {
       this.openRest(60);
+    }
+  };
+
+  // superset flow: after a set, hop to the next unfinished partner with no rest.
+  // when the round wraps back to the start of the group, rest first.
+  App.supersetNext = function (it) {
+    const s = this._sess;
+    const target = x => x.sets * (x.perSide ? 2 : 1);
+    const members = s.items.map((x, i) => ({ x, i })).filter(o => o.x.groupId === it.groupId);
+    const remaining = members.filter(o => !o.x.skipped && o.x.logged.length < target(o.x));
+    if (!remaining.length) {
+      this.toast("Superset complete!");
+      s.idx = members[members.length - 1].i;
+      this.advance();
+      return;
+    }
+    const curPos = members.findIndex(o => o.i === s.idx);
+    let next = remaining[0];
+    for (let k = 1; k <= members.length; k++) {
+      const o = members[(curPos + k) % members.length];
+      if (o.x.logged.length < target(o.x)) { next = o; break; }
+    }
+    const wrapped = next.i <= s.idx;
+    s.idx = next.i;
+    if (wrapped) {
+      this.openRest(60);
+    } else {
+      this.renderSessionStep();
+      this.toast("Next up: " + (next.x.variant || (this.ex(next.x.exId) || {}).name));
     }
   };
 
@@ -253,6 +308,8 @@
     it.logged.push({ sec });
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     if (!manual) this.chime();
+    it.skipped = false;
+    if (it.groupId) return this.supersetNext(it);
     if (it.logged.length >= targetSets) {
       this.toast("Exercise complete!");
       this.advance();

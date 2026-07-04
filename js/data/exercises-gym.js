@@ -183,6 +183,27 @@ window.EXERCISES.push(
   ]
 },
 {
+  id: "dumbbell-front-raise", name: "Dumbbell Front Raise", region: "shoulder", type: "lift",
+  equipment: ["dumbbell"], position: "Standing", level: 1,
+  muscles: "Front shoulders (anterior delts)",
+  helps: ["strength-training"],
+  dose: { sets: 3, reps: 12 },
+  howTo: [
+    "Stand tall with a light dumbbell in each hand resting on the front of your thighs.",
+    "With a soft bend in the elbows, raise both arms straight out in front of you.",
+    "Stop when your hands reach about shoulder height, palms facing down.",
+    "Lower slowly back to your thighs and repeat."
+  ],
+  tips: ["Brace your core so your lower back doesn't arch as the weights come up.", "Alternating one arm at a time makes it easier to keep the body still."],
+  caution: "No swinging or leaning back to heave the weight up. Stop at shoulder height, going higher just irritates the shoulder.",
+  variations: [
+    { name: "Alternating Front Raise", note: "One arm at a time. Easier to control and kinder to the lower back." },
+    { name: "Plate Front Raise", note: "Hold a single weight plate with both hands like a steering wheel." },
+    { name: "Cable Front Raise", note: "Facing away from a low pulley. Constant tension through the whole arc." },
+    { name: "Incline Front Raise", note: "Chest against an incline bench. Removes all momentum and body English." }
+  ]
+},
+{
   id: "rear-delt-fly", name: "Rear Delt Fly", region: "shoulder", type: "lift",
   equipment: ["dumbbell", "machine"], position: "Hinged forward or seated at a machine", level: 2,
   muscles: "Rear shoulders, upper back",
@@ -430,6 +451,25 @@ window.EXERCISES.push(
   caution: "Skip shrugs if you deal with neck pain or thoracic outlet syndrome. Tight upper traps are usually part of that picture.",
   variations: [
     { name: "Barbell Shrug", note: "Lets you load heavier with the bar in front of your thighs." }
+  ]
+},
+{
+  id: "kelso-shrug", name: "Kelso Shrug", region: "upper-back", type: "lift",
+  equipment: ["dumbbell", "bench"], position: "Chest down on a low incline bench", level: 2,
+  muscles: "Middle and lower trapezius, rhomboids",
+  helps: ["strength-training", "upper-cross", "posture", "tos"],
+  dose: { sets: 3, reps: 12 },
+  howTo: [
+    "Set a bench to a low incline and lie chest-down with a dumbbell in each hand hanging straight toward the floor.",
+    "Keep your arms completely straight the whole time. This is a shrug for the shoulder blades, not a row.",
+    "Squeeze your shoulder blades back and together, lifting the weights an inch or two.",
+    "Pause and hold the squeeze for a second, then let the blades spread apart slowly and repeat."
+  ],
+  tips: ["Think about pinching a pencil between your shoulder blades.", "Light weight with a hard squeeze beats heavy weight here. The range is tiny by design."],
+  caution: "Keep your neck long and relaxed. If your upper traps or neck take over, go lighter.",
+  variations: [
+    { name: "Cable Row Kelso Shrug", note: "Seated at a cable row, pull the shoulder blades back and together without bending the elbows." },
+    { name: "Chest-Supported Machine Version", note: "Chest against a supported-row pad, retracting the blades only. Very easy to lock in the form." }
   ]
 },
 
