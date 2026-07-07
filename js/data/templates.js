@@ -156,6 +156,7 @@ window.EQUIPMENT = [
 ];
 
 window.EX_TYPES = [
+  { id: "yoga", name: "Yoga", color: "pink" },
   { id: "stretch", name: "Stretch", color: "teal" },
   { id: "strengthen", name: "Strengthen", color: "accent" },
   { id: "mobility", name: "Mobility", color: "blue" },

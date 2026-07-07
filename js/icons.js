@@ -67,7 +67,7 @@ window.ICONS = {
   "ankle-foot": '<path d="M8.5 3h5v7.2c0 1.9 1.2 3 3 3.7 2.1.8 3.4 2.2 2.6 4.1-.8 1.9-3.2 2.3-5.2 1.5L8.5 17.6c-1.5-.6-2-1.6-2-3z" stroke-linejoin="round"/><path d="M8.5 7.5h5"/>',
   core: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>',
   balance: '<path d="M12 4v17M6 21h12"/><path d="M12 6 5.5 8.5M12 6l6.5 2.5"/><path d="M3 14a2.6 2.6 0 0 0 5.2 0L5.5 8.5zM15.8 14a2.6 2.6 0 0 0 5.2 0l-2.7-5.5z" stroke-linejoin="round"/>',
-  chest: '<path d="M7 3.5c0 2.8-1.2 4.8-2.5 6.7C4.5 10.2 6 20.5 12 20.5s7.5-10.3 7.5-10.3C18.2 8.3 17 6.3 17 3.5"/><path d="M7 11c2 1.7 4 1.7 5 .2 1 1.5 3 1.5 5-.2"/>',
+  chest: '<path d="M3 7.5h18"/><path d="M6.5 5v5M17.5 5v5"/><path d="M9.5 16v-5.5M14.5 16v-5.5"/><path d="M6.5 20.5c0-3 2.4-4.8 5.5-4.8s5.5 1.8 5.5 4.8"/>',
   arms: '<path d="M7.5 4.5 11 3.5l1.6 5.2c2.1-1.2 4.9-.9 6 1 1.2 2 .5 4.9-2 6.1-3.1 1.5-8.2 1.3-10.2-1.4C4.8 11.6 5.6 7.5 7.5 4.5z" stroke-linejoin="round"/><path d="M13.5 11.5c1.2-.6 2.6-.3 3.2.7"/>',
 
   // ----- equipment -----

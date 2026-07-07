@@ -145,7 +145,7 @@
     const r = this.region(regionId);
     this.pushView("region:" + regionId + ":" + (label || ""), () => this.openRegionSheet(regionId, label, muscles));
     const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId));
-    const exs = window.EXERCISES.filter(e => e.region === regionId);
+    const exs = window.EXERCISES.filter(e => e.region === regionId && e.type !== "yoga");
     let painVal = null;
 
     this.openModal(label || r.name, `

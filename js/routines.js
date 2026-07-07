@@ -387,7 +387,10 @@
     const render = () => {
       const q = this._pick.q.toLowerCase();
       const list = window.EXERCISES.filter(ex => {
-        if (this._pick.region && ex.region !== this._pick.region) return false;
+        // yoga poses only appear under the Yoga chip, never mixed into the other lists
+        if (this._pick.region === "__yoga") { if (ex.type !== "yoga") return false; }
+        else if (ex.type === "yoga") return false;
+        else if (this._pick.region && ex.region !== this._pick.region) return false;
         if (q && !(ex.name + " " + ex.muscles + " " + ex.equipment.map(x => this.equip(x).name).join(" ") + " " +
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase().includes(q)) return false;
         return true;
@@ -428,6 +431,7 @@
       <div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="pick-search" placeholder="Search exercises"></div>
       <div class="filter-wrap"><div class="filter-bar" id="pick-regions">
         <button class="chip on" data-v="">All</button>
+        <button class="chip" data-v="__yoga">${this.icon("sun")} Yoga</button>
         ${window.REGIONS.map(rg => `<button class="chip" data-v="${rg.id}">${this.icon(rg.icon)} ${rg.name}</button>`).join("")}
       </div></div>
       <div id="pick-list"></div>

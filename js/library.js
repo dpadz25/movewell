@@ -6,6 +6,8 @@
     const f = this._lib;
     const q = f.q.toLowerCase();
     return window.EXERCISES.filter(ex => {
+      // yoga poses stay hidden (even from All and search) unless the Yoga type filter is on
+      if (ex.type === "yoga" && f.type !== "yoga") return false;
       if (f.region && ex.region !== f.region) return false;
       if (f.type && ex.type !== f.type) return false;
       if (f.equip) {
