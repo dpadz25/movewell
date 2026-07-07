@@ -5,15 +5,23 @@
     const s = this.state;
     const active = s.routines.filter(r => !r.archived);
     const archived = s.routines.filter(r => r.archived);
+    if (!this._rlib) this._rlib = { q: "", type: "" };
+    const typesInUse = [...new Set(active.map(r => this.routineType(r)))];
+    const typeChips = window.ROUTINE_TYPES.filter(t => typesInUse.includes(t.id));
+    if (this._rlib.type && !typesInUse.includes(this._rlib.type)) this._rlib.type = "";
     document.getElementById("routines-scroll").innerHTML = `
       <span class="page-tag">${this.icon("clipboard")} Your Plan</span>
       <div class="page-title">Routine Library</div>
-      <div class="page-sub">All of your routines live here. Tap the home button on a card (swipe left) to choose which ones show on your Home screen.</div>
+      <div class="page-sub">Routines start from your Home screen. Tap the house on a routine to put it there.</div>
       <button class="btn big grad" onclick="App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>
-      <div class="section-label">${active.length ? "All Routines" : ""}</div>
-      ${active.length ? `<div class="swipe-hint">Swipe a card left to add to Home, edit, or archive</div>` +
-        active.map(r => this.routineCardHtml(r, "library")).join("")
-      : `<div class="empty-state"><div class="empty-icon">${this.icon("clipboard")}</div><p>No routines yet.<br>Start from a ready-made plan or build your own.</p></div>`}
+      ${active.length ? `
+        <div class="search-wrap" style="margin-top:1rem"><span class="search-icon">${this.icon("search")}</span><input type="text" id="rl-search" placeholder="Search routines" value="${this.esc(this._rlib.q)}"></div>
+        ${typeChips.length > 1 ? `<div class="filter-wrap"><div class="filter-bar" id="rl-types">
+          <button class="chip small-chip ${!this._rlib.type ? "on" : ""}" data-v="">All</button>
+          ${typeChips.map(t => `<button class="chip small-chip ${this._rlib.type === t.id ? "on" : ""}" data-v="${t.id}">${this.icon(t.icon)} ${t.name}</button>`).join("")}
+        </div></div>` : ""}
+        <div id="rl-list"></div>
+      ` : `<div class="empty-state"><div class="empty-icon">${this.icon("clipboard")}</div><p>No routines yet.<br>Start from a ready-made plan or build your own.</p></div>`}
       ${archived.length ? `
         <div class="section-label">Archived (${archived.length})</div>
         ${archived.map(r => `
@@ -27,7 +35,44 @@
           </div>`).join("")}` : ""}
     `;
     const root = document.getElementById("routines-scroll");
-    this.bindRoutineCards(root, "library");
+
+    // only the list re-renders while typing or filtering, so the search box keeps focus
+    const renderList = () => {
+      const listEl = document.getElementById("rl-list");
+      if (!listEl) return;
+      const q = this._rlib.q.trim().toLowerCase();
+      const shown = active.filter(r => {
+        if (this._rlib.type && this.routineType(r) !== this._rlib.type) return false;
+        if (q && !r.name.toLowerCase().includes(q)) return false;
+        return true;
+      });
+      listEl.innerHTML = shown.map(r => this.routineRowHtml(r)).join("") ||
+        `<p style="color:var(--muted);font-size:0.9rem;padding:0.8rem 0.2rem">Nothing matches. Try a different search or filter.</p>`;
+      listEl.querySelectorAll(".routine-row").forEach(row => {
+        const r = s.routines.find(x => x.id === row.dataset.rrow);
+        if (!r) return;
+        row.querySelector("[data-act='home']").onclick = (e) => {
+          e.stopPropagation();
+          r.onHome = !r.onHome;
+          this.save();
+          this.toast(r.onHome ? "Added to Home. Start it from your Home screen." : "Removed from your Home screen");
+          renderList();
+        };
+        row.onclick = () => this.openRoutineEditor(r.id);
+      });
+    };
+    renderList();
+
+    const search = root.querySelector("#rl-search");
+    if (search) search.oninput = (e) => { this._rlib.q = e.target.value; renderList(); };
+    root.querySelectorAll("#rl-types .chip").forEach(ch => ch.onclick = () => {
+      root.querySelectorAll("#rl-types .chip").forEach(x => x.classList.remove("on"));
+      ch.classList.add("on");
+      this._rlib.type = ch.dataset.v;
+      renderList();
+    });
+    this.bindFilterFades(root);
+
     root.querySelectorAll("[data-arid]").forEach(card => {
       const r = s.routines.find(x => x.id === card.dataset.arid);
       card.querySelector("[data-act='restore']").onclick = () => {
@@ -43,6 +88,20 @@
         }, "Delete");
       };
     });
+  };
+
+  // one compact row in the routine library list
+  App.routineRowHtml = function (r) {
+    const t = this.routineTypeMeta(this.routineType(r));
+    return `
+      <div class="routine-row" data-rrow="${r.id}">
+        <button class="home-tgl ${r.onHome ? "on" : ""}" data-act="home" aria-label="${r.onHome ? "Remove from Home screen" : "Add to Home screen"}">${this.icon("home")}</button>
+        <div class="routine-row-info">
+          <div class="routine-row-name">${this.esc(r.name)}</div>
+          <div class="routine-row-meta">${this.esc(t.name)} · ${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min</div>
+        </div>
+        <div class="ex-item-chev">${this.icon("chevR")}</div>
+      </div>`;
   };
 
   // ----- create flow -----
@@ -129,9 +188,16 @@
     const r = this.state.routines.find(x => x.id === rid);
     if (!r) return;
     this.pushView("editor:" + rid, () => this.openRoutineEditor(rid));
+    const autoType = this.routineTypeMeta(this.routineType({ items: r.items }));
     this.openModal("Edit Routine", `
       <label class="field-label">Routine name</label>
       <input type="text" id="re-name" value="${this.esc(r.name)}">
+      <label class="field-label">Routine type</label>
+      <div class="chip-row" id="re-kind">
+        <button class="chip small-chip ${!r.kind ? "on" : ""}" data-k="">Auto: ${this.esc(autoType.name)}</button>
+        ${window.ROUTINE_TYPES.map(t => `<button class="chip small-chip ${r.kind === t.id ? "on" : ""}" data-k="${t.id}">${this.icon(t.icon)} ${this.esc(t.name)}</button>`).join("")}
+      </div>
+      <div class="field-hint">Used to group routines in your library. Auto picks based on the exercises inside.</div>
       ${r.desc ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem">${this.esc(r.desc)}</p>` : ""}
       <p style="font-size:0.85rem;color:var(--muted2);margin-top:0.4rem">Estimated session: ~${this.estimateRoutineMin(r)} min including rest</p>
       <div class="section-label">Exercises (${r.items.length})</div>
@@ -140,11 +206,23 @@
       <button class="btn big" id="re-add" style="margin-top:0.6rem">${this.icon("plus")} Add Exercises</button>
       <div class="btn-row" style="margin-top:0.8rem">
         <button class="btn secondary" id="re-start">${this.icon("play")} Start This Routine</button>
-        <button class="btn danger" id="re-delete">${this.icon("trash")} Delete</button>
+        <button class="btn secondary" id="re-archive">${this.icon("archive")} Archive</button>
       </div>
+      <button class="btn danger big" id="re-delete" style="margin-top:0.5rem">${this.icon("trash")} Delete</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelector("#re-name").onchange = (e) => { r.name = e.target.value.trim() || r.name; this.save(); this.refresh(); };
+    body.querySelectorAll("#re-kind .chip").forEach(ch => ch.onclick = () => {
+      body.querySelectorAll("#re-kind .chip").forEach(x => x.classList.remove("on"));
+      ch.classList.add("on");
+      if (ch.dataset.k) r.kind = ch.dataset.k; else delete r.kind;
+      this.save(); this.refresh();
+    });
+    body.querySelector("#re-archive").onclick = () => {
+      r.archived = true;
+      this.save(); this.closeModal(); this.refresh();
+      this.toast("Archived. Find it at the bottom of Routines.");
+    };
     body.querySelector("#re-add").onclick = () => this.openExercisePicker(r.id);
     body.querySelector("#re-start").onclick = () => { this.closeModal(); this.startSession(r.id); };
     body.querySelector("#re-delete").onclick = () => {

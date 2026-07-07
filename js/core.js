@@ -60,6 +60,23 @@
     condition(id) { return window.CONDITIONS.find(c => c.id === id) || { id, name: id, blurb: "" }; },
     equip(id) { return window.EQUIPMENT.find(q => q.id === id) || { id, name: id, icon: "bodyweight" }; },
     typeMeta(id) { return window.EX_TYPES.find(t => t.id === id) || { id, name: id, color: "" }; },
+    routineTypeMeta(id) { return window.ROUTINE_TYPES.find(t => t.id === id) || { id, name: id, icon: "sparkle" }; },
+    // a routine's type: the user's manual tag wins, otherwise the majority exercise type decides
+    routineType(r) {
+      if (r.kind) return r.kind;
+      const map = { stretch: "stretching", strengthen: "strengthening", mobility: "mobility", "nerve-glide": "mobility", balance: "balance", lift: "gym", cardio: "cardio" };
+      const counts = {};
+      r.items.forEach(it => {
+        const ex = this.ex(it.exId);
+        if (!ex) return;
+        const k = map[ex.type] || "mixed";
+        counts[k] = (counts[k] || 0) + 1;
+      });
+      const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+      const total = entries.reduce((n, e) => n + e[1], 0);
+      if (!total) return "mixed";
+      return entries[0][1] / total >= 0.6 ? entries[0][0] : "mixed";
+    },
 
     esc(s) {
       return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

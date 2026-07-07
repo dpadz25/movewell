@@ -332,6 +332,25 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .routine-start-btn .icn { width: 1em; height: 1em; }
 .routine-start-btn:active { opacity: 0.85; }
 
+/* ============ ROUTINE LIBRARY LIST (compact rows) ============ */
+.routine-row {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 0.55rem 0.7rem; margin-bottom: 0.45rem; box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 0.65rem; cursor: pointer;
+}
+.routine-row:active { background: var(--surface2); }
+.routine-row-info { flex: 1; min-width: 0; }
+.routine-row-name { font-size: 0.98rem; font-weight: 800; overflow-wrap: anywhere; }
+.routine-row-meta { font-size: 0.76rem; color: var(--muted); margin-top: 0.1rem; }
+.home-tgl {
+  width: 2.8rem; height: 2.8rem; border-radius: 12px; flex-shrink: 0;
+  border: 2px dashed var(--border2); background: var(--surface); color: var(--muted2);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.home-tgl .icn { width: 1.3rem; height: 1.3rem; }
+.home-tgl.on { background: var(--accent); border: 2px solid var(--accent); color: var(--on-accent); }
+.home-tgl:active { transform: scale(0.94); }
+
 .empty-state { text-align: center; padding: 2rem 1rem; color: var(--muted); }
 .empty-state .empty-icon { display: flex; justify-content: center; margin-bottom: 0.7rem; color: var(--accent); }
 .empty-state .empty-icon .icn { width: 3rem; height: 3rem; stroke-width: 1.5; }

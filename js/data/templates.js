@@ -165,6 +165,22 @@ window.EX_TYPES = [
   { id: "cardio", name: "Cardio", color: "red" }
 ];
 
+// Routine types for the library filter. Most are auto-detected from a routine's
+// exercises; the rest (yoga, warm-up, etc.) can be picked manually in the editor.
+window.ROUTINE_TYPES = [
+  { id: "rehab", name: "Rehab", icon: "medical" },
+  { id: "stretching", name: "Stretching", icon: "leaf" },
+  { id: "strengthening", name: "Strengthening", icon: "arms" },
+  { id: "mobility", name: "Mobility", icon: "stick" },
+  { id: "gym", name: "Gym", icon: "barbell" },
+  { id: "cardio", name: "Cardio", icon: "run" },
+  { id: "balance", name: "Balance", icon: "balance" },
+  { id: "yoga", name: "Yoga", icon: "sun" },
+  { id: "posture", name: "Posture", icon: "upper-back" },
+  { id: "warmup", name: "Warm-Up", icon: "flame" },
+  { id: "mixed", name: "Mixed", icon: "sparkle" }
+];
+
 // Routine templates. Items may override the exercise's default dose.
 window.TEMPLATES = [
   {
