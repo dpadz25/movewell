@@ -25,13 +25,11 @@
       ${archived.length ? `
         <div class="section-label">Archived (${archived.length})</div>
         ${archived.map(r => `
-          <div class="routine-card archived-card" data-arid="${r.id}">
-            <div class="routine-card-info">
-              <div class="routine-card-name">${this.esc(r.name)}</div>
-              <div class="routine-card-meta">${r.items.length} exercises · archived</div>
-            </div>
-            <button class="btn secondary small" data-act="restore">${this.icon("upload")} Restore</button>
-            <button class="mini-btn danger" data-act="destroy" aria-label="Delete forever">${this.icon("trash")}</button>
+          <div class="archived-row" data-arid="${r.id}">
+            <span class="archived-row-name">${this.esc(r.name)}</span>
+            <span class="archived-row-meta">${r.items.length} exercises</span>
+            <button class="mini-btn" data-act="restore" title="Restore" aria-label="Restore ${this.esc(r.name)}">${this.icon("upload")}</button>
+            <button class="mini-btn danger" data-act="destroy" title="Delete forever" aria-label="Delete ${this.esc(r.name)} forever">${this.icon("trash")}</button>
           </div>`).join("")}` : ""}
     `;
     const root = document.getElementById("routines-scroll");

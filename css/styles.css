@@ -351,6 +351,19 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .home-tgl.on { background: var(--accent); border: 2px solid var(--accent); color: var(--on-accent); }
 .home-tgl:active { transform: scale(0.94); }
 
+/* archived routines: slim one-line rows */
+.archived-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.3rem 0.4rem 0.3rem 0.7rem; margin-bottom: 0.3rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  opacity: 0.85;
+}
+.archived-row-name {
+  flex: 1; min-width: 0; font-size: 0.85rem; font-weight: 700; color: var(--muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.archived-row-meta { font-size: 0.72rem; color: var(--muted2); flex-shrink: 0; }
+
 .empty-state { text-align: center; padding: 2rem 1rem; color: var(--muted); }
 .empty-state .empty-icon { display: flex; justify-content: center; margin-bottom: 0.7rem; color: var(--accent); }
 .empty-state .empty-icon .icn { width: 3rem; height: 3rem; stroke-width: 1.5; }
