@@ -64,7 +64,7 @@
     // a routine's type: the user's manual tag wins, otherwise the majority exercise type decides
     routineType(r) {
       if (r.kind) return r.kind;
-      const map = { stretch: "stretching", strengthen: "strengthening", mobility: "mobility", "nerve-glide": "mobility", balance: "balance", lift: "gym", cardio: "cardio", yoga: "yoga" };
+      const map = { stretch: "stretching", strengthen: "strengthening", mobility: "mobility", "nerve-glide": "mobility", balance: "balance", lift: "gym", cardio: "cardio", yoga: "yoga", recovery: "recovery" };
       const counts = {};
       r.items.forEach(it => {
         const ex = this.ex(it.exId);

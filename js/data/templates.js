@@ -163,7 +163,8 @@ window.EX_TYPES = [
   { id: "nerve-glide", name: "Nerve Glide", color: "orange" },
   { id: "balance", name: "Balance", color: "yellow" },
   { id: "lift", name: "Gym Lift", color: "purple" },
-  { id: "cardio", name: "Cardio", color: "red" }
+  { id: "cardio", name: "Cardio", color: "red" },
+  { id: "recovery", name: "Recovery", color: "teal" }
 ];
 
 // Routine types for the library filter. Most are auto-detected from a routine's
@@ -179,6 +180,7 @@ window.ROUTINE_TYPES = [
   { id: "yoga", name: "Yoga", icon: "sun" },
   { id: "posture", name: "Posture", icon: "upper-back" },
   { id: "warmup", name: "Warm-Up", icon: "flame" },
+  { id: "recovery", name: "Recovery", icon: "heart" },
   { id: "mixed", name: "Mixed", icon: "sparkle" }
 ];
 
