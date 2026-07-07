@@ -397,8 +397,11 @@
           if (!tracking) return;
           const dx = e.clientX - startX, dy = e.clientY - startY;
           if (!dragging) {
-            if (Math.abs(dx) < 8) return;
-            if (Math.abs(dy) > Math.abs(dx)) { tracking = false; return; }
+            const ax = Math.abs(dx), ay = Math.abs(dy);
+            // clearly vertical: hand the gesture to the page scroll
+            if (ay > 12 && ay > ax * 1.4) { tracking = false; return; }
+            // not clearly horizontal yet: keep watching
+            if (ax < 8 || ax < ay) return;
             dragging = true;
             try { card.setPointerCapture(e.pointerId); } catch (err) { }
             closeOthers(wrap);
@@ -418,6 +421,8 @@
           apply(open ? -trayW() : 0, true);
         };
         card.addEventListener("pointerup", finish);
+        // once a sideways drag has locked in, stop the page from scrolling mid-swipe
+        card.addEventListener("touchmove", e => { if (dragging) e.preventDefault(); }, { passive: false });
         card.addEventListener("pointercancel", () => {
           if (!tracking) return;
           tracking = false;
