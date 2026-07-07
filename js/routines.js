@@ -167,7 +167,7 @@
       <div class="routine-item ${inGroup ? "ss-grouped" : ""}" data-i="${i}">
         <div class="routine-item-info" data-act="dose">
           <div class="routine-item-name">${i + 1}. ${this.esc(it.variant || ex.name)}${inGroup ? ` <span class="ss-tag">${this.icon("link")} superset</span>` : ""}</div>
-          <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)} · tap to adjust</div>
+          <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)} · tap to adjust or replace</div>
         </div>
         <button class="mini-btn" data-act="up" title="Move up" ${i === 0 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowUp")}</button>
         <button class="mini-btn" data-act="down" title="Move down" ${i === r.items.length - 1 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowDown")}</button>
@@ -274,6 +274,7 @@
         <label class="switch"><input type="checkbox" id="dv-perside" ${it.perSide ? "checked" : ""}><span class="slider"></span></label>
       </div>
       <button class="btn secondary big" id="dv-detail" style="margin-bottom:0.6rem">${this.icon("book")} View Exercise Instructions</button>
+      <button class="btn secondary big" id="dv-replace" style="margin-bottom:0.6rem">${this.icon("swap")} Replace This Exercise</button>
       <button class="btn big grad" id="dv-done">${this.icon("check")} Done</button>
     `);
     const body = document.getElementById("modal-body");
@@ -296,13 +297,16 @@
     });
     body.querySelector("#dv-perside").onchange = (e) => { it.perSide = e.target.checked; this.save(); };
     body.querySelector("#dv-detail").onclick = () => this.openExerciseDetail(it.exId, { hideAdd: true });
+    body.querySelector("#dv-replace").onclick = () => this.openExercisePicker(rid, i);
     body.querySelector("#dv-done").onclick = () => this.modalBack();
   };
 
-  // ----- picker: add exercises to a routine -----
-  App.openExercisePicker = function (rid) {
+  // ----- picker: add exercises to a routine, or replace one in place -----
+  App.openExercisePicker = function (rid, replaceI) {
     const r = this.state.routines.find(x => x.id === rid);
-    this.pushView("picker:" + rid, () => this.openExercisePicker(rid));
+    const replacing = replaceI != null;
+    const oldIt = replacing ? r.items[replaceI] : null;
+    this.pushView("picker:" + rid + (replacing ? ":swap" + replaceI : ""), () => this.openExercisePicker(rid, replaceI));
     this._pick = { q: "", region: "" };
     const render = () => {
       const q = this._pick.q.toLowerCase();
@@ -326,20 +330,32 @@
         const exId = n.dataset.ex;
         if (inR.has(exId)) { this.toast("Already in this routine"); return; }
         const ex = this.ex(exId);
-        r.items.push({ exId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide });
+        const item = { exId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide };
+        if (replacing) {
+          // swap in place: keep the spot in the order and any superset link
+          if (oldIt.groupId) item.groupId = oldIt.groupId;
+          r.items[replaceI] = item;
+          this.save();
+          this.toast("Replaced with " + ex.name);
+          // jump straight back to the routine editor, skipping the old exercise's adjust screen
+          this._modalStack.pop();
+          this.modalBack();
+          return;
+        }
+        r.items.push(item);
         this.save();
         this.toast(ex.name + " added");
         render();
       });
     };
-    this.openModal("Add to “" + r.name + "”", `
+    this.openModal(replacing ? "Replace “" + (oldIt.variant || this.ex(oldIt.exId).name) + "”" : "Add to “" + r.name + "”", `
       <div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="pick-search" placeholder="Search exercises"></div>
       <div class="filter-wrap"><div class="filter-bar" id="pick-regions">
         <button class="chip on" data-v="">All</button>
         ${window.REGIONS.map(rg => `<button class="chip" data-v="${rg.id}">${this.icon(rg.icon)} ${rg.name}</button>`).join("")}
       </div></div>
       <div id="pick-list"></div>
-      <button class="btn big" id="pick-done" style="margin-top:0.8rem">${this.icon("check")} Done, Back to Routine</button>
+      <button class="btn big" id="pick-done" style="margin-top:0.8rem">${replacing ? this.icon("close") + " Cancel, Keep Current Exercise" : this.icon("check") + " Done, Back to Routine"}</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelector("#pick-search").oninput = (e) => { this._pick.q = e.target.value; render(); };

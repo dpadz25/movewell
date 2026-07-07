@@ -23,6 +23,7 @@ window.ICONS = {
   trash: '<path d="M4 7h16"/><path d="M9.2 7V5.4c0-.8.6-1.4 1.4-1.4h2.8c.8 0 1.4.6 1.4 1.4V7"/><path d="m6.5 7 .9 13.5h9.2L17.5 7"/><path d="M10 11v5.5M14 11v5.5"/>',
   archive: '<rect x="3.5" y="4" width="17" height="4.5" rx="1.2"/><path d="M5 8.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V8.5"/><path d="M9.8 12.5h4.4"/>',
   link: '<path d="M9.5 14.5 14.5 9.5"/><path d="M11 6.8 13.2 4.6a3.4 3.4 0 0 1 4.8 0l1.4 1.4a3.4 3.4 0 0 1 0 4.8L17.2 13"/><path d="M13 17.2 10.8 19.4a3.4 3.4 0 0 1-4.8 0l-1.4-1.4a3.4 3.4 0 0 1 0-4.8L6.8 11"/>',
+  swap: '<path d="M4.5 8h15M16 4.5 19.5 8 16 11.5"/><path d="M19.5 16h-15M8 12.5 4.5 16 8 19.5"/>',
   play: '<path d="M8 5.3v13.4L19 12z" fill="currentColor" stroke-linejoin="round"/>',
   pause: '<path d="M8.5 5.5v13M15.5 5.5v13" stroke-width="3"/>',
   pencil: '<path d="m4.5 19.5.9-3.9L16.7 4.3a2 2 0 0 1 2.9 0l.1.1a2 2 0 0 1 0 2.9L8.4 18.6z"/><path d="m14.5 6.5 3 3"/>',
