@@ -498,6 +498,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .routine-item-info { flex: 1; min-width: 0; cursor: pointer; }
 .routine-item-name { font-size: 0.98rem; font-weight: 800; }
 .routine-item-dose { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+.routine-item-dose .icn.edit-hint { width: 0.8em; height: 0.8em; color: var(--muted2); vertical-align: -0.1em; }
 .mini-btn {
   background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px;
   width: 2.4rem; height: 2.4rem; color: var(--muted); cursor: pointer; flex-shrink: 0;

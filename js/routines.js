@@ -300,7 +300,7 @@
         <button class="mini-btn drag-handle" data-act="drag" title="Hold and drag to reorder" aria-label="Hold and drag to reorder">${this.icon("grip")}</button>
         <div class="routine-item-info" data-act="dose">
           <div class="routine-item-name">${i + 1}. ${this.esc(it.variant || ex.name)}${inGroup ? ` <span class="ss-tag">${this.icon("link")} superset</span>` : ""}</div>
-          <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)}</div>
+          <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)} ${this.icon("pencil", "edit-hint")}</div>
         </div>
         <button class="mini-btn danger" data-act="remove" title="Remove">${this.icon("close")}</button>
       </div>
