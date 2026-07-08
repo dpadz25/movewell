@@ -156,7 +156,7 @@
 
   App.createBlankRoutine = function (firstExId) {
     this.pushView("blank-name", () => this.createBlankRoutine(firstExId));
-    const r = { id: this.uid(), name: "", desc: "", onHome: true, archived: false, items: [] };
+    const r = { id: this.uid(), name: "", desc: "", onHome: true, archived: false, warmupItems: [], items: [] };
     if (firstExId) {
       const ex = this.ex(firstExId);
       r.items.push({ exId: firstExId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide });
@@ -185,8 +185,11 @@
   App.openRoutineEditor = function (rid) {
     const r = this.state.routines.find(x => x.id === rid);
     if (!r) return;
+    // pairing mode is a per-routine, per-visit editor state, never persisted
+    if (this._pairModeRid !== rid) { this._pairMode = false; this._pairModeRid = rid; }
     this.pushView("editor:" + rid, () => this.openRoutineEditor(rid));
     const autoType = this.routineTypeMeta(this.routineType({ items: r.items }));
+    const wu = r.warmupItems || [];
     this.openModal("Edit Routine", `
       <label class="field-label">Routine name</label>
       <input type="text" id="re-name" value="${this.esc(r.name)}">
@@ -197,9 +200,14 @@
       </div>
       <div class="field-hint">Used to group routines in your library. Auto picks based on the exercises inside.</div>
       ${r.desc ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem">${this.esc(r.desc)}</p>` : ""}
-      <p style="font-size:0.85rem;color:var(--muted2);margin-top:0.4rem">Estimated session: ~${this.estimateRoutineMin(r)} min including rest</p>
-      <div class="section-label">Exercises (${r.items.length})</div>
-      ${r.items.length > 1 ? `<p style="font-size:0.78rem;color:var(--muted2);margin:-0.2rem 0 0.5rem">Tap the link between two exercises to pair them as a superset. You'll alternate between them during the session, resting after each round.</p>` : ""}
+      <p style="font-size:0.85rem;color:var(--muted2);margin-top:0.4rem">~${this.estimateRoutineMin(r)} min</p>
+      ${wu.length ? `
+      <div class="section-label">Warmup (${wu.length})</div>
+      <div id="re-warmup">${wu.map((it, i) => this.routineItemHtml(r, it, i, { warmup: true })).join("")}</div>
+      <button class="btn secondary small" id="re-warmup-more">${this.icon("plus")} Add warmup exercise</button>
+      ` : `<button class="btn secondary" id="re-warmup-add" style="margin-top:0.6rem">${this.icon("plus")} Add a warmup</button>`}
+      <div class="section-label label-row">Exercises (${r.items.length})${r.items.length > 1 ? `<button class="link-btn" id="re-pair">${this.icon("link")} ${this._pairMode ? "Done pairing" : "Pair exercises"}</button>` : ""}</div>
+      ${this._pairMode ? `<p style="font-size:0.78rem;color:var(--muted2);margin:-0.2rem 0 0.5rem">Tap the link between two moves to pair them. Paired moves take turns during your session.</p>` : ""}
       <div id="re-items">${r.items.map((it, i) => this.routineItemHtml(r, it, i)).join("") || `<p style="color:var(--muted);font-size:0.9rem">No exercises yet. Add some below.</p>`}</div>
       <button class="btn big" id="re-add" style="margin-top:0.6rem">${this.icon("plus")} Add Exercises</button>
       <div class="btn-row" style="margin-top:0.8rem">
@@ -222,6 +230,19 @@
       this.toast("Archived. Find it at the bottom of Routines.");
     };
     body.querySelector("#re-add").onclick = () => this.openExercisePicker(r.id);
+    const wuAdd = body.querySelector("#re-warmup-add");
+    if (wuAdd) wuAdd.onclick = () => {
+      const items = this.suggestWarmup(r);
+      if (!items.length) { this.toast("Couldn't suggest a warmup. Add exercises first."); return; }
+      r.warmupItems = items;
+      this.save();
+      this.openRoutineEditor(rid);
+      this.toast("Warmup added. Tap a move to change it.");
+    };
+    const wuMore = body.querySelector("#re-warmup-more");
+    if (wuMore) wuMore.onclick = () => this.openExercisePicker(r.id, "wu");
+    const pair = body.querySelector("#re-pair");
+    if (pair) pair.onclick = () => { this._pairMode = !this._pairMode; this.openRoutineEditor(rid); };
     body.querySelector("#re-start").onclick = () => { this.closeModal(); this.startSession(r.id); };
     body.querySelector("#re-delete").onclick = () => {
       this.confirm("Delete this routine?", "“" + r.name + "” and its exercise list will be removed. Your past session history is kept.", () => {
@@ -233,23 +254,57 @@
     this.bindRoutineItemButtons(r);
   };
 
-  App.routineItemHtml = function (r, it, i) {
+  // pick 2-3 gentle mobility/stretch moves matching the routine's body regions
+  App.suggestWarmup = function (r) {
+    const count = {}, order = [];
+    r.items.forEach(it => {
+      const ex = this.ex(it.exId);
+      if (!ex) return;
+      if (!(ex.region in count)) order.push(ex.region);
+      count[ex.region] = (count[ex.region] || 0) + 1;
+    });
+    const regions = order.sort((a, b) => count[b] - count[a]);
+    const used = new Set(r.items.map(it => it.exId));
+    (r.warmupItems || []).forEach(it => used.add(it.exId));
+    const picks = [];
+    const pickFrom = (maxLevel, regionList) => {
+      regionList.forEach(rg => {
+        if (picks.length >= 3) return;
+        const cands = window.EXERCISES.filter(ex =>
+          (ex.type === "mobility" || ex.type === "stretch") &&
+          ex.level <= maxLevel && ex.dose && ex.region === rg && !used.has(ex.id));
+        if (!cands.length) return;
+        const best = cands.find(x => x.type === "mobility") || cands[0];
+        used.add(best.id);
+        picks.push(best);
+      });
+    };
+    pickFrom(1, regions);
+    if (picks.length < 2) pickFrom(2, regions);
+    if (picks.length < 2) pickFrom(1, ["core", "hip", "lower-back", "upper-back", "neck"]);
+    return picks.slice(0, 3).map(ex => ({
+      exId: ex.id, sets: 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0,
+      timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide
+    }));
+  };
+
+  App.routineItemHtml = function (r, it, i, opts) {
+    const wu = !!(opts && opts.warmup);
     const ex = this.ex(it.exId);
     if (!ex) return "";
-    const next = r.items[i + 1];
-    const linked = !!(it.groupId && next && next.groupId === it.groupId);
-    const inGroup = !!it.groupId;
+    const next = wu ? null : r.items[i + 1];
+    const linked = !!(!wu && it.groupId && next && next.groupId === it.groupId);
+    const inGroup = !wu && !!it.groupId;
     return `
-      <div class="routine-item ${inGroup ? "ss-grouped" : ""}" data-i="${i}">
+      <div class="routine-item ${inGroup ? "ss-grouped" : ""}${wu ? " warmup-item" : ""}" data-i="${i}" data-list="${wu ? "wu" : "main"}">
+        <button class="mini-btn drag-handle" data-act="drag" title="Hold and drag to reorder" aria-label="Hold and drag to reorder">${this.icon("grip")}</button>
         <div class="routine-item-info" data-act="dose">
           <div class="routine-item-name">${i + 1}. ${this.esc(it.variant || ex.name)}${inGroup ? ` <span class="ss-tag">${this.icon("link")} superset</span>` : ""}</div>
-          <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)} · tap to adjust or replace</div>
+          <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)}</div>
         </div>
-        <button class="mini-btn" data-act="up" title="Move up" ${i === 0 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowUp")}</button>
-        <button class="mini-btn" data-act="down" title="Move down" ${i === r.items.length - 1 ? "disabled style='opacity:0.3'" : ""}>${this.icon("arrowDown")}</button>
         <button class="mini-btn danger" data-act="remove" title="Remove">${this.icon("close")}</button>
       </div>
-      ${next ? `<button class="ss-connector ${linked ? "linked" : ""}" data-link="${i}">${this.icon("link")} ${linked ? "Superset linked · tap to unlink" : "Superset with next"}</button>` : ""}`;
+      ${(!wu && this._pairMode && next) ? `<button class="ss-connector ${linked ? "linked" : ""}" data-link="${i}">${this.icon("link")} ${linked ? "Paired · tap to unlink" : "Pair with next"}</button>` : ""}`;
   };
 
   // supersets: consecutive items sharing a groupId alternate during a session.
@@ -296,34 +351,95 @@
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".routine-item").forEach(node => {
       const i = Number(node.dataset.i);
+      const list = node.dataset.list || "main";
+      const arr = list === "wu" ? (r.warmupItems || []) : r.items;
       node.querySelectorAll("[data-act]").forEach(btn => btn.onclick = (e) => {
         e.stopPropagation();
         const act = btn.dataset.act;
-        if (act === "up" && i > 0) { [r.items[i - 1], r.items[i]] = [r.items[i], r.items[i - 1]]; this.normalizeGroups(r); this.save(); this.openRoutineEditor(r.id); }
-        if (act === "down" && i < r.items.length - 1) { [r.items[i + 1], r.items[i]] = [r.items[i], r.items[i + 1]]; this.normalizeGroups(r); this.save(); this.openRoutineEditor(r.id); }
-        if (act === "remove") { r.items.splice(i, 1); this.normalizeGroups(r); this.save(); this.openRoutineEditor(r.id); }
-        if (act === "dose") this.openDoseEditor(r.id, i);
+        if (act === "remove") { arr.splice(i, 1); if (list === "main") this.normalizeGroups(r); this.save(); this.openRoutineEditor(r.id); }
+        if (act === "dose") this.openDoseEditor(r.id, i, list);
       });
     });
     body.querySelectorAll("[data-link]").forEach(btn => btn.onclick = (e) => {
       e.stopPropagation();
       this.toggleSupersetLink(r, Number(btn.dataset.link));
     });
+    this.bindDragReorder(r);
+  };
+
+  // hold the grip handle and drag a row up/down to reorder within its own list
+  App.bindDragReorder = function (r) {
+    const body = document.getElementById("modal-body");
+    body.querySelectorAll(".drag-handle").forEach(handle => {
+      handle.onpointerdown = (e) => {
+        e.preventDefault();
+        const row = handle.closest(".routine-item");
+        const list = row.dataset.list || "main";
+        const rows = Array.from(body.querySelectorAll(`.routine-item[data-list="${list}"]`));
+        if (rows.length < 2) return;
+        const from = Number(row.dataset.i);
+        const startY = e.clientY;
+        const startScroll = body.scrollTop;
+        const rowH = row.offsetHeight + parseFloat(getComputedStyle(row).marginBottom) || row.offsetHeight;
+        let lastY = e.clientY, to = from, scrollT = null;
+        try { handle.setPointerCapture(e.pointerId); } catch (_) { /* synthetic or already-lifted pointer */ }
+        row.classList.add("dragging");
+        body.classList.add("dragging-list");
+
+        const update = () => {
+          const dy = (lastY - startY) + (body.scrollTop - startScroll);
+          row.style.transform = `translateY(${dy}px)`;
+          to = Math.max(0, Math.min(rows.length - 1, from + Math.round(dy / rowH)));
+          rows.forEach((n, j) => {
+            if (n === row) return;
+            let shift = 0;
+            if (from < to && j > from && j <= to) shift = -rowH;
+            if (from > to && j >= to && j < from) shift = rowH;
+            n.style.transform = shift ? `translateY(${shift}px)` : "";
+          });
+        };
+        const edgeScroll = (y) => {
+          const rect = body.getBoundingClientRect();
+          clearInterval(scrollT); scrollT = null;
+          if (y < rect.top + 60) scrollT = setInterval(() => { body.scrollTop -= 6; update(); }, 16);
+          else if (y > rect.bottom - 60) scrollT = setInterval(() => { body.scrollTop += 6; update(); }, 16);
+        };
+        const finish = (commit) => {
+          clearInterval(scrollT);
+          handle.onpointermove = handle.onpointerup = handle.onpointercancel = null;
+          body.classList.remove("dragging-list");
+          rows.forEach(n => { n.style.transform = ""; });
+          row.classList.remove("dragging");
+          if (commit && to !== from) {
+            const arr = list === "wu" ? (r.warmupItems || []) : r.items;
+            const [item] = arr.splice(from, 1);
+            arr.splice(to, 0, item);
+            if (list === "main") this.normalizeGroups(r);
+            this.save();
+            this.openRoutineEditor(r.id);
+          }
+        };
+        handle.onpointermove = (ev) => { lastY = ev.clientY; update(); edgeScroll(ev.clientY); };
+        handle.onpointerup = () => finish(true);
+        handle.onpointercancel = () => finish(false);
+      };
+    });
   };
 
   // ----- dose editor -----
-  App.openDoseEditor = function (rid, i) {
+  App.openDoseEditor = function (rid, i, list) {
     const r = this.state.routines.find(x => x.id === rid);
-    const it = r.items[i];
+    const arr = list === "wu" ? (r.warmupItems || []) : r.items;
+    const it = arr[i];
+    if (!it) return;
     const ex = this.ex(it.exId);
-    this.pushView("dose:" + rid + ":" + i, () => this.openDoseEditor(rid, i));
+    this.pushView("dose:" + rid + ":" + (list || "main") + ":" + i, () => this.openDoseEditor(rid, i, list));
     const timed = it.timeSec > 0;
     const hasVariations = ex.variations && ex.variations.length > 0;
     this.openModal(ex.name, `
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Adjust the amounts to match your plan.</p>
       ${hasVariations ? `
-      <div class="section-label" style="margin-top:0">Which version are you doing?</div>
-      <p style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.5rem">Pick the variation you actually use and it will show by that name in this routine and during sessions.</p>
+      <div class="section-label" style="margin-top:0">Version</div>
+      <p style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.5rem">Pick the one you do.</p>
       <div class="chip-row" id="dv-variant" style="margin-bottom:1rem">
         <button class="chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
         ${ex.variations.map(v => `<button class="chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
@@ -373,16 +489,19 @@
     });
     body.querySelector("#dv-perside").onchange = (e) => { it.perSide = e.target.checked; this.save(); };
     body.querySelector("#dv-detail").onclick = () => this.openExerciseDetail(it.exId, { hideAdd: true });
-    body.querySelector("#dv-replace").onclick = () => this.openExercisePicker(rid, i);
+    body.querySelector("#dv-replace").onclick = () => this.openExercisePicker(rid, list, i);
     body.querySelector("#dv-done").onclick = () => this.modalBack();
   };
 
-  // ----- picker: add exercises to a routine, or replace one in place -----
-  App.openExercisePicker = function (rid, replaceI) {
+  // ----- picker: add exercises to a routine or its warmup (list "wu"), or replace one in place -----
+  App.openExercisePicker = function (rid, list, replaceI) {
     const r = this.state.routines.find(x => x.id === rid);
+    const wu = list === "wu";
+    if (wu && !Array.isArray(r.warmupItems)) r.warmupItems = [];
+    const arr = wu ? r.warmupItems : r.items;
     const replacing = replaceI != null;
-    const oldIt = replacing ? r.items[replaceI] : null;
-    this.pushView("picker:" + rid + (replacing ? ":swap" + replaceI : ""), () => this.openExercisePicker(rid, replaceI));
+    const oldIt = replacing ? arr[replaceI] : null;
+    this.pushView("picker:" + rid + ":" + (list || "main") + (replacing ? ":swap" + replaceI : ""), () => this.openExercisePicker(rid, list, replaceI));
     this._pick = { q: "", region: "" };
     const render = () => {
       const q = this._pick.q.toLowerCase();
@@ -395,7 +514,7 @@
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase().includes(q)) return false;
         return true;
       });
-      const inR = new Set(r.items.map(i => i.exId));
+      const inR = new Set(r.items.map(i => i.exId).concat((r.warmupItems || []).map(i => i.exId)));
       document.getElementById("pick-list").innerHTML = list.map(ex => `
         <div class="ex-item" data-ex="${ex.id}" style="${inR.has(ex.id) ? "opacity:0.55" : ""}">
           <div class="ex-item-icon tile ${this.region(ex.region).color || ""}">${this.icon(this.region(ex.region).icon)}</div>
@@ -409,11 +528,11 @@
         const exId = n.dataset.ex;
         if (inR.has(exId)) { this.toast("Already in this routine"); return; }
         const ex = this.ex(exId);
-        const item = { exId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide };
+        const item = { exId, sets: wu ? 1 : (ex.dose.sets || 1), reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide };
         if (replacing) {
           // swap in place: keep the spot in the order and any superset link
-          if (oldIt.groupId) item.groupId = oldIt.groupId;
-          r.items[replaceI] = item;
+          if (!wu && oldIt.groupId) item.groupId = oldIt.groupId;
+          arr[replaceI] = item;
           this.save();
           this.toast("Replaced with " + ex.name);
           // jump straight back to the routine editor, skipping the old exercise's adjust screen
@@ -421,13 +540,13 @@
           this.modalBack();
           return;
         }
-        r.items.push(item);
+        arr.push(item);
         this.save();
         this.toast(ex.name + " added");
         render();
       });
     };
-    this.openModal(replacing ? "Replace “" + (oldIt.variant || this.ex(oldIt.exId).name) + "”" : "Add to “" + r.name + "”", `
+    this.openModal(replacing ? "Replace “" + (oldIt.variant || this.ex(oldIt.exId).name) + "”" : wu ? "Add warmup moves" : "Add to “" + r.name + "”", `
       <div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="pick-search" placeholder="Search exercises"></div>
       <div class="filter-wrap"><div class="filter-bar" id="pick-regions">
         <button class="chip on" data-v="">All</button>

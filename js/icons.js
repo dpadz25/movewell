@@ -16,6 +16,7 @@ window.ICONS = {
   chevR: '<path d="m9 5 7 7-7 7"/>',
   chevD: '<path d="m5 9 7 7 7-7"/>',
   chevU: '<path d="m5 15 7-7 7 7"/>',
+  grip: '<circle cx="9" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.1" fill="currentColor" stroke="none"/>',
   arrowUp: '<path d="M12 20V4M5.5 10.5 12 4l6.5 6.5"/>',
   arrowDown: '<path d="M12 4v16M5.5 13.5 12 20l6.5-6.5"/>',
   arrowLeft: '<path d="M20 12H4M10.5 5.5 4 12l6.5 6.5"/>',

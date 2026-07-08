@@ -721,6 +721,28 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .routine-card.archived-card .btn.small { flex-shrink: 0; }
 
 /* ============ SUPERSETS ============ */
+.routine-item.warmup-item { border-left: 3px solid var(--teal); }
+
+/* drag-to-reorder */
+.drag-handle { touch-action: none; cursor: grab; }
+.routine-item.dragging {
+  position: relative; z-index: 5;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  border-color: var(--accent);
+}
+.modal-body.dragging-list .routine-item:not(.dragging) { transition: transform 0.15s ease; }
+.modal-body.dragging-list .ss-connector { visibility: hidden; }
+
+/* inline text-style button (e.g. "Pair exercises" in the editor) */
+.link-btn {
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  color: var(--accent-strong); font-weight: 800; font-size: 0.8rem;
+  min-height: 2.4rem; padding: 0.3rem 0.5rem; margin: -0.3rem -0.5rem -0.3rem 0;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.link-btn .icn { width: 0.9rem; height: 0.9rem; }
+.section-label.label-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+
 .routine-item.ss-grouped { border-left: 3px solid var(--purple); }
 .ss-tag {
   display: inline-flex; align-items: center; gap: 0.2rem; vertical-align: 0.1em;

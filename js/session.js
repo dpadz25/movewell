@@ -24,11 +24,31 @@
   App.startSession = function (rid) {
     const r = this.state.routines.find(x => x.id === rid);
     if (!r || r.items.length === 0) { this.toast("Add some exercises to this routine first"); return; }
+    if (!(r.warmupItems || []).length) return this._beginSession(r, false);
+    this.pushView("warmup-ask:" + rid, () => this.startSession(rid));
+    this.openModal("Ready?", `
+      <p style="font-size:0.95rem;color:var(--muted);margin-bottom:1rem">This routine has a short warmup.</p>
+      <button class="btn big grad" id="wu-yes">${this.icon("play")} Start with warmup</button>
+      <button class="btn secondary big" id="wu-no" style="margin-top:0.7rem">Skip warmup</button>
+    `);
+    const body = document.getElementById("modal-body");
+    body.querySelector("#wu-yes").onclick = () => this._beginSession(r, true);
+    body.querySelector("#wu-no").onclick = () => this._beginSession(r, false);
+  };
+
+  App._beginSession = function (r, withWarmup) {
     this.closeModal();
+    const wuItems = withWarmup
+      ? (r.warmupItems || []).map((it, i) => {
+        const c = { ...it, logged: [], skipped: false, warmup: true, srcIdx: i };
+        delete c.groupId;
+        return c;
+      })
+      : [];
     this._sess = {
       routineId: r.id, routineName: r.name,
       start: Date.now(), idx: 0,
-      items: r.items.map(it => ({ ...it, logged: [], skipped: false }))
+      items: wuItems.concat(r.items.map((it, i) => ({ ...it, logged: [], skipped: false, srcIdx: i })))
     };
     document.getElementById("session").classList.add("open");
     clearInterval(this._sessClockT);
@@ -81,11 +101,14 @@
     const gPos = gMembers ? gMembers.findIndex(o => o.j === s.idx) : -1;
     const partnerNames = gMembers ? gMembers.filter(o => o.j !== s.idx).map(o => this.esc(o.x.variant || (this.ex(o.x.exId) || {}).name)).join(" + ") : "";
     const nxt = s.items[s.idx + 1];
-    const canLinkNext = !it.groupId && nxt && !nxt.groupId;
+    const canLinkNext = !it.warmup && !it.groupId && nxt && !nxt.warmup && !nxt.groupId;
     const variantNote = it.variant ? (ex.variations.find(v => v.name === it.variant) || {}).note : "";
     const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(displayName + " exercise how to");
 
-    document.getElementById("session-progress-text").textContent = "Exercise " + (s.idx + 1) + " of " + total;
+    const wuCount = s.items.filter(x => x.warmup).length;
+    document.getElementById("session-progress-text").textContent = it.warmup
+      ? "Warmup " + (s.idx + 1) + " of " + wuCount
+      : "Exercise " + (s.idx + 1 - wuCount) + " of " + (total - wuCount);
     document.getElementById("session-progressbar-fill").style.width = ((s.idx) / total * 100) + "%";
 
     let loggerHtml = "";
@@ -112,16 +135,17 @@
             <div class="stepper-label">Reps</div>
             <div class="stepper"><button id="rep-minus">${this.icon("minus")}</button><span class="stepper-val" id="rep-val">${it.reps || 10}</span><button id="rep-plus">${this.icon("plus")}</button></div>
           </div>
-          <div class="stepper-row">
+          ${it.warmup ? "" : `<div class="stepper-row">
             <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">tap the number to type it</span></div>
             <div class="stepper"><button id="wt-minus">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus">${this.icon("plus")}</button></div>
-          </div>
+          </div>`}
           <button class="btn big grad" id="log-set">${this.icon("check")} Log Set ${done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
           <div id="sets-done">${this.setsDoneHtml(it)}</div>
         </div>`;
     }
 
     document.getElementById("session-body").innerHTML = `
+      ${it.warmup ? `<span class="tag teal session-ex-type">Warmup</span>` : ""}
       <span class="tag ${t.color} session-ex-type">${t.name}</span>
       ${gMembers ? `<span class="tag purple session-ex-type">${this.icon("link")} Superset ${gPos + 1} of ${gMembers.length}</span>` : ""}
       <div class="session-ex-name">${this.esc(displayName)}</div>
@@ -160,11 +184,12 @@
       variantBar.querySelectorAll(".chip").forEach(ch => ch.onclick = () => {
         it.variant = ch.dataset.v || "";
         if (!it.variant) delete it.variant;
-        // persist the choice back to the routine itself
+        // persist the choice back to the routine itself (warmup items live in their own list)
         const routine = this.state.routines.find(x => x.id === s.routineId);
-        if (routine && routine.items[s.idx] && routine.items[s.idx].exId === it.exId) {
-          if (it.variant) routine.items[s.idx].variant = it.variant;
-          else delete routine.items[s.idx].variant;
+        const srcArr = routine && (it.warmup ? (routine.warmupItems || []) : routine.items);
+        if (srcArr && srcArr[it.srcIdx] && srcArr[it.srcIdx].exId === it.exId) {
+          if (it.variant) srcArr[it.srcIdx].variant = it.variant;
+          else delete srcArr[it.srcIdx].variant;
           this.save();
         }
         this.stopHoldTimer();
@@ -175,12 +200,12 @@
     if (ssLink) ssLink.onclick = () => {
       const gid = this.uid();
       it.groupId = gid; nxt.groupId = gid;
-      // persist the pairing back to the routine itself
+      // persist the pairing back to the routine itself (never for warmup steps)
       const routine = this.state.routines.find(x => x.id === s.routineId);
-      if (routine && routine.items[s.idx] && routine.items[s.idx].exId === it.exId &&
-        routine.items[s.idx + 1] && routine.items[s.idx + 1].exId === nxt.exId) {
-        routine.items[s.idx].groupId = gid;
-        routine.items[s.idx + 1].groupId = gid;
+      if (routine && routine.items[it.srcIdx] && routine.items[it.srcIdx].exId === it.exId &&
+        routine.items[nxt.srcIdx] && routine.items[nxt.srcIdx].exId === nxt.exId) {
+        routine.items[it.srcIdx].groupId = gid;
+        routine.items[nxt.srcIdx].groupId = gid;
         this.save();
       }
       this.renderSessionStep();
@@ -199,13 +224,15 @@
       const repVal = body.querySelector("#rep-val"), wtVal = body.querySelector("#wt-val");
       body.querySelector("#rep-minus").onclick = () => repVal.textContent = Math.max(1, Number(repVal.textContent) - 1);
       body.querySelector("#rep-plus").onclick = () => repVal.textContent = Number(repVal.textContent) + 1;
-      body.querySelector("#wt-minus").onclick = () => wtVal.value = Math.max(0, (Number(wtVal.value) || 0) - ((Number(wtVal.value) || 0) > 20 ? 5 : 1));
-      body.querySelector("#wt-plus").onclick = () => wtVal.value = (Number(wtVal.value) || 0) + ((Number(wtVal.value) || 0) >= 20 ? 5 : 1);
+      if (wtVal) {
+        body.querySelector("#wt-minus").onclick = () => wtVal.value = Math.max(0, (Number(wtVal.value) || 0) - ((Number(wtVal.value) || 0) > 20 ? 5 : 1));
+        body.querySelector("#wt-plus").onclick = () => wtVal.value = (Number(wtVal.value) || 0) + ((Number(wtVal.value) || 0) >= 20 ? 5 : 1);
+      }
       body.querySelector("#log-set").onclick = () => {
-        const reps = Number(repVal.textContent), weight = Number(wtVal.value) || 0;
+        const reps = Number(repVal.textContent), weight = wtVal ? (Number(wtVal.value) || 0) : 0;
         it.logged.push({ reps, weight: weight || 0 });
         this._lastWeight = this._lastWeight || {};
-        this._lastWeight[it.exId] = weight;
+        if (wtVal) this._lastWeight[it.exId] = weight;
         this.afterSetLogged(it);
       };
     }
@@ -361,7 +388,7 @@
       id: this.uid(), date: new Date().toISOString(),
       routineId: s.routineId, routineName: s.routineName,
       durationSec, exercisesDone: doneItems.length, setsDone: totalSets,
-      items: s.items.map(i => ({ exId: i.exId, name: i.variant || (this.ex(i.exId) || {}).name || i.exId, sets: i.logged, skipped: i.skipped })),
+      items: s.items.map(i => ({ exId: i.exId, name: i.variant || (this.ex(i.exId) || {}).name || i.exId, sets: i.logged, skipped: i.skipped, warmup: !!i.warmup })),
       feel: null, pain: null, note: ""
     };
 

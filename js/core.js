@@ -36,10 +36,11 @@
       } catch (e) {
         this.state = this.defaultState();
       }
-      // older saves predate the Home/Library split and archiving
+      // older saves predate the Home/Library split, archiving, and warmups
       this.state.routines.forEach(r => {
         if (r.onHome === undefined) r.onHome = true;
         if (r.archived === undefined) r.archived = false;
+        if (!Array.isArray(r.warmupItems)) r.warmupItems = [];
       });
       this.syncCustomExercises();
     },
@@ -85,7 +86,7 @@
     // realistic routine length: work time + rest between sets + setup between exercises
     estimateRoutineMin(r) {
       let sec = 0;
-      r.items.forEach(it => {
+      (r.warmupItems || []).concat(r.items).forEach(it => {
         const ex = this.ex(it.exId);
         if (!ex) return;
         const sets = (it.sets || 1) * (it.perSide ? 2 : 1);
@@ -764,6 +765,7 @@
         desc: t.desc,
         onHome: true,
         archived: false,
+        warmupItems: [],
         items: t.items.filter(id => this.ex(id)).map(id => {
           const ex = this.ex(id);
           return {
