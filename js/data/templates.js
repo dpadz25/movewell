@@ -65,6 +65,7 @@ window.TEMPLATE_GROUPS = [
   { id: "tg-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Tennis elbow, carpal tunnel, grip", templates: ["tpl-tennis-elbow", "tpl-carpal"] },
   { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Low back care, sciatica, core strength", templates: ["tpl-low-back", "tpl-sciatica", "tpl-abs"] },
   { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength, knee pain, arthritis", templates: ["tpl-hip", "tpl-knee"] },
+  { id: "tg-legs", name: "Legs", icon: "step", color: "accent", blurb: "Stretches, warmups, strength, yoga, and recovery for your legs", templates: ["tpl-leg-warmup", "tpl-leg-stretch", "tpl-leg-strength", "tpl-leg-yoga", "tpl-leg-recovery", "tpl-legs"] },
   { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Sprains, heel pain, steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
   { id: "tg-gentle", name: "Gentle Full-Body Start", icon: "leaf", color: "yellow", blurb: "A kind first routine after a long break", templates: ["tpl-gentle-full"] },
   { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
@@ -240,6 +241,39 @@ window.TEMPLATES = [
     id: "tpl-knee", name: "Knee Builder", conditions: ["knee-pain", "knee-oa"],
     desc: "Quad and hip strengthening, the proven pair for kneecap pain and knee arthritis.",
     items: ["quad-set", "straight-leg-raise", "short-arc-quad", "sit-to-stand", "mini-squat", "step-up", "standing-hamstring-curl", "clamshell", "quad-stretch"]
+  },
+  {
+    id: "tpl-leg-warmup", name: "Leg Warmup", conditions: [], kind: "warmup",
+    desc: "Gentle moves that wake up the hips, knees, and ankles. Do it before walks, leg day, or any lower-body session.",
+    items: [
+      { id: "leg-swings", sets: 1 },
+      { id: "hip-cars", sets: 1 },
+      { id: "ankle-pumps", sets: 1 },
+      { id: "knee-to-wall", sets: 1 },
+      { id: "glute-bridge", sets: 1 },
+      { id: "deep-squat-hold", sets: 1 },
+      { id: "monster-walk", sets: 1 }
+    ]
+  },
+  {
+    id: "tpl-leg-stretch", name: "Leg Stretch Session", conditions: [],
+    desc: "Stretches every major leg muscle: quads, hamstrings, glutes, inner thighs, and calves.",
+    items: ["quad-stretch", "hamstring-stretch-towel", "hip-flexor-stretch", "figure-4-stretch", "butterfly-stretch", "itb-tfl-stretch", "calf-stretch-wall", "soleus-stretch"]
+  },
+  {
+    id: "tpl-leg-strength", name: "Leg Strength (No Equipment)", conditions: [],
+    desc: "Builds the quads, glutes, hamstrings, and calves using just your body weight and a chair.",
+    items: ["sit-to-stand", "mini-squat", "step-up", "standing-hamstring-curl", "glute-bridge", "side-lying-hip-abduction", "calf-raise", "wall-sit"]
+  },
+  {
+    id: "tpl-leg-yoga", name: "Yoga for Legs & Hips", conditions: [],
+    desc: "A gentle flow of standing and floor poses that stretch and strengthen the legs from hips to ankles.",
+    items: ["yoga-hip-circles", "yoga-downward-dog", "yoga-low-lunge", "yoga-warrior-2", "yoga-triangle", "yoga-wide-fold", "yoga-garland", "yoga-happy-baby"]
+  },
+  {
+    id: "tpl-leg-recovery", name: "Leg Recovery & Massage", conditions: [],
+    desc: "Foam rolling and release work for tired, tight legs after workouts or long days on your feet.",
+    items: ["foam-roll-quads", "foam-roll-itband", "ball-glute-release", "foot-ball-roll", "yoga-legs-up-wall"]
   },
   {
     id: "tpl-ankle", name: "Ankle Sprain Recovery", conditions: ["ankle-sprain"],

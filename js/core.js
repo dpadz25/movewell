@@ -742,25 +742,31 @@
       setTimeout(() => this.startTour(), 700);
     },
     routineFromTemplate(t) {
-      return {
+      const r = {
         id: this.uid(),
         name: t.name,
         desc: t.desc,
         onHome: true,
         archived: false,
         warmupItems: [],
-        items: t.items.filter(id => this.ex(id)).map(id => {
-          const ex = this.ex(id);
+        // template items are exercise ids, or objects like { id, sets: 1 }
+        // that override parts of the exercise's default dose
+        items: t.items.map(entry => {
+          const o = typeof entry === "string" ? { id: entry } : entry;
+          const ex = this.ex(o.id);
+          if (!ex) return null;
           return {
-            exId: id,
-            sets: ex.dose.sets || 1,
-            reps: ex.dose.reps || 0,
-            hold: ex.dose.hold || 0,
-            timeSec: ex.dose.timeSec || 0,
-            perSide: !!ex.dose.perSide
+            exId: o.id,
+            sets: o.sets != null ? o.sets : (ex.dose.sets || 1),
+            reps: o.reps != null ? o.reps : (ex.dose.reps || 0),
+            hold: o.hold != null ? o.hold : (ex.dose.hold || 0),
+            timeSec: o.timeSec != null ? o.timeSec : (ex.dose.timeSec || 0),
+            perSide: o.perSide != null ? !!o.perSide : !!ex.dose.perSide
           };
-        })
+        }).filter(Boolean)
       };
+      if (t.kind) r.kind = t.kind;
+      return r;
     }
   };
 
