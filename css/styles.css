@@ -587,6 +587,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .rest-overlay.open { display: flex; }
 .rest-title { font-size: 1.2rem; font-weight: 700; color: var(--muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; font-family: 'Space Grotesk', sans-serif; }
 .rest-display { font-family: 'Space Grotesk', sans-serif; font-size: 5.5rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent-strong); line-height: 1; margin-bottom: 1.2rem; }
+.rest-next { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: -0.4rem 0 1.2rem; max-width: 22rem; }
 .rest-presets { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
 
 .session-nav {

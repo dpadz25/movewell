@@ -387,7 +387,6 @@
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".ex-item[data-r]").forEach(n => n.onclick = () => {
       const r = this.state.routines.find(x => x.id === n.dataset.r);
-      if (r.items.some(i => i.exId === exId)) { this.toast("Already in that routine"); return; }
       r.items.push({
         exId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0,
         timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide
