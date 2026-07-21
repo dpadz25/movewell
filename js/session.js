@@ -113,6 +113,23 @@
     return null;
   };
 
+  // ---------- yoga sessions: no set logging, no supersets, no rest breaks ----------
+  App.isYogaSession = function (s) {
+    const r = this.state.routines.find(x => x.id === s.routineId);
+    return r ? this.routineType(r) === "yoga" : false;
+  };
+  App.completeYogaStep = function (it) {
+    if (!it.logged.length) {
+      const isTimed = it.timeSec > 0 || (it.hold > 0 && (!it.reps || it.reps <= 1));
+      const timerTarget = it.timeSec > 0 ? it.timeSec : it.hold;
+      if (isTimed) it.logged.push({ sec: timerTarget });
+      else it.logged.push({ reps: it.reps || 1 });
+      it.skipped = false;
+      this.persistSession();
+    }
+    this.advance();
+  };
+
   // ---------- step rendering ----------
   App.renderSessionStep = function () {
     const s = this._sess;
@@ -127,14 +144,17 @@
     const done = it.logged.length;
     const prev = this.lastPerformance(it.exId);
     const displayName = it.variant || ex.name;
-    // superset context
-    const gMembers = it.groupId ? s.items.map((x, j) => ({ x, j })).filter(o => o.x.groupId === it.groupId) : null;
+    // yoga routines get a much calmer session screen: no logging, no supersets, no rest breaks
+    const yoga = this.isYogaSession(s);
+    // superset context (never active in a yoga session)
+    const gMembers = (!yoga && it.groupId) ? s.items.map((x, j) => ({ x, j })).filter(o => o.x.groupId === it.groupId) : null;
     const gPos = gMembers ? gMembers.findIndex(o => o.j === s.idx) : -1;
     const partnerNames = gMembers ? gMembers.filter(o => o.j !== s.idx).map(o => this.esc(o.x.variant || (this.ex(o.x.exId) || {}).name)).join(" + ") : "";
     const nxt = s.items[s.idx + 1];
-    const canLinkNext = !it.warmup && !it.groupId && nxt && !nxt.warmup && !nxt.groupId;
+    const canLinkNext = !yoga && !it.warmup && !it.groupId && nxt && !nxt.warmup && !nxt.groupId;
     const variantNote = it.variant ? (ex.variations.find(v => v.name === it.variant) || {}).note : "";
     const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(displayName + " exercise how to");
+    const shortPoseName = n => n.replace(/\s*\(.*$/, "");
 
     const wuCount = s.items.filter(x => x.warmup).length;
     document.getElementById("session-progress-text").textContent = it.warmup
@@ -143,7 +163,9 @@
     document.getElementById("session-progressbar-fill").style.width = ((s.idx) / total * 100) + "%";
 
     let loggerHtml = "";
-    if (done >= targetSets) {
+    if (yoga) {
+      // no set logging, no timer widget, no rest breaks — just the pose and the nav buttons
+    } else if (done >= targetSets) {
       // finished exercises (revisited with Back) can't log extra sets
       loggerHtml = `
         <div class="set-log-card">
@@ -182,15 +204,48 @@
         </div>`;
     }
 
+    let yogaTopHtml;
+    if (yoga) {
+      const regionIcon = this.region(ex.region).icon;
+      const winSize = Math.min(5, total);
+      let winStart = s.idx - 2;
+      if (winStart < 0) winStart = 0;
+      let winEnd = winStart + winSize;
+      if (winEnd > total) { winEnd = total; winStart = Math.max(0, winEnd - winSize); }
+      let trailNodes = "";
+      for (let j = winStart; j < winEnd; j++) {
+        const x = s.items[j];
+        const xEx = this.ex(x.exId);
+        const label = this.esc(shortPoseName(x.variant || (xEx || {}).name || ""));
+        const state = j === s.idx ? "now" : (x.logged.length > 0 ? "done" : (x.skipped ? "skipped" : "future"));
+        trailNodes += `
+          <div class="yoga-trail-node ${state}">
+            <div class="yoga-trail-dot">${state === "done" ? this.icon("check") : ""}</div>
+            <div class="yoga-trail-label">${label}</div>
+          </div>`;
+      }
+      yogaTopHtml = `
+        <div class="yoga-banner">
+          <div class="yoga-banner-icon">${this.icon(regionIcon, "xl")}</div>
+          <div class="yoga-pose-name">${this.esc(displayName)}</div>
+          <div class="yoga-banner-sub">${this.doseText(it)}</div>
+        </div>
+        <div class="yoga-trail"><div class="yoga-trail-line"></div>${trailNodes}</div>
+        ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:0 0 0.7rem;text-align:center">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}`;
+    } else {
+      yogaTopHtml = `
+        ${it.warmup ? `<span class="tag teal session-ex-type">Warmup</span>` : ""}
+        <span class="tag ${t.color} session-ex-type">${t.name}</span>
+        ${gMembers ? `<span class="tag purple session-ex-type">${this.icon("link")} Superset ${gPos + 1} of ${gMembers.length}</span>` : ""}
+        <div class="session-ex-name">${this.esc(displayName)}</div>
+        ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:-0.1rem 0 0.3rem">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}
+        <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
+        ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between partners, rest after each round.</span></div>` : ""}
+        ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Superset with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}`;
+    }
+
     document.getElementById("session-body").innerHTML = `
-      ${it.warmup ? `<span class="tag teal session-ex-type">Warmup</span>` : ""}
-      <span class="tag ${t.color} session-ex-type">${t.name}</span>
-      ${gMembers ? `<span class="tag purple session-ex-type">${this.icon("link")} Superset ${gPos + 1} of ${gMembers.length}</span>` : ""}
-      <div class="session-ex-name">${this.esc(displayName)}</div>
-      ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:-0.1rem 0 0.3rem">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}
-      <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
-      ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between partners, rest after each round.</span></div>` : ""}
-      ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Superset with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}
+      ${yogaTopHtml}
       ${(ex.variations && ex.variations.length) ? `
       <div class="filter-wrap" style="margin-bottom:0.7rem"><div class="filter-bar" style="padding-bottom:0.2rem" id="sess-variants">
         <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
@@ -255,7 +310,9 @@
       body.querySelector("#howto-chev").innerHTML = h.classList.contains("open") ? this.icon("chevU") : this.icon("chevD");
     };
 
-    if (done >= targetSets) {
+    if (yoga) {
+      // no logger UI in a yoga session, so nothing to bind here
+    } else if (done >= targetSets) {
       // nothing to bind: the logger is a read-only "all done" card
     } else if (isTimed) {
       body.querySelector("#hold-start").onclick = () => this.startHoldTimer(timerTarget, it);
@@ -279,7 +336,7 @@
 
     document.getElementById("sess-back").onclick = () => { if (s.idx > 0) { this.stopHoldTimer(); s.idx--; this.renderSessionStep(); } };
     document.getElementById("sess-skip").onclick = () => { it.skipped = it.logged.length === 0; this.advance(); };
-    document.getElementById("sess-next").onclick = () => this.advance();
+    document.getElementById("sess-next").onclick = () => { if (yoga) this.completeYogaStep(it); else this.advance(); };
     this.persistSession();
   };
 

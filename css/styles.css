@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap');
 
 /* ============ THEME SYSTEM ============ */
 :root {
@@ -560,6 +560,33 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 }
 .session-howto { display: none; margin-bottom: 1rem; }
 .session-howto.open { display: block; }
+
+/* ---- yoga session: gradient banner + flow trail (replaces type tag / dose line) ---- */
+.yoga-banner {
+  margin: -1.2rem -1.1rem 1.1rem; padding: 1.6rem 1.1rem 1.4rem;
+  background: var(--accent-grad); color: #fff; text-align: center; border-radius: 0 0 22px 22px;
+}
+.yoga-banner-icon { color: #fff; margin-bottom: 0.3rem; }
+.yoga-pose-name { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 2rem; line-height: 1.15; margin: 0.1rem 0 0.2rem; }
+.yoga-banner-sub { font-size: 0.95rem; font-weight: 700; opacity: 0.92; }
+.yoga-trail { position: relative; display: flex; margin-bottom: 1.2rem; }
+.yoga-trail-line { position: absolute; top: 0.75rem; left: 10%; right: 10%; height: 2px; background: var(--border); z-index: 0; }
+.yoga-trail-node { position: relative; z-index: 1; flex: 1; min-width: 0; text-align: center; }
+.yoga-trail-dot {
+  width: 1.5rem; height: 1.5rem; border-radius: 50%; margin: 0 auto 0.35rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--border2); background: var(--card); color: var(--accent-strong);
+  transition: transform 0.2s;
+}
+.yoga-trail-dot .icn { width: 0.85rem; height: 0.85rem; stroke-width: 2.6; }
+.yoga-trail-node.now .yoga-trail-dot { background: var(--accent); border-color: var(--accent); color: #fff; transform: scale(1.2); }
+.yoga-trail-node.done .yoga-trail-dot { border-color: var(--accent); background: var(--accent-dim); }
+.yoga-trail-node.skipped .yoga-trail-dot { opacity: 0.6; }
+.yoga-trail-label {
+  font-size: 0.68rem; font-weight: 700; color: var(--muted2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 0.15rem;
+}
+.yoga-trail-node.now .yoga-trail-label { color: var(--text); }
 
 .set-log-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1rem; margin-bottom: 0.9rem; box-shadow: var(--shadow); }
 .set-log-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted2); margin-bottom: 0.7rem; display: flex; justify-content: space-between; font-weight: 700; }

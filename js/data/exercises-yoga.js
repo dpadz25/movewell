@@ -206,6 +206,49 @@ window.EXERCISES.push(
   ]
 },
 {
+  id: "yoga-seated-roll-up", name: "Seated Roll-Up", region: "core", type: "yoga",
+  equipment: ["none"], position: "Seated, knees bent", level: 2,
+  muscles: "Abdominals, spine control",
+  helps: [],
+  dose: { sets: 1, reps: 5 },
+  howTo: [
+    "Sit with knees bent, feet flat, and arms reaching forward.",
+    "Tuck your chin and slowly roll back one vertebra at a time until your shoulders touch the floor.",
+    "Roll back up to sitting right away, using your core rather than swinging up.",
+    "Keep the motion slow and controlled in both directions."
+  ],
+  tips: ["Not a fixed traditional pose, sometimes called a 'rock and roll' or rollback in flow yoga classes.", "Rock gently at first to find the rhythm before doing full reps."],
+  caution: "Skip this if you have a disc-related back problem or osteoporosis. A slow Modified Curl-Up is a safer substitute."
+},
+{
+  id: "yoga-pike-bent-knee-side-stretch", name: "Pike with Bent Knee, Side Stretch (Head-to-Knee / Janu Sirsasana)", region: "lower-back", type: "yoga",
+  equipment: ["none"], position: "Seated, one leg extended", level: 2,
+  muscles: "Hamstrings, side body, low back",
+  helps: [],
+  dose: { sets: 1, reps: 1, hold: 20, perSide: true },
+  howTo: [
+    "Sit with one leg extended straight and the other knee bent, sole of that foot resting against your inner thigh.",
+    "Inhale and reach both arms up.",
+    "Tip your torso to the side over the straight leg, reaching the same-side hand toward your foot and the other arm up and over.",
+    "Breathe into the stretch along your whole side body, then sit up and switch sides."
+  ],
+  tips: ["Keep the extended knee soft, not locked.", "A towel around your foot brings the stretch to you if your reach is short."]
+},
+{
+  id: "yoga-supine-final-stretch", name: "Supine Full-Body Stretch", region: "balance", type: "yoga",
+  equipment: ["none"], position: "Lying on your back", level: 1,
+  muscles: "Whole body",
+  helps: [],
+  dose: { sets: 1, reps: 1, hold: 20 },
+  howTo: [
+    "Lie flat on your back and stretch your arms straight overhead.",
+    "Reach your fingertips and toes away from each other in opposite directions.",
+    "Take a full breath in as you lengthen, then let it all go on the exhale.",
+    "Let your body settle heavy into the floor before moving into Shavasana."
+  ],
+  tips: ["Not a traditional named pose, just a full-body lengthening stretch used to transition into Corpse Pose."]
+},
+{
   id: "yoga-supine-twist", name: "Supine Spinal Twist (Jathara Parivartanasana)", region: "lower-back", type: "yoga",
   equipment: ["none"], position: "Lying on your back", level: 1,
   muscles: "Low back, obliques, glutes",
@@ -364,6 +407,49 @@ window.EXERCISES.push(
   tips: ["A simple, energizing shape. Good between the Warrior poses."]
 },
 {
+  id: "yoga-half-lift", name: "Half Lift / Flat Back (Ardha Uttanasana)", region: "lower-back", type: "yoga",
+  equipment: ["none"], position: "Standing, folded forward", level: 1,
+  muscles: "Hamstrings, spinal erectors",
+  helps: [],
+  dose: { sets: 1, reps: 2, hold: 5 },
+  howTo: [
+    "From a Standing Forward Fold, place your fingertips on your shins or the floor.",
+    "Inhale and lift your chest halfway up until your back is flat, like a tabletop.",
+    "Lengthen through the crown of your head and look slightly forward.",
+    "Exhale and fold back down, or continue rolling up to standing."
+  ],
+  tips: ["Bend your knees as much as you need to keep your back flat.", "This move connects Standing Forward Fold to standing back up, so it shows up constantly in a flow."]
+},
+{
+  id: "yoga-standing-backbend", name: "Standing Back Bend (Anuvittasana)", region: "upper-back", type: "yoga",
+  equipment: ["none"], position: "Standing", level: 2,
+  muscles: "Spine, chest, shoulders",
+  helps: [],
+  dose: { sets: 1, reps: 1, hold: 10 },
+  howTo: [
+    "Stand tall with feet hip-width apart.",
+    "Reach both arms straight overhead, palms facing each other.",
+    "Gently lean your upper back backward, leading with your chest, not your neck.",
+    "Keep your legs supporting you and your gaze forward or slightly up."
+  ],
+  tips: ["Keep the bend small and in the upper back, not the low back.", "Also called Anuvittasana, or a Half Wheel when done deeper."],
+  caution: "Move slowly and stop if you feel dizzy or get low back pinching."
+},
+{
+  id: "yoga-side-stretch-elbow-knee", name: "Side Stretch, Elbow to Knee (Extended Side Angle / Utthita Parsvakonasana)", region: "hip", type: "yoga",
+  equipment: ["none"], position: "From Warrior II stance", level: 2,
+  muscles: "Side body, hips, legs",
+  helps: [],
+  dose: { sets: 1, reps: 1, hold: 15, perSide: true },
+  howTo: [
+    "From Warrior II with your front knee bent, tip your torso over your front thigh.",
+    "Rest your front forearm or elbow lightly on top of your front knee.",
+    "Reach your other arm up and over your ear, making one long line from back foot to fingertips.",
+    "Breathe into the stretch along your side body, then switch sides."
+  ],
+  tips: ["Rest your hand on a block or your shin instead of the knee if that reach is too far.", "Keep the front knee bent throughout so it does not lock or twist."]
+},
+{
   id: "yoga-standing-forward-fold", name: "Standing Forward Fold (Uttanasana)", region: "lower-back", type: "yoga",
   equipment: ["none"], position: "Standing, folded forward", level: 1,
   muscles: "Hamstrings, low back, calves",
@@ -393,6 +479,20 @@ window.EXERCISES.push(
     "Take a moment to notice how you feel compared to when you started."
   ],
   tips: ["A traditional way to close a practice. Even a few breaths count."]
+},
+{
+  id: "yoga-closing-self-hug", name: "Closing Self-Hug & Overhead Stretch", region: "balance", type: "yoga",
+  equipment: ["none"], position: "Seated", level: 1,
+  muscles: "Upper back, shoulders",
+  helps: [],
+  dose: { sets: 1, reps: 1, hold: 15 },
+  howTo: [
+    "Sit tall and wrap your arms around yourself in a hug, holding opposite shoulders or elbows.",
+    "Breathe and let your upper back round gently, releasing the day.",
+    "Release the hug and reach both arms overhead, palms together.",
+    "Lengthen your spine upward for a final full breath before finishing."
+  ],
+  tips: ["Not a fixed traditional pose, just a gentle way to bookend practice alongside Heart Center."]
 }
 
 );

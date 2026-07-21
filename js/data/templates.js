@@ -69,7 +69,8 @@ window.TEMPLATE_GROUPS = [
   { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Sprains, heel pain, steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
   { id: "tg-gentle", name: "Gentle Full-Body Start", icon: "leaf", color: "yellow", blurb: "A kind first routine after a long break", templates: ["tpl-gentle-full"] },
   { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
-  { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness on the machines", templates: ["tpl-cardio"] }
+  { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness on the machines", templates: ["tpl-cardio"] },
+  { id: "tg-yoga", name: "Yoga", icon: "sun", color: "pink", blurb: "Full-length beginner flows", templates: ["tpl-yoga-beginner-flow"] }
 ];
 
 // Everyday muscle names -> precise anatomical names, shown in exercise details.
@@ -334,5 +335,40 @@ window.TEMPLATES = [
     id: "tpl-abs", name: "Core & Abs Day", conditions: ["strength-training"],
     desc: "Science-backed ab training. Weighted flexion, hanging work, anti-rotation, and a carry to finish.",
     items: ["cable-crunch", "decline-sit-up", "hanging-leg-raise", "bicycle-crunch", "pallof-press", "suitcase-carry"]
+  },
+  {
+    id: "tpl-yoga-beginner-flow", name: "Beginner Yoga Flow", conditions: [], kind: "yoga",
+    desc: "A full beginner vinyasa flow: joint warm-up, sun-salutation-style rounds, a standing warrior sequence on both sides, a floor cool-down, and a seated close with breath work.",
+    items: [
+      "yoga-wrist-rolls", "yoga-neck-rolls", "yoga-shoulder-rolls", "yoga-hip-circles", "yoga-ankle-rolls",
+      "yoga-cat-cow",
+      "yoga-downward-dog", "yoga-plank", "yoga-chaturanga", "yoga-upward-dog", "yoga-downward-dog",
+      "yoga-childs-pose", "yoga-sphinx",
+      { id: "yoga-chaturanga", reps: 4 }, "yoga-upward-dog", "yoga-childs-pose",
+      "yoga-seated-forward-fold", "yoga-boat",
+      "knee-to-chest", "lower-trunk-rotation", "yoga-supine-twist",
+      { id: "knee-to-chest", perSide: false, reps: 1, hold: 30 },
+      "yoga-happy-baby", "yoga-seated-roll-up",
+      "yoga-plank", { id: "yoga-chaturanga", reps: 4 }, "yoga-downward-dog",
+      "yoga-standing-forward-fold", { id: "yoga-half-lift", reps: 2 }, "yoga-standing-backbend",
+      { id: "yoga-tree", perSide: false },
+      { id: "yoga-warrior-1", perSide: false }, { id: "yoga-warrior-2", perSide: false }, "yoga-star",
+      { id: "yoga-warrior-2", perSide: false }, { id: "yoga-reverse-warrior", perSide: false },
+      { id: "yoga-side-stretch-elbow-knee", perSide: false },
+      { id: "yoga-warrior-3", perSide: false }, { id: "yoga-warrior-2", perSide: false }, { id: "yoga-warrior-1", perSide: false },
+      { id: "yoga-tree", perSide: false },
+      { id: "yoga-warrior-1", perSide: false }, { id: "yoga-warrior-2", perSide: false }, "yoga-star",
+      { id: "yoga-warrior-2", perSide: false }, { id: "yoga-reverse-warrior", perSide: false },
+      { id: "yoga-side-stretch-elbow-knee", perSide: false },
+      { id: "yoga-warrior-3", perSide: false }, { id: "yoga-warrior-2", perSide: false }, { id: "yoga-warrior-1", perSide: false },
+      "yoga-standing-forward-fold", "yoga-downward-dog",
+      { id: "yoga-chaturanga", reps: 2 }, "yoga-downward-dog", "yoga-upward-dog", "yoga-childs-pose",
+      "yoga-butterfly",
+      { id: "yoga-seated-forward-fold", perSide: true },
+      "yoga-seated-forward-fold", "yoga-pike-bent-knee-side-stretch",
+      { id: "knee-to-chest", perSide: false, reps: 1, hold: 30 },
+      "yoga-happy-baby", "yoga-supine-final-stretch", "yoga-corpse",
+      "yoga-anjali-mudra", "yoga-neck-rolls", "yoga-shoulder-rolls", "yoga-closing-self-hug"
+    ]
   }
 ];
