@@ -90,6 +90,38 @@
     <ellipse class="bm-body" cx="80" cy="404" rx="14" ry="9"/>
     <ellipse class="bm-body" cx="120" cy="404" rx="14" ry="9"/>`;
 
+  // seated meditative-pose illustration for the Mind tab: a licensed icon (credited below), rendered as a
+  // CSS mask so it recolors automatically for light/dark theme, with a soft halo circle behind it
+  const MEDITATION_SVG = `
+    <div class="bodymap-mind-halo">
+      <div class="bodymap-mind-img"></div>
+    </div>`;
+
+  const PMR_STEPS = [
+    ["Hands & forearms", "Squeeze both hands into tight fists"],
+    ["Upper arms & shoulders", "Pull your elbows in and shrug your shoulders up"],
+    ["Face", "Scrunch your whole face, eyes shut, lips pressed"],
+    ["Neck & chest", "Gently tip your head back and take a deep breath in"],
+    ["Stomach & back", "Pull your stomach in tight, like bracing for a poke"],
+    ["Legs & feet", "Straighten your legs and curl your toes down"]
+  ];
+
+  function pmrHtml() {
+    return `
+      <div class="section-label" style="margin-top:1.2rem">Progressive Muscle Relaxation</div>
+      <p class="bodymap-mind-text">A short way to release built-up tension, one muscle group at a time. For each step below, tense that area for about 5 seconds, then let it go and relax for 15 to 20 seconds before moving on. The whole tutorial takes about 10 to 15 minutes. Go at your own pace, and skip any step that hurts.</p>
+      <div class="pmr-steps">
+        ${PMR_STEPS.map((s, i) => `
+          <div class="pmr-step">
+            <div class="pmr-step-num">${i + 1}</div>
+            <div class="pmr-step-body">
+              <div class="pmr-step-name">${s[0]}</div>
+              <div class="pmr-step-detail">${s[1]}, hold, then relax.</div>
+            </div>
+          </div>`).join("")}
+      </div>`;
+  }
+
   function bodySvg(zones, hurtRegions, sex) {
     const zonesHtml = zones.map(z =>
       `<ellipse class="bm-zone ${hurtRegions.has(z[4]) ? "hurt" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-label="${z[5]}" data-muscles="${z[6] || ""}"><title>${z[5]} — ${z[6] || ""}</title></ellipse>`
@@ -104,6 +136,7 @@
   }
 
   App.renderBodymap = function () {
+    const isMind = this._bmView === "mind";
     // regions with pain logged in the last 7 days
     const weekAgo = Date.now() - 7 * 86400000;
     const hurt = new Set(this.state.bodyLogs.filter(b => new Date(b.date).getTime() > weekAgo && b.pain >= 3).map(b => b.region));
@@ -120,11 +153,20 @@
         <div class="bodymap-toggle">
           <button class="btn ${this._bmView === "front" ? "" : "secondary"} small" id="bm-front">Front</button>
           <button class="btn ${this._bmView === "back" ? "" : "secondary"} small" id="bm-back">Back</button>
+          <button class="btn ${isMind ? "" : "secondary"} small" id="bm-mind">Mind</button>
         </div>
-        ${bodySvg(zones, hurt, sex)}
-        <div class="bodymap-hint">${this.icon("bulb")} Highlighted areas are tappable.${hurt.size ? " Red areas had pain logged this week." : ""}</div>
+        <div class="bodymap-disclaimer">This map shows common causes, it does not diagnose you. See a physical therapist or doctor to know what to work on.</div>
+        ${isMind ? `
+          <div class="bodymap-mind">
+            ${MEDITATION_SVG}
+            <p class="bodymap-mind-text">Stress does not just stay in your head. It can tighten muscles and lower your tolerance for pain, so old aches flare up and new tension builds, especially in the neck, shoulders, and back.</p>
+            <div class="bodymap-mind-source">Source: Cleveland Clinic &amp; American Psychological Association</div>
+            ${pmrHtml()}
+          </div>` : `
+          ${bodySvg(zones, hurt, sex)}
+          <div class="bodymap-hint">${this.icon("bulb")} Highlighted areas are tappable.${hurt.size ? " Red areas had pain logged this week." : ""}</div>`}
       </div>
-      ${recent.length ? `
+      ${!isMind && recent.length ? `
         <div class="section-label">Recent Body Notes</div>
         ${recent.map(b => `
           <div class="history-item">
@@ -138,13 +180,15 @@
     const scroll = document.getElementById("bodymap-scroll");
     scroll.querySelector("#bm-front").onclick = () => { this._bmView = "front"; this.refresh(); };
     scroll.querySelector("#bm-back").onclick = () => { this._bmView = "back"; this.refresh(); };
+    scroll.querySelector("#bm-mind").onclick = () => { this._bmView = "mind"; this.refresh(); };
     scroll.querySelectorAll(".bm-zone").forEach(z => z.onclick = () => this.openRegionSheet(z.dataset.region, z.dataset.label, z.dataset.muscles));
   };
 
   App.openRegionSheet = function (regionId, label, muscles) {
     const r = this.region(regionId);
     this.pushView("region:" + regionId + ":" + (label || ""), () => this.openRegionSheet(regionId, label, muscles));
-    const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId));
+    const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId))
+      .sort((a, b) => (a.commonRank ?? 999) - (b.commonRank ?? 999));
     const exs = window.EXERCISES.filter(e => e.region === regionId && e.type !== "yoga");
     let painVal = null;
 

@@ -490,6 +490,7 @@
         <p style="font-size:0.75rem;color:var(--muted2);text-align:center;margin-top:1rem">
           MoveWell keeps all data on this device only.<br>This app supports your training and therapy plan. It is not medical advice.<br>Always follow your physical therapist's or doctor's guidance.
         </p>
+        <p style="font-size:0.7rem;color:var(--muted2);text-align:center;margin-top:0.6rem">Meditation icon on the Body Map's Mind tab by <a href="https://www.vecteezy.com" target="_blank" rel="noopener">Vecteezy.com</a></p>
       `);
       const body = document.getElementById("modal-body");
       body.querySelectorAll(".textsize-option").forEach(b => b.onclick = () => {

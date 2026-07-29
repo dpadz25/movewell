@@ -671,6 +671,31 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .bodymap-svg .bm-zone:hover { opacity: 0.4; }
 .bodymap-svg .bm-zone.hurt { fill: var(--red); stroke: var(--red); opacity: 0.45; }
 .bodymap-hint { font-size: 0.85rem; color: var(--muted); text-align: center; margin: 0.6rem 0 1rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.bodymap-disclaimer { font-size: 0.78rem; color: var(--muted2); text-align: center; max-width: 340px; margin: 0 0 0.9rem; }
+
+.bodymap-mind { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 420px; }
+.bodymap-mind-halo {
+  width: min(220px, 55vw); aspect-ratio: 1; border-radius: 50%; background: var(--accent-dim);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 0.4rem;
+}
+.bodymap-mind-img {
+  width: 68%; height: 68%; background-color: var(--muted);
+  -webkit-mask-image: url('../img/meditation-pose.png'); mask-image: url('../img/meditation-pose.png');
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+}
+.bodymap-mind-text { font-size: 0.95rem; color: var(--muted); text-align: center; line-height: 1.5; margin: 0 0 0.4rem; }
+.bodymap-mind-source { font-size: 0.75rem; color: var(--muted2); text-align: center; margin-bottom: 0.4rem; }
+
+.pmr-steps { width: 100%; margin-top: 0.4rem; }
+.pmr-step { display: flex; align-items: flex-start; gap: 0.7rem; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 0.7rem 0.9rem; margin-bottom: 0.5rem; }
+.pmr-step-num {
+  flex-shrink: 0; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--accent-dim); color: var(--accent-strong);
+  display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem;
+}
+.pmr-step-name { font-weight: 700; margin-bottom: 0.15rem; }
+.pmr-step-detail { font-size: 0.85rem; color: var(--muted); }
 
 .region-issue {
   background: var(--card); border: 1px solid var(--border); border-radius: 14px;
