@@ -603,7 +603,14 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 }
 .set-done-row .set-check { color: var(--accent); display: flex; }
 .set-done-row .set-check .icn { stroke-width: 2.6; }
-.prev-hint { font-size: 0.82rem; color: var(--blue); background: var(--blue-dim); border-radius: 10px; padding: 0.5rem 0.75rem; margin-bottom: 0.75rem; }
+.prev-hint {
+  display: block; width: 100%; text-align: left; border: none; font: inherit; cursor: pointer;
+  font-size: 0.82rem; color: var(--blue); background: var(--blue-dim); border-radius: 10px;
+  padding: 0.5rem 0.75rem; margin-bottom: 0.75rem;
+}
+.prev-hint:active { opacity: 0.8; }
+.plate-breakdown { display: flex; flex-direction: column; gap: 0.5rem; }
+.plate-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
 
 /* big timer */
 .hold-timer { text-align: center; padding: 0.6rem 0 0.9rem; }
@@ -736,6 +743,19 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .week-dot .dot .icn { width: 1rem; height: 1rem; stroke-width: 2.6; }
 .week-dot.done .dot { background: var(--accent); border-color: var(--accent); color: #fff; }
 .week-dot .dot-label { font-size: 0.65rem; color: var(--muted2); font-weight: 700; }
+
+.heatmap-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; }
+.heatmap-nav h3 { margin: 0; }
+.heatmap-nav .icon-btn[disabled] { opacity: 0.35; pointer-events: none; }
+.heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.3rem; }
+.heatmap-cell {
+  aspect-ratio: 1; border-radius: 7px; display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: var(--muted2);
+  background: var(--surface2); border: 1px solid var(--border2);
+}
+.heatmap-cell.blank { background: transparent; border: none; }
+.heatmap-cell.l1 { background: var(--accent-dim); color: var(--accent-strong); border-color: transparent; }
+.heatmap-cell.l2 { background: var(--accent); color: var(--on-accent); border-color: transparent; }
 
 /* ============ TOAST ============ */
 .toast {

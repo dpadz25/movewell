@@ -190,14 +190,14 @@
       loggerHtml = `
         <div class="set-log-card">
           <div class="set-log-title"><span>Log your sets: ${done} of ${targetSets} done</span></div>
-          ${prev ? `<div class="prev-hint">Last time: ${prev.sets.map(x => (x.reps || "") + (x.weight ? "×" + x.weight + "lb" : "")).filter(Boolean).join(", ") || prev.sets.length + " sets"} · ${this.fmtDate(prev.date)}</div>` : ""}
+          ${prev ? `<button class="prev-hint" id="use-last-set">Last time: ${prev.sets.map(x => (x.reps || "") + (x.weight ? "×" + x.weight + "lb" : "")).filter(Boolean).join(", ") || prev.sets.length + " sets"} · ${this.fmtDate(prev.date)}</button>` : ""}
           <div class="stepper-row">
             <div class="stepper-label">Reps</div>
             <div class="stepper"><button id="rep-minus">${this.icon("minus")}</button><span class="stepper-val" id="rep-val">${it.reps || 10}</span><button id="rep-plus">${this.icon("plus")}</button></div>
           </div>
           ${it.warmup ? "" : `<div class="stepper-row">
             <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">tap the number to type it</span></div>
-            <div class="stepper"><button id="wt-minus">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus">${this.icon("plus")}</button></div>
+            <div class="stepper"><button id="wt-minus">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus">${this.icon("plus")}</button><button class="icon-btn" id="plate-calc" title="Plate calculator" aria-label="Plate calculator">${this.icon("scale")}</button></div>
           </div>`}
           <button class="btn big grad" id="log-set">${this.icon("check")} Log Set ${done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
           <div id="sets-done">${this.setsDoneHtml(it)}</div>
@@ -324,6 +324,17 @@
       if (wtVal) {
         body.querySelector("#wt-minus").onclick = () => wtVal.value = Math.max(0, (Number(wtVal.value) || 0) - ((Number(wtVal.value) || 0) > 20 ? 5 : 1));
         body.querySelector("#wt-plus").onclick = () => wtVal.value = (Number(wtVal.value) || 0) + ((Number(wtVal.value) || 0) >= 20 ? 5 : 1);
+        const plateBtn = body.querySelector("#plate-calc");
+        if (plateBtn) plateBtn.onclick = () => this.openPlateCalculator(Number(wtVal.value) || 0);
+      }
+      const useLastBtn = body.querySelector("#use-last-set");
+      if (useLastBtn && prev) {
+        useLastBtn.onclick = () => {
+          const lastSet = prev.sets[prev.sets.length - 1];
+          repVal.textContent = lastSet.reps || (it.reps || 10);
+          if (wtVal) wtVal.value = lastSet.weight || 0;
+          this.toast("Filled in last time's numbers");
+        };
       }
       body.querySelector("#log-set").onclick = () => {
         const reps = Number(repVal.textContent), weight = wtVal ? (Number(wtVal.value) || 0) : 0;
@@ -381,6 +392,30 @@
     s.items.splice(i + 1, 0, it);
     this.renderSessionStep();
     this.toast("We'll come back to this one later");
+  };
+
+  // ---------- plate calculator ----------
+  App.PLATES_LB = [45, 35, 25, 10, 5, 2.5];
+  App.BAR_LB = 45;
+  App.openPlateCalculator = function (targetLb) {
+    this.pushView("platecalc", () => this.openPlateCalculator(targetLb));
+    const perSide = (targetLb - this.BAR_LB) / 2;
+    let breakdown = [];
+    if (targetLb > 0 && perSide > 0) {
+      let remaining = perSide;
+      this.PLATES_LB.forEach(p => {
+        const n = Math.floor(remaining / p + 1e-9);
+        if (n > 0) { breakdown.push({ plate: p, count: n }); remaining -= n * p; }
+      });
+    }
+    const covered = breakdown.reduce((a, b) => a + b.plate * b.count, 0);
+    this.openModal("Plate Calculator", `
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem">Assumes a ${this.BAR_LB} lb bar, standard plates.</p>
+      ${targetLb <= 0 ? `<p style="color:var(--muted2)">Enter a weight above 0 to see the breakdown.</p>` :
+        perSide <= 0 ? `<p style="color:var(--muted2)">That's at or below the bar weight — no plates needed.</p>` :
+        `<div class="plate-breakdown">${breakdown.map(b => `<div class="plate-row"><span class="tag">${b.plate} lb</span> × ${b.count} per side</div>`).join("")}</div>
+         ${perSide - covered > 0.01 ? `<p style="color:var(--yellow);margin-top:0.5rem">Can't hit that exactly with standard plates — closest is shown above.</p>` : ""}`}
+    `);
   };
 
   App.setsDoneHtml = function (it) {
@@ -587,13 +622,16 @@
       this._pendingLog.note = card.querySelector("#cel-note").value.trim();
       this.state.logs.push(this._pendingLog);
       this.save();
+      const streakNow = this.streak();
+      const hitMilestone = [3, 7, 14, 30, 60, 100, 180, 365].includes(streakNow);
       this.clearSavedSession();
       this._pendingLog = null;
       document.getElementById("celebrate").classList.remove("open");
       this.stopConfetti();
       this._sess = null;
       this.showPage("home");
-      this.toast("Session saved. See you next time!");
+      const base = "Session saved. See you next time!";
+      this.toast(hitMilestone ? "🔥 " + streakNow + "-day streak! " + base : base);
     };
     this.chime();
     setTimeout(() => this.chime(), 400);

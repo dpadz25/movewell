@@ -11,6 +11,9 @@
     const exWithData = [...new Set(logs.flatMap(l => l.items.filter(i => i.sets && i.sets.length).map(i => i.exId)))];
 
     const feelIcon = (f) => this.icon("face" + f);
+    const weightLogs = s.bodyWeightLogs || [];
+    const recentWeights = weightLogs.slice(-8).reverse();
+    this._heatmapMonthOffset = this._heatmapMonthOffset || 0;
     document.getElementById("progress-scroll").innerHTML = `
       <span class="page-tag">${this.icon("chart")} Progress</span>
       <div class="page-title">Your Journey</div>
@@ -20,10 +23,30 @@
         <div class="home-stat"><div class="home-stat-num">${streak}</div><div class="home-stat-label">Day Streak</div></div>
         <div class="home-stat"><div class="home-stat-num">${totalMin}</div><div class="home-stat-label">Minutes</div></div>
       </div>
+      <div class="chart-card">
+        <h3>${this.icon("scale")} Weight over time</h3>
+        <button class="btn secondary small" id="wi-add" style="margin-bottom:0.6rem">${this.icon("plus")} Log Weight</button>
+        ${weightLogs.length ? `<div class="chart-holder"><canvas id="chart-weight"></canvas></div>` : `<p style="color:var(--muted2);font-size:0.85rem">No weigh-ins yet. Log Weight to start tracking.</p>`}
+        ${recentWeights.length ? recentWeights.map(w => `
+          <div class="history-item" data-weight="${w.id}">
+            <div class="history-item-top">
+              <div class="history-item-name">${w.weightLb} lb</div>
+              <div class="history-item-date">${this.fmtDate(w.date)}</div>
+            </div>
+          </div>`).join("") : ""}
+      </div>
       ${logs.length === 0 ? `
         <div class="empty-state card"><div class="empty-icon">${this.icon("chart")}</div>
         <p>No sessions yet.<br>Complete your first routine and your progress will appear here.</p>
         <button class="btn big grad" onclick="App.showPage('home')">Go Start One</button></div>` : `
+        <div class="chart-card">
+          <div class="heatmap-nav">
+            <button class="icon-btn" id="hm-prev">${this.icon("arrowLeft")}</button>
+            <h3 id="hm-label" style="margin:0">${this.icon("calendar")} Workout Calendar</h3>
+            <button class="icon-btn" id="hm-next">${this.icon("arrowRight")}</button>
+          </div>
+          <div id="heatmap-holder"></div>
+        </div>
         <div class="chart-card"><h3>${this.icon("calendar")} Sessions per week</h3><div class="chart-holder"><canvas id="chart-weeks"></canvas></div></div>
         <div class="chart-card"><h3>${this.icon("face4")} How you felt after sessions</h3><div class="chart-holder"><canvas id="chart-feel"></canvas></div></div>
         ${exWithData.length ? `
@@ -52,9 +75,9 @@
       `}
     `;
 
-    if (logs.length === 0) return;
-
     const scroll = document.getElementById("progress-scroll");
+    scroll.querySelector("#wi-add").onclick = () => this.openWeighInModal();
+    scroll.querySelectorAll(".history-item[data-weight]").forEach(n => n.onclick = () => this.openWeightLogDetail(n.dataset.weight));
     scroll.querySelectorAll(".history-item[data-log]").forEach(n => n.onclick = () => this.openLogDetail(n.dataset.log));
 
     // ----- charts -----
@@ -64,6 +87,27 @@
     const muted = css.getPropertyValue("--muted2").trim();
     Object.values(this.charts).forEach(c => { try { c.destroy(); } catch (e) {} });
     this.charts = {};
+
+    if (weightLogs.length) {
+      this.charts.weight = new Chart(document.getElementById("chart-weight"), {
+        type: "line",
+        data: {
+          labels: weightLogs.map(w => this.fmtDate(w.date)),
+          datasets: [{ label: "Weight (lbs)", data: weightLogs.map(w => w.weightLb), borderColor: accent, backgroundColor: accent, tension: 0.35 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { ticks: { color: muted, maxTicksLimit: 6 } } }
+        }
+      });
+    }
+
+    if (logs.length === 0) return;
+
+    scroll.querySelector("#hm-prev").onclick = () => { this._heatmapMonthOffset--; this.renderHeatmap(this._heatmapMonthOffset); };
+    scroll.querySelector("#hm-next").onclick = () => { this._heatmapMonthOffset++; this.renderHeatmap(this._heatmapMonthOffset); };
+    this.renderHeatmap(this._heatmapMonthOffset);
 
     // sessions per week (last 8 weeks)
     const weeks = [];
@@ -146,6 +190,38 @@
       sel.onchange = drawEx;
       drawEx();
     }
+  };
+
+  App.renderHeatmap = function (monthOffset) {
+    const holder = document.getElementById("heatmap-holder");
+    if (!holder) return;
+    const counts = {};
+    this.state.logs.forEach(l => {
+      const k = this.todayKey(l.date);
+      counts[k] = (counts[k] || 0) + 1;
+    });
+    const now = new Date();
+    const target = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+    const monthLabel = target.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    const label = document.getElementById("hm-label");
+    if (label) label.innerHTML = this.icon("calendar") + " " + monthLabel;
+    const nextBtn = document.querySelector("#hm-next");
+    if (nextBtn) nextBtn.disabled = monthOffset >= 0;
+
+    const firstDay = new Date(target.getFullYear(), target.getMonth(), 1);
+    const daysInMonth = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+    const startPad = firstDay.getDay(); // 0=Sun
+
+    let cells = "";
+    for (let i = 0; i < startPad; i++) cells += `<div class="heatmap-cell blank"></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dt = new Date(target.getFullYear(), target.getMonth(), d);
+      const k = this.todayKey(dt);
+      const n = counts[k] || 0;
+      const level = n === 0 ? "l0" : n === 1 ? "l1" : "l2";
+      cells += `<div class="heatmap-cell ${level}" title="${monthLabel.split(" ")[0]} ${d}: ${n} session${n === 1 ? "" : "s"}">${d}</div>`;
+    }
+    holder.innerHTML = `<div class="heatmap-grid">${cells}</div>`;
   };
 
   App.openLogDetail = function (logId) {

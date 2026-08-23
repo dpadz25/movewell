@@ -24,7 +24,8 @@
         routines: [],
         customExercises: [],
         logs: [],       // completed sessions
-        bodyLogs: []    // body-feel entries from the body map
+        bodyLogs: [],   // body-feel entries from the body map
+        bodyWeightLogs: [] // weigh-in history: {id, date, weightLb}
       };
     },
     load() {
@@ -297,6 +298,7 @@
           <div class="section-label" style="margin:0 0 0.2rem">This Week</div>
           <div class="week-dots">${dots}</div>
         </div>
+        <button class="btn ghost big" id="home-log-weight" style="margin-top:0.7rem">${this.icon("scale")} Log Weight</button>
         <div class="home-stats">
           <div class="home-stat"><div class="home-stat-num">${s.logs.length}</div><div class="home-stat-label">Sessions</div></div>
           <div class="home-stat"><div class="home-stat-num">${totalEx}</div><div class="home-stat-label">Exercises</div></div>
@@ -307,6 +309,53 @@
         ${s.routines.length > 0 ? `<button class="btn ghost big" style="margin-top:0.3rem" onclick="App.showPage('routines');App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>` : ""}
       `;
       this.bindRoutineCards(document.getElementById("home-scroll"), "home");
+      document.getElementById("home-log-weight").onclick = () => this.openWeighInModal();
+    },
+
+    // ---------- WEIGHT LOG ----------
+    openWeighInModal() {
+      this.pushView("weighin", () => this.openWeighInModal());
+      const logs = this.state.bodyWeightLogs;
+      const last = logs[logs.length - 1];
+      this.openModal("Log Weight", `
+        <label class="field-label">Weight (lbs)</label>
+        <input type="number" id="wi-val" min="0" max="900" step="0.1" value="${last ? last.weightLb : (this.state.profile.weightLb || "")}" placeholder="165">
+        <button class="btn big grad" id="wi-save" style="margin-top:0.8rem">Save Weigh-In</button>
+      `);
+      document.getElementById("modal-body").querySelector("#wi-save").onclick = () => {
+        const v = Number(document.getElementById("wi-val").value);
+        if (!v || v <= 0) { this.toast("Enter a valid weight"); return; }
+        this.state.bodyWeightLogs.push({ id: this.uid(), date: new Date().toISOString(), weightLb: v });
+        this.state.profile.weightLb = v;
+        this.save(); this.closeModal(); this.refresh();
+        this.toast("Weight logged");
+      };
+    },
+    openWeightLogDetail(id) {
+      const entry = this.state.bodyWeightLogs.find(x => x.id === id);
+      if (!entry) return;
+      this.pushView("weightlog:" + id, () => this.openWeightLogDetail(id));
+      this.openModal("Edit Weigh-In", `
+        <label class="field-label">Weight (lbs)</label>
+        <input type="number" id="wld-val" min="0" max="900" step="0.1" value="${entry.weightLb}">
+        <button class="btn big grad" id="wld-save" style="margin-top:0.8rem">Save Changes</button>
+        <button class="btn danger big" id="wld-delete" style="margin-top:1rem">${this.icon("trash")} Delete This Entry</button>
+      `);
+      const body = document.getElementById("modal-body");
+      body.querySelector("#wld-save").onclick = () => {
+        const v = Number(body.querySelector("#wld-val").value);
+        if (!v || v <= 0) { this.toast("Enter a valid weight"); return; }
+        entry.weightLb = v;
+        this.save(); this.closeModal(); this.refresh();
+        this.toast("Updated");
+      };
+      body.querySelector("#wld-delete").onclick = () => {
+        this.confirm("Delete this weigh-in?", "This removes it from your history and chart. It cannot be undone.", () => {
+          this.state.bodyWeightLogs = this.state.bodyWeightLogs.filter(x => x.id !== id);
+          this.save(); this.closeModal(); this.refresh();
+          this.toast("Entry deleted");
+        }, "Delete");
+      };
     },
 
     // ---------- routine cards (shared by Home and Routines library) ----------
