@@ -50,6 +50,11 @@
       start: Date.now(), idx: 0,
       items: wuItems.concat(r.items.map((it, i) => ({ ...it, logged: [], skipped: false, srcIdx: i })))
     };
+    this._openSessionUI();
+  };
+
+  // shared by fresh starts and resumed sessions: overlay, clock, first render
+  App._openSessionUI = function () {
     document.getElementById("session").classList.add("open");
     clearInterval(this._sessClockT);
     this._sessClockT = setInterval(() => {
@@ -57,6 +62,31 @@
       if (el && this._sess) el.textContent = this.fmtClock(Math.floor((Date.now() - this._sess.start) / 1000));
     }, 1000);
     this.renderSessionStep();
+  };
+
+  // ---------- keep the session alive across page reloads ----------
+  // Phones reload the page after the browser sits in the background a while,
+  // which used to wipe an in-progress session. A snapshot in localStorage
+  // lets the user pick up right where they left off.
+  const SESS_KEY = "movewell-active-session-v1";
+  App.persistSession = function () {
+    try { if (this._sess) localStorage.setItem(SESS_KEY, JSON.stringify(this._sess)); } catch (e) { /* storage may be full */ }
+  };
+  App.clearSavedSession = function () { localStorage.removeItem(SESS_KEY); };
+  App.offerSessionResume = function () {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(SESS_KEY)); } catch (e) { }
+    if (!saved || !Array.isArray(saved.items) || !saved.items.length) return;
+    // every exercise must still exist (a custom one may have been deleted)
+    if (saved.items.some(x => !this.ex(x.exId))) { this.clearSavedSession(); return; }
+    this.confirm("Continue your session?",
+      "You were partway through “" + saved.routineName + "”. Pick up where you left off?",
+      () => {
+        this._sess = saved;
+        if (this._sess.idx >= this._sess.items.length) this._sess.idx = this._sess.items.length - 1;
+        this._openSessionUI();
+      }, "Resume",
+      () => this.clearSavedSession());
   };
 
   App.exitSession = function () {
@@ -68,6 +98,7 @@
     clearInterval(this._sessClockT);
     this.stopHoldTimer();
     this._sess = null;
+    this.clearSavedSession();
     document.getElementById("session").classList.remove("open");
     document.getElementById("rest-overlay").classList.remove("open");
     this.refresh();
@@ -80,6 +111,23 @@
       if (item) return { date: this.state.logs[i].date, sets: item.sets };
     }
     return null;
+  };
+
+  // ---------- yoga sessions: no set logging, no supersets, no rest breaks ----------
+  App.isYogaSession = function (s) {
+    const r = this.state.routines.find(x => x.id === s.routineId);
+    return r ? this.routineType(r) === "yoga" : false;
+  };
+  App.completeYogaStep = function (it) {
+    if (!it.logged.length) {
+      const isTimed = it.timeSec > 0 || (it.hold > 0 && (!it.reps || it.reps <= 1));
+      const timerTarget = it.timeSec > 0 ? it.timeSec : it.hold;
+      if (isTimed) it.logged.push({ sec: timerTarget });
+      else it.logged.push({ reps: it.reps || 1 });
+      it.skipped = false;
+      this.persistSession();
+    }
+    this.advance();
   };
 
   // ---------- step rendering ----------
@@ -96,14 +144,17 @@
     const done = it.logged.length;
     const prev = this.lastPerformance(it.exId);
     const displayName = it.variant || ex.name;
-    // superset context
-    const gMembers = it.groupId ? s.items.map((x, j) => ({ x, j })).filter(o => o.x.groupId === it.groupId) : null;
+    // yoga routines get a much calmer session screen: no logging, no supersets, no rest breaks
+    const yoga = this.isYogaSession(s);
+    // superset context (never active in a yoga session)
+    const gMembers = (!yoga && it.groupId) ? s.items.map((x, j) => ({ x, j })).filter(o => o.x.groupId === it.groupId) : null;
     const gPos = gMembers ? gMembers.findIndex(o => o.j === s.idx) : -1;
     const partnerNames = gMembers ? gMembers.filter(o => o.j !== s.idx).map(o => this.esc(o.x.variant || (this.ex(o.x.exId) || {}).name)).join(" + ") : "";
     const nxt = s.items[s.idx + 1];
-    const canLinkNext = !it.warmup && !it.groupId && nxt && !nxt.warmup && !nxt.groupId;
+    const canLinkNext = !yoga && !it.warmup && !it.groupId && nxt && !nxt.warmup && !nxt.groupId;
     const variantNote = it.variant ? (ex.variations.find(v => v.name === it.variant) || {}).note : "";
     const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(displayName + " exercise how to");
+    const shortPoseName = n => n.replace(/\s*\(.*$/, "");
 
     const wuCount = s.items.filter(x => x.warmup).length;
     document.getElementById("session-progress-text").textContent = it.warmup
@@ -112,7 +163,16 @@
     document.getElementById("session-progressbar-fill").style.width = ((s.idx) / total * 100) + "%";
 
     let loggerHtml = "";
-    if (isTimed) {
+    if (yoga) {
+      // no set logging, no timer widget, no rest breaks — just the pose and the nav buttons
+    } else if (done >= targetSets) {
+      // finished exercises (revisited with Back) can't log extra sets
+      loggerHtml = `
+        <div class="set-log-card">
+          <div class="set-log-title"><span>${this.icon("check")} All ${targetSets} ${targetSets === 1 ? "set" : "sets"} done</span></div>
+          <div id="sets-done">${this.setsDoneHtml(it)}</div>
+        </div>`;
+    } else if (isTimed) {
       loggerHtml = `
         <div class="set-log-card">
           <div class="set-log-title"><span>Timer: ${done} of ${targetSets} done</span></div>
@@ -144,15 +204,48 @@
         </div>`;
     }
 
+    let yogaTopHtml;
+    if (yoga) {
+      const regionIcon = this.region(ex.region).icon;
+      const winSize = Math.min(5, total);
+      let winStart = s.idx - 2;
+      if (winStart < 0) winStart = 0;
+      let winEnd = winStart + winSize;
+      if (winEnd > total) { winEnd = total; winStart = Math.max(0, winEnd - winSize); }
+      let trailNodes = "";
+      for (let j = winStart; j < winEnd; j++) {
+        const x = s.items[j];
+        const xEx = this.ex(x.exId);
+        const label = this.esc(shortPoseName(x.variant || (xEx || {}).name || ""));
+        const state = j === s.idx ? "now" : (x.logged.length > 0 ? "done" : (x.skipped ? "skipped" : "future"));
+        trailNodes += `
+          <div class="yoga-trail-node ${state}">
+            <div class="yoga-trail-dot">${state === "done" ? this.icon("check") : ""}</div>
+            <div class="yoga-trail-label">${label}</div>
+          </div>`;
+      }
+      yogaTopHtml = `
+        <div class="yoga-banner">
+          <div class="yoga-banner-icon">${this.icon(regionIcon, "xl")}</div>
+          <div class="yoga-pose-name">${this.esc(displayName)}</div>
+          <div class="yoga-banner-sub">${this.doseText(it)}</div>
+        </div>
+        <div class="yoga-trail"><div class="yoga-trail-line"></div>${trailNodes}</div>
+        ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:0 0 0.7rem;text-align:center">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}`;
+    } else {
+      yogaTopHtml = `
+        ${it.warmup ? `<span class="tag teal session-ex-type">Warmup</span>` : ""}
+        <span class="tag ${t.color} session-ex-type">${t.name}</span>
+        ${gMembers ? `<span class="tag purple session-ex-type">${this.icon("link")} Superset ${gPos + 1} of ${gMembers.length}</span>` : ""}
+        <div class="session-ex-name">${this.esc(displayName)}</div>
+        ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:-0.1rem 0 0.3rem">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}
+        <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
+        ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between partners, rest after each round.</span></div>` : ""}
+        ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Superset with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}`;
+    }
+
     document.getElementById("session-body").innerHTML = `
-      ${it.warmup ? `<span class="tag teal session-ex-type">Warmup</span>` : ""}
-      <span class="tag ${t.color} session-ex-type">${t.name}</span>
-      ${gMembers ? `<span class="tag purple session-ex-type">${this.icon("link")} Superset ${gPos + 1} of ${gMembers.length}</span>` : ""}
-      <div class="session-ex-name">${this.esc(displayName)}</div>
-      ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:-0.1rem 0 0.3rem">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}
-      <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
-      ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between partners, rest after each round.</span></div>` : ""}
-      ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Superset with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}
+      ${yogaTopHtml}
       ${(ex.variations && ex.variations.length) ? `
       <div class="filter-wrap" style="margin-bottom:0.7rem"><div class="filter-bar" style="padding-bottom:0.2rem" id="sess-variants">
         <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
@@ -217,7 +310,11 @@
       body.querySelector("#howto-chev").innerHTML = h.classList.contains("open") ? this.icon("chevU") : this.icon("chevD");
     };
 
-    if (isTimed) {
+    if (yoga) {
+      // no logger UI in a yoga session, so nothing to bind here
+    } else if (done >= targetSets) {
+      // nothing to bind: the logger is a read-only "all done" card
+    } else if (isTimed) {
       body.querySelector("#hold-start").onclick = () => this.startHoldTimer(timerTarget, it);
       body.querySelector("#hold-manual").onclick = () => this.logTimedSet(it, timerTarget, true);
     } else {
@@ -239,7 +336,16 @@
 
     document.getElementById("sess-back").onclick = () => { if (s.idx > 0) { this.stopHoldTimer(); s.idx--; this.renderSessionStep(); } };
     document.getElementById("sess-skip").onclick = () => this.openSkipPrompt(it);
-    document.getElementById("sess-next").onclick = () => this.advance();
+    document.getElementById("sess-next").onclick = () => { if (yoga) this.completeYogaStep(it); else this.advance(); };
+    this.persistSession();
+  };
+
+  // display name of the session item at idx, for "Up next" hints
+  App.upNextName = function (idx) {
+    const s = this._sess;
+    const n = s && s.items[idx];
+    if (!n) return "";
+    return n.variant || (this.ex(n.exId) || {}).name || "";
   };
 
   // ---------- skip / defer ----------
@@ -287,15 +393,18 @@
   };
 
   App.afterSetLogged = function (it) {
+    this.persistSession();
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     this.chime();
     it.skipped = false;
     if (it.groupId) return this.supersetNext(it);
+    const s = this._sess;
     if (it.logged.length >= targetSets) {
-      this.toast("Exercise complete!");
-      this.advance();
+      // exercise finished: rest first, then move on (last one goes straight to the finish)
+      if (s.idx >= s.items.length - 1) { this.toast("Exercise complete!"); this.advance(); return; }
+      this.openRest(60, { next: this.upNextName(s.idx + 1), advance: true });
     } else {
-      this.openRest(60);
+      this.openRest(60, { next: "set " + (it.logged.length + 1) + " of " + targetSets + " · " + this.upNextName(s.idx) });
     }
   };
 
@@ -309,7 +418,9 @@
     if (!remaining.length) {
       this.toast("Superset complete!");
       s.idx = members[members.length - 1].i;
-      this.advance();
+      this.persistSession();
+      if (s.idx >= s.items.length - 1) { this.advance(); return; }
+      this.openRest(60, { next: this.upNextName(s.idx + 1), advance: true });
       return;
     }
     const curPos = members.findIndex(o => o.i === s.idx);
@@ -320,8 +431,9 @@
     }
     const wrapped = next.i <= s.idx;
     s.idx = next.i;
+    this.persistSession();
     if (wrapped) {
-      this.openRest(60);
+      this.openRest(60, { next: this.upNextName(s.idx) });
     } else {
       this.renderSessionStep();
       this.toast("Next up: " + (next.x.variant || (this.ex(next.x.exId) || {}).name));
@@ -369,45 +481,51 @@
 
   App.logTimedSet = function (it, sec, manual) {
     it.logged.push({ sec });
+    this.persistSession();
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     if (!manual) this.chime();
     it.skipped = false;
     if (it.groupId) return this.supersetNext(it);
+    const s = this._sess;
     if (it.logged.length >= targetSets) {
-      this.toast("Exercise complete!");
-      this.advance();
+      if (s.idx >= s.items.length - 1) { this.toast("Exercise complete!"); this.advance(); return; }
+      this.openRest(60, { next: this.upNextName(s.idx + 1), advance: true });
     } else {
-      this.renderSessionStep();
-      this.toast("Nice! " + (targetSets - it.logged.length) + " to go");
+      this.openRest(60, { next: "round " + (it.logged.length + 1) + " of " + targetSets + " · " + this.upNextName(s.idx) });
     }
   };
 
   // ---------- rest timer ----------
-  App.openRest = function (sec) {
+  // opts.next: label shown as "Up next: ..." on the rest screen
+  // opts.advance: move to the next exercise when the rest ends (or is skipped)
+  App.openRest = function (sec, opts) {
+    opts = opts || {};
     const ov = document.getElementById("rest-overlay");
     ov.classList.add("open");
+    const nextEl = document.getElementById("rest-next");
+    if (nextEl) {
+      nextEl.textContent = opts.next ? "Up next: " + opts.next : "";
+      nextEl.style.display = opts.next ? "" : "none";
+    }
     let remaining = sec;
     const disp = document.getElementById("rest-display");
     disp.textContent = this.fmtClock(remaining);
+    const finish = (chime) => {
+      clearInterval(this._restT);
+      if (chime) this.chime();
+      ov.classList.remove("open");
+      if (opts.advance) this.advance();
+      else this.renderSessionStep();
+    };
     clearInterval(this._restT);
     this._restT = setInterval(() => {
       remaining--;
       if (remaining <= 3 && remaining > 0) this.tickBeep();
-      if (remaining <= 0) {
-        clearInterval(this._restT);
-        this.chime();
-        ov.classList.remove("open");
-        this.renderSessionStep();
-        return;
-      }
+      if (remaining <= 0) { finish(true); return; }
       disp.textContent = this.fmtClock(remaining);
     }, 1000);
     ov.querySelectorAll("[data-rest]").forEach(b => b.onclick = () => { remaining = Number(b.dataset.rest); disp.textContent = this.fmtClock(remaining); });
-    document.getElementById("rest-skip").onclick = () => {
-      clearInterval(this._restT);
-      ov.classList.remove("open");
-      this.renderSessionStep();
-    };
+    document.getElementById("rest-skip").onclick = () => finish(false);
   };
 
   // ---------- finish + celebration ----------
@@ -469,6 +587,7 @@
       this._pendingLog.note = card.querySelector("#cel-note").value.trim();
       this.state.logs.push(this._pendingLog);
       this.save();
+      this.clearSavedSession();
       this._pendingLog = null;
       document.getElementById("celebrate").classList.remove("open");
       this.stopConfetti();

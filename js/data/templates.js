@@ -17,35 +17,39 @@ window.REGIONS = [
   { id: "balance", name: "Balance & Whole Body", icon: "balance", color: "accent" }
 ];
 
+// commonRank: how common/prevalent the condition is in the general population, low = more common.
+// Used to sort the condition list shown when a body region is tapped (bodymap.js), most to least common.
+// Non-diagnosis catch-all entries (posture, general, strength-training, conditioning, post-surgery) use 999
+// so they always sort to the bottom; they aren't real conditions to rank by prevalence.
 window.CONDITIONS = [
-  { id: "tos", name: "Thoracic Outlet Syndrome", regions: ["neck", "shoulder", "upper-back"], blurb: "Nerves or blood vessels get pinched between the neck and shoulder, causing arm pain, tingling, or heaviness. Care focuses on posture, opening the chest, calming the scalene muscles, and gentle nerve glides." },
-  { id: "upper-cross", name: "Upper Crossed Syndrome / Rounded Shoulders", regions: ["neck", "shoulder", "upper-back"], blurb: "Tight chest and neck muscles pair with weak deep-neck and mid-back muscles, creating a forward-head, rounded-shoulder posture. Care stretches the tight front and strengthens the sleepy back." },
-  { id: "neck-pain", name: "Neck Pain & Stiffness", regions: ["neck", "upper-back"], blurb: "General neck ache and stiffness, often from posture, stress, or age-related change. Gentle motion, deep neck strengthening, and upper back mobility usually help." },
-  { id: "headache", name: "Tension Headaches", regions: ["neck"], blurb: "Headaches that start at the base of the skull or feel like a tight band, often driven by neck muscle tension and posture." },
-  { id: "shoulder-pain", name: "General Shoulder Pain", regions: ["shoulder"], blurb: "Aching or pinching shoulder with reaching or lifting. Building rotator cuff and shoulder blade strength usually calms it." },
-  { id: "rotator-cuff", name: "Rotator Cuff Injury / Impingement", regions: ["shoulder"], blurb: "The small stabilizing muscles of the shoulder are irritated, torn, or weak. Progressive cuff and shoulder-blade strengthening is the gold standard." },
-  { id: "frozen-shoulder", name: "Frozen Shoulder", regions: ["shoulder"], blurb: "The shoulder capsule tightens, badly limiting motion. Recovery is slow but steady, with frequent gentle stretching within tolerable limits." },
-  { id: "tennis-elbow", name: "Tennis Elbow (Outer)", regions: ["elbow", "wrist"], blurb: "Irritated tendon on the outside of the elbow from gripping and wrist work. Slow 'lowering-only' strengthening rebuilds the tendon." },
-  { id: "golfers-elbow", name: "Golfer's Elbow (Inner)", regions: ["elbow", "wrist"], blurb: "The inner-elbow cousin of tennis elbow. Same slow strengthening approach, opposite side." },
-  { id: "carpal-tunnel", name: "Carpal Tunnel Syndrome", regions: ["wrist"], blurb: "The median nerve is compressed at the wrist, causing numb or tingly fingers. Tendon glides, nerve glides, and gentle stretches keep things moving." },
-  { id: "wrist-pain", name: "Wrist Pain / Weakness", regions: ["wrist"], blurb: "General wrist soreness or weakness from sprains, overuse, or arthritis. Gentle motion first, then gradual strengthening." },
-  { id: "arthritis-hand", name: "Hand Arthritis / Stiffness", regions: ["wrist"], blurb: "Stiff, achy fingers and thumbs. Daily gentle motion and light strengthening keep hands functional." },
-  { id: "low-back-pain", name: "Low Back Pain", regions: ["lower-back", "core", "hip"], blurb: "The most common complaint in physical therapy. Gentle motion, core endurance (the 'Big 3'), hip strength, and walking are the recipe." },
-  { id: "sciatica", name: "Sciatica / Leg Nerve Pain", regions: ["lower-back", "hip"], blurb: "Pain running from the back or buttock down the leg along the sciatic nerve. Nerve flossing, back care, and piriformis work often ease it." },
-  { id: "disc", name: "Disc-Related Back Pain", regions: ["lower-back"], blurb: "Back pain influenced by a bulging or irritated disc. Extension-based movements (McKenzie) help many people. Follow your therapist's direction preference." },
-  { id: "hip-pain", name: "Hip Pain / Bursitis / Arthritis", regions: ["hip"], blurb: "Aching in the groin, side hip, or buttock. Strengthening the gluteals, especially the side hip, is usually the core of care." },
-  { id: "knee-pain", name: "Kneecap / General Knee Pain", regions: ["knee", "hip"], blurb: "Pain around or behind the kneecap with stairs, squatting, or sitting. Quad and hip strengthening are proven treatment." },
-  { id: "knee-oa", name: "Knee Arthritis", regions: ["knee"], blurb: "Wear-related knee change. Motion is lotion. Strengthening and regular walking reduce pain better than rest." },
-  { id: "post-surgery", name: "Post-Surgery Recovery (General)", regions: ["knee", "ankle-foot", "balance"], blurb: "Early-stage gentle motion and activation after joint surgery. Always follow your surgeon's specific protocol first." },
-  { id: "itb", name: "IT Band / Outer Thigh Pain", regions: ["knee", "hip"], blurb: "Pain along the outer thigh or outer knee, common in walkers and runners. Side-hip strengthening plus targeted stretching." },
-  { id: "ankle-sprain", name: "Ankle Sprain Recovery", regions: ["ankle-foot", "balance"], blurb: "After a rolled ankle, restore motion, rebuild strength in all four directions, then retrain balance so it does not happen again." },
-  { id: "achilles", name: "Achilles Tendon Pain", regions: ["ankle-foot"], blurb: "Pain in the cord above the heel. Slow, heavy heel work (eccentrics) is the research-backed fix." },
-  { id: "plantar-fasciitis", name: "Plantar Fasciitis (Heel Pain)", regions: ["ankle-foot"], blurb: "Sharp heel pain, worst with the first morning steps. Calf and arch stretching plus foot strengthening." },
-  { id: "posture", name: "Posture Improvement", regions: ["upper-back", "neck", "core"], blurb: "Standing and sitting taller with less effort. Open the front, strengthen the back, and move often." },
-  { id: "balance-falls", name: "Balance & Fall Prevention", regions: ["balance", "ankle-foot", "hip"], blurb: "Balance is a trainable skill at any age. Programs like these reduce falls by 30 to 40 percent." },
-  { id: "general", name: "General Strength & Mobility", regions: ["balance", "core"], blurb: "Overall conditioning, getting stronger, moving easier, and keeping independence." },
-  { id: "strength-training", name: "Strength & Muscle Building", regions: ["chest", "arms", "upper-back", "shoulder", "hip", "knee", "core"], blurb: "Classic gym training to build muscle and strength. Think push, pull, and leg days with barbells, dumbbells, kettlebells, cables, and machines. Start lighter than you think and progress gradually." },
-  { id: "conditioning", name: "Cardio & Conditioning", regions: ["balance", "hip", "knee"], blurb: "Heart and lung fitness. Treadmill, bike, rower, stairs, and intervals. Cardio improves recovery between lifting sessions, and 150 minutes a week of moderate work is the widely recommended target." }
+  { id: "tos", name: "Thoracic Outlet Syndrome", regions: ["neck", "shoulder", "upper-back"], commonRank: 23, blurb: "Nerves or blood vessels get pinched between the neck and shoulder, causing arm pain, tingling, or heaviness. Care focuses on posture, opening the chest, calming the scalene muscles, and gentle nerve glides." },
+  { id: "upper-cross", name: "Upper Crossed Syndrome / Rounded Shoulders", regions: ["neck", "shoulder", "upper-back"], commonRank: 16, blurb: "Tight chest and neck muscles pair with weak deep-neck and mid-back muscles, creating a forward-head, rounded-shoulder posture. Care stretches the tight front and strengthens the sleepy back." },
+  { id: "neck-pain", name: "Neck Pain & Stiffness", regions: ["neck", "upper-back"], commonRank: 2, blurb: "General neck ache and stiffness, often from posture, stress, or age-related change. Gentle motion, deep neck strengthening, and upper back mobility usually help." },
+  { id: "headache", name: "Tension Headaches", regions: ["neck"], commonRank: 4, blurb: "Headaches that start at the base of the skull or feel like a tight band, often driven by neck muscle tension and posture." },
+  { id: "shoulder-pain", name: "General Shoulder Pain", regions: ["shoulder"], commonRank: 3, blurb: "Aching or pinching shoulder with reaching or lifting. Building rotator cuff and shoulder blade strength usually calms it." },
+  { id: "rotator-cuff", name: "Rotator Cuff Injury / Impingement", regions: ["shoulder"], commonRank: 11, blurb: "The small stabilizing muscles of the shoulder are irritated, torn, or weak. Progressive cuff and shoulder-blade strengthening is the gold standard." },
+  { id: "frozen-shoulder", name: "Frozen Shoulder", regions: ["shoulder"], commonRank: 17, blurb: "The shoulder capsule tightens, badly limiting motion. Recovery is slow but steady, with frequent gentle stretching within tolerable limits." },
+  { id: "tennis-elbow", name: "Tennis Elbow (Outer)", regions: ["elbow", "wrist"], commonRank: 20, blurb: "Irritated tendon on the outside of the elbow from gripping and wrist work. Slow 'lowering-only' strengthening rebuilds the tendon." },
+  { id: "golfers-elbow", name: "Golfer's Elbow (Inner)", regions: ["elbow", "wrist"], commonRank: 21, blurb: "The inner-elbow cousin of tennis elbow. Same slow strengthening approach, opposite side." },
+  { id: "carpal-tunnel", name: "Carpal Tunnel Syndrome", regions: ["wrist"], commonRank: 14, blurb: "The median nerve is compressed at the wrist, causing numb or tingly fingers. Tendon glides, nerve glides, and gentle stretches keep things moving." },
+  { id: "wrist-pain", name: "Wrist Pain / Weakness", regions: ["wrist"], commonRank: 6, blurb: "General wrist soreness or weakness from sprains, overuse, or arthritis. Gentle motion first, then gradual strengthening." },
+  { id: "arthritis-hand", name: "Hand Arthritis / Stiffness", regions: ["wrist"], commonRank: 13, blurb: "Stiff, achy fingers and thumbs. Daily gentle motion and light strengthening keep hands functional." },
+  { id: "low-back-pain", name: "Low Back Pain", regions: ["lower-back", "core", "hip"], commonRank: 1, blurb: "The most common complaint in physical therapy. Gentle motion, core endurance (the 'Big 3'), hip strength, and walking are the recipe." },
+  { id: "sciatica", name: "Sciatica / Leg Nerve Pain", regions: ["lower-back", "hip"], commonRank: 15, blurb: "Pain running from the back or buttock down the leg along the sciatic nerve. Nerve flossing, back care, and piriformis work often ease it." },
+  { id: "disc", name: "Disc-Related Back Pain", regions: ["lower-back"], commonRank: 8, blurb: "Back pain influenced by a bulging or irritated disc. Extension-based movements (McKenzie) help many people. Follow your therapist's direction preference." },
+  { id: "hip-pain", name: "Hip Pain / Bursitis / Arthritis", regions: ["hip"], commonRank: 7, blurb: "Aching in the groin, side hip, or buttock. Strengthening the gluteals, especially the side hip, is usually the core of care." },
+  { id: "knee-pain", name: "Kneecap / General Knee Pain", regions: ["knee", "hip"], commonRank: 12, blurb: "Pain around or behind the kneecap with stairs, squatting, or sitting. Quad and hip strengthening are proven treatment." },
+  { id: "knee-oa", name: "Knee Arthritis", regions: ["knee"], commonRank: 5, blurb: "Wear-related knee change. Motion is lotion. Strengthening and regular walking reduce pain better than rest." },
+  { id: "post-surgery", name: "Post-Surgery Recovery (General)", regions: ["knee", "ankle-foot", "balance"], commonRank: 999, blurb: "Early-stage gentle motion and activation after joint surgery. Always follow your surgeon's specific protocol first." },
+  { id: "itb", name: "IT Band / Outer Thigh Pain", regions: ["knee", "hip"], commonRank: 19, blurb: "Pain along the outer thigh or outer knee, common in walkers and runners. Side-hip strengthening plus targeted stretching." },
+  { id: "ankle-sprain", name: "Ankle Sprain Recovery", regions: ["ankle-foot", "balance"], commonRank: 9, blurb: "After a rolled ankle, restore motion, rebuild strength in all four directions, then retrain balance so it does not happen again." },
+  { id: "achilles", name: "Achilles Tendon Pain", regions: ["ankle-foot"], commonRank: 18, blurb: "Pain in the cord above the heel. Slow, heavy heel work (eccentrics) is the research-backed fix." },
+  { id: "plantar-fasciitis", name: "Plantar Fasciitis (Heel Pain)", regions: ["ankle-foot"], commonRank: 10, blurb: "Sharp heel pain, worst with the first morning steps. Calf and arch stretching plus foot strengthening." },
+  { id: "posture", name: "Posture Improvement", regions: ["upper-back", "neck", "core"], commonRank: 999, blurb: "Standing and sitting taller with less effort. Open the front, strengthen the back, and move often." },
+  { id: "balance-falls", name: "Balance & Fall Prevention", regions: ["balance", "ankle-foot", "hip"], commonRank: 22, blurb: "Balance is a trainable skill at any age. Programs like these reduce falls by 30 to 40 percent." },
+  { id: "general", name: "General Strength & Mobility", regions: ["balance", "core"], commonRank: 999, blurb: "Overall conditioning, getting stronger, moving easier, and keeping independence." },
+  { id: "strength-training", name: "Strength & Muscle Building", regions: ["chest", "arms", "upper-back", "shoulder", "hip", "knee", "core"], commonRank: 999, blurb: "Classic gym training to build muscle and strength. Think push, pull, and leg days with barbells, dumbbells, kettlebells, cables, and machines. Start lighter than you think and progress gradually." },
+  { id: "conditioning", name: "Cardio & Conditioning", regions: ["balance", "hip", "knee"], commonRank: 999, blurb: "Heart and lung fitness. Treadmill, bike, rower, stairs, and intervals. Cardio improves recovery between lifting sessions, and 150 minutes a week of moderate work is the widely recommended target." }
 ];
 
 // Broad categories so long lists (onboarding conditions, routine templates)
@@ -65,10 +69,12 @@ window.TEMPLATE_GROUPS = [
   { id: "tg-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Tennis elbow, carpal tunnel, grip", templates: ["tpl-tennis-elbow", "tpl-carpal"] },
   { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Low back care, sciatica, core strength", templates: ["tpl-low-back", "tpl-sciatica", "tpl-abs"] },
   { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength, knee pain, arthritis", templates: ["tpl-hip", "tpl-knee"] },
+  { id: "tg-legs", name: "Legs", icon: "step", color: "accent", blurb: "Stretches, warmups, strength, yoga, and recovery for your legs", templates: ["tpl-leg-warmup", "tpl-leg-stretch", "tpl-leg-strength", "tpl-leg-yoga", "tpl-leg-recovery", "tpl-legs"] },
   { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Sprains, heel pain, steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
   { id: "tg-gentle", name: "Gentle Full-Body Start", icon: "leaf", color: "yellow", blurb: "A kind first routine after a long break", templates: ["tpl-gentle-full"] },
   { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
-  { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness on the machines", templates: ["tpl-cardio"] }
+  { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness on the machines", templates: ["tpl-cardio"] },
+  { id: "tg-yoga", name: "Yoga", icon: "sun", color: "pink", blurb: "Full-length beginner flows", templates: ["tpl-yoga-beginner-flow"] }
 ];
 
 // Everyday muscle names -> precise anatomical names, shown in exercise details.
@@ -242,6 +248,39 @@ window.TEMPLATES = [
     items: ["quad-set", "straight-leg-raise", "short-arc-quad", "sit-to-stand", "mini-squat", "step-up", "standing-hamstring-curl", "clamshell", "quad-stretch"]
   },
   {
+    id: "tpl-leg-warmup", name: "Leg Warmup", conditions: [], kind: "warmup",
+    desc: "Gentle moves that wake up the hips, knees, and ankles. Do it before walks, leg day, or any lower-body session.",
+    items: [
+      { id: "leg-swings", sets: 1 },
+      { id: "hip-cars", sets: 1 },
+      { id: "ankle-pumps", sets: 1 },
+      { id: "knee-to-wall", sets: 1 },
+      { id: "glute-bridge", sets: 1 },
+      { id: "deep-squat-hold", sets: 1 },
+      { id: "monster-walk", sets: 1 }
+    ]
+  },
+  {
+    id: "tpl-leg-stretch", name: "Leg Stretch Session", conditions: [],
+    desc: "Stretches every major leg muscle: quads, hamstrings, glutes, inner thighs, and calves.",
+    items: ["quad-stretch", "hamstring-stretch-towel", "hip-flexor-stretch", "figure-4-stretch", "butterfly-stretch", "itb-tfl-stretch", "calf-stretch-wall", "soleus-stretch"]
+  },
+  {
+    id: "tpl-leg-strength", name: "Leg Strength (No Equipment)", conditions: [],
+    desc: "Builds the quads, glutes, hamstrings, and calves using just your body weight and a chair.",
+    items: ["sit-to-stand", "mini-squat", "step-up", "standing-hamstring-curl", "glute-bridge", "side-lying-hip-abduction", "calf-raise", "wall-sit"]
+  },
+  {
+    id: "tpl-leg-yoga", name: "Yoga for Legs & Hips", conditions: [],
+    desc: "A gentle flow of standing and floor poses that stretch and strengthen the legs from hips to ankles.",
+    items: ["yoga-hip-circles", "yoga-downward-dog", "yoga-low-lunge", "yoga-warrior-2", "yoga-triangle", "yoga-wide-fold", "yoga-garland", "yoga-happy-baby"]
+  },
+  {
+    id: "tpl-leg-recovery", name: "Leg Recovery & Massage", conditions: [],
+    desc: "Foam rolling and release work for tired, tight legs after workouts or long days on your feet.",
+    items: ["foam-roll-quads", "foam-roll-itband", "ball-glute-release", "foot-ball-roll", "yoga-legs-up-wall"]
+  },
+  {
     id: "tpl-ankle", name: "Ankle Sprain Recovery", conditions: ["ankle-sprain"],
     desc: "Motion, four-direction strength, then balance retraining so the ankle does not roll again.",
     items: ["ankle-pumps", "band-ankle-4way", "calf-raise", "knee-to-wall", "calf-stretch-wall", "single-leg-stance", "single-leg-balance-foam"]
@@ -300,5 +339,40 @@ window.TEMPLATES = [
     id: "tpl-abs", name: "Core & Abs Day", conditions: ["strength-training"],
     desc: "Science-backed ab training. Weighted flexion, hanging work, anti-rotation, and a carry to finish.",
     items: ["cable-crunch", "decline-sit-up", "hanging-leg-raise", "bicycle-crunch", "pallof-press", "suitcase-carry"]
+  },
+  {
+    id: "tpl-yoga-beginner-flow", name: "Beginner Yoga Flow", conditions: [], kind: "yoga",
+    desc: "A full beginner vinyasa flow: joint warm-up, sun-salutation-style rounds, a standing warrior sequence on both sides, a floor cool-down, and a seated close with breath work.",
+    items: [
+      "yoga-wrist-rolls", "yoga-neck-rolls", "yoga-shoulder-rolls", "yoga-hip-circles", "yoga-ankle-rolls",
+      "yoga-cat-cow",
+      "yoga-downward-dog", "yoga-plank", "yoga-chaturanga", "yoga-upward-dog", "yoga-downward-dog",
+      "yoga-childs-pose", "yoga-sphinx",
+      { id: "yoga-chaturanga", reps: 4 }, "yoga-upward-dog", "yoga-childs-pose",
+      "yoga-seated-forward-fold", "yoga-boat",
+      "knee-to-chest", "lower-trunk-rotation", "yoga-supine-twist",
+      { id: "knee-to-chest", perSide: false, reps: 1, hold: 30 },
+      "yoga-happy-baby", "yoga-seated-roll-up",
+      "yoga-plank", { id: "yoga-chaturanga", reps: 4 }, "yoga-downward-dog",
+      "yoga-standing-forward-fold", { id: "yoga-half-lift", reps: 2 }, "yoga-standing-backbend",
+      { id: "yoga-tree", perSide: false },
+      { id: "yoga-warrior-1", perSide: false }, { id: "yoga-warrior-2", perSide: false }, "yoga-star",
+      { id: "yoga-warrior-2", perSide: false }, { id: "yoga-reverse-warrior", perSide: false },
+      { id: "yoga-side-stretch-elbow-knee", perSide: false },
+      { id: "yoga-warrior-3", perSide: false }, { id: "yoga-warrior-2", perSide: false }, { id: "yoga-warrior-1", perSide: false },
+      { id: "yoga-tree", perSide: false },
+      { id: "yoga-warrior-1", perSide: false }, { id: "yoga-warrior-2", perSide: false }, "yoga-star",
+      { id: "yoga-warrior-2", perSide: false }, { id: "yoga-reverse-warrior", perSide: false },
+      { id: "yoga-side-stretch-elbow-knee", perSide: false },
+      { id: "yoga-warrior-3", perSide: false }, { id: "yoga-warrior-2", perSide: false }, { id: "yoga-warrior-1", perSide: false },
+      "yoga-standing-forward-fold", "yoga-downward-dog",
+      { id: "yoga-chaturanga", reps: 2 }, "yoga-downward-dog", "yoga-upward-dog", "yoga-childs-pose",
+      "yoga-butterfly",
+      { id: "yoga-seated-forward-fold", perSide: true },
+      "yoga-seated-forward-fold", "yoga-pike-bent-knee-side-stretch",
+      { id: "knee-to-chest", perSide: false, reps: 1, hold: 30 },
+      "yoga-happy-baby", "yoga-supine-final-stretch", "yoga-corpse",
+      "yoga-anjali-mudra", "yoga-neck-rolls", "yoga-shoulder-rolls", "yoga-closing-self-hug"
+    ]
   }
 ];

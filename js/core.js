@@ -83,24 +83,6 @@
       return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     },
 
-    // realistic routine length: work time + rest between sets + setup between exercises
-    estimateRoutineMin(r) {
-      let sec = 0;
-      (r.warmupItems || []).concat(r.items).forEach(it => {
-        const ex = this.ex(it.exId);
-        if (!ex) return;
-        const sets = (it.sets || 1) * (it.perSide ? 2 : 1);
-        let work;
-        if (it.timeSec) work = it.timeSec;
-        else if (it.hold && (!it.reps || it.reps <= 1)) work = it.hold + 5;
-        else work = (it.reps || 10) * ((it.hold || 0) + 4);
-        const rest = ex.type === "cardio" ? 0 : ex.type === "lift" ? 90 : 20;
-        const setup = ex.type === "lift" ? 45 : 25;
-        sec += sets * work + Math.max(0, sets - 1) * rest + setup;
-      });
-      return Math.max(3, Math.round(sec / 60));
-    },
-
     doseText(d) {
       if (!d) return "";
       const parts = [];
@@ -150,7 +132,7 @@
       clearTimeout(this._toastT);
       this._toastT = setTimeout(() => t.classList.remove("show"), 2200);
     },
-    confirm(title, text, onYes, yesLabel) {
+    confirm(title, text, onYes, yesLabel, onNo) {
       const c = document.getElementById("confirm");
       document.getElementById("confirm-title").textContent = title;
       document.getElementById("confirm-text").textContent = text;
@@ -158,7 +140,8 @@
       yes.textContent = yesLabel || "Yes";
       c.classList.add("open");
       yes.onclick = () => { c.classList.remove("open"); onYes(); };
-      document.getElementById("confirm-no").onclick = () => c.classList.remove("open");
+      // onNo only fires on the explicit No button; a backdrop tap just dismisses
+      document.getElementById("confirm-no").onclick = () => { c.classList.remove("open"); if (onNo) onNo(); };
       document.getElementById("confirm-backdrop").onclick = () => c.classList.remove("open");
     },
     openModal(title, bodyHtml) {
@@ -328,7 +311,7 @@
 
     // ---------- routine cards (shared by Home and Routines library) ----------
     routineCardHtml(r, mode) {
-      const meta = `${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min`;
+      const meta = `${r.items.length} exercise${r.items.length === 1 ? "" : "s"}`;
       const actions = mode === "home" ? `
           <button class="swipe-btn" data-act="up" aria-label="Move up">${this.icon("arrowUp")}<span>Up</span></button>
           <button class="swipe-btn" data-act="down" aria-label="Move down">${this.icon("arrowDown")}<span>Down</span></button>
@@ -507,6 +490,7 @@
         <p style="font-size:0.75rem;color:var(--muted2);text-align:center;margin-top:1rem">
           MoveWell keeps all data on this device only.<br>This app supports your training and therapy plan. It is not medical advice.<br>Always follow your physical therapist's or doctor's guidance.
         </p>
+        <p style="font-size:0.7rem;color:var(--muted2);text-align:center;margin-top:0.6rem">Meditation icon on the Body Map's Mind tab by <a href="https://www.vecteezy.com" target="_blank" rel="noopener">Vecteezy.com</a></p>
       `);
       const body = document.getElementById("modal-body");
       body.querySelectorAll(".textsize-option").forEach(b => b.onclick = () => {
@@ -759,25 +743,31 @@
       setTimeout(() => this.startTour(), 700);
     },
     routineFromTemplate(t) {
-      return {
+      const r = {
         id: this.uid(),
         name: t.name,
         desc: t.desc,
         onHome: true,
         archived: false,
         warmupItems: [],
-        items: t.items.filter(id => this.ex(id)).map(id => {
-          const ex = this.ex(id);
+        // template items are exercise ids, or objects like { id, sets: 1 }
+        // that override parts of the exercise's default dose
+        items: t.items.map(entry => {
+          const o = typeof entry === "string" ? { id: entry } : entry;
+          const ex = this.ex(o.id);
+          if (!ex) return null;
           return {
-            exId: id,
-            sets: ex.dose.sets || 1,
-            reps: ex.dose.reps || 0,
-            hold: ex.dose.hold || 0,
-            timeSec: ex.dose.timeSec || 0,
-            perSide: !!ex.dose.perSide
+            exId: o.id,
+            sets: o.sets != null ? o.sets : (ex.dose.sets || 1),
+            reps: o.reps != null ? o.reps : (ex.dose.reps || 0),
+            hold: o.hold != null ? o.hold : (ex.dose.hold || 0),
+            timeSec: o.timeSec != null ? o.timeSec : (ex.dose.timeSec || 0),
+            perSide: o.perSide != null ? !!o.perSide : !!ex.dose.perSide
           };
-        })
+        }).filter(Boolean)
       };
+      if (t.kind) r.kind = t.kind;
+      return r;
     }
   };
 
@@ -792,6 +782,9 @@
     document.getElementById("modal-back").onclick = () => App.modalBack();
     document.getElementById("modal-backdrop").onclick = () => App.closeModal();
     if (!App.state.onboarded) App.startOnboarding();
-    else App.showPage("home");
+    else {
+      App.showPage("home");
+      App.offerSessionResume();
+    }
   });
 })();

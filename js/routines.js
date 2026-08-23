@@ -96,7 +96,7 @@
         <button class="home-tgl ${r.onHome ? "on" : ""}" data-act="home" aria-label="${r.onHome ? "Remove from Home screen" : "Add to Home screen"}">${this.icon("home")}</button>
         <div class="routine-row-info">
           <div class="routine-row-name">${this.esc(r.name)}</div>
-          <div class="routine-row-meta">${this.esc(t.name)} · ${r.items.length} exercises · ~${this.estimateRoutineMin(r)} min</div>
+          <div class="routine-row-meta">${this.esc(t.name)} · ${r.items.length} exercise${r.items.length === 1 ? "" : "s"}</div>
         </div>
         <div class="ex-item-chev">${this.icon("chevR")}</div>
       </div>`;
@@ -200,7 +200,6 @@
       </div>
       <div class="field-hint">Used to group routines in your library. Auto picks based on the exercises inside.</div>
       ${r.desc ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem">${this.esc(r.desc)}</p>` : ""}
-      <p style="font-size:0.85rem;color:var(--muted2);margin-top:0.4rem">~${this.estimateRoutineMin(r)} min</p>
       ${wu.length ? `
       <div class="section-label">Warmup (${wu.length})</div>
       <div id="re-warmup">${wu.map((it, i) => this.routineItemHtml(r, it, i, { warmup: true })).join("")}</div>
@@ -231,14 +230,7 @@
     };
     body.querySelector("#re-add").onclick = () => this.openExercisePicker(r.id);
     const wuAdd = body.querySelector("#re-warmup-add");
-    if (wuAdd) wuAdd.onclick = () => {
-      const items = this.suggestWarmup(r);
-      if (!items.length) { this.toast("Couldn't suggest a warmup. Add exercises first."); return; }
-      r.warmupItems = items;
-      this.save();
-      this.openRoutineEditor(rid);
-      this.toast("Warmup added. Tap a move to change it.");
-    };
+    if (wuAdd) wuAdd.onclick = () => this.openExercisePicker(r.id, "wu");
     const wuMore = body.querySelector("#re-warmup-more");
     if (wuMore) wuMore.onclick = () => this.openExercisePicker(r.id, "wu");
     const pair = body.querySelector("#re-pair");
@@ -252,40 +244,6 @@
       }, "Delete");
     };
     this.bindRoutineItemButtons(r);
-  };
-
-  // pick 2-3 gentle mobility/stretch moves matching the routine's body regions
-  App.suggestWarmup = function (r) {
-    const count = {}, order = [];
-    r.items.forEach(it => {
-      const ex = this.ex(it.exId);
-      if (!ex) return;
-      if (!(ex.region in count)) order.push(ex.region);
-      count[ex.region] = (count[ex.region] || 0) + 1;
-    });
-    const regions = order.sort((a, b) => count[b] - count[a]);
-    const used = new Set(r.items.map(it => it.exId));
-    (r.warmupItems || []).forEach(it => used.add(it.exId));
-    const picks = [];
-    const pickFrom = (maxLevel, regionList) => {
-      regionList.forEach(rg => {
-        if (picks.length >= 3) return;
-        const cands = window.EXERCISES.filter(ex =>
-          (ex.type === "mobility" || ex.type === "stretch") &&
-          ex.level <= maxLevel && ex.dose && ex.region === rg && !used.has(ex.id));
-        if (!cands.length) return;
-        const best = cands.find(x => x.type === "mobility") || cands[0];
-        used.add(best.id);
-        picks.push(best);
-      });
-    };
-    pickFrom(1, regions);
-    if (picks.length < 2) pickFrom(2, regions);
-    if (picks.length < 2) pickFrom(1, ["core", "hip", "lower-back", "upper-back", "neck"]);
-    return picks.slice(0, 3).map(ex => ({
-      exId: ex.id, sets: 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0,
-      timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide
-    }));
   };
 
   App.routineItemHtml = function (r, it, i, opts) {
@@ -514,19 +472,20 @@
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase().includes(q)) return false;
         return true;
       });
-      const inR = new Set(r.items.map(i => i.exId).concat((r.warmupItems || []).map(i => i.exId)));
+      // the same exercise can be added more than once, so show a count instead of disabling
+      const inR = {};
+      r.items.concat(r.warmupItems || []).forEach(i => { inR[i.exId] = (inR[i.exId] || 0) + 1; });
       document.getElementById("pick-list").innerHTML = list.map(ex => `
-        <div class="ex-item" data-ex="${ex.id}" style="${inR.has(ex.id) ? "opacity:0.55" : ""}">
+        <div class="ex-item" data-ex="${ex.id}">
           <div class="ex-item-icon tile ${this.region(ex.region).color || ""}">${this.icon(this.region(ex.region).icon)}</div>
           <div class="ex-item-info">
             <div class="ex-item-name">${this.esc(ex.name)}</div>
-            <div class="ex-item-meta">${ex.custom ? `<span class="tag pink">Custom</span>` : ""}<span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>
+            <div class="ex-item-meta">${inR[ex.id] ? `<span class="tag accent">${this.icon("check")} in routine${inR[ex.id] > 1 ? " ×" + inR[ex.id] : ""}</span>` : ""}${ex.custom ? `<span class="tag pink">Custom</span>` : ""}<span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>
           </div>
-          <div class="ex-item-chev">${inR.has(ex.id) ? this.icon("check") : this.icon("plus")}</div>
+          <div class="ex-item-chev">${this.icon("plus")}</div>
         </div>`).join("");
       document.getElementById("pick-list").querySelectorAll(".ex-item").forEach(n => n.onclick = () => {
         const exId = n.dataset.ex;
-        if (inR.has(exId)) { this.toast("Already in this routine"); return; }
         const ex = this.ex(exId);
         const item = { exId, sets: wu ? 1 : (ex.dose.sets || 1), reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide };
         if (replacing) {
@@ -542,7 +501,8 @@
         }
         arr.push(item);
         this.save();
-        this.toast(ex.name + " added");
+        const copies = arr.filter(x => x.exId === exId).length;
+        this.toast(copies > 1 ? ex.name + " added again (" + copies + " total)" : ex.name + " added");
         render();
       });
     };
