@@ -238,8 +238,43 @@
     }
 
     document.getElementById("sess-back").onclick = () => { if (s.idx > 0) { this.stopHoldTimer(); s.idx--; this.renderSessionStep(); } };
-    document.getElementById("sess-skip").onclick = () => { it.skipped = it.logged.length === 0; this.advance(); };
+    document.getElementById("sess-skip").onclick = () => this.openSkipPrompt(it);
     document.getElementById("sess-next").onclick = () => this.advance();
+  };
+
+  // ---------- skip / defer ----------
+  App.openSkipPrompt = function (it) {
+    const s = this._sess;
+    const ex = this.ex(it.exId);
+    const name = this.esc(it.variant || (ex || {}).name || "this exercise");
+    const isLast = s.items.indexOf(it) >= s.items.length - 1;
+    const canDefer = !it.groupId && !isLast;
+    this.openModal("Skip " + name + "?", `
+      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem">Choose what to do with this exercise.</p>
+      <button class="btn secondary big" id="skip-forever">Skip for the session</button>
+      ${canDefer ? `<button class="btn secondary big" id="skip-defer" style="margin-top:0.7rem">Not available, come back later</button>` : ""}
+    `);
+    const body = document.getElementById("modal-body");
+    body.querySelector("#skip-forever").onclick = () => {
+      this.closeModal();
+      it.skipped = it.logged.length === 0;
+      this.advance();
+    };
+    const deferBtn = body.querySelector("#skip-defer");
+    if (deferBtn) deferBtn.onclick = () => {
+      this.closeModal();
+      this.deferExercise(it);
+    };
+  };
+
+  App.deferExercise = function (it) {
+    const s = this._sess;
+    const i = s.items.indexOf(it);
+    if (i < 0 || i >= s.items.length - 1) { this.renderSessionStep(); return; }
+    s.items.splice(i, 1);
+    s.items.splice(i + 1, 0, it);
+    this.renderSessionStep();
+    this.toast("We'll come back to this one later");
   };
 
   App.setsDoneHtml = function (it) {

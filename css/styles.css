@@ -417,7 +417,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .ex-item-chev .icn { width: 1.1rem; height: 1.1rem; }
 
 /* ============ MODAL (bottom sheet) ============ */
-.modal { position: fixed; inset: 0; z-index: 300; display: none; }
+.modal { position: fixed; inset: 0; z-index: 470; display: none; }
 .modal.open { display: block; }
 .modal-backdrop { position: absolute; inset: 0; background: rgba(20, 20, 14, 0.55); }
 .modal-sheet {
@@ -488,6 +488,13 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .builder-section .chip { min-height: 2.2rem; padding: 0.35rem 0.8rem; font-size: 0.8rem; }
 .builder-section label.field-label { margin-top: 0.7rem; }
 .builder-section label.field-label:first-of-type { margin-top: 0; }
+.section-label.builder-toggle {
+  width: 100%; background: none; border: none; cursor: pointer; padding: 0; font: inherit;
+  display: flex; align-items: center; justify-content: space-between; text-align: left;
+}
+.section-label.builder-toggle .chev { display: inline-flex; flex-shrink: 0; }
+.builder-body { display: none; margin-top: 0.6rem; }
+.builder-body.open { display: block; }
 
 /* ============ ROUTINE EDITOR ============ */
 .routine-item {

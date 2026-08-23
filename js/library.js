@@ -219,87 +219,105 @@
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.9rem">Fill this in and your exercise will look and behave exactly like the built-in ones, searchable, filterable, and usable in routines and sessions.</p>
 
       <div class="builder-section">
-        <div class="section-label">${this.icon("pencil")} The Basics</div>
-        <label class="field-label">Exercise name *</label>
-        <input type="text" id="cb-name" value="${this.esc(d.name)}" placeholder="e.g. Landmine Press">
-        <label class="field-label">Muscles it works</label>
-        <input type="text" id="cb-muscles" value="${this.esc(d.muscles)}" placeholder="e.g. Shoulders, upper chest, core">
-        <label class="field-label">Position / setup</label>
-        <input type="text" id="cb-position" value="${this.esc(d.position)}" placeholder="e.g. Standing, holding one end of a barbell">
-      </div>
-
-      <div class="builder-section">
-        <div class="section-label">${this.icon("core")} Body Area *</div>
-        <div class="chip-row" id="cb-region">
-          ${window.REGIONS.map(r => `<button class="chip ${d.region === r.id ? "on" : ""}" data-v="${r.id}">${this.icon(r.icon)} ${r.name}</button>`).join("")}
+        <button class="section-label builder-toggle" data-b="basics"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("pencil")} The Basics</span><span class="chev" id="cb-chev-basics">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-basics">
+          <label class="field-label">Exercise name *</label>
+          <input type="text" id="cb-name" value="${this.esc(d.name)}" placeholder="e.g. Landmine Press">
+          <label class="field-label">Muscles it works</label>
+          <input type="text" id="cb-muscles" value="${this.esc(d.muscles)}" placeholder="e.g. Shoulders, upper chest, core">
+          <label class="field-label">Position / setup</label>
+          <input type="text" id="cb-position" value="${this.esc(d.position)}" placeholder="e.g. Standing, holding one end of a barbell">
         </div>
       </div>
 
       <div class="builder-section">
-        <div class="section-label">${this.icon("sparkle")} Type & Level</div>
-        <div class="chip-row" id="cb-type" style="margin-bottom:0.7rem">
-          ${window.EX_TYPES.map(t => `<button class="chip ${d.type === t.id ? "on" : ""}" data-v="${t.id}">${t.name}</button>`).join("")}
-        </div>
-        <div class="chip-row" id="cb-level">
-          ${[1, 2, 3].map(l => `<button class="chip ${d.level === l ? "on" : ""}" data-v="${l}">${levelNames[l]}</button>`).join("")}
-        </div>
-      </div>
-
-      <div class="builder-section">
-        <div class="section-label">${this.icon("dumbbell")} Equipment (tap all that apply)</div>
-        <div class="chip-row" id="cb-equip">
-          ${window.EQUIPMENT.map(q => `<button class="chip ${d.equipment.includes(q.id) ? "on" : ""}" data-v="${q.id}">${this.icon(q.icon)} ${q.name}</button>`).join("")}
+        <button class="section-label builder-toggle" data-b="region"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("core")} Body Area *</span><span class="chev" id="cb-chev-region">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-region">
+          <div class="chip-row" id="cb-region">
+            ${window.REGIONS.map(r => `<button class="chip ${d.region === r.id ? "on" : ""}" data-v="${r.id}">${this.icon(r.icon)} ${r.name}</button>`).join("")}
+          </div>
         </div>
       </div>
 
       <div class="builder-section">
-        <div class="section-label">${this.icon("timer")} Suggested Amount</div>
-        <div class="stepper-row">
-          <div class="stepper-label">Sets</div>
-          <div class="stepper"><button data-k="sets" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="cb-sets">${d.dose.sets}</span><button data-k="sets" data-d="1">${this.icon("plus")}</button></div>
-        </div>
-        <div class="stepper-row">
-          <div class="stepper-label">Reps <span style="font-weight:400;color:var(--muted2);font-size:0.75rem">(0 if timed)</span></div>
-          <div class="stepper"><button data-k="reps" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="cb-reps">${d.dose.reps}</span><button data-k="reps" data-d="1">${this.icon("plus")}</button></div>
-        </div>
-        <div class="stepper-row">
-          <div class="stepper-label">Hold (seconds)</div>
-          <div class="stepper"><button data-k="hold" data-d="-5">${this.icon("minus")}</button><span class="stepper-val" id="cb-hold">${d.dose.hold}</span><button data-k="hold" data-d="5">${this.icon("plus")}</button></div>
-        </div>
-        <div class="stepper-row">
-          <div class="stepper-label">Timed (seconds) <span style="font-weight:400;color:var(--muted2);font-size:0.75rem">(for planks, carries)</span></div>
-          <div class="stepper"><button data-k="timeSec" data-d="-15">${this.icon("minus")}</button><span class="stepper-val" id="cb-timeSec">${d.dose.timeSec}</span><button data-k="timeSec" data-d="15">${this.icon("plus")}</button></div>
-        </div>
-        <div class="toggle-row" style="margin-bottom:0">
-          <div class="stepper-label">Do each side separately</div>
-          <label class="switch"><input type="checkbox" id="cb-perside" ${d.dose.perSide ? "checked" : ""}><span class="slider"></span></label>
+        <button class="section-label builder-toggle" data-b="typelevel"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("sparkle")} Type & Level</span><span class="chev" id="cb-chev-typelevel">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-typelevel">
+          <div class="chip-row" id="cb-type" style="margin-bottom:0.7rem">
+            ${window.EX_TYPES.map(t => `<button class="chip ${d.type === t.id ? "on" : ""}" data-v="${t.id}">${t.name}</button>`).join("")}
+          </div>
+          <div class="chip-row" id="cb-level">
+            ${[1, 2, 3].map(l => `<button class="chip ${d.level === l ? "on" : ""}" data-v="${l}">${levelNames[l]}</button>`).join("")}
+          </div>
         </div>
       </div>
 
       <div class="builder-section">
-        <div class="section-label">${this.icon("note")} How To Do It</div>
-        <label class="field-label" style="margin-top:0">Steps, one per line</label>
-        <textarea id="cb-howto" placeholder="Stand tall with feet shoulder width.&#10;Lower down slowly.&#10;Press back up.">${this.esc((d.howTo || []).join("\n"))}</textarea>
+        <button class="section-label builder-toggle" data-b="equip"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("dumbbell")} Equipment (tap all that apply)</span><span class="chev" id="cb-chev-equip">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-equip">
+          <div class="chip-row" id="cb-equip">
+            ${window.EQUIPMENT.map(q => `<button class="chip ${d.equipment.includes(q.id) ? "on" : ""}" data-v="${q.id}">${this.icon(q.icon)} ${q.name}</button>`).join("")}
+          </div>
+        </div>
       </div>
 
       <div class="builder-section">
-        <div class="section-label">${this.icon("bulb")} Tips & Cautions</div>
-        <label class="field-label" style="margin-top:0">Helpful tips, one per line</label>
-        <textarea id="cb-tips" placeholder="Keep your core braced.&#10;Go lighter than you think at first." style="min-height:3.6rem">${this.esc((d.tips || []).join("\n"))}</textarea>
-        <label class="field-label">Caution note</label>
-        <input type="text" id="cb-caution" value="${this.esc(d.caution || "")}" placeholder="e.g. Stop if you feel sharp pain">
+        <button class="section-label builder-toggle" data-b="dose"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("timer")} Suggested Amount</span><span class="chev" id="cb-chev-dose">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-dose">
+          <div class="stepper-row">
+            <div class="stepper-label">Sets</div>
+            <div class="stepper"><button data-k="sets" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="cb-sets">${d.dose.sets}</span><button data-k="sets" data-d="1">${this.icon("plus")}</button></div>
+          </div>
+          <div class="stepper-row">
+            <div class="stepper-label">Reps <span style="font-weight:400;color:var(--muted2);font-size:0.75rem">(0 if timed)</span></div>
+            <div class="stepper"><button data-k="reps" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="cb-reps">${d.dose.reps}</span><button data-k="reps" data-d="1">${this.icon("plus")}</button></div>
+          </div>
+          <div class="stepper-row">
+            <div class="stepper-label">Hold (seconds)</div>
+            <div class="stepper"><button data-k="hold" data-d="-5">${this.icon("minus")}</button><span class="stepper-val" id="cb-hold">${d.dose.hold}</span><button data-k="hold" data-d="5">${this.icon("plus")}</button></div>
+          </div>
+          <div class="stepper-row">
+            <div class="stepper-label">Timed (seconds) <span style="font-weight:400;color:var(--muted2);font-size:0.75rem">(for planks, carries)</span></div>
+            <div class="stepper"><button data-k="timeSec" data-d="-15">${this.icon("minus")}</button><span class="stepper-val" id="cb-timeSec">${d.dose.timeSec}</span><button data-k="timeSec" data-d="15">${this.icon("plus")}</button></div>
+          </div>
+          <div class="toggle-row" style="margin-bottom:0">
+            <div class="stepper-label">Do each side separately</div>
+            <label class="switch"><input type="checkbox" id="cb-perside" ${d.dose.perSide ? "checked" : ""}><span class="slider"></span></label>
+          </div>
+        </div>
       </div>
 
       <div class="builder-section">
-        <div class="section-label">${this.icon("sparkle")} Variations</div>
-        <label class="field-label" style="margin-top:0">One per line, as Name: description</label>
-        <textarea id="cb-variations" placeholder="Kneeling Version: Do it from your knees to make it easier.&#10;Weighted Version: Hold a dumbbell for extra challenge." style="min-height:3.6rem">${this.esc((d.variations || []).map(v => v.name + ": " + v.note).join("\n"))}</textarea>
+        <button class="section-label builder-toggle" data-b="howto"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("note")} How To Do It</span><span class="chev" id="cb-chev-howto">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-howto">
+          <label class="field-label" style="margin-top:0">Steps, one per line</label>
+          <textarea id="cb-howto" placeholder="Stand tall with feet shoulder width.&#10;Lower down slowly.&#10;Press back up.">${this.esc((d.howTo || []).join("\n"))}</textarea>
+        </div>
       </div>
 
       <div class="builder-section">
-        <div class="section-label">${this.icon("heart")} Often Used For (optional)</div>
-        <div class="chip-row" id="cb-helps">
-          ${window.CONDITIONS.map(c => `<button class="chip ${d.helps.includes(c.id) ? "on" : ""}" data-v="${c.id}">${this.esc(c.name)}</button>`).join("")}
+        <button class="section-label builder-toggle" data-b="tips"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("bulb")} Tips & Cautions</span><span class="chev" id="cb-chev-tips">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-tips">
+          <label class="field-label" style="margin-top:0">Helpful tips, one per line</label>
+          <textarea id="cb-tips" placeholder="Keep your core braced.&#10;Go lighter than you think at first." style="min-height:3.6rem">${this.esc((d.tips || []).join("\n"))}</textarea>
+          <label class="field-label">Caution note</label>
+          <input type="text" id="cb-caution" value="${this.esc(d.caution || "")}" placeholder="e.g. Stop if you feel sharp pain">
+        </div>
+      </div>
+
+      <div class="builder-section">
+        <button class="section-label builder-toggle" data-b="variations"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("sparkle")} Variations</span><span class="chev" id="cb-chev-variations">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-variations">
+          <label class="field-label" style="margin-top:0">One per line, as Name: description</label>
+          <textarea id="cb-variations" placeholder="Kneeling Version: Do it from your knees to make it easier.&#10;Weighted Version: Hold a dumbbell for extra challenge." style="min-height:3.6rem">${this.esc((d.variations || []).map(v => v.name + ": " + v.note).join("\n"))}</textarea>
+        </div>
+      </div>
+
+      <div class="builder-section">
+        <button class="section-label builder-toggle" data-b="helps"><span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon("heart")} Often Used For (optional)</span><span class="chev" id="cb-chev-helps">${this.icon("chevD")}</span></button>
+        <div class="builder-body" id="cb-body-helps">
+          <div class="chip-row" id="cb-helps">
+            ${window.CONDITIONS.map(c => `<button class="chip ${d.helps.includes(c.id) ? "on" : ""}" data-v="${c.id}">${this.esc(c.name)}</button>`).join("")}
+          </div>
         </div>
       </div>
 
@@ -307,6 +325,31 @@
     `);
 
     const body = document.getElementById("modal-body");
+    // collapsible section toggles
+    const sectionHasContent = (key) => {
+      switch (key) {
+        case "typelevel": return d.type !== "strengthen" || d.level !== 2;
+        case "equip": return d.equipment.length > 0 && !(d.equipment.length === 1 && d.equipment[0] === "none");
+        case "dose": return d.dose.hold > 0 || d.dose.timeSec > 0 || d.dose.perSide || d.dose.sets !== 3 || d.dose.reps !== 10;
+        case "howto": return (d.howTo || []).length > 0;
+        case "tips": return (d.tips || []).length > 0 || !!d.caution;
+        case "variations": return (d.variations || []).length > 0;
+        case "helps": return (d.helps || []).length > 0;
+        default: return false;
+      }
+    };
+    [["basics", true], ["region", true], ["typelevel", false], ["equip", false], ["dose", false],
+     ["howto", false], ["tips", false], ["variations", false], ["helps", false]].forEach(([key, alwaysOpen]) => {
+      const btn = body.querySelector('[data-b="' + key + '"]');
+      const sec = body.querySelector("#cb-body-" + key);
+      const chev = body.querySelector("#cb-chev-" + key);
+      const open = alwaysOpen || (editing && sectionHasContent(key));
+      if (open) { sec.classList.add("open"); chev.innerHTML = this.icon("chevU"); }
+      btn.onclick = () => {
+        sec.classList.toggle("open");
+        chev.innerHTML = sec.classList.contains("open") ? this.icon("chevU") : this.icon("chevD");
+      };
+    });
     // single-select chip groups
     const single = (id, key, isNum) => {
       body.querySelectorAll("#" + id + " .chip").forEach(ch => ch.onclick = () => {
