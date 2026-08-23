@@ -24,8 +24,10 @@
         <div class="home-stat"><div class="home-stat-num">${totalMin}</div><div class="home-stat-label">Minutes</div></div>
       </div>
       <div class="chart-card">
-        <h3>${this.icon("scale")} Weight over time</h3>
-        <button class="btn secondary small" id="wi-add" style="margin-bottom:0.6rem">${this.icon("plus")} Log Weight</button>
+        <div class="weight-card-head">
+          <h3>${this.icon("scale")} Weight over time</h3>
+          <button class="icon-btn small" id="wi-add" title="Log Weight" aria-label="Log Weight">${this.icon("plus")}</button>
+        </div>
         ${weightLogs.length ? `<div class="chart-holder"><canvas id="chart-weight"></canvas></div>` : `<p style="color:var(--muted2);font-size:0.85rem">No weigh-ins yet. Log Weight to start tracking.</p>`}
         ${recentWeights.length ? recentWeights.map(w => `
           <div class="history-item" data-weight="${w.id}">

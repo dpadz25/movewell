@@ -245,7 +245,6 @@
       const streak = this.streak();
       const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay());
       const weekLogs = s.logs.filter(l => new Date(l.date) >= new Date(weekStart.toDateString()));
-      const totalEx = s.logs.reduce((a, l) => a + (l.exercisesDone || 0), 0);
 
       // week dots (Sun..Sat)
       const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
@@ -275,8 +274,27 @@
             <button class="btn big grad" onclick="App.showPage('routines')">Open My Routine Library</button>
           </div>`;
       } else {
+        // group routines by category (rehab, stretching, gym, yoga, etc.) so Home stays scannable
+        this._homeCatOpen = this._homeCatOpen || {};
+        const groups = {};
+        homeRoutines.forEach(r => {
+          const kind = this.routineType(r);
+          (groups[kind] = groups[kind] || []).push(r);
+        });
         routinesHtml = `<div class="swipe-hint">Swipe a card left to reorder, edit, or archive</div>` +
-          homeRoutines.map(r => this.routineCardHtml(r, "home")).join("");
+          window.ROUTINE_TYPES.filter(t => groups[t.id]).map(t => {
+            const open = this._homeCatOpen[t.id] !== false;
+            return `
+              <div class="home-cat">
+                <button class="section-label home-cat-toggle" data-cat="${t.id}">
+                  <span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon(t.icon)} ${t.name} <span class="home-cat-count">${groups[t.id].length}</span></span>
+                  <span class="chev">${this.icon(open ? "chevU" : "chevD")}</span>
+                </button>
+                <div class="home-cat-body ${open ? "open" : ""}" data-catbody="${t.id}">
+                  ${groups[t.id].map(r => this.routineCardHtml(r, "home")).join("")}
+                </div>
+              </div>`;
+          }).join("");
       }
 
       document.getElementById("home-scroll").innerHTML = `
@@ -298,18 +316,20 @@
           <div class="section-label" style="margin:0 0 0.2rem">This Week</div>
           <div class="week-dots">${dots}</div>
         </div>
-        <button class="btn ghost big" id="home-log-weight" style="margin-top:0.7rem">${this.icon("scale")} Log Weight</button>
-        <div class="home-stats">
-          <div class="home-stat"><div class="home-stat-num">${s.logs.length}</div><div class="home-stat-label">Sessions</div></div>
-          <div class="home-stat"><div class="home-stat-num">${totalEx}</div><div class="home-stat-label">Exercises</div></div>
-          <div class="home-stat"><div class="home-stat-num">${window.EXERCISES.length}</div><div class="home-stat-label">In Library</div></div>
-        </div>
         <div class="section-label">Your Routines</div>
         ${routinesHtml}
         ${s.routines.length > 0 ? `<button class="btn ghost big" style="margin-top:0.3rem" onclick="App.showPage('routines');App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>` : ""}
       `;
       this.bindRoutineCards(document.getElementById("home-scroll"), "home");
-      document.getElementById("home-log-weight").onclick = () => this.openWeighInModal();
+      document.querySelectorAll(".home-cat-toggle").forEach(btn => btn.onclick = () => {
+        const kind = btn.dataset.cat;
+        const catBody = document.querySelector('.home-cat-body[data-catbody="' + kind + '"]');
+        const chev = btn.querySelector(".chev");
+        const nowOpen = !catBody.classList.contains("open");
+        catBody.classList.toggle("open", nowOpen);
+        chev.innerHTML = this.icon(nowOpen ? "chevU" : "chevD");
+        this._homeCatOpen[kind] = nowOpen;
+      });
     },
 
     // ---------- WEIGHT LOG ----------
