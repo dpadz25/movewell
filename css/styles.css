@@ -49,6 +49,10 @@ html[data-theme="berry"] {
   --accent: #8a4a9e; --accent-strong: #6d3680; --accent-dim: #eee0f3;
   --accent-grad: linear-gradient(135deg, #8a4a9e, #b3548b);
 }
+html[data-theme="pink"] {
+  --accent: #d6487d; --accent-strong: #b23162; --accent-dim: #fbdfe9;
+  --accent-grad: linear-gradient(135deg, #d6487d, #f0709a);
+}
 html[data-dark="1"] {
   --bg: #161713;
   --card: #21231d;
@@ -69,6 +73,7 @@ html[data-dark="1"][data-theme="forest"], html[data-dark="1"]:not([data-theme]) 
 html[data-dark="1"][data-theme="ocean"] { --accent-dim: #1c3242; }
 html[data-dark="1"][data-theme="sunset"] { --accent-dim: #3f2818; }
 html[data-dark="1"][data-theme="berry"] { --accent-dim: #33223d; }
+html[data-dark="1"][data-theme="pink"] { --accent-dim: #4a1f30; }
 
 /* Text size settings: everything is in rem so this scales the whole app */
 html { font-size: 17px; }
@@ -205,7 +210,7 @@ label.field-label { display: block; font-size: 0.8rem; font-weight: 700; color: 
 .chip .icn { width: 1.05em; height: 1.05em; }
 .chip.small-chip { min-height: 2rem; padding: 0.3rem 0.75rem; font-size: 0.78rem; }
 input.stepper-input, .stepper input.stepper-input {
-  width: 4.2rem; flex: 0 0 auto; text-align: center; font-weight: 800; font-size: 1.05rem;
+  width: 5.4rem; flex: 0 0 auto; text-align: center; font-weight: 800; font-size: 1.8rem;
   border: 2px solid var(--border2); border-radius: 10px; padding: 0.4rem 0.15rem;
   background: var(--surface); color: var(--text); font-variant-numeric: tabular-nums;
   outline: none; -moz-appearance: textfield; appearance: textfield; font-family: inherit;
@@ -297,6 +302,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .sw-ocean { background: linear-gradient(135deg, #2b6f9e, #3fa3b8); }
 .sw-sunset { background: linear-gradient(135deg, #c25b2e, #d99038); }
 .sw-berry { background: linear-gradient(135deg, #8a4a9e, #b3548b); }
+.sw-pink { background: linear-gradient(135deg, #d6487d, #f0709a); }
 
 /* ============ HOME ============ */
 .greeting { font-size: 1.7rem; font-weight: 700; margin-bottom: 0.2rem; font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.03em; }
@@ -444,9 +450,22 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 }
 @keyframes sheet-up { from { transform: translateX(-50%) translateY(40px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
 .modal-head {
+  position: relative;
   display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
   padding: 1rem 1.1rem 0.7rem; border-bottom: 1px solid var(--border); flex-shrink: 0;
   background: var(--card);
+}
+.modal-save-indicator {
+  position: absolute; top: 50%; right: 3.7rem; transform: translateY(-50%) scale(0.6);
+  display: inline-flex; color: var(--accent); opacity: 0; pointer-events: none;
+}
+.modal-save-indicator.show { animation: save-pop 1s ease; }
+@keyframes save-pop {
+  0% { opacity: 0; transform: translateY(-50%) scale(0.6); }
+  15% { opacity: 1; transform: translateY(-50%) scale(1.15); }
+  30% { opacity: 1; transform: translateY(-50%) scale(1); }
+  75% { opacity: 1; transform: translateY(-50%) scale(1); }
+  100% { opacity: 0; transform: translateY(-50%) scale(1); }
 }
 .modal-title { font-size: 1.2rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
 .modal-close {
@@ -543,7 +562,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .stepper button .icn { width: 1.2rem; height: 1.2rem; stroke-width: 2.4; }
 .stepper button:active { background: var(--accent-dim); }
 .stepper .stepper-val {
-  min-width: 3.2rem; text-align: center; font-size: 1.15rem; font-weight: 700;
+  min-width: 3.4rem; text-align: center; font-size: 1.8rem; font-weight: 700;
   font-variant-numeric: tabular-nums; font-family: 'Space Grotesk', sans-serif;
 }
 .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; }
@@ -575,7 +594,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .session-body { flex: 1; overflow-y: auto; padding: 1.2rem 1.1rem 2rem; }
 .session-ex-type { margin-bottom: 0.4rem; }
 .session-ex-name { font-size: 1.7rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; margin-bottom: 0.3rem; letter-spacing: -0.02em; }
-.session-ex-dose { font-size: 1.05rem; color: var(--accent-strong); font-weight: 800; margin-bottom: 1rem; }
+.session-ex-dose { font-size: 1.2rem; color: var(--accent-strong); font-weight: 800; margin-bottom: 1rem; }
 .session-howto-toggle {
   width: 100%; text-align: left; background: var(--card); border: 1px solid var(--border);
   border-radius: 14px; padding: 0.85rem 1rem; font-size: 0.95rem; font-weight: 800;
@@ -625,8 +644,6 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
   padding: 0.5rem 0.75rem; margin-bottom: 0.75rem;
 }
 .prev-hint:active { opacity: 0.8; }
-.plate-breakdown { display: flex; flex-direction: column; gap: 0.5rem; }
-.plate-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
 
 /* big timer */
 .hold-timer { text-align: center; padding: 0.6rem 0 0.9rem; }

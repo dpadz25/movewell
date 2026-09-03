@@ -216,12 +216,12 @@
       <button class="btn danger big" id="re-delete" style="margin-top:0.5rem">${this.icon("trash")} Delete</button>
     `);
     const body = document.getElementById("modal-body");
-    body.querySelector("#re-name").onchange = (e) => { r.name = e.target.value.trim() || r.name; this.save(); this.refresh(); };
+    body.querySelector("#re-name").onchange = (e) => { r.name = e.target.value.trim() || r.name; this.save(); this.refresh(); this.flashSaveIndicator(); };
     body.querySelectorAll("#re-kind .chip").forEach(ch => ch.onclick = () => {
       body.querySelectorAll("#re-kind .chip").forEach(x => x.classList.remove("on"));
       ch.classList.add("on");
       if (ch.dataset.k) r.kind = ch.dataset.k; else delete r.kind;
-      this.save(); this.refresh();
+      this.save(); this.refresh(); this.flashSaveIndicator();
     });
     body.querySelector("#re-archive").onclick = () => {
       r.archived = true;
@@ -375,6 +375,7 @@
             if (list === "main") this.normalizeGroups(r);
             this.save();
             this.openRoutineEditor(r.id);
+            this.flashSaveIndicator();
           }
         };
         handle.onpointermove = (ev) => { lastY = ev.clientY; update(); edgeScroll(ev.clientY); };
@@ -437,6 +438,7 @@
       it[k] = Math.max(mins[k], (it[k] || 0) + d);
       body.querySelector("#dv-" + k).textContent = k === "timeSec" ? this.fmtDur(it[k]) : it[k];
       this.save();
+      this.flashSaveIndicator();
     });
     body.querySelectorAll("#dv-variant .chip").forEach(ch => ch.onclick = () => {
       body.querySelectorAll("#dv-variant .chip").forEach(x => x.classList.remove("on"));
@@ -444,8 +446,9 @@
       it.variant = ch.dataset.v || "";
       if (!it.variant) delete it.variant;
       this.save();
+      this.flashSaveIndicator();
     });
-    body.querySelector("#dv-perside").onchange = (e) => { it.perSide = e.target.checked; this.save(); };
+    body.querySelector("#dv-perside").onchange = (e) => { it.perSide = e.target.checked; this.save(); this.flashSaveIndicator(); };
     body.querySelector("#dv-detail").onclick = () => this.openExerciseDetail(it.exId, { hideAdd: true });
     body.querySelector("#dv-replace").onclick = () => this.openExercisePicker(rid, list, i);
     body.querySelector("#dv-done").onclick = () => this.modalBack();
@@ -467,6 +470,7 @@
         // yoga poses only appear under the Yoga chip, never mixed into the other lists
         if (this._pick.region === "__yoga") { if (ex.type !== "yoga") return false; }
         else if (ex.type === "yoga") return false;
+        else if (this._pick.region === "__stretch") { if (ex.type !== "stretch") return false; }
         else if (this._pick.region && ex.region !== this._pick.region) return false;
         if (q && !(ex.name + " " + ex.muscles + " " + ex.equipment.map(x => this.equip(x).name).join(" ") + " " +
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase().includes(q)) return false;
@@ -511,6 +515,7 @@
       <div class="filter-wrap"><div class="filter-bar" id="pick-regions">
         <button class="chip on" data-v="">All</button>
         <button class="chip" data-v="__yoga">${this.icon("sun")} Yoga</button>
+        <button class="chip" data-v="__stretch">${this.icon("leaf")} Stretch</button>
         ${window.REGIONS.map(rg => `<button class="chip" data-v="${rg.id}">${this.icon(rg.icon)} ${rg.name}</button>`).join("")}
       </div></div>
       <div id="pick-list"></div>

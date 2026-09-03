@@ -43,6 +43,16 @@
         if (r.archived === undefined) r.archived = false;
         if (!Array.isArray(r.warmupItems)) r.warmupItems = [];
       });
+      // older saves predate side-aware body-map regions (e.g. "hip-left" vs "hip"); the
+      // side was already sitting in the free-text label, so recover it from there instead
+      // of leaving old logs stuck highlighting both sides.
+      if (Array.isArray(this.state.bodyLogs)) {
+        this.state.bodyLogs.forEach(b => {
+          if (!b.region || /-left$|-right$/.test(b.region)) return;
+          const m = /^(Left|Right)\b/.exec(b.label || "");
+          if (m) b.region = b.region + "-" + m[1].toLowerCase();
+        });
+      }
       this.syncCustomExercises();
     },
     save() {
@@ -58,7 +68,12 @@
 
     // ---------- lookups ----------
     ex(id) { return window.EXERCISES.find(e => e.id === id); },
-    region(id) { return window.REGIONS.find(r => r.id === id) || { id, name: id, icon: "core", color: "" }; },
+    // body-map zones store a side-aware key for paired parts (e.g. "hip-left"); strip
+    // the suffix so region metadata (icon/name/color) still resolves for those entries.
+    region(id) {
+      const base = (id || "").replace(/-left$|-right$/, "");
+      return window.REGIONS.find(r => r.id === base) || { id, name: id, icon: "core", color: "" };
+    },
     condition(id) { return window.CONDITIONS.find(c => c.id === id) || { id, name: id, blurb: "" }; },
     equip(id) { return window.EQUIPMENT.find(q => q.id === id) || { id, name: id, icon: "bodyweight" }; },
     typeMeta(id) { return window.EX_TYPES.find(t => t.id === id) || { id, name: id, color: "" }; },
@@ -132,6 +147,16 @@
       t.classList.add("show");
       clearTimeout(this._toastT);
       this._toastT = setTimeout(() => t.classList.remove("show"), 2200);
+    },
+    // brief top-right checkmark, for screens (like the routine editor) that autosave
+    // every field with no other feedback
+    flashSaveIndicator() {
+      const el = document.getElementById("modal-save-indicator");
+      if (!el) return;
+      el.innerHTML = this.icon("check");
+      el.classList.remove("show");
+      void el.offsetWidth; // restart the animation if it's already mid-flash
+      el.classList.add("show");
     },
     confirm(title, text, onYes, yesLabel, onNo) {
       const c = document.getElementById("confirm");
@@ -514,7 +539,7 @@
     openSettings() {
       this.pushView("settings", () => this.openSettings());
       const p = this.state.profile;
-      const themes = [["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"]];
+      const themes = [["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"], ["pink", "Pink"]];
       this.openModal("Settings", `
         <label class="field-label">Your name</label>
         <input type="text" id="set-name" value="${this.esc(p.name)}" placeholder="Your name">
@@ -755,7 +780,7 @@
           <h1>Make it yours</h1>
           <p>Pick a color theme and a comfortable reading size. Both can change any time in Settings.</p>
           <div class="theme-options" id="ob-theme">
-            ${[["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"]].map(([id, label]) => `
+            ${[["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"], ["pink", "Pink"]].map(([id, label]) => `
               <button class="theme-option ${d.theme === id ? "on" : ""}" data-theme="${id}">
                 <span class="sw sw-${id}"></span><span class="sw-label">${label}</span>
               </button>`).join("")}

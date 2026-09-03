@@ -142,6 +142,9 @@
     const timerTarget = it.timeSec > 0 ? it.timeSec : it.hold;
     const targetSets = it.sets * (it.perSide ? 2 : 1);
     const done = it.logged.length;
+    // for a per-side exercise, one "set" is both sides together, not each side on its own
+    const displaySets = it.sets;
+    const doneSets = it.perSide ? Math.floor(done / 2) : done;
     const prev = this.lastPerformance(it.exId);
     const displayName = it.variant || ex.name;
     // yoga routines get a much calmer session screen: no logging, no supersets, no rest breaks
@@ -169,13 +172,13 @@
       // finished exercises (revisited with Back) can't log extra sets
       loggerHtml = `
         <div class="set-log-card">
-          <div class="set-log-title"><span>${this.icon("check")} All ${targetSets} ${targetSets === 1 ? "set" : "sets"} done</span></div>
+          <div class="set-log-title"><span>${this.icon("check")} All ${displaySets} ${displaySets === 1 ? "set" : "sets"} done</span></div>
           <div id="sets-done">${this.setsDoneHtml(it)}</div>
         </div>`;
     } else if (isTimed) {
       loggerHtml = `
         <div class="set-log-card">
-          <div class="set-log-title"><span>Timer: ${done} of ${targetSets} done</span></div>
+          <div class="set-log-title"><span>Timer: ${doneSets} of ${displaySets} done</span></div>
           <div class="hold-timer" id="hold-timer">
             <div class="hold-timer-display" id="hold-display">${this.fmtClock(timerTarget)}</div>
             <div class="hold-timer-sub">${it.timeSec > 0 ? "keep going until the chime" : "hold the position until the chime"}${it.perSide ? " · alternate sides each round" : ""}</div>
@@ -189,7 +192,7 @@
     } else {
       loggerHtml = `
         <div class="set-log-card">
-          <div class="set-log-title"><span>Log your sets: ${done} of ${targetSets} done</span></div>
+          <div class="set-log-title"><span>Log your sets: ${doneSets} of ${displaySets} done</span></div>
           ${prev ? `<button class="prev-hint" id="use-last-set">Last time: ${prev.sets.map(x => (x.reps || "") + (x.weight ? "×" + x.weight + "lb" : "")).filter(Boolean).join(", ") || prev.sets.length + " sets"} · ${this.fmtDate(prev.date)}</button>` : ""}
           <div class="stepper-row">
             <div class="stepper-label">Reps</div>
@@ -197,9 +200,9 @@
           </div>
           ${it.warmup ? "" : `<div class="stepper-row">
             <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">tap the number to type it</span></div>
-            <div class="stepper"><button id="wt-minus">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus">${this.icon("plus")}</button><button class="icon-btn" id="plate-calc" title="Plate calculator" aria-label="Plate calculator">${this.icon("scale")}</button></div>
+            <div class="stepper"><button id="wt-minus">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus">${this.icon("plus")}</button></div>
           </div>`}
-          <button class="btn big grad" id="log-set">${this.icon("check")} Log Set ${done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
+          <button class="btn big grad" id="log-set">${this.icon("check")} Log Set ${it.perSide ? doneSets + 1 : done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
           <div id="sets-done">${this.setsDoneHtml(it)}</div>
         </div>`;
     }
@@ -251,8 +254,8 @@
         <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
         ${ex.variations.map(v => `<button class="chip small-chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
       </div></div>` : ""}
-      <button class="session-howto-toggle" id="howto-toggle"><span style="display:inline-flex;align-items:center;gap:0.45rem">${this.icon("book")} Show me how to do it</span><span id="howto-chev" style="display:inline-flex">${this.icon("chevD")}</span></button>
-      <div class="session-howto" id="howto">
+      <button class="session-howto-toggle" id="howto-toggle"><span style="display:inline-flex;align-items:center;gap:0.45rem">${this.icon("book")} Show me how to do it</span><span id="howto-chev" style="display:inline-flex">${it._howtoOpen === false ? this.icon("chevD") : this.icon("chevU")}</span></button>
+      <div class="session-howto${it._howtoOpen === false ? "" : " open"}" id="howto">
         <div class="sess-muscles">${this.icon("person")}<span><strong>Muscles targeted:</strong> ${this.muscleDetail(ex.muscles)}</span></div>
         <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video demonstration</a>
         <ol class="exd-steps">${ex.howTo.map(x => `<li>${this.esc(x)}</li>`).join("")}</ol>
@@ -307,7 +310,10 @@
     body.querySelector("#howto-toggle").onclick = () => {
       const h = body.querySelector("#howto");
       h.classList.toggle("open");
-      body.querySelector("#howto-chev").innerHTML = h.classList.contains("open") ? this.icon("chevU") : this.icon("chevD");
+      // remember the user's choice on this exercise step so re-rendering (e.g. after
+      // logging a set) doesn't silently reopen or reclose it out from under them
+      it._howtoOpen = h.classList.contains("open");
+      body.querySelector("#howto-chev").innerHTML = it._howtoOpen ? this.icon("chevU") : this.icon("chevD");
     };
 
     if (yoga) {
@@ -324,8 +330,6 @@
       if (wtVal) {
         body.querySelector("#wt-minus").onclick = () => wtVal.value = Math.max(0, (Number(wtVal.value) || 0) - ((Number(wtVal.value) || 0) > 20 ? 5 : 1));
         body.querySelector("#wt-plus").onclick = () => wtVal.value = (Number(wtVal.value) || 0) + ((Number(wtVal.value) || 0) >= 20 ? 5 : 1);
-        const plateBtn = body.querySelector("#plate-calc");
-        if (plateBtn) plateBtn.onclick = () => this.openPlateCalculator(Number(wtVal.value) || 0);
       }
       const useLastBtn = body.querySelector("#use-last-set");
       if (useLastBtn && prev) {
@@ -394,35 +398,12 @@
     this.toast("We'll come back to this one later");
   };
 
-  // ---------- plate calculator ----------
-  App.PLATES_LB = [45, 35, 25, 10, 5, 2.5];
-  App.BAR_LB = 45;
-  App.openPlateCalculator = function (targetLb) {
-    this.pushView("platecalc", () => this.openPlateCalculator(targetLb));
-    const perSide = (targetLb - this.BAR_LB) / 2;
-    let breakdown = [];
-    if (targetLb > 0 && perSide > 0) {
-      let remaining = perSide;
-      this.PLATES_LB.forEach(p => {
-        const n = Math.floor(remaining / p + 1e-9);
-        if (n > 0) { breakdown.push({ plate: p, count: n }); remaining -= n * p; }
-      });
-    }
-    const covered = breakdown.reduce((a, b) => a + b.plate * b.count, 0);
-    this.openModal("Plate Calculator", `
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem">Assumes a ${this.BAR_LB} lb bar, standard plates.</p>
-      ${targetLb <= 0 ? `<p style="color:var(--muted2)">Enter a weight above 0 to see the breakdown.</p>` :
-        perSide <= 0 ? `<p style="color:var(--muted2)">That's at or below the bar weight — no plates needed.</p>` :
-        `<div class="plate-breakdown">${breakdown.map(b => `<div class="plate-row"><span class="tag">${b.plate} lb</span> × ${b.count} per side</div>`).join("")}</div>
-         ${perSide - covered > 0.01 ? `<p style="color:var(--yellow);margin-top:0.5rem">Can't hit that exactly with standard plates — closest is shown above.</p>` : ""}`}
-    `);
-  };
-
   App.setsDoneHtml = function (it) {
     if (!it.logged.length) return "";
+    // a per-side exercise logs one entry per side, but both sides together are one "set"
     return it.logged.map((x, i) => `
       <div class="set-done-row"><span class="set-check">${App.icon("check")}</span>
-        <span>Set ${i + 1}${it.perSide ? (i % 2 === 0 ? " · first side" : " · other side") : ""}:
+        <span>Set ${it.perSide ? Math.floor(i / 2) + 1 : i + 1}${it.perSide ? (i % 2 === 0 ? " · first side" : " · other side") : ""}:
         ${x.sec ? this.fmtDur(x.sec) : (x.reps + " reps" + (x.weight ? " × " + x.weight + " lbs" : ""))}</span>
       </div>`).join("");
   };
@@ -438,8 +419,13 @@
       // exercise finished: rest first, then move on (last one goes straight to the finish)
       if (s.idx >= s.items.length - 1) { this.toast("Exercise complete!"); this.advance(); return; }
       this.openRest(60, { next: this.upNextName(s.idx + 1), advance: true });
+    } else if (it.perSide && it.logged.length % 2 === 1) {
+      // just finished the first side of a per-side exercise: no rest needed, go straight to the other side
+      this.renderSessionStep();
     } else {
-      this.openRest(60, { next: "set " + (it.logged.length + 1) + " of " + targetSets + " · " + this.upNextName(s.idx) });
+      // one "set" is both sides together for a per-side exercise, so this only runs after a full round
+      const nextSet = it.perSide ? it.logged.length / 2 + 1 : it.logged.length + 1;
+      this.openRest(60, { next: "set " + nextSet + " of " + it.sets + " · " + this.upNextName(s.idx) });
     }
   };
 
@@ -525,8 +511,13 @@
     if (it.logged.length >= targetSets) {
       if (s.idx >= s.items.length - 1) { this.toast("Exercise complete!"); this.advance(); return; }
       this.openRest(60, { next: this.upNextName(s.idx + 1), advance: true });
+    } else if (it.perSide && it.logged.length % 2 === 1) {
+      // just finished the first side of a per-side exercise: no rest needed, go straight to the other side
+      this.renderSessionStep();
     } else {
-      this.openRest(60, { next: "round " + (it.logged.length + 1) + " of " + targetSets + " · " + this.upNextName(s.idx) });
+      // one "set" is both sides together for a per-side exercise, so this only runs after a full round
+      const nextSet = it.perSide ? it.logged.length / 2 + 1 : it.logged.length + 1;
+      this.openRest(60, { next: "round " + nextSet + " of " + it.sets + " · " + this.upNextName(s.idx) });
     }
   };
 
@@ -570,7 +561,8 @@
     this.stopHoldTimer();
     const durationSec = Math.floor((Date.now() - s.start) / 1000);
     const doneItems = s.items.filter(i => i.logged.length > 0);
-    const totalSets = s.items.reduce((a, i) => a + i.logged.length, 0);
+    // a per-side exercise logs one entry per side, but both sides together only count as one set
+    const totalSets = s.items.reduce((a, i) => a + (i.perSide ? Math.ceil(i.logged.length / 2) : i.logged.length), 0);
 
     this._pendingLog = {
       id: this.uid(), date: new Date().toISOString(),

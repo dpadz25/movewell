@@ -53,6 +53,15 @@
     [120, 402, 14, 13, "ankle-foot", "Right Ankle (Achilles)", "Achilles tendon, ankle stabilizers"]
   ];
 
+  // Left/Right ellipses for a paired body part currently share one regionId (e.g. "hip"),
+  // which is fine for icon/condition/exercise lookups but wrong for pain-highlighting and
+  // logging, since it can't tell sides apart. Derive a side-aware key from the label text
+  // ("Left Hip / Groin" / "Right Hip / Groin") instead of hand-tagging every zone row.
+  function zoneKey(z) {
+    const m = /^(Left|Right)\b/.exec(z[5]);
+    return m ? z[4] + "-" + m[1].toLowerCase() : z[4];
+  }
+
   // two silhouettes: broader shoulders (male) vs narrower shoulders and wider hips (female)
   const BODY_MALE = `
     <circle class="bm-body" cx="100" cy="30" r="21"/>
@@ -123,9 +132,10 @@
   }
 
   function bodySvg(zones, hurtRegions, sex) {
-    const zonesHtml = zones.map(z =>
-      `<ellipse class="bm-zone ${hurtRegions.has(z[4]) ? "hurt" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-label="${z[5]}" data-muscles="${z[6] || ""}"><title>${z[5]} — ${z[6] || ""}</title></ellipse>`
-    ).join("");
+    const zonesHtml = zones.map(z => {
+      const zk = zoneKey(z);
+      return `<ellipse class="bm-zone ${hurtRegions.has(zk) ? "hurt" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-zone="${zk}" data-label="${z[5]}" data-muscles="${z[6] || ""}"><title>${z[5]} — ${z[6] || ""}</title></ellipse>`;
+    }).join("");
     return `
     <svg class="bodymap-svg" viewBox="0 0 200 430" xmlns="http://www.w3.org/2000/svg">
       <g>
@@ -181,12 +191,12 @@
     scroll.querySelector("#bm-front").onclick = () => { this._bmView = "front"; this.refresh(); };
     scroll.querySelector("#bm-back").onclick = () => { this._bmView = "back"; this.refresh(); };
     scroll.querySelector("#bm-mind").onclick = () => { this._bmView = "mind"; this.refresh(); };
-    scroll.querySelectorAll(".bm-zone").forEach(z => z.onclick = () => this.openRegionSheet(z.dataset.region, z.dataset.label, z.dataset.muscles));
+    scroll.querySelectorAll(".bm-zone").forEach(z => z.onclick = () => this.openRegionSheet(z.dataset.region, z.dataset.zone, z.dataset.label, z.dataset.muscles));
   };
 
-  App.openRegionSheet = function (regionId, label, muscles) {
+  App.openRegionSheet = function (regionId, zoneId, label, muscles) {
     const r = this.region(regionId);
-    this.pushView("region:" + regionId + ":" + (label || ""), () => this.openRegionSheet(regionId, label, muscles));
+    this.pushView("region:" + regionId + ":" + zoneId + ":" + (label || ""), () => this.openRegionSheet(regionId, zoneId, label, muscles));
     const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId))
       .sort((a, b) => (a.commonRank ?? 999) - (b.commonRank ?? 999));
     const exs = window.EXERCISES.filter(e => e.region === regionId && e.type !== "yoga");
@@ -224,7 +234,7 @@
     });
     body.querySelector("#rs-log").onclick = () => {
       this.state.bodyLogs.push({
-        date: new Date().toISOString(), region: regionId, label: label || r.name,
+        date: new Date().toISOString(), region: zoneId, label: label || r.name,
         pain: painVal, note: body.querySelector("#rs-note").value.trim()
       });
       this.save(); this.closeModal(); this.refresh();
