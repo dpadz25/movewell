@@ -80,7 +80,7 @@
             <button role="tab" class="${front ? "on" : ""}" aria-selected="${front}" data-view="front">Front</button>
             <button role="tab" class="${!front ? "on" : ""}" aria-selected="${!front}" data-view="back">Back</button>
           </div>
-          <p class="lib-map-hint">Tap where it hurts. Each side is separate.</p>
+          <p class="lib-map-hint">${this.wantsRehab() ? "Tap where it hurts. Each side is separate." : "Tap an area to see exercises for it."}</p>
           <div class="lib-map">
             <div class="lib-map-caps"><span>${front ? "Your right" : "Your left"}</span><span>${front ? "Your left" : "Your right"}</span></div>
             ${this.bmSvg(u.view, u.zone ? u.zone.zone + "|" + u.zone.label : null)}
@@ -100,7 +100,7 @@
         ${sel ? `
           <div class="lib-sel">
             <div class="lib-sel-text"><div class="lib-sel-k">Selected</div><div class="lib-sel-v">${this.esc(sel.label)}</div></div>
-            <button class="lib-sel-btn" id="lib-log" ${sel.needSide ? "disabled" : ""}>${sel.needSide ? "Pick a side" : "Log how it feels"}</button>
+            ${this.wantsRehab() ? `<button class="lib-sel-btn" id="lib-log" ${sel.needSide ? "disabled" : ""}>${sel.needSide ? "Pick a side" : "Log how it feels"}</button>` : ""}
           </div>` : ""}
         <button class="lib-relax" id="lib-relax">${this.icon("sparkle")}<span>Feeling tense? Try a calm-down exercise</span>${this.icon("chevR")}</button>
       </section>`;

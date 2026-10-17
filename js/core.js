@@ -268,6 +268,8 @@
       const meta = document.getElementById("meta-theme");
       if (meta) meta.setAttribute("content", p.dark ? "#14170F" : "#F5F2EA");
     },
+    // people who only want fitness never see pain questions; older saves count as "both"
+    wantsRehab() { return (this.state.profile.goal || "both") !== "fitness"; },
     // height of the iPhone status bar area when the app draws underneath it (0 elsewhere)
     safeTop() {
       if (!this._safeProbe) {
@@ -353,7 +355,7 @@
             <button class="btn big" id="home-pick-tpl">Show me ready-made routines</button>
             <button class="btn big secondary" id="home-build">Build my own</button>
           </div>
-          <button class="home-hint-row" id="home-where">${this.icon("person")}<span><strong>Not sure where to start?</strong><br>Tell us where it hurts</span>${this.icon("chevR")}</button>`;
+          ${this.wantsRehab() ? `<button class="home-hint-row" id="home-where">${this.icon("person")}<span><strong>Not sure where to start?</strong><br>Tell us where it hurts</span>${this.icon("chevR")}</button>` : ""}`;
       } else if (!next) {
         top = `
           <div class="home-empty card">
@@ -587,6 +589,11 @@
             <div><label for="set-hin">Height (in)</label><input type="number" id="set-hin" min="0" max="11" inputmode="numeric" value="${p.heightIn || ""}" placeholder="10"></div>
             <div><label for="set-wt">Weight (lb)</label><input type="number" id="set-wt" min="0" max="900" inputmode="decimal" value="${p.weightLb || ""}" placeholder="165"></div>
           </div>`)}
+        ${card("What you use MoveWell for", `
+          <div class="opt-grid three" id="set-goal">
+            ${[["fitness", "Fitness"], ["rehab", "Rehab"], ["both", "Both"]].map(([id, l]) => `<button class="opt-btn ${(p.goal || "both") === id ? "on" : ""}" data-goal="${id}" aria-pressed="${(p.goal || "both") === id}">${l}</button>`).join("")}
+          </div>
+          <p class="set-small">Fitness hides the pain questions. Rehab and Both show them.</p>`)}
         ${card("Look and sound", `
           <div class="field-label">Text size</div>
           <div class="ob-sizes" role="radiogroup" aria-label="Text size">
@@ -629,6 +636,7 @@
       pick(".ob-size", b => { this.state.profile.textSize = b.dataset.ts; });
       pick(".ob-color", b => { this.state.profile.theme = b.dataset.theme; });
       pick("#set-sex .opt-btn", b => { this.state.profile.sex = b.dataset.sex; });
+      pick("#set-goal .opt-btn", b => { this.state.profile.goal = b.dataset.goal; this.refresh(); });
       body.querySelector("#set-dark").onchange = (e) => { this.state.profile.dark = e.target.checked; this.applyAppearance(); saved(); };
       body.querySelector("#set-sound").onchange = (e) => { this.state.profile.sound = e.target.checked; saved(); };
       body.querySelector("#set-name").onchange = (e) => { this.state.profile.name = e.target.value.trim(); saved(); this.refresh(); };
@@ -679,35 +687,69 @@
     startOnboarding() {
       const ob = document.getElementById("onboard");
       ob.classList.add("open");
-      this._obData = { name: "", conditions: [], textSize: "normal", sex: "", heightFt: 0, heightIn: 0, weightLb: 0, theme: "forest" };
-      this.onboardStep(1);
+      this._obData = { name: "", goal: "", fitGoals: [], groups: [], conditions: [], textSize: "normal", sex: "", heightFt: 0, heightIn: 0, weightLb: 0, theme: "forest" };
+      this.onboardStep("name");
     },
-    obDots(n) {
-      return `<div class="ob-dots" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="${n}" aria-label="Step ${n} of 4">${[1, 2, 3, 4].map(i => `<i class="${i === n ? "on" : i < n ? "done" : ""}"></i>`).join("")}</div>`;
+    // the steps depend on the goal: pain questions only for rehab, fitness choices only for fitness
+    obSteps() {
+      const g = this._obData.goal;
+      return ["name", "goal"]
+        .concat(g === "fitness" || g === "both" ? ["fit"] : [])
+        .concat(g === "rehab" || g === "both" ? ["pain"] : [])
+        .concat(["look", "done"]);
     },
-    obHead(n, opts) {
+    obDots(n, total) {
+      return `<div class="ob-dots" role="progressbar" aria-valuemin="1" aria-valuemax="${total}" aria-valuenow="${n}" aria-label="Step ${n} of ${total}">${Array.from({ length: total }, (_, i) => `<i class="${i + 1 === n ? "on" : i + 1 < n ? "done" : ""}"></i>`).join("")}</div>`;
+    },
+    obHead(key, opts) {
       opts = opts || {};
+      const steps = this.obSteps(), n = steps.indexOf(key) + 1;
       return `<div class="ob-head">
         ${n > 1 ? `<button class="ob-back" id="ob-back" aria-label="Back">${this.icon("arrowLeft")}</button>` : `<span></span>`}
-        ${this.obDots(n)}
+        ${this.obDots(n, steps.length)}
         ${opts.skip ? `<button class="ob-skip" id="ob-skip">Skip</button>` : `<span></span>`}
       </div>`;
     },
+    obGo(key, dir) {
+      const steps = this.obSteps();
+      this.onboardStep(steps[steps.indexOf(key) + dir] || "done");
+    },
+    // what each fitness choice adds as a starter routine
+    OB_FIT: [
+      ["home-strength", "Get stronger at home", "arms", "accent", ["tpl-leg-strength", "tpl-abs"]],
+      ["gym", "Lift at the gym", "barbell", "purple", ["tpl-upper", "tpl-lower"]],
+      ["stretch", "Stretch and loosen up", "leaf", "teal", ["tpl-leg-stretch"]],
+      ["cardio", "Cardio and stamina", "run", "red", ["tpl-cardio"]],
+      ["yoga", "Yoga", "sun", "pink", ["tpl-yoga-beginner-flow"]],
+      ["qigong", "Qi Gong", "leaf", "blue", ["tpl-qigong-10"]],
+      ["balance", "Better balance", "balance", "yellow", ["tpl-balance"]],
+      ["relax", "Relax and unwind", "heart", "orange", ["tpl-relax"]]
+    ],
     // which ready-made routines onboarding will add, so the last step can show them
     obPlannedTemplates() {
       const d = this._obData;
       const out = [];
       const add = t => { if (t && !out.includes(t)) out.push(t); };
-      d.conditions.forEach(cid => window.TEMPLATES.forEach(t => { if (t.conditions.includes(cid)) add(t); }));
-      (d.groups || []).forEach(gid => {
-        if (gid === "general") { add(window.TEMPLATES.find(t => t.id === "tpl-gentle-full")); return; }
-        const g = window.CONDITION_GROUPS.find(x => x.id === gid);
-        if (!g || g.conditions.some(c => d.conditions.includes(c))) return;
-        add(window.TEMPLATES.find(t => t.conditions.some(c => g.conditions.includes(c))));
+      const byId = id => window.TEMPLATES.find(t => t.id === id);
+      const rehab = d.goal === "rehab" || d.goal === "both";
+      const fit = d.goal === "fitness" || d.goal === "both";
+      if (rehab) {
+        d.conditions.forEach(cid => window.TEMPLATES.forEach(t => { if (t.conditions.includes(cid)) add(t); }));
+        (d.groups || []).forEach(gid => {
+          if (gid === "general") { add(byId("tpl-gentle-full")); return; }
+          const g = window.CONDITION_GROUPS.find(x => x.id === gid);
+          if (!g || g.conditions.some(c => d.conditions.includes(c))) return;
+          add(window.TEMPLATES.find(t => t.conditions.some(c => g.conditions.includes(c))));
+        });
+      }
+      if (fit) (d.fitGoals || []).forEach(k => {
+        const row = this.OB_FIT.find(x => x[0] === k);
+        if (row) row[4].forEach(id => add(byId(id)));
       });
       return out.slice(0, 6);
     },
     onboardStep(n) {
+      if (typeof n === "number") n = ["name", "pain", "look", "done"][n - 1] || "name";
       const inner = document.getElementById("onboard-inner");
       const d = this._obData;
       d.groups = d.groups || [];
@@ -717,9 +759,9 @@
         const bb = inner.querySelector("#ob-back"); if (bb) bb.onclick = back;
         const sk = inner.querySelector("#ob-skip"); if (sk) sk.onclick = skip;
       };
-      if (n === 1) {
+      if (n === "name") {
         inner.innerHTML = `
-          ${this.obHead(1)}
+          ${this.obHead("name")}
           <div class="ob-welcome">
             <div class="ob-hero" aria-hidden="true">
               <div class="ob-sun"></div>
@@ -734,18 +776,76 @@
           </label>
           <button class="btn big grad ob-next ob-rise d3" id="ob-next1">Continue</button>
         `;
-        const go = () => { d.name = inner.querySelector("#ob-name").value.trim(); this.onboardStep(2); };
+        const go = () => { d.name = inner.querySelector("#ob-name").value.trim(); this.obGo("name", 1); };
         inner.querySelector("#ob-next1").onclick = go;
         inner.querySelector("#ob-name").addEventListener("keydown", e => { if (e.key === "Enter") go(); });
       }
-      if (n === 2) {
-        const groups = window.CONDITION_GROUPS.concat([{ id: "general", name: "Just get moving", icon: "sparkle", color: "accent", conditions: [] }]);
+      if (n === "goal") {
+        const opts = [
+          ["fitness", "Get fit and stay active", "No pain to work on. Strength, stretching, yoga, cardio and more.", "arms"],
+          ["rehab", "Recover from pain or an injury", "Exercises for a sore back, knee, shoulder and other areas.", "medical"],
+          ["both", "A bit of both", "Stay active and work on an area that bothers you.", "sparkle"]
+        ];
+        inner.innerHTML = `
+          ${this.obHead("goal")}
+          <h1 class="ob-title">${d.name ? "What brings you to MoveWell, " + this.esc(d.name) + "?" : "What brings you to MoveWell?"}</h1>
+          <p class="ob-lead">This helps us show you what matters to you. You can change it later in Settings.</p>
+          <div class="ob-goal-list ob-stag" role="radiogroup" aria-label="Your goal">
+            ${opts.map(o => `<button class="ob-why ${d.goal === o[0] ? "on" : ""}" role="radio" aria-checked="${d.goal === o[0]}" data-goal="${o[0]}">
+              <span class="tile ${o[0] === "rehab" ? "teal" : o[0] === "both" ? "blue" : "accent"} ob-goal-icon">${this.icon(o[3])}</span>
+              <span class="ob-why-text"><span class="ob-goal-name">${o[1]}</span><span class="ob-why-sub">${o[2]}</span></span>
+              <span class="ob-check">${this.icon("check")}</span>
+            </button>`).join("")}
+          </div>
+          <button class="btn big grad ob-next" id="ob-next-goal" ${d.goal ? "" : "disabled"}>Continue</button>
+        `;
+        inner.querySelectorAll(".ob-why").forEach(b => b.onclick = () => {
+          d.goal = b.dataset.goal;
+          inner.querySelectorAll(".ob-why").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); });
+          inner.querySelector("#ob-next-goal").disabled = false;
+        });
+        inner.querySelector("#ob-next-goal").onclick = () => { if (d.goal) this.obGo("goal", 1); };
+        inner.querySelector("#ob-back").onclick = () => this.obGo("goal", -1);
+      }
+      if (n === "fit") {
+        const render = () => {
+          inner.innerHTML = `
+            ${this.obHead("fit", { skip: true })}
+            <h1 class="ob-title">What would you like to do?</h1>
+            <p class="ob-lead">Pick as many as you like. We will add a starter routine for each one.</p>
+            <div class="ob-goals ob-stag">
+              ${this.OB_FIT.map(f => {
+                const on = d.fitGoals.includes(f[0]);
+                return `<button class="ob-goal ${on ? "on" : ""}" role="checkbox" aria-checked="${on}" data-f="${f[0]}">
+                  <span class="tile ${f[3]} ob-goal-icon">${this.icon(f[2])}</span>
+                  <span class="ob-goal-name">${f[1]}</span>
+                  <span class="ob-check">${this.icon("check")}</span>
+                </button>`;
+              }).join("")}
+            </div>
+            <button class="btn big grad ob-next" id="ob-next-fit">${d.fitGoals.length ? "Continue" : "Skip for now"}</button>
+          `;
+          inner.querySelectorAll(".ob-goal").forEach(b => b.onclick = () => {
+            const k = b.dataset.f;
+            d.fitGoals = d.fitGoals.includes(k) ? d.fitGoals.filter(x => x !== k) : d.fitGoals.concat(k);
+            b.classList.toggle("on"); b.setAttribute("aria-checked", b.classList.contains("on"));
+            inner.querySelector("#ob-next-fit").textContent = d.fitGoals.length ? "Continue" : "Skip for now";
+          });
+          inner.querySelector("#ob-next-fit").onclick = () => this.obGo("fit", 1);
+          inner.querySelector("#ob-back").onclick = () => this.obGo("fit", -1);
+          inner.querySelector("#ob-skip").onclick = () => { d.fitGoals = []; this.obGo("fit", 1); };
+        };
+        render();
+      }
+      if (n === "pain") {
+        // gym and fitness choices live on their own step now, so this one is only about pain
+        const groups = window.CONDITION_GROUPS.filter(g => g.id !== "grp-gym");
         const render2 = () => {
           const picked = groups.filter(g => d.groups.includes(g.id) && g.conditions.length);
           inner.innerHTML = `
-            ${this.obHead(2, { skip: true })}
-            <h1 class="ob-title">${d.name ? "What brings you here, " + this.esc(d.name) + "?" : "What brings you here?"}</h1>
-            <p class="ob-lead">Pick as many as you like. We will add a starter routine for each one.</p>
+            ${this.obHead("pain", { skip: true })}
+            <h1 class="ob-title">Where does it bother you?</h1>
+            <p class="ob-lead">Pick every area that needs work. We will add a starter routine for each one.</p>
             <div class="ob-goals ob-stag">
               ${groups.map(g => {
                 const on = d.groups.includes(g.id);
@@ -780,14 +880,14 @@
             if (d.conditions.includes(cid)) d.conditions = d.conditions.filter(x => x !== cid); else d.conditions.push(cid);
             ch.classList.toggle("on"); ch.setAttribute("aria-pressed", ch.classList.contains("on"));
           });
-          inner.querySelector("#ob-next2").onclick = () => this.onboardStep(3);
-          bindHead(() => this.onboardStep(1), () => { d.groups = []; d.conditions = []; this.onboardStep(3); });
+          inner.querySelector("#ob-next2").onclick = () => this.obGo("pain", 1);
+          bindHead(() => this.obGo("pain", -1), () => { d.groups = []; d.conditions = []; this.obGo("pain", 1); });
         };
         render2();
       }
-      if (n === 3) {
+      if (n === "look") {
         inner.innerHTML = `
-          ${this.obHead(3, { skip: true })}
+          ${this.obHead("look", { skip: true })}
           <h1 class="ob-title">Make it easy to read</h1>
           <p class="ob-lead">Tap a size. This screen changes so you can see it.</p>
           <div class="ob-sizes ob-stag" role="radiogroup" aria-label="Text size">
@@ -811,13 +911,13 @@
           document.documentElement.setAttribute("data-theme", d.theme);
           inner.querySelectorAll(".ob-color").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); });
         });
-        inner.querySelector("#ob-next3").onclick = () => this.onboardStep(4);
-        bindHead(() => this.onboardStep(2), () => this.onboardStep(4));
+        inner.querySelector("#ob-next3").onclick = () => this.obGo("look", 1);
+        bindHead(() => this.obGo("look", -1), () => this.obGo("look", 1));
       }
-      if (n === 4) {
+      if (n === "done") {
         const plan = this.obPlannedTemplates();
         inner.innerHTML = `
-          ${this.obHead(4)}
+          ${this.obHead("done")}
           <div class="ob-leaves" aria-hidden="true">${[8, 22, 38, 55, 70, 84, 94].map((x, i) => `<span class="ob-leaf" style="left:${x}%;animation-delay:${-i * 1.3}s;animation-duration:${8 + (i % 3) * 2}s">${this.icon("leaf")}</span>`).join("")}</div>
           <div class="ob-done ob-stag">
             <h1 class="ob-title">${d.name ? "You are all set, " + this.esc(d.name) + "." : "You are all set."}</h1>
@@ -827,7 +927,7 @@
           <button class="btn big grad ob-next ob-glow" id="ob-finish">Start using MoveWell</button>
         `;
         inner.querySelector("#ob-finish").onclick = () => this.finishOnboarding();
-        bindHead(() => this.onboardStep(3));
+        bindHead(() => this.obGo("done", -1));
       }
       inner.scrollTop = 0;
     },
@@ -836,7 +936,8 @@
       const d = this._obData;
       const p = this.state.profile;
       p.name = d.name;
-      p.conditions = d.conditions;
+      p.conditions = d.goal === "fitness" ? [] : d.conditions;
+      p.goal = d.goal || "both";
       p.textSize = d.textSize;
       p.sex = d.sex;
       p.heightFt = d.heightFt;

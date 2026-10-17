@@ -30,11 +30,11 @@
       },
       {
         target: "#lib-area-toggle", page: "library", title: "Find by body area",
-        text: "Tap Body area to pick the spot that bothers you, left or right. You can log how it feels and see exercises for that exact area."
+        text: App.wantsRehab() ? "Tap Body area to pick the spot that bothers you, left or right. You can log how it feels and see exercises for that exact area." : "Tap Body area to see exercises for one part of the body, like your hips or shoulders."
       },
       {
         target: "#progress-scroll .pg-stats", page: "progress", title: "Your progress",
-        text: "Sessions, your streak, and how your pain is changing all collect here, so you can watch your work pay off."
+        text: App.wantsRehab() ? "Sessions, your streak, and how your pain is changing all collect here, so you can watch your work pay off." : "Your sessions, streak and minutes all collect here, so you can watch your work pay off."
       },
       {
         target: "#btn-settings", page: "home", title: "Make it yours",

@@ -692,7 +692,7 @@
     (this.state.bodyLogs || []).forEach(b => { if (new Date(b.date).getTime() > monthAgo) latest[b.region] = b; });
     const zones = Object.values(latest).filter(b => b.pain > 0).sort((x, y) => new Date(y.date) - new Date(x.date)).slice(0, 2);
     const painAsk = zones.length ? zones.map(b => ({ key: b.region, label: b.label || this.region(String(b.region).replace(/-(left|right)$/, "")).name, before: b.pain }))
-      : [{ key: "", label: "", before: null }];
+      : this.wantsRehab() ? [{ key: "", label: "", before: null }] : [];
     const painVals = {};
     const FEELS = [[5, "Great"], [4, "Good"], [3, "Okay"], [2, "Tired"], [1, "Sore"]];
     const mins = Math.max(1, Math.round(durationSec / 60));
