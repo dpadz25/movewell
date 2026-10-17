@@ -95,7 +95,8 @@
       const ch = card.offsetHeight;
       const below = rect.bottom + pad + 14;
       let top = below + ch < window.innerHeight - 12 ? below : rect.top - pad - ch - 14;
-      top = Math.max(12, Math.min(top, window.innerHeight - ch - 12));
+      const safeTop = App.safeTop() + 12;
+      top = Math.max(safeTop, Math.min(top, window.innerHeight - ch - 12));
       card.style.top = top + "px";
       card.style.visibility = "";
       card.classList.remove("tour-pop"); void card.offsetWidth; card.classList.add("tour-pop");

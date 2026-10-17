@@ -249,20 +249,29 @@
   App.openLogDetail = function (logId) {
     const l = this.state.logs.find(x => x.id === logId);
     if (!l) return;
+    const FEEL = { 5: "Great", 4: "Good", 3: "Okay", 2: "Tired", 1: "Sore" };
+    const setText = (x) => x.sec ? App.fmtDur(x.sec) : (x.reps || 0) + " reps" + (x.weight ? " at " + x.weight + " lb" : "");
+    const items = l.items.filter(i => !i.warmup || (i.sets && i.sets.length));
     this.openModal(l.routineName, `
-      <div class="history-item-meta" style="margin-bottom:1rem">
-        <span>${this.icon("calendar")} ${this.fmtDate(l.date)}</span>
-        <span>${this.icon("clock")} ${this.fmtClock(l.durationSec || 0)}</span>
-        ${l.feel ? `<span>felt ${this.icon("face" + l.feel)}</span>` : ""}
-        ${l.pain != null ? `<span>pain ${l.pain}/10</span>` : ""}
+      <div class="ld-sum">
+        <div><div class="ld-k">Date</div><div class="ld-v">${this.fmtDate(l.date)}</div></div>
+        <div><div class="ld-k">Time</div><div class="ld-v">${Math.max(1, Math.round((l.durationSec || 0) / 60))} min</div></div>
+        <div><div class="ld-k">Felt</div><div class="ld-v">${l.feel ? this.icon("face" + l.feel) + " " + FEEL[l.feel] : "Not saved"}</div></div>
+        <div><div class="ld-k">Pain after</div><div class="ld-v">${l.pain != null ? l.pain + " of 10" : "Not saved"}</div></div>
       </div>
       ${l.note ? `<div class="exd-tip" style="margin-bottom:1rem">${this.icon("note")}<span>${this.esc(l.note)}</span></div>` : ""}
-      ${l.items.map(i => `
-        <div class="exd-variation">
-          <strong>${this.esc(i.name)} ${i.skipped ? "· skipped" : ""}</strong>
-          ${(i.sets && i.sets.length) ? `<span>${i.sets.map((x, n) => "Set " + (n + 1) + ": " + (x.sec ? App.fmtDur(x.sec) : x.reps + " reps" + (x.weight ? " × " + x.weight + " lbs" : ""))).join(" · ")}</span>` : `<span>${i.skipped ? "Skipped this time. That's okay." : "No sets logged"}</span>`}
-        </div>`).join("")}
-      <button class="btn danger big" id="log-delete" style="margin-top:1rem">${this.icon("trash")} Delete This Entry</button>
+      <h3 class="ld-h">What you did</h3>
+      ${items.map(i => {
+        const did = i.sets && i.sets.length;
+        return `<div class="ld-item ${did ? "" : "skip"}">
+          <span class="ld-mark">${this.icon(did ? "check" : "close")}</span>
+          <div class="ld-info">
+            <div class="home-row-name">${this.esc(i.name)}${i.hurt ? ` <span class="ld-hurt">hurt</span>` : ""}</div>
+            <div class="home-row-meta">${did ? i.sets.map(setText).join(", ") : "Skipped this time. That is okay."}</div>
+          </div>
+        </div>`;
+      }).join("")}
+      <button class="btn danger big" id="log-delete" style="margin-top:1rem">${this.icon("trash")} Delete this entry</button>
     `);
     document.getElementById("modal-body").querySelector("#log-delete").onclick = () => {
       this.confirm("Delete this session entry?", "This removes it from your history and charts. It cannot be undone.", () => {

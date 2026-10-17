@@ -264,6 +264,19 @@
       // only green and pink remain; older ocean, sunset and berry saves show as green
       document.documentElement.setAttribute("data-theme", p.theme === "pink" ? "pink" : "forest");
       document.documentElement.setAttribute("data-dark", p.dark ? "1" : "");
+      // the phone's status bar takes the app's background color, so it blends in
+      const meta = document.getElementById("meta-theme");
+      if (meta) meta.setAttribute("content", p.dark ? "#14170F" : "#F5F2EA");
+    },
+    // height of the iPhone status bar area when the app draws underneath it (0 elsewhere)
+    safeTop() {
+      if (!this._safeProbe) {
+        const d = document.createElement("div");
+        d.style.cssText = "position:fixed;top:0;left:0;height:env(safe-area-inset-top);visibility:hidden;pointer-events:none";
+        document.body.appendChild(d);
+        this._safeProbe = d;
+      }
+      return this._safeProbe.offsetHeight || 0;
     },
 
     // ---------- HOME ----------

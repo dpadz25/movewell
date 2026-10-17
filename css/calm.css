@@ -910,3 +910,54 @@ html[data-dark="1"] .re-top { background: var(--surface2); }
   #heatmap-holder .heatmap-grid { max-width: 440px; margin: 0 auto; }
   .heatmap-nav { max-width: 440px; margin-left: auto; margin-right: auto; }
 }
+
+/* ============ iPHONE STATUS BAR AND HOME INDICATOR ============ */
+/* Installs from before this update still draw under the status bar with white text.
+   This strip only shows when the app is underneath it, so the clock stays readable. */
+body::after {
+  content: ""; position: fixed; top: 0; left: 0; right: 0; height: env(safe-area-inset-top); z-index: 700;
+  background: var(--accent-strong); pointer-events: none;
+}
+.header { padding-left: max(1.1rem, env(safe-area-inset-left)); padding-right: max(1.1rem, env(safe-area-inset-right)); }
+.scroll { padding-left: max(1.1rem, env(safe-area-inset-left)); padding-right: max(1.1rem, env(safe-area-inset-right)); padding-bottom: calc(8rem + env(safe-area-inset-bottom)); }
+.toast { bottom: calc(6.9rem + env(safe-area-inset-bottom)); }
+.rest-overlay { padding: calc(1.5rem + env(safe-area-inset-top)) 1.5rem calc(1.5rem + env(safe-area-inset-bottom)); }
+.modal-sheet { max-height: calc(100% - 2.5rem - env(safe-area-inset-top)); }
+.modal-body { padding-bottom: calc(1.4rem + env(safe-area-inset-bottom)); }
+.confirm-card { max-height: calc(100% - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow-y: auto; }
+.session-top, .session-nav, .session-body { padding-left: max(1.1rem, env(safe-area-inset-left)); padding-right: max(1.1rem, env(safe-area-inset-right)); }
+@media (min-width: 768px) {
+  .scroll { padding-left: max(2rem, env(safe-area-inset-left)); padding-right: max(2rem, env(safe-area-inset-right)); }
+  .header { padding-left: max(2rem, env(safe-area-inset-left)); padding-right: max(2rem, env(safe-area-inset-right)); }
+}
+
+/* ============ MAKE YOUR OWN EXERCISE ============ */
+.cb { display: flex; flex-direction: column; gap: 0.8rem; }
+.cb-card { background: var(--card); border-radius: 24px; padding: 1rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 0.7rem; }
+.cb-q { font-size: 1.05rem; font-weight: 800; color: var(--text); }
+.cb-card input[type="text"] { margin: 0; }
+.seg.seg3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.seg.seg3 button { font-size: 0.88rem; line-height: 1.15; padding: 0.3rem 0.2rem; }
+#cb-dose .stepper-row:last-child { margin-bottom: 0; }
+.cb-card .toggle-row { margin: 0; }
+.cb-more { display: flex; flex-direction: column; gap: 0.45rem; padding: 0.2rem 0.2rem 0; }
+.cb-more[hidden] { display: none; }
+.cb-more .field-label { margin-top: 0.5rem; }
+.cb-foot { position: sticky; bottom: 0; padding-top: 0.6rem; background: linear-gradient(transparent, var(--bg) 30%); z-index: 2; }
+/* with a sheet open, toasts sit above its bottom button instead of on top of it */
+body:has(.modal.open) .toast, body:has(.session.open) .toast, body:has(.celebrate.open) .toast { bottom: calc(6.4rem + env(safe-area-inset-bottom)); }
+
+/* ============ PAST SESSION DETAIL ============ */
+.ld-sum { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+.ld-sum > div { background: var(--card); border-radius: 18px; padding: 0.7rem 0.85rem; box-shadow: var(--shadow); }
+.ld-k { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.ld-v { font-weight: 800; display: flex; align-items: center; gap: 0.3rem; }
+.ld-v .icn { width: 1.2rem; height: 1.2rem; color: var(--accent-strong); }
+.ld-h { margin: 0.2rem 0 0.6rem; font-size: 1.05rem; font-weight: 800; text-transform: none; letter-spacing: 0; color: var(--text); }
+.ld-item { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.65rem 0.8rem; margin-bottom: 0.45rem; background: var(--card); border-radius: 18px; }
+.ld-mark { flex: none; width: 1.8rem; height: 1.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--accent); color: #fff; margin-top: 0.1rem; }
+.ld-mark .icn { width: 1rem; height: 1rem; stroke-width: 3; }
+.ld-item.skip .ld-mark { background: var(--surface2); color: var(--muted); }
+.ld-item.skip .home-row-name { color: var(--muted); }
+.ld-info { min-width: 0; flex: 1; }
+.ld-hurt { display: inline-block; margin-left: 0.3rem; padding: 0 0.45rem; border-radius: 999px; background: var(--red-dim); color: var(--red); font-size: 0.72rem; font-weight: 800; vertical-align: 0.1em; }
