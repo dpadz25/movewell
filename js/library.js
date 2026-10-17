@@ -176,6 +176,9 @@
     const map = $("#lib-map");
     if (map) map.onchange = () => { u.mapOn = map.checked; u.zone = null; rerender(); };
     scroll.querySelectorAll(".seg button").forEach(b => b.onclick = () => { u.view = b.dataset.view; u.zone = null; rerender(); });
+    scroll.querySelectorAll(".lib-map .bm-zone").forEach(z => z.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); z.onclick(); }
+    });
     scroll.querySelectorAll(".lib-map .bm-zone").forEach(z => z.onclick = () => {
       const same = u.zone && u.zone.zone === z.dataset.zone && u.zone.label === z.dataset.label;
       if (same) { u.zone = null; f.region = ""; }

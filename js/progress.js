@@ -26,7 +26,6 @@
         : a2 > a1 ? `Your pain after sessions is up a little, from about ${a1} to ${a2} out of 10. If it keeps rising, check in with your therapist.`
         : `Your pain after sessions is holding steady at about ${a2} out of 10.`;
     } else if (painNow != null) painLine = `Your pain after sessions has been about ${Math.round(painNow * 10) / 10} out of 10 lately. Keep logging to see the trend.`;
-    const bodyNotes = (s.bodyLogs || []).slice(-5).reverse();
     this._histAll = this._histAll || false;
     const hist = logs.slice().sort((x, y) => new Date(y.date) - new Date(x.date)).slice(0, this._histAll ? 60 : 8);
 
@@ -62,16 +61,7 @@
             <div class="chart-holder"><canvas id="chart-ex"></canvas></div>
           </div>` : ""}
       `}
-      ${bodyNotes.length ? `
-        <h2 class="rl-sub">Body notes</h2>
-        <div class="ex-grid">${bodyNotes.map(b => `
-          <div class="pg-row">
-            <div class="pg-pain ${b.pain <= 3 ? "lo" : b.pain <= 6 ? "mid" : "hi"}">${b.pain}</div>
-            <div class="pg-row-info">
-              <div class="home-row-name">${this.esc(b.label || this.region(String(b.region).replace(/-(left|right)$/, "")).name)}</div>
-              <div class="home-row-meta">${this.fmtDate(b.date)}${b.note ? " · “" + this.esc(b.note) + "”" : ""}</div>
-            </div>
-          </div>`).join("")}</div>` : ""}
+      ${this.bodyMonthHtml()}
       ${logs.length ? `
         <h2 class="rl-sub">Past sessions</h2>
         <div class="ex-grid">${hist.map(l => `
@@ -99,6 +89,7 @@
     scroll.querySelector("#wi-add").onclick = () => this.openWeighInModal();
     scroll.querySelectorAll("[data-weight]").forEach(n => n.onclick = () => this.openWeightLogDetail(n.dataset.weight));
     scroll.querySelectorAll("[data-log]").forEach(n => n.onclick = () => this.openLogDetail(n.dataset.log));
+    scroll.querySelectorAll("#pg-body-seg button").forEach(b => b.onclick = () => { this._pgView = b.dataset.view; this.refresh(); });
     const more = scroll.querySelector("#pg-more");
     if (more) more.onclick = () => { this._histAll = !this._histAll; this.refresh(); };
 
@@ -212,6 +203,68 @@
       sel.onchange = drawEx;
       drawEx();
     }
+  };
+
+  // "Your body this month": each part shaded by its latest pain score, with a plain-words list
+  App.bodyMonthHtml = function () {
+    const monthAgo = Date.now() - 30 * 86400000;
+    const all = (this.state.bodyLogs || []).slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    const recent = all.filter(b => new Date(b.date).getTime() > monthAgo);
+    if (!recent.length) return "";
+    const latest = {}, prev = {};
+    all.forEach(b => { if (latest[b.region]) prev[b.region] = latest[b.region]; latest[b.region] = b; });
+    const zones = [...new Set(recent.map(b => b.region))];
+    const inView = (v, z) => this.bmParts(v).some(p => p.zone === z);
+    if (!this._pgView) this._pgView = zones.some(z => inView("front", z)) ? "front" : "back";
+    const view = this._pgView, front = view === "front";
+    // one orange ramp that changes in lightness, so it still reads for color-blind eyes
+    const ramp = (n) => n <= 0 ? null : n <= 3 ? "#F4C79A" : n <= 6 ? "#E08A45" : "#A9461C";
+    const colors = {};
+    zones.forEach(z => { const c = ramp(latest[z].pain); if (c) colors[z] = c; });
+    const [VW, VH] = this.BM_VIEWBOX;
+    const marks = zones.filter(z => inView(view, z)).map(z => {
+      const c = this.bmCenter(view, z);
+      const side = c.key.endsWith("_a") ? "a" : "b";
+      return `<span class="pg-bm-badge ${side}" style="left:${(c.x / VW * 100).toFixed(2)}%;top:${(c.y / VH * 100).toFixed(2)}%">${latest[z].pain}</span>`;
+    }).join("");
+    const rows = zones.slice().sort((a, b) => latest[b].pain - latest[a].pain).slice(0, 6).map(z => {
+      const l = latest[z], p = prev[z];
+      let tag = "", tc = "", trend = "First note this month";
+      if (p) {
+        trend = "Was " + p.pain + " on " + this.fmtDate(p.date);
+        if (l.pain < p.pain) { tag = "Getting better"; tc = "up"; }
+        else if (l.pain > p.pain) { tag = "Keep an eye on it"; tc = "down"; }
+        else { tag = "Steady"; tc = ""; }
+      }
+      return `<div class="pg-row">
+        <div class="pg-pain ${l.pain <= 3 ? "lo" : l.pain <= 6 ? "mid" : "hi"}">${l.pain}</div>
+        <div class="pg-row-info">
+          <div class="home-row-name">${this.esc(l.label || z)}</div>
+          <div class="home-row-meta">${this.esc(trend)}</div>
+        </div>
+        ${tag ? `<span class="pg-trend ${tc}">${tag}</span>` : ""}
+      </div>`;
+    }).join("");
+    return `
+      <h2 class="rl-sub">Your body this month</h2>
+      <p class="pg-bm-sub">Darker means more pain. Numbers are your latest score.</p>
+      <div class="seg pg-bm-seg" id="pg-body-seg" role="tablist">
+        <button role="tab" class="${front ? "on" : ""}" aria-selected="${front}" data-view="front">Front</button>
+        <button role="tab" class="${!front ? "on" : ""}" aria-selected="${!front}" data-view="back">Back</button>
+      </div>
+      <div class="pg-bm">
+        <div class="pg-bm-fig" role="img" aria-label="${this.esc(zones.filter(z => inView(view, z)).map(z => latest[z].label + " " + latest[z].pain + " out of 10").join(", ") || "No pain logged on this side")}">
+          ${this.bmFigure(view, { colors, tap: false })}
+          ${marks}
+        </div>
+        <div class="pg-bm-key" aria-hidden="true">
+          <span><i style="background:var(--bm-key0)"></i>No pain</span>
+          <span><i style="background:#F4C79A"></i>1 to 3</span>
+          <span><i style="background:#E08A45"></i>4 to 6</span>
+          <span><i style="background:#A9461C"></i>7 to 10</span>
+        </div>
+      </div>
+      <div class="ex-grid">${rows}</div>`;
   };
 
   App.renderHeatmap = function (monthOffset) {

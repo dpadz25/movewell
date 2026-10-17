@@ -2,109 +2,140 @@
 // The silhouette adapts to the male / female choice made in onboarding or settings.
 (function () {
 
-  // zones: [cx, cy, rx, ry, regionId, label, muscles]
-  const FRONT_ZONES = [
-    [100, 57, 16, 11, "neck", "Neck (Front)", "Scalenes, sternocleidomastoid (SCM), deep neck flexors"],
-    [60, 76, 15, 12, "shoulder", "Left Shoulder", "Deltoid, rotator cuff (supraspinatus, infraspinatus, subscapularis)"],
-    [140, 76, 15, 12, "shoulder", "Right Shoulder", "Deltoid, rotator cuff (supraspinatus, infraspinatus, subscapularis)"],
-    [100, 97, 30, 16, "chest", "Chest", "Pectoralis major & minor"],
-    [50, 105, 10, 16, "arms", "Left Upper Arm (Biceps)", "Biceps brachii, brachialis"],
-    [150, 105, 10, 16, "arms", "Right Upper Arm (Biceps)", "Biceps brachii, brachialis"],
-    [50, 136, 11, 10, "elbow", "Left Elbow", "Wrist extensor & flexor tendons (tennis / golfer's elbow)"],
-    [150, 136, 11, 10, "elbow", "Right Elbow", "Wrist extensor & flexor tendons (tennis / golfer's elbow)"],
-    [47, 163, 9, 15, "wrist", "Left Forearm", "Wrist flexors & extensors, forearm rotators"],
-    [153, 163, 9, 15, "wrist", "Right Forearm", "Wrist flexors & extensors, forearm rotators"],
-    [48, 196, 11, 13, "wrist", "Left Wrist & Hand", "Finger flexors & extensors, thumb muscles, carpal tunnel"],
-    [152, 196, 11, 13, "wrist", "Right Wrist & Hand", "Finger flexors & extensors, thumb muscles, carpal tunnel"],
-    [100, 145, 27, 18, "core", "Stomach / Core", "Rectus abdominis (six-pack), obliques, transverse abdominis"],
-    [76, 194, 14, 13, "hip", "Left Hip / Groin", "Hip flexors (iliopsoas), adductors (inner thigh)"],
-    [124, 194, 14, 13, "hip", "Right Hip / Groin", "Hip flexors (iliopsoas), adductors (inner thigh)"],
-    [81, 258, 13, 24, "knee", "Left Thigh (Quads)", "Quadriceps femoris (rectus femoris + vastus muscles)"],
-    [119, 258, 13, 24, "knee", "Right Thigh (Quads)", "Quadriceps femoris (rectus femoris + vastus muscles)"],
-    [81, 306, 13, 12, "knee", "Left Knee", "Quadriceps & patellar tendons, joint stabilizers"],
-    [119, 306, 13, 12, "knee", "Right Knee", "Quadriceps & patellar tendons, joint stabilizers"],
-    [81, 350, 11, 18, "ankle-foot", "Left Shin", "Tibialis anterior"],
-    [119, 350, 11, 18, "ankle-foot", "Right Shin", "Tibialis anterior"],
-    [80, 402, 14, 13, "ankle-foot", "Left Ankle & Foot", "Ankle stabilizers, foot arch (plantar) muscles"],
-    [120, 402, 14, 13, "ankle-foot", "Right Ankle & Foot", "Ankle stabilizers, foot arch (plantar) muscles"]
-  ];
-  const BACK_ZONES = [
-    [100, 57, 16, 11, "neck", "Neck (Back)", "Upper trapezius, levator scapulae, suboccipitals"],
-    [60, 76, 15, 12, "shoulder", "Left Shoulder (Back)", "Posterior deltoid, infraspinatus, teres minor"],
-    [140, 76, 15, 12, "shoulder", "Right Shoulder (Back)", "Posterior deltoid, infraspinatus, teres minor"],
-    [100, 95, 30, 17, "upper-back", "Upper Back", "Trapezius, rhomboids"],
-    [100, 128, 33, 13, "upper-back", "Mid Back (Lats)", "Latissimus dorsi, lower trapezius"],
-    [50, 105, 10, 16, "arms", "Left Upper Arm (Triceps)", "Triceps brachii"],
-    [150, 105, 10, 16, "arms", "Right Upper Arm (Triceps)", "Triceps brachii"],
-    [50, 136, 11, 10, "elbow", "Left Elbow", "Triceps tendon, wrist extensor tendons"],
-    [150, 136, 11, 10, "elbow", "Right Elbow", "Triceps tendon, wrist extensor tendons"],
-    [47, 163, 9, 15, "wrist", "Left Forearm", "Wrist & finger extensors"],
-    [153, 163, 9, 15, "wrist", "Right Forearm", "Wrist & finger extensors"],
-    [100, 158, 27, 14, "lower-back", "Lower Back", "Erector spinae, quadratus lumborum, multifidus"],
-    [100, 195, 33, 17, "hip", "Glutes & Buttocks", "Gluteus maximus & medius, piriformis"],
-    [81, 258, 13, 24, "hip", "Left Hamstring", "Biceps femoris, semitendinosus, semimembranosus"],
-    [119, 258, 13, 24, "hip", "Right Hamstring", "Biceps femoris, semitendinosus, semimembranosus"],
-    [81, 306, 13, 12, "knee", "Left Knee (Back)", "Hamstring tendons, calf attachment (popliteal area)"],
-    [119, 306, 13, 12, "knee", "Right Knee (Back)", "Hamstring tendons, calf attachment (popliteal area)"],
-    [81, 352, 12, 20, "ankle-foot", "Left Calf", "Gastrocnemius, soleus"],
-    [119, 352, 12, 20, "ankle-foot", "Right Calf", "Gastrocnemius, soleus"],
-    [80, 402, 14, 13, "ankle-foot", "Left Ankle (Achilles)", "Achilles tendon, ankle stabilizers"],
-    [120, 402, 14, 13, "ankle-foot", "Right Ankle (Achilles)", "Achilles tendon, ankle stabilizers"]
-  ];
+  // ---------- the body figure ----------
+  // One figure for everyone, built from the parts you tap. Arms are held a little out so
+  // every part (wrists and feet included) gets a finger-sized target.
+  // viewBox 0 0 260 470. Side "a" is the left of the screen, "b" the right.
+  const VB_W = 260, VB_H = 470;
+  const SHAPES = {
+    neck: [["line", 130, 60, 130, 74, 20]],
+    chest: [["rect", 94, 78, 72, 64, 22]],
+    belly: [["rect", 98, 146, 64, 50, 16]],
+    shoulder: [["circle", 84, 90, 15]],
+    upperarm: [["line", 82, 112, 70, 158, 22]],
+    forearm: [["line", 67, 172, 56, 218, 20]],
+    hand: [["circle", 51, 240, 12]],
+    hip: [["rect", 96, 200, 33, 42, 14]],
+    thigh: [["line", 110, 256, 108, 308, 30]],
+    knee: [["circle", 107, 331, 15]],
+    lowerleg: [["line", 107, 360, 107, 410, 24]],
+    foot: [["ellipse", 102, 436, 17, 10]]
+  };
+  // tap areas, at least 40 units (about 45 px) in both directions
+  const HITS = {
+    neck: [108, 8, 44, 70], chest: [102, 80, 56, 62], belly: [102, 146, 56, 52],
+    shoulder: [62, 70, 40, 40], upperarm: [56, 112, 40, 48], forearm: [40, 162, 42, 54],
+    hand: [30, 218, 44, 42], hip: [88, 200, 42, 44], thigh: [86, 246, 44, 64],
+    knee: [86, 312, 44, 40], lowerleg: [86, 354, 44, 62], foot: [78, 418, 52, 40]
+  };
+  const PAIRED = ["shoulder", "upperarm", "forearm", "hand", "hip", "thigh", "knee", "lowerleg", "foot"];
+  // what each part means: [exercise region, name, muscles], front and back
+  const PARTS = {
+    front: {
+      neck: ["neck", "Neck", "Scalenes, sternocleidomastoid (SCM), deep neck flexors"],
+      chest: ["chest", "Chest", "Pectoralis major and minor"],
+      belly: ["core", "Belly and core", "Rectus abdominis, obliques, transverse abdominis"],
+      shoulder: ["shoulder", "Shoulder", "Deltoid, rotator cuff"],
+      upperarm: ["arms", "Upper arm", "Biceps brachii, brachialis"],
+      forearm: ["elbow", "Elbow and forearm", "Wrist flexor and extensor tendons, forearm rotators"],
+      hand: ["wrist", "Wrist and hand", "Finger flexors and extensors, thumb muscles, carpal tunnel"],
+      hip: ["hip", "Hip", "Hip flexors (iliopsoas), adductors"],
+      thigh: ["knee", "Front of thigh", "Quadriceps"],
+      knee: ["knee", "Knee", "Quadriceps and patellar tendons, joint stabilizers"],
+      lowerleg: ["ankle-foot", "Shin", "Tibialis anterior"],
+      foot: ["ankle-foot", "Ankle and foot", "Ankle stabilizers, foot arch muscles"]
+    },
+    back: {
+      neck: ["neck", "Neck", "Upper trapezius, levator scapulae, suboccipitals"],
+      chest: ["upper-back", "Upper back", "Trapezius, rhomboids, lats"],
+      belly: ["lower-back", "Lower back", "Erector spinae, quadratus lumborum, multifidus"],
+      shoulder: ["shoulder", "Shoulder blade", "Posterior deltoid, infraspinatus, teres minor"],
+      upperarm: ["arms", "Upper arm", "Triceps brachii"],
+      forearm: ["elbow", "Elbow and forearm", "Triceps tendon, wrist extensor tendons"],
+      hand: ["wrist", "Wrist and hand", "Wrist and finger extensors"],
+      hip: ["hip", "Hip and glute", "Gluteus maximus and medius, piriformis"],
+      thigh: ["hip", "Back of thigh", "Hamstrings"],
+      knee: ["knee", "Back of knee", "Hamstring tendons, calf attachment"],
+      lowerleg: ["ankle-foot", "Calf", "Gastrocnemius, soleus"],
+      foot: ["ankle-foot", "Heel and ankle", "Achilles tendon, ankle stabilizers"]
+    }
+  };
+  // the key saved with a pain note. Kept close to the old keys ("knee-right", "lower-back")
+  // so notes logged before the redesign still light up the right part.
+  const ZONE_BASE = { front: { thigh: "thigh", lowerleg: "shin", upperarm: "arms", forearm: "elbow", hand: "wrist", foot: "ankle-foot" },
+    back: { thigh: "hamstring", lowerleg: "calf", upperarm: "arms", forearm: "elbow", hand: "wrist", foot: "ankle-foot", hip: "hip" } };
 
-  // The front view faces you like a mirror image of a person standing opposite, so the
-  // shape on the left of the screen is that person's RIGHT side. Relabel the front zones to
-  // match ("Your right" / "Your left" captions sit beside the map).
-  FRONT_ZONES.forEach(z => {
-    if (z[0] < 100) z[5] = z[5].replace(/^Left\b/, "Right");
-    else if (z[0] > 100) z[5] = z[5].replace(/^Right\b/, "Left");
-  });
-
-  // Left/Right ellipses for a paired body part currently share one regionId (e.g. "hip"),
-  // which is fine for icon/condition/exercise lookups but wrong for pain-highlighting and
-  // logging, since it can't tell sides apart. Derive a side-aware key from the label text
-  // ("Left Hip / Groin" / "Right Hip / Groin") instead of hand-tagging every zone row.
-  function zoneKey(z) {
-    const m = /^(Left|Right)\b/.exec(z[5]);
-    return m ? z[4] + "-" + m[1].toLowerCase() : z[4];
-  }
-
-  // two silhouettes: broader shoulders (male) vs narrower shoulders and wider hips (female)
-  const BODY_MALE = `
-    <circle class="bm-body" cx="100" cy="30" r="21"/>
-    <rect class="bm-body" x="90" y="48" width="20" height="16" rx="6"/>
-    <path class="bm-body" d="M 64 64 Q 100 55 136 64 L 139 120 Q 139 150 132 176 L 68 176 Q 61 150 61 120 Z"/>
-    <rect class="bm-body" x="41" y="68" width="18" height="62" rx="8"/>
-    <rect class="bm-body" x="141" y="68" width="18" height="62" rx="8"/>
-    <rect class="bm-body" x="40" y="130" width="16" height="56" rx="7"/>
-    <rect class="bm-body" x="144" y="130" width="16" height="56" rx="7"/>
-    <ellipse class="bm-body" cx="48" cy="197" rx="9" ry="12"/>
-    <ellipse class="bm-body" cx="152" cy="197" rx="9" ry="12"/>
-    <path class="bm-body" d="M 68 176 L 132 176 Q 136 196 132 210 L 68 210 Q 64 196 68 176 Z"/>
-    <rect class="bm-body" x="70" y="208" width="24" height="102" rx="11"/>
-    <rect class="bm-body" x="106" y="208" width="24" height="102" rx="11"/>
-    <rect class="bm-body" x="72" y="308" width="19" height="88" rx="9"/>
-    <rect class="bm-body" x="109" y="308" width="19" height="88" rx="9"/>
-    <ellipse class="bm-body" cx="79" cy="404" rx="15" ry="9"/>
-    <ellipse class="bm-body" cx="121" cy="404" rx="15" ry="9"/>`;
-
-  const BODY_FEMALE = `
-    <circle class="bm-body" cx="100" cy="30" r="21"/>
-    <rect class="bm-body" x="91" y="48" width="18" height="16" rx="6"/>
-    <path class="bm-body" d="M 70 64 Q 100 57 130 64 L 133 112 Q 131 142 123 168 L 77 168 Q 69 142 67 112 Z"/>
-    <rect class="bm-body" x="44" y="69" width="16" height="61" rx="8"/>
-    <rect class="bm-body" x="140" y="69" width="16" height="61" rx="8"/>
-    <rect class="bm-body" x="42" y="130" width="14" height="56" rx="7"/>
-    <rect class="bm-body" x="144" y="130" width="14" height="56" rx="7"/>
-    <ellipse class="bm-body" cx="48" cy="197" rx="9" ry="12"/>
-    <ellipse class="bm-body" cx="152" cy="197" rx="9" ry="12"/>
-    <path class="bm-body" d="M 77 168 L 123 168 Q 135 190 131 210 L 69 210 Q 65 190 77 168 Z"/>
-    <rect class="bm-body" x="69" y="208" width="25" height="102" rx="12"/>
-    <rect class="bm-body" x="106" y="208" width="25" height="102" rx="12"/>
-    <rect class="bm-body" x="73" y="308" width="18" height="88" rx="9"/>
-    <rect class="bm-body" x="110" y="308" width="18" height="88" rx="9"/>
-    <ellipse class="bm-body" cx="80" cy="404" rx="14" ry="9"/>
-    <ellipse class="bm-body" cx="120" cy="404" rx="14" ry="9"/>`;
+  const mirror = (sh) => {
+    const [k, ...v] = sh;
+    if (k === "circle" || k === "ellipse") return [k, VB_W - v[0], ...v.slice(1)];
+    if (k === "line") return [k, VB_W - v[0], v[1], VB_W - v[2], v[3], v[4]];
+    return [k, VB_W - v[0] - v[2], ...v.slice(1)];
+  };
+  // every tappable part of one view: key, shapes, hit box, region, label, muscles, zone key
+  App.bmParts = function (view) {
+    view = view === "back" ? "back" : "front";
+    const front = view === "front";
+    const out = [];
+    Object.keys(SHAPES).forEach(base => {
+      const meta = PARTS[view][base];
+      const sides = PAIRED.includes(base) ? ["a", "b"] : [null];
+      sides.forEach(s => {
+        const shapes = s === "b" ? SHAPES[base].map(mirror) : SHAPES[base];
+        const h = HITS[base];
+        const hit = s === "b" ? [VB_W - h[0] - h[2], h[1], h[2], h[3]] : h;
+        // facing view: the left of the screen is the person's right. From behind, their left.
+        const side = s ? ((s === "a") === front ? "right" : "left") : null;
+        const zBase = (ZONE_BASE[view][base]) || meta[0];
+        const zone = side ? zBase + "-" + side : (meta[0]);
+        const label = side ? (side === "right" ? "Right " : "Left ") + meta[1].charAt(0).toLowerCase() + meta[1].slice(1) : meta[1];
+        out.push({ key: base + (s ? "_" + s : ""), base, shapes, hit, region: meta[0], label, muscles: meta[2], zone, side });
+      });
+    });
+    return out;
+  };
+  const shapeSvg = (sh, cls, extra) => {
+    const [k, ...v] = sh;
+    extra = extra || "";
+    if (k === "circle") return `<circle class="${cls}" cx="${v[0]}" cy="${v[1]}" r="${v[2]}" ${extra}></circle>`;
+    if (k === "ellipse") return `<ellipse class="${cls}" cx="${v[0]}" cy="${v[1]}" rx="${v[2]}" ry="${v[3]}" ${extra}></ellipse>`;
+    if (k === "rect") return `<rect class="${cls}" x="${v[0]}" y="${v[1]}" width="${v[2]}" height="${v[3]}" rx="${v[4]}" ${extra}></rect>`;
+    return `<line class="${cls} line" x1="${v[0]}" y1="${v[1]}" x2="${v[2]}" y2="${v[3]}" style="stroke-width:${v[4]}px" ${extra}></line>`;
+  };
+  // the figure as SVG. opts.colors: { zoneKey: css color } paints parts (used for pain over time);
+  // opts.sel: zone key or "zone|label" to highlight; opts.hurt: Set of zone keys with recent pain;
+  // opts.tap: false draws a picture only (no tap areas)
+  App.bmFigure = function (view, opts) {
+    opts = opts || {};
+    const parts = this.bmParts(view);
+    const head = ["circle", 130, 34, 23];
+    const fat = (sh) => sh[0] === "line" ? [...sh.slice(0, 5), sh[5] + 12] : sh;
+    const under = [shapeSvg(head, "bm-under")].concat(parts.flatMap(p => p.shapes.map(sh => shapeSvg(fat(sh), "bm-under")))).join("");
+    const seamFor = (sh) => sh[0] === "line" ? shapeSvg([...sh.slice(0, 5), sh[5] + 5], "bm-seam") : "";
+    const body = parts.map(p => {
+      const color = opts.colors && opts.colors[p.zone];
+      const isSel = opts.sel && (opts.sel === p.zone || opts.sel === p.zone + "|" + p.label);
+      const cls = ["bm-zone", isSel ? "sel" : "", opts.hurt && opts.hurt.has(p.zone) ? "hurt" : ""].join(" ").trim();
+      const style = color ? ` style="--part:${color}"` : "";
+      const hit = opts.tap === false ? "" : `<rect class="bm-hit" x="${p.hit[0]}" y="${p.hit[1]}" width="${p.hit[2]}" height="${p.hit[3]}" rx="12"></rect>`;
+      const a11y = opts.tap === false ? "" : ` role="button" tabindex="0" aria-label="${this.esc(p.label)}" aria-pressed="${!!isSel}"`;
+      return `<g class="${cls}"${style}${a11y} data-key="${p.key}" data-region="${p.region}" data-zone="${p.zone}" data-label="${this.esc(p.label)}" data-muscles="${this.esc(p.muscles)}">${p.shapes.map(seamFor).join("")}${p.shapes.map(sh => shapeSvg(sh, "bm-fill")).join("")}${hit}</g>`;
+    }).join("");
+    return `<svg class="bodymap-svg bm-figure" viewBox="0 0 ${VB_W} ${VB_H}" xmlns="http://www.w3.org/2000/svg"${opts.tap === false ? ' aria-hidden="true"' : ""}>
+      <g class="bm-shadow">${under}</g>
+      ${shapeSvg(head, "bm-head")}
+      ${body}
+    </svg>`;
+  };
+  // where a part sits, in viewBox units (for badges placed beside it)
+  App.bmCenter = function (view, zone) {
+    const p = this.bmParts(view).find(x => x.zone === zone);
+    if (!p) return null;
+    const sh = p.shapes[0];
+    if (sh[0] === "circle" || sh[0] === "ellipse") return { x: sh[1], y: sh[2], key: p.key };
+    if (sh[0] === "rect") return { x: sh[1] + sh[3] / 2, y: sh[2] + sh[4] / 2, key: p.key };
+    return { x: (sh[1] + sh[3]) / 2, y: (sh[2] + sh[4]) / 2, key: p.key };
+  };
+  App.BM_VIEWBOX = [VB_W, VB_H];
 
   // seated meditative-pose illustration for the Mind tab: a licensed icon (credited below), rendered as a
   // CSS mask so it recolors automatically for light/dark theme, with a soft halo circle behind it
@@ -138,28 +169,13 @@
       </div>`;
   }
 
-  function bodySvg(zones, hurtRegions, sex, selZone) {
-    const zonesHtml = zones.map(z => {
-      const zk = zoneKey(z);
-      const sel = selZone && selZone === zk + "|" + z[5];
-      return `<ellipse class="bm-zone ${hurtRegions.has(zk) ? "hurt" : ""} ${sel ? "sel" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-zone="${zk}" data-label="${z[5]}" data-muscles="${z[6] || ""}"><title>${z[5]}: ${z[6] || ""}</title></ellipse>`;
-    }).join("");
-    return `
-    <svg class="bodymap-svg" viewBox="0 0 200 430" xmlns="http://www.w3.org/2000/svg">
-      <g>
-        ${sex === "female" ? BODY_FEMALE : BODY_MALE}
-        ${zonesHtml}
-      </g>
-    </svg>`;
-  }
-
   // ---- helpers shared with the Exercises tab (the body map now lives there) ----
   App.bmHurtSet = function () {
     const weekAgo = Date.now() - 7 * 86400000;
     return new Set(this.state.bodyLogs.filter(b => new Date(b.date).getTime() > weekAgo && b.pain >= 3).map(b => b.region));
   };
   App.bmSvg = function (view, selZone) {
-    return bodySvg(view === "back" ? BACK_ZONES : FRONT_ZONES, this.bmHurtSet(), this.state.profile.sex, selZone);
+    return this.bmFigure(view, { sel: selZone, hurt: this.bmHurtSet() });
   };
   App.openRelaxSheet = function () {
     this.pushView("relax", () => this.openRelaxSheet());
@@ -186,9 +202,15 @@
 
     this.openModal(label || r.name, `
       <section class="fin-card rs-card">
-        <h2>How does it feel right now?</h2>
-        <p class="fin-hint">${last ? `Last time it was ${last.pain} out of 10, on ${this.fmtDate(last.date)}. ` : ""}0 means no pain, 10 is the worst.</p>
-        <div class="pain-scale fin-pain" id="rs-pain">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num" data-p="${i}" aria-label="Pain ${i}">${i}</button>`).join("")}</div>
+        <div class="rs-head">
+          <div class="rs-mini">${this.bmFigure(zoneId && /-(right|left)$/.test(zoneId) && /^(hamstring|calf)/.test(zoneId) || ["upper-back", "lower-back"].includes(zoneId) ? "back" : "front", { sel: zoneId, tap: false })}</div>
+          <div>
+            <h2>How does it feel right now?</h2>
+            <p class="fin-hint">${last ? `Last time: ${last.pain} out of 10, ${this.fmtDate(last.date)}.` : "0 means no pain, 10 is the worst."}</p>
+          </div>
+        </div>
+        <div class="pain-steps" id="rs-pain" role="group" aria-label="Pain from 0 to 10">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num pain-step ${i <= 3 ? "lo" : i <= 6 ? "mid" : "hi"}" data-p="${i}" aria-label="Pain ${i}" style="height:${2.4 + i * 0.22}rem">${i}</button>`).join("")}</div>
+        <div class="pain-steps-ends"><span>No pain</span><span>Worst</span></div>
         <div class="rs-word" id="rs-word" aria-live="polite">Tap a number</div>
         <input type="text" id="rs-note" placeholder="Anything to add? Like: stiff in the morning" aria-label="Note">
         <button class="btn big grad" id="rs-log" disabled>Save how it feels</button>

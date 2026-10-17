@@ -523,9 +523,6 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 
 .bodymap-svg { width: min(280px, 70vw); height: auto; }
 .bodymap-svg .bm-body { fill: var(--surface2); stroke: var(--border2); stroke-width: 1.5; }
-.bodymap-svg .bm-zone { fill: var(--accent); opacity: 0.14; stroke: var(--accent); stroke-width: 1; cursor: pointer; transition: opacity .15s; }
-.bodymap-svg .bm-zone:hover { opacity: 0.4; }
-.bodymap-svg .bm-zone.hurt { fill: var(--red); stroke: var(--red); opacity: 0.45; }
 
 .bodymap-mind { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 420px; }
 .bodymap-mind-halo {

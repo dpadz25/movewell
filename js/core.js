@@ -580,10 +580,6 @@
         ${card("You", `
           <label class="field-label" for="set-name">Your name</label>
           <input type="text" id="set-name" value="${this.esc(p.name)}" placeholder="Your first name" autocomplete="given-name">
-          <div class="field-label">Body map shape</div>
-          <div class="opt-grid two" id="set-sex">
-            ${[["male", "Male"], ["female", "Female"]].map(([id, l]) => `<button class="opt-btn ${p.sex === id ? "on" : ""}" data-sex="${id}" aria-pressed="${p.sex === id}">${l}</button>`).join("")}
-          </div>
           <div class="ob-field-grid set-body">
             <div><label for="set-hft">Height (ft)</label><input type="number" id="set-hft" min="0" max="8" inputmode="numeric" value="${p.heightFt || ""}" placeholder="5"></div>
             <div><label for="set-hin">Height (in)</label><input type="number" id="set-hin" min="0" max="11" inputmode="numeric" value="${p.heightIn || ""}" placeholder="10"></div>
@@ -635,7 +631,6 @@
       });
       pick(".ob-size", b => { this.state.profile.textSize = b.dataset.ts; });
       pick(".ob-color", b => { this.state.profile.theme = b.dataset.theme; });
-      pick("#set-sex .opt-btn", b => { this.state.profile.sex = b.dataset.sex; });
       pick("#set-goal .opt-btn", b => { this.state.profile.goal = b.dataset.goal; this.refresh(); });
       body.querySelector("#set-dark").onchange = (e) => { this.state.profile.dark = e.target.checked; this.applyAppearance(); saved(); };
       body.querySelector("#set-sound").onchange = (e) => { this.state.profile.sound = e.target.checked; saved(); };
