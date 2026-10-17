@@ -245,7 +245,6 @@
       if (name === "home") this.renderHome();
       if (name === "routines") this.renderRoutines();
       if (name === "library") this.renderLibrary();
-      if (name === "bodymap") this.renderBodymap();
       if (name === "progress") this.renderProgress();
     },
     refresh() {
@@ -486,57 +485,6 @@
       };
     },
 
-    // ---------- routine cards (shared by Home and Routines library) ----------
-    routineCardHtml(r, mode) {
-      const meta = `${r.items.length} exercise${r.items.length === 1 ? "" : "s"}`;
-      const actions = mode === "home" ? `
-          <button class="swipe-btn" data-act="up" aria-label="Move up">${this.icon("arrowUp")}<span>Up</span></button>
-          <button class="swipe-btn" data-act="down" aria-label="Move down">${this.icon("arrowDown")}<span>Down</span></button>
-          <button class="swipe-btn" data-act="edit" aria-label="Edit">${this.icon("pencil")}<span>Edit</span></button>
-          <button class="swipe-btn danger" data-act="archive" aria-label="Archive">${this.icon("archive")}<span>Archive</span></button>`
-        : `
-          <button class="swipe-btn ${r.onHome ? "on" : ""}" data-act="home" aria-label="${r.onHome ? "Remove from Home" : "Add to Home"}">${this.icon("home")}<span>${r.onHome ? "On Home" : "Add"}</span></button>
-          <button class="swipe-btn" data-act="edit" aria-label="Edit">${this.icon("pencil")}<span>Edit</span></button>
-          <button class="swipe-btn danger" data-act="archive" aria-label="Archive">${this.icon("archive")}<span>Archive</span></button>`;
-      return `
-        <div class="swipe-wrap" data-rid="${r.id}">
-          <div class="swipe-actions">${actions}</div>
-          <div class="routine-card swipe-card">
-            <div class="routine-card-info" data-act="open">
-              <div class="routine-card-name">${this.esc(r.name)}</div>
-              <div class="routine-card-meta">${meta}${mode === "library" && r.onHome ? ` · <span class="onhome-flag">${this.icon("home")} on Home</span>` : ""}</div>
-            </div>
-            <button class="routine-start-btn" data-act="start">${this.icon("play")} Start</button>
-          </div>
-        </div>`;
-    },
-
-    bindRoutineCards(root, mode) {
-      this.bindSwipeCards(root);
-      root.querySelectorAll(".swipe-wrap[data-rid]").forEach(wrap => {
-        const rid = wrap.dataset.rid;
-        wrap.querySelectorAll("[data-act]").forEach(el => el.onclick = (e) => {
-          e.stopPropagation();
-          const r = this.state.routines.find(x => x.id === rid);
-          if (!r) return;
-          const act = el.dataset.act;
-          if (act === "open" || act === "edit") this.openRoutineEditor(rid);
-          if (act === "start") this.startSession(rid);
-          if (act === "up" || act === "down") this.moveRoutine(r, act === "up" ? -1 : 1);
-          if (act === "archive") {
-            r.archived = true;
-            this.save(); this.refresh();
-            this.toast("Archived. Find it at the bottom of Routines.");
-          }
-          if (act === "home") {
-            r.onHome = !r.onHome;
-            this.save(); this.refresh();
-            this.toast(r.onHome ? "Added to your Home screen" : "Removed from your Home screen");
-          }
-        });
-      });
-    },
-
     // reorder within the routines that are visible on Home
     moveRoutine(r, dir) {
       const arr = this.state.routines;
@@ -623,83 +571,68 @@
       this.pushView("settings", () => this.openSettings());
       const p = this.state.profile;
       const themes = [["forest", "Green"], ["pink", "Pink"]];
+      const card = (title, inner) => `<section class="set-card"><h3>${title}</h3>${inner}</section>`;
       this.openModal("Settings", `
-        <label class="field-label">Your name</label>
-        <input type="text" id="set-name" value="${this.esc(p.name)}" placeholder="Your name">
-        <label class="field-label">Sex</label>
-        <div class="sex-options" id="set-sex">
-          <button class="sex-option ${p.sex === "male" ? "on" : ""}" data-sex="male">${this.icon("person")}Male</button>
-          <button class="sex-option ${p.sex === "female" ? "on" : ""}" data-sex="female">${this.icon("person")}Female</button>
-        </div>
-        <div class="ob-field-grid">
-          <div><label>Height (ft)</label><input type="number" id="set-hft" min="0" max="8" value="${p.heightFt || ""}" placeholder="5"></div>
-          <div><label>Height (in)</label><input type="number" id="set-hin" min="0" max="11" value="${p.heightIn || ""}" placeholder="10"></div>
-          <div><label>Weight (lbs)</label><input type="number" id="set-wt" min="0" max="900" value="${p.weightLb || ""}" placeholder="165"></div>
-        </div>
-        <label class="field-label">Color theme</label>
-        <div class="theme-options" id="set-theme">
-          ${themes.map(([id, label]) => `
-            <button class="theme-option ${p.theme === id ? "on" : ""}" data-theme="${id}">
-              <span class="sw sw-${id}"></span><span class="sw-label">${label}</span>
-            </button>`).join("")}
-        </div>
-        <div class="toggle-row">
-          <div class="stepper-label" style="display:flex;align-items:center;gap:0.45rem">${this.icon("moon")} Dark mode</div>
-          <label class="switch"><input type="checkbox" id="set-dark" ${p.dark ? "checked" : ""}><span class="slider"></span></label>
-        </div>
-        <label class="field-label">Text size</label>
-        <div class="textsize-options">
-          ${["normal", "large", "huge"].map(ts => `
-            <button class="textsize-option ${p.textSize === ts ? "on" : ""}" data-ts="${ts}">
-              <span class="ts-a" style="font-size:${ts === "normal" ? "1.1rem" : ts === "large" ? "1.4rem" : "1.8rem"}">Aa</span>
-              <span class="ts-label">${ts === "normal" ? "Normal" : ts === "large" ? "Large" : "Extra Large"}</span>
-            </button>`).join("")}
-        </div>
-        <button class="btn big grad" id="set-save" style="margin-top:0.5rem">Save Settings</button>
-        <div class="section-label">Your Data</div>
-        <div class="btn-row">
-          <button class="btn secondary" id="set-export">${this.icon("download")} Export Backup</button>
-          <button class="btn secondary" id="set-import">${this.icon("upload")} Import Backup</button>
-        </div>
-        <input type="file" id="set-import-file" accept=".json" style="display:none">
-        <button class="btn secondary big" id="set-tour" style="margin-top:0.6rem">${this.icon("sparkle")} Replay the App Tour</button>
-        <button class="btn danger big" id="set-reset" style="margin-top:1.4rem">Erase Everything & Start Over</button>
-        <p style="font-size:0.75rem;color:var(--muted2);text-align:center;margin-top:1rem">
-          MoveWell keeps all data on this device only.<br>This app supports your training and therapy plan. It is not medical advice.<br>Always follow your physical therapist's or doctor's guidance.
+        <p class="set-note">Changes save as you make them.</p>
+        ${card("You", `
+          <label class="field-label" for="set-name">Your name</label>
+          <input type="text" id="set-name" value="${this.esc(p.name)}" placeholder="Your first name" autocomplete="given-name">
+          <div class="field-label">Body map shape</div>
+          <div class="opt-grid two" id="set-sex">
+            ${[["male", "Male"], ["female", "Female"]].map(([id, l]) => `<button class="opt-btn ${p.sex === id ? "on" : ""}" data-sex="${id}" aria-pressed="${p.sex === id}">${l}</button>`).join("")}
+          </div>
+          <div class="ob-field-grid set-body">
+            <div><label for="set-hft">Height (ft)</label><input type="number" id="set-hft" min="0" max="8" inputmode="numeric" value="${p.heightFt || ""}" placeholder="5"></div>
+            <div><label for="set-hin">Height (in)</label><input type="number" id="set-hin" min="0" max="11" inputmode="numeric" value="${p.heightIn || ""}" placeholder="10"></div>
+            <div><label for="set-wt">Weight (lb)</label><input type="number" id="set-wt" min="0" max="900" inputmode="decimal" value="${p.weightLb || ""}" placeholder="165"></div>
+          </div>`)}
+        ${card("Look and sound", `
+          <div class="field-label">Text size</div>
+          <div class="ob-sizes" role="radiogroup" aria-label="Text size">
+            ${[["normal", "Normal", 1.1], ["large", "Large", 1.4], ["huge", "Extra large", 1.75]].map(([id, label, px]) => `
+              <button class="ob-size ${p.textSize === id ? "on" : ""}" role="radio" aria-checked="${p.textSize === id}" data-ts="${id}"><span style="font-size:${px}rem">Aa</span><span class="ob-size-l">${label}</span></button>`).join("")}
+          </div>
+          <div class="field-label">Color</div>
+          <div class="ob-colors" role="radiogroup" aria-label="Color">
+            ${themes.map(([id, label]) => `<button class="ob-color ${(p.theme === "pink" ? "pink" : "forest") === id ? "on" : ""}" role="radio" data-theme="${id}"><span class="sw sw-${id}"></span>${label}</button>`).join("")}
+          </div>
+          <div class="toggle-row">
+            <div class="stepper-label set-lbl">${this.icon("moon")} Dark mode</div>
+            <label class="switch"><input type="checkbox" id="set-dark" ${p.dark ? "checked" : ""} aria-label="Dark mode"><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="stepper-label set-lbl">${this.icon("speaker")} Chimes and timer sounds</div>
+            <label class="switch"><input type="checkbox" id="set-sound" ${p.sound !== false ? "checked" : ""} aria-label="Sounds"><span class="slider"></span></label>
+          </div>`)}
+        ${card("Help", `
+          <button class="menu-item" id="set-tour">${this.icon("sparkle")}<span>Show me around again</span></button>`)}
+        ${card("Your data", `
+          <p class="set-small">Everything stays on this device. Save a backup file now and then so you never lose your history.</p>
+          <div class="btn-row">
+            <button class="btn secondary" id="set-export">${this.icon("download")} Save backup</button>
+            <button class="btn secondary" id="set-import">${this.icon("upload")} Load backup</button>
+          </div>
+          <input type="file" id="set-import-file" accept=".json" style="display:none">`)}
+        <button class="btn danger big" id="set-reset">Erase everything and start over</button>
+        <p class="set-foot">
+          MoveWell supports your training and therapy plan. It is not medical advice. Always follow your physical therapist's or doctor's guidance.<br>
+          Meditation picture by <a href="https://www.vecteezy.com" target="_blank" rel="noopener">Vecteezy.com</a>
         </p>
-        <p style="font-size:0.7rem;color:var(--muted2);text-align:center;margin-top:0.6rem">Meditation icon on the Body Map's Mind tab by <a href="https://www.vecteezy.com" target="_blank" rel="noopener">Vecteezy.com</a></p>
       `);
       const body = document.getElementById("modal-body");
-      body.querySelectorAll(".textsize-option").forEach(b => b.onclick = () => {
-        body.querySelectorAll(".textsize-option").forEach(x => x.classList.remove("on"));
-        b.classList.add("on");
-        this.state.profile.textSize = b.dataset.ts;
-        this.applyAppearance();
+      const saved = () => { this.save(); this.flashSaveIndicator && this.flashSaveIndicator(); };
+      const pick = (sel, fn) => body.querySelectorAll(sel).forEach(b => b.onclick = () => {
+        body.querySelectorAll(sel).forEach(x => { x.classList.toggle("on", x === b); x.setAttribute(x.getAttribute("role") === "radio" ? "aria-checked" : "aria-pressed", x === b); });
+        fn(b); this.applyAppearance(); saved();
       });
-      body.querySelectorAll("#set-sex .sex-option").forEach(b => b.onclick = () => {
-        body.querySelectorAll("#set-sex .sex-option").forEach(x => x.classList.remove("on"));
-        b.classList.add("on");
-        this.state.profile.sex = b.dataset.sex;
-      });
-      body.querySelectorAll("#set-theme .theme-option").forEach(b => b.onclick = () => {
-        body.querySelectorAll("#set-theme .theme-option").forEach(x => x.classList.remove("on"));
-        b.classList.add("on");
-        this.state.profile.theme = b.dataset.theme;
-        this.applyAppearance();
-      });
-      body.querySelector("#set-dark").onchange = (e) => {
-        this.state.profile.dark = e.target.checked;
-        this.applyAppearance();
-      };
-      body.querySelector("#set-save").onclick = () => {
-        const p2 = this.state.profile;
-        p2.name = body.querySelector("#set-name").value.trim();
-        p2.heightFt = Number(body.querySelector("#set-hft").value) || 0;
-        p2.heightIn = Number(body.querySelector("#set-hin").value) || 0;
-        p2.weightLb = Number(body.querySelector("#set-wt").value) || 0;
-        this.save(); this.applyAppearance(); this.closeModal(); this.refresh();
-        this.toast("Settings saved");
-      };
+      pick(".ob-size", b => { this.state.profile.textSize = b.dataset.ts; });
+      pick(".ob-color", b => { this.state.profile.theme = b.dataset.theme; });
+      pick("#set-sex .opt-btn", b => { this.state.profile.sex = b.dataset.sex; });
+      body.querySelector("#set-dark").onchange = (e) => { this.state.profile.dark = e.target.checked; this.applyAppearance(); saved(); };
+      body.querySelector("#set-sound").onchange = (e) => { this.state.profile.sound = e.target.checked; saved(); };
+      body.querySelector("#set-name").onchange = (e) => { this.state.profile.name = e.target.value.trim(); saved(); this.refresh(); };
+      const num = (id, key) => body.querySelector(id).onchange = (e) => { this.state.profile[key] = Number(e.target.value) || 0; saved(); };
+      num("#set-hft", "heightFt"); num("#set-hin", "heightIn"); num("#set-wt", "weightLb");
       body.querySelector("#set-export").onclick = () => {
         const blob = new Blob([JSON.stringify(this.state, null, 2)], { type: "application/json" });
         const a = document.createElement("a");

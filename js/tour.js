@@ -59,7 +59,6 @@
     this._tourOn = false;
     document.getElementById("tour").classList.remove("open");
     window.removeEventListener("resize", this._tourResize);
-    document.querySelectorAll(".tour-nudge").forEach(n => n.classList.remove("tour-nudge"));
     if (!this.state.toured) { this.state.toured = true; this.save(); }
     // the tour wanders through the tabs, so bring the user back home
     if (this.currentPage !== "home") this.showPage("home");
@@ -102,12 +101,6 @@
       card.classList.remove("tour-pop"); void card.offsetWidth; card.classList.add("tour-pop");
     });
 
-    // little demo animation for the swipe step
-    document.querySelectorAll(".tour-nudge").forEach(n => n.classList.remove("tour-nudge"));
-    if (step.nudge) {
-      const cardEl = target.querySelector(".swipe-card") || target;
-      cardEl.classList.add("tour-nudge");
-    }
   };
 
   App.tourNext = function () {

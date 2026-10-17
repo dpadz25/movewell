@@ -20,8 +20,8 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <!-- cache-buster: bump the v= number on every file below with each deploy -->
-  <link rel="stylesheet" href="css/styles.css?v=20261017s">
-  <link rel="stylesheet" href="css/calm.css?v=20261017s">
+  <link rel="stylesheet" href="css/styles.css?v=20261018a">
+  <link rel="stylesheet" href="css/calm.css?v=20261018a">
 </head>
 <body>
 
@@ -38,7 +38,6 @@
   <main class="page active" id="page-home"><div class="scroll" id="home-scroll"></div></main>
   <main class="page" id="page-routines"><div class="scroll" id="routines-scroll"></div></main>
   <main class="page" id="page-library"><div class="scroll" id="library-scroll"></div></main>
-  <main class="page" id="page-bodymap"><div class="scroll" id="bodymap-scroll"></div></main>
   <main class="page" id="page-progress"><div class="scroll" id="progress-scroll"></div></main>
 
   <!-- BOTTOM NAV -->
@@ -67,17 +66,22 @@
   </div>
 
   <!-- REST TIMER OVERLAY -->
-  <div class="rest-overlay" id="rest-overlay">
-    <div class="rest-title">Rest</div>
-    <div class="rest-display" id="rest-display">0:60</div>
+  <div class="rest-overlay" id="rest-overlay" role="dialog" aria-label="Rest between sets">
+    <div class="rest-head">
+      <div class="rest-title">Take a rest</div>
+      <button class="rest-sound" id="rest-sound" role="switch" aria-checked="true"><span data-icon="speaker" id="rest-sound-icon"></span><span id="rest-sound-label">Sound on</span></button>
+    </div>
+    <div class="rest-center">
+      <div class="rest-orb" aria-hidden="true"><span></span><span></span></div>
+      <svg class="rest-ring" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="92" class="rest-ring-bg"></circle><circle cx="100" cy="100" r="92" class="rest-ring-fg" id="rest-ring-fg"></circle></svg>
+      <div class="rest-display" id="rest-display" role="timer" aria-live="off">1:00</div>
+    </div>
     <div class="rest-next" id="rest-next"></div>
     <div class="rest-presets">
-      <button class="btn secondary small" data-rest="30">30s</button>
-      <button class="btn secondary small" data-rest="60">1 min</button>
-      <button class="btn secondary small" data-rest="90">90s</button>
-      <button class="btn secondary small" data-rest="120">2 min</button>
+      <button class="rest-chip" data-add="-15" aria-label="15 seconds less">&minus; 15 sec</button>
+      <button class="rest-chip" data-add="30" aria-label="30 seconds more">+ 30 sec</button>
     </div>
-    <button class="btn big" id="rest-skip">I'm Ready, Continue</button>
+    <button class="btn big" id="rest-skip">I am ready</button>
   </div>
 
   <!-- CELEBRATION -->
@@ -131,21 +135,21 @@
   <div class="toast" id="toast"></div>
 
   <!-- ICONS + DATA -->
-  <script src="js/icons.js?v=20261017s"></script>
-  <script src="js/data/exercises-upper.js?v=20261017s"></script>
-  <script src="js/data/exercises-lower.js?v=20261017s"></script>
-  <script src="js/data/exercises-core.js?v=20261017s"></script>
-  <script src="js/data/exercises-gym.js?v=20261017s"></script>
-  <script src="js/data/exercises-yoga.js?v=20261017s"></script>
-  <script src="js/data/exercises-extra.js?v=20261017s"></script>
-  <script src="js/data/templates.js?v=20261017s"></script>
+  <script src="js/icons.js?v=20261018a"></script>
+  <script src="js/data/exercises-upper.js?v=20261018a"></script>
+  <script src="js/data/exercises-lower.js?v=20261018a"></script>
+  <script src="js/data/exercises-core.js?v=20261018a"></script>
+  <script src="js/data/exercises-gym.js?v=20261018a"></script>
+  <script src="js/data/exercises-yoga.js?v=20261018a"></script>
+  <script src="js/data/exercises-extra.js?v=20261018a"></script>
+  <script src="js/data/templates.js?v=20261018a"></script>
   <!-- APP -->
-  <script src="js/core.js?v=20261017s"></script>
-  <script src="js/library.js?v=20261017s"></script>
-  <script src="js/routines.js?v=20261017s"></script>
-  <script src="js/bodymap.js?v=20261017s"></script>
-  <script src="js/session.js?v=20261017s"></script>
-  <script src="js/progress.js?v=20261017s"></script>
-  <script src="js/tour.js?v=20261017s"></script>
+  <script src="js/core.js?v=20261018a"></script>
+  <script src="js/library.js?v=20261018a"></script>
+  <script src="js/routines.js?v=20261018a"></script>
+  <script src="js/bodymap.js?v=20261018a"></script>
+  <script src="js/session.js?v=20261018a"></script>
+  <script src="js/progress.js?v=20261018a"></script>
+  <script src="js/tour.js?v=20261018a"></script>
 </body>
 </html>

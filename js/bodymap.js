@@ -1,7 +1,6 @@
 // MoveWell body map: tap where it hurts, log how it feels, get matching exercises
 // The silhouette adapts to the male / female choice made in onboarding or settings.
 (function () {
-  App._bmView = "front";
 
   // zones: [cx, cy, rx, ry, regionId, label, muscles]
   const FRONT_ZONES = [
@@ -173,55 +172,6 @@
       </div>`);
   };
 
-  App.renderBodymap = function () {
-    const isMind = this._bmView === "mind";
-    // regions with pain logged in the last 7 days
-    const weekAgo = Date.now() - 7 * 86400000;
-    const hurt = new Set(this.state.bodyLogs.filter(b => new Date(b.date).getTime() > weekAgo && b.pain >= 3).map(b => b.region));
-    const zones = this._bmView === "front" ? FRONT_ZONES : BACK_ZONES;
-    const sex = this.state.profile.sex;
-
-    const recent = this.state.bodyLogs.slice(-5).reverse();
-
-    document.getElementById("bodymap-scroll").innerHTML = `
-      <span class="page-tag">${this.icon("person")} Body Map</span>
-      <div class="page-title">Where does it hurt?</div>
-      <div class="page-sub">Tap any part of the body to log how it feels and see exercises that can help.</div>
-      <div class="bodymap-wrap">
-        <div class="bodymap-toggle">
-          <button class="btn ${this._bmView === "front" ? "" : "secondary"} small" id="bm-front">Front</button>
-          <button class="btn ${this._bmView === "back" ? "" : "secondary"} small" id="bm-back">Back</button>
-          <button class="btn ${isMind ? "" : "secondary"} small" id="bm-mind">Mind</button>
-        </div>
-        <div class="bodymap-disclaimer">This map shows common causes, it does not diagnose you. See a physical therapist or doctor to know what to work on.</div>
-        ${isMind ? `
-          <div class="bodymap-mind">
-            ${MEDITATION_SVG}
-            <p class="bodymap-mind-text">Stress does not just stay in your head. It can tighten muscles and lower your tolerance for pain, so old aches flare up and new tension builds, especially in the neck, shoulders, and back.</p>
-            <div class="bodymap-mind-source">Source: Cleveland Clinic &amp; American Psychological Association</div>
-            ${pmrHtml()}
-          </div>` : `
-          ${bodySvg(zones, hurt, sex)}
-          <div class="bodymap-hint">${this.icon("bulb")} Highlighted areas are tappable.${hurt.size ? " Red areas had pain logged this week." : ""}</div>`}
-      </div>
-      ${!isMind && recent.length ? `
-        <div class="section-label">Recent Body Notes</div>
-        ${recent.map(b => `
-          <div class="history-item">
-            <div class="history-item-top">
-              <div class="history-item-name">${this.icon(this.region(b.region).icon)} ${this.esc(b.label || this.region(b.region).name)}</div>
-              <div class="history-item-date">${this.fmtDate(b.date)}</div>
-            </div>
-            <div class="history-item-meta"><span>Pain: <strong>${b.pain}/10</strong></span>${b.note ? `<span>“${this.esc(b.note)}”</span>` : ""}</div>
-          </div>`).join("")}` : ""}
-    `;
-    const scroll = document.getElementById("bodymap-scroll");
-    scroll.querySelector("#bm-front").onclick = () => { this._bmView = "front"; this.refresh(); };
-    scroll.querySelector("#bm-back").onclick = () => { this._bmView = "back"; this.refresh(); };
-    scroll.querySelector("#bm-mind").onclick = () => { this._bmView = "mind"; this.refresh(); };
-    scroll.querySelectorAll(".bm-zone").forEach(z => z.onclick = () => this.openRegionSheet(z.dataset.region, z.dataset.zone, z.dataset.label, z.dataset.muscles));
-  };
-
   App.openRegionSheet = function (regionId, zoneId, label, muscles) {
     const r = this.region(regionId);
     this.pushView("region:" + regionId + ":" + zoneId + ":" + (label || ""), () => this.openRegionSheet(regionId, zoneId, label, muscles));
@@ -230,35 +180,58 @@
       .sort((a, b) => (a.commonRank ?? 999) - (b.commonRank ?? 999));
     const exs = window.EXERCISES.filter(e => e.region === regionId && e.type !== "yoga");
     let painVal = null;
+    const last = (this.state.bodyLogs || []).filter(b => b.region === zoneId).slice(-1)[0];
+    const WORDS = ["No pain", "Barely there", "Mild", "Mild", "Moderate", "Moderate", "Strong", "Strong", "Severe", "Severe", "Worst possible"];
+    this._rsOpen = this._rsOpen || {};
 
     this.openModal(label || r.name, `
-      ${muscles ? `<div class="bm-muscle-note">${this.icon("person")}<span><strong>Muscles in this area:</strong> ${this.esc(muscles)}</span></div>` : ""}
-      <div class="card" style="margin-bottom:1rem">
-        <div class="feel-title">How does this area feel right now?</div>
-        <div class="pain-scale" id="rs-pain">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num" data-p="${i}">${i}</button>`).join("")}</div>
-        <div class="pain-scale-labels"><span>No pain</span><span>Worst pain</span></div>
-        <input type="text" id="rs-note" placeholder="Optional note, like: stiff in the morning">
-        <button class="btn big" id="rs-log" style="margin-top:0.8rem" disabled>Save How It Feels</button>
+      <section class="fin-card rs-card">
+        <h2>How does it feel right now?</h2>
+        <p class="fin-hint">${last ? `Last time it was ${last.pain} out of 10, on ${this.fmtDate(last.date)}. ` : ""}0 means no pain, 10 is the worst.</p>
+        <div class="pain-scale fin-pain" id="rs-pain">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num" data-p="${i}" aria-label="Pain ${i}">${i}</button>`).join("")}</div>
+        <div class="rs-word" id="rs-word" aria-live="polite">Tap a number</div>
+        <input type="text" id="rs-note" placeholder="Anything to add? Like: stiff in the morning" aria-label="Note">
+        <button class="btn big grad" id="rs-log" disabled>Save how it feels</button>
+      </section>
+      ${muscles ? `<div class="bm-muscle-note">${this.icon("person")}<span><strong>Muscles here:</strong> ${this.esc(muscles)}</span></div>` : ""}
+      <button class="re-more-toggle rs-toggle" data-sec="why" aria-expanded="${!!this._rsOpen.why}">${this.icon("bulb")}<span>Why might it hurt?</span>${this.icon(this._rsOpen.why ? "chevU" : "chevD")}</button>
+      <div class="rs-sec" id="rs-why" ${this._rsOpen.why ? "" : "hidden"}>
+        <p class="re-hint">Common reasons this area bothers people. Only a professional can diagnose you.</p>
+        ${conds.map(c => `
+          <button class="region-issue" data-c="${c.id}">
+            <div class="region-issue-name">${this.esc(c.name)}</div>
+            <div class="region-issue-blurb">${this.esc(c.blurb)}</div>
+          </button>`).join("") || `<p class="home-list-empty">No common causes listed for this area.</p>`}
       </div>
-      <div class="section-label" style="margin-top:0.4rem">What might be going on</div>
-      <p style="font-size:0.8rem;color:var(--muted2);margin-bottom:0.6rem">Common reasons this area bothers people. Tap one to learn more. Only a professional can diagnose you.</p>
-      ${conds.map(c => `
-        <div class="region-issue" data-c="${c.id}">
-          <div class="region-issue-name">${this.esc(c.name)}</div>
-          <div class="region-issue-blurb">${this.esc(c.blurb)}</div>
-        </div>`).join("") || `<p style="color:var(--muted)">No listed conditions for this area.</p>`}
-      <div class="section-label">Exercises for this area (${exs.length})</div>
-      ${exs.map(ex => this.exItemHtml(ex)).join("")}
-      <button class="btn big grad" id="rs-make-routine" style="margin-top:0.8rem">${this.icon("sparkle")} Make Me a Routine for This Area</button>
+      <button class="re-more-toggle rs-toggle" data-sec="ex" aria-expanded="${!!this._rsOpen.ex}">${this.icon("book")}<span>Exercises for this area (${exs.length})</span>${this.icon(this._rsOpen.ex ? "chevU" : "chevD")}</button>
+      <div class="rs-sec" id="rs-ex" ${this._rsOpen.ex ? "" : "hidden"}>
+        ${exs.slice(0, 5).map(ex => this.exItemHtml(ex)).join("")}
+        ${exs.length > 5 ? `<button class="link-quiet rs-all" id="rs-all">See all ${exs.length} in Exercises</button>` : ""}
+      </div>
+      <button class="btn ghost big" id="rs-make-routine" style="margin-top:0.8rem">${this.icon("sparkle")} Make me a routine for this area</button>
     `);
 
     const body = document.getElementById("modal-body");
+    body.querySelectorAll(".rs-toggle").forEach(t => t.onclick = () => {
+      const k = t.dataset.sec, open = !this._rsOpen[k];
+      this._rsOpen[k] = open;
+      body.querySelector("#rs-" + k).hidden = !open;
+      t.setAttribute("aria-expanded", open);
+      t.lastElementChild.outerHTML = this.icon(open ? "chevU" : "chevD");
+    });
+    const all = body.querySelector("#rs-all");
+    if (all) all.onclick = () => {
+      this._lib.region = regionId;
+      this.closeModal();
+      this.showPage("library");
+    };
     body.querySelectorAll("#rs-pain .pain-num").forEach(b => b.onclick = () => {
       body.querySelectorAll("#rs-pain .pain-num").forEach(x => { x.classList.remove("on"); x.style.background = ""; });
       b.classList.add("on");
       const p = Number(b.dataset.p);
       b.style.background = p <= 3 ? "var(--accent)" : p <= 6 ? "var(--yellow)" : "var(--red)";
       painVal = p;
+      body.querySelector("#rs-word").textContent = p + " out of 10: " + WORDS[p].toLowerCase();
       body.querySelector("#rs-log").disabled = false;
     });
     body.querySelector("#rs-log").onclick = () => {
@@ -267,7 +240,7 @@
         pain: painVal, note: body.querySelector("#rs-note").value.trim()
       });
       this.save(); this.closeModal(); this.refresh();
-      this.toast("Body note saved");
+      this.toast("Saved. You can see it in Progress.");
     };
     body.querySelectorAll(".region-issue").forEach(n => n.onclick = () => this.openConditionSheet(n.dataset.c, regionId, label));
     body.querySelector("#rs-make-routine").onclick = () => {

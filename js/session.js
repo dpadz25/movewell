@@ -4,6 +4,7 @@
   // ---------- gentle beep ----------
   let audioCtx = null;
   function beep(freq, dur, when) {
+    if (App.state && App.state.profile && App.state.profile.sound === false) return;
     try {
       audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
       const t = audioCtx.currentTime + (when || 0);
@@ -573,12 +574,30 @@
     ov.classList.add("open");
     const nextEl = document.getElementById("rest-next");
     if (nextEl) {
-      nextEl.textContent = opts.next ? "Up next: " + opts.next : "";
+      nextEl.innerHTML = opts.next ? `<span>Up next</span>${this.esc(opts.next)}` : "";
       nextEl.style.display = opts.next ? "" : "none";
     }
-    let remaining = sec;
+    let remaining = sec, total = sec;
     const disp = document.getElementById("rest-display");
-    disp.textContent = this.fmtClock(remaining);
+    const ring = document.getElementById("rest-ring-fg");
+    const C = 2 * Math.PI * 92;
+    const paint = () => {
+      disp.textContent = this.fmtClock(Math.max(0, remaining));
+      ring.style.strokeDasharray = C;
+      ring.style.strokeDashoffset = C * (1 - Math.max(0, remaining) / Math.max(1, total));
+    };
+    // sound switch, remembered for every session
+    const sb = document.getElementById("rest-sound");
+    const paintSound = () => {
+      const on = this.state.profile.sound !== false;
+      sb.setAttribute("aria-checked", on);
+      sb.classList.toggle("off", !on);
+      document.getElementById("rest-sound-icon").innerHTML = this.icon(on ? "speaker" : "speakerOff");
+      document.getElementById("rest-sound-label").textContent = on ? "Sound on" : "Sound off";
+    };
+    sb.onclick = () => { this.state.profile.sound = this.state.profile.sound === false; this.save(); paintSound(); };
+    paintSound();
+    paint();
     const finish = (chime) => {
       clearInterval(this._restT);
       if (chime) this.chime();
@@ -590,10 +609,14 @@
     this._restT = setInterval(() => {
       remaining--;
       if (remaining <= 3 && remaining > 0) this.tickBeep();
-      if (remaining <= 0) { finish(true); return; }
-      disp.textContent = this.fmtClock(remaining);
+      if (remaining <= 0) { paint(); finish(true); return; }
+      paint();
     }, 1000);
-    ov.querySelectorAll("[data-rest]").forEach(b => b.onclick = () => { remaining = Number(b.dataset.rest); disp.textContent = this.fmtClock(remaining); });
+    ov.querySelectorAll("[data-add]").forEach(b => b.onclick = () => {
+      remaining = Math.max(5, remaining + Number(b.dataset.add));
+      total = Math.max(total, remaining);
+      paint();
+    });
     document.getElementById("rest-skip").onclick = () => finish(false);
   };
 
