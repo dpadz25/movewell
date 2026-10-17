@@ -26,82 +26,199 @@
     });
   };
 
+  // body areas that come in a left and a right
+  const PAIRED = ["shoulder", "arms", "elbow", "wrist", "hip", "knee", "ankle-foot"];
+  const LEVELS = { 1: "Gentle", 2: "Moderate", 3: "Advanced" };
+  const COMMON_EQUIP = ["none", "band", "dumbbell", "chair", "wall", "towel", "machine", "barbell"];
+  const DEFAULT_LIB = () => ({ q: "", region: "", type: "", equip: "", level: 0 });
+
+  // what the "Selected" bar and "Log how it feels" use: a side-aware zone key and a label
+  App.libSelection = function () {
+    const u = this._libUi, f = this._lib;
+    if (u.zone) return u.zone;
+    if (!f.region) return null;
+    const r = this.region(f.region);
+    const paired = PAIRED.includes(f.region);
+    if (paired && !u.side) return { region: f.region, zone: null, label: r.name, needSide: true };
+    if (paired && u.side !== "both") {
+      const side = u.side === "left" ? "Left" : "Right";
+      return { region: f.region, zone: f.region + "-" + u.side, label: side + " " + r.name };
+    }
+    return { region: f.region, zone: f.region, label: (paired ? "Both sides, " : "") + r.name };
+  };
+
   App.renderLibrary = function () {
     const f = this._lib;
+    const u = this._libUi = this._libUi || { areaOpen: false, filtersOpen: false, mapOn: false, view: "front", side: "", zone: null, moreEquip: false };
     const list = this.filteredExercises();
-    const levelNames = { 1: "Gentle", 2: "Moderate", 3: "Advanced" };
-    const filterBar = (id, inner) => `<div class="filter-wrap"><div class="filter-bar" id="${id}">${inner}</div></div>`;
+    const filterCount = (f.type ? 1 : 0) + (f.equip ? 1 : 0) + (f.level ? 1 : 0);
+    const sel = this.libSelection();
+    const opt = (group, value, label, on) =>
+      `<button class="opt-btn ${on ? "on" : ""}" data-g="${group}" data-v="${value}" aria-pressed="${on}">${label}</button>`;
+
+    // removable chips for everything that is narrowing the list
+    const chips = [];
+    if (f.region) chips.push(["region", sel ? sel.label : this.region(f.region).name]);
+    if (f.type) chips.push(["type", this.typeMeta(f.type).name]);
+    if (f.equip) chips.push(["equip", this.equip(f.equip).name]);
+    if (f.level) chips.push(["level", LEVELS[f.level]]);
+
+    const equipShown = u.moreEquip ? window.EQUIPMENT : window.EQUIPMENT.filter(q => COMMON_EQUIP.includes(q.id) || q.id === f.equip);
+    const paired = f.region && PAIRED.includes(f.region);
+    const front = u.view !== "back";
+
+    const areaPanel = `
+      <section class="lib-panel" aria-label="Find by body area">
+        <div class="lib-panel-head">
+          <h2>Pick an area</h2>
+          <label class="lib-switch">Body map
+            <span class="switch"><input type="checkbox" id="lib-map" ${u.mapOn ? "checked" : ""}><span class="slider"></span></span>
+          </label>
+        </div>
+        ${u.mapOn ? `
+          <div class="seg" role="tablist">
+            <button role="tab" class="${front ? "on" : ""}" aria-selected="${front}" data-view="front">Front</button>
+            <button role="tab" class="${!front ? "on" : ""}" aria-selected="${!front}" data-view="back">Back</button>
+          </div>
+          <p class="lib-map-hint">Tap where it hurts. Each side is separate.</p>
+          <div class="lib-map">
+            <div class="lib-map-caps"><span>${front ? "Your right" : "Your left"}</span><span>${front ? "Your left" : "Your right"}</span></div>
+            ${this.bmSvg(u.view, u.zone ? u.zone.zone + "|" + u.zone.label : null)}
+          </div>` : `
+          <div class="opt-grid two">
+            ${window.REGIONS.map(r => opt("region", r.id, this.esc(r.name), f.region === r.id)).join("")}
+          </div>
+          ${paired ? `
+            <div class="lib-side">
+              <div class="lib-side-q">Which side?</div>
+              <div class="opt-grid three">
+                ${opt("side", "left", "Left", u.side === "left")}
+                ${opt("side", "right", "Right", u.side === "right")}
+                ${opt("side", "both", "Both", u.side === "both")}
+              </div>
+            </div>` : ""}`}
+        ${sel ? `
+          <div class="lib-sel">
+            <div class="lib-sel-text"><div class="lib-sel-k">Selected</div><div class="lib-sel-v">${this.esc(sel.label)}</div></div>
+            <button class="lib-sel-btn" id="lib-log" ${sel.needSide ? "disabled" : ""}>${sel.needSide ? "Pick a side" : "Log how it feels"}</button>
+          </div>` : ""}
+        <button class="lib-relax" id="lib-relax">${this.icon("sparkle")}<span>Feeling tense? Try a calm-down exercise</span>${this.icon("chevR")}</button>
+      </section>`;
+
+    const filterPanel = `
+      <section class="lib-panel" aria-label="Filters">
+        <div class="lib-group"><div class="lib-group-t">Kind of movement</div>
+          <div class="opt-grid ${this.state.profile.textSize === "huge" ? "two" : "three"}">
+            ${opt("type", "", "Any", !f.type)}
+            ${window.EX_TYPES.map(t => opt("type", t.id, t.name, f.type === t.id)).join("")}
+          </div></div>
+        <div class="lib-group"><div class="lib-group-t">How hard</div>
+          <div class="opt-grid two">
+            ${opt("level", 0, "Any", !f.level)}
+            ${[1, 2, 3].map(l => opt("level", l, LEVELS[l], f.level === l)).join("")}
+          </div></div>
+        <div class="lib-group"><div class="lib-group-t">Equipment</div>
+          <div class="opt-grid two">
+            ${opt("equip", "", "Any", !f.equip)}
+            ${equipShown.map(q => opt("equip", q.id, this.esc(q.name), f.equip === q.id)).join("")}
+          </div>
+          <button class="lib-more" id="lib-more">${u.moreEquip ? "Show less" : "More equipment"}</button>
+        </div>
+        ${filterCount ? `<button class="lib-clear" id="lib-clear-f">Clear filters</button>` : ""}
+      </section>`;
 
     document.getElementById("library-scroll").innerHTML = `
-      <span class="page-tag">${this.icon("book")} Exercise Library</span>
       <div class="page-title">Exercises</div>
-      <div class="page-sub">Every exercise has step-by-step instructions and easier or harder variations. Swipe the filter rows sideways to see more.</div>
-      <button class="btn ghost big" id="lib-create" style="margin-bottom:0.9rem">${this.icon("plus")} Create Your Own Exercise</button>
       <div class="search-wrap">
         <span class="search-icon">${this.icon("search")}</span>
-        <input type="text" id="lib-search" placeholder="Search, try 'neck' or 'bench'" value="${this.esc(f.q)}">
+        <input type="text" id="lib-search" placeholder="Search, like knee or stretch" aria-label="Search exercises" value="${this.esc(f.q)}">
       </div>
-      ${filterBar("lib-regions", `
-        <button class="chip ${!f.region ? "on" : ""}" data-v="">All Areas</button>
-        ${window.REGIONS.map(r => `<button class="chip ${f.region === r.id ? "on" : ""}" data-v="${r.id}">${this.icon(r.icon)} ${r.name}</button>`).join("")}`)}
-      ${filterBar("lib-types", `
-        <button class="chip ${!f.type ? "on" : ""}" data-v="">All Types</button>
-        ${window.EX_TYPES.map(t => `<button class="chip ${f.type === t.id ? "on" : ""}" data-v="${t.id}">${t.name}</button>`).join("")}`)}
-      ${filterBar("lib-equip", `
-        <button class="chip ${!f.equip ? "on" : ""}" data-v="">Any Equipment</button>
-        ${window.EQUIPMENT.map(q => `<button class="chip ${f.equip === q.id ? "on" : ""}" data-v="${q.id}">${this.icon(q.icon)} ${q.name}</button>`).join("")}`)}
-      ${filterBar("lib-level", `
-        <button class="chip ${!f.level ? "on" : ""}" data-v="0">Any Level</button>
-        ${[1, 2, 3].map(l => `<button class="chip ${f.level === l ? "on" : ""}" data-v="${l}">${levelNames[l]}</button>`).join("")}`)}
-      <div class="filter-count">${list.length} exercise${list.length === 1 ? "" : "s"} found
-        ${(f.q || f.region || f.type || f.equip || f.level) ? ` · <a href="#" id="lib-clear" style="color:var(--accent-strong)">clear filters</a>` : ""}
+      <div class="lib-toggles">
+        <button class="lib-pill ${u.areaOpen ? "open" : ""} ${f.region ? "has" : ""}" id="lib-area-toggle" aria-expanded="${u.areaOpen}">
+          ${this.icon("person")}<span>Body area</span>${f.region ? `<span class="lib-badge">1</span>` : ""}
+        </button>
+        <button class="lib-pill ${u.filtersOpen ? "open" : ""} ${filterCount ? "has" : ""}" id="lib-filter-toggle" aria-expanded="${u.filtersOpen}">
+          ${this.icon("sliders")}<span>Filters</span>${filterCount ? `<span class="lib-badge">${filterCount}</span>` : ""}
+        </button>
       </div>
-      ${list.map(ex => this.exItemHtml(ex)).join("") || `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches those filters.<br>Try clearing one of them.</p></div>`}
+      ${chips.length ? `<div class="lib-chips">${chips.map(c => `<button class="lib-chip" data-k="${c[0]}" aria-label="Remove ${this.esc(c[1])}">${this.esc(c[1])}${this.icon("close")}</button>`).join("")}</div>` : ""}
+      ${u.areaOpen ? areaPanel : ""}
+      ${u.filtersOpen ? filterPanel : ""}
+      <div class="lib-list-head">
+        <div class="filter-count">${list.length} exercise${list.length === 1 ? "" : "s"}</div>
+        <button class="lib-create" id="lib-create">${this.icon("plus")} Make your own</button>
+      </div>
+      ${list.map(ex => this.exItemHtml(ex)).join("") || `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches those choices.<br>Try removing one of them.</p></div>`}
     `;
 
     const scroll = document.getElementById("library-scroll");
-    this.bindFilterFades(scroll);
-    // if a selected chip sits off-screen, bring it into view
-    scroll.querySelectorAll(".filter-bar").forEach(bar => {
-      const on = bar.querySelector(".chip.on");
-      if (on && on.offsetLeft + on.offsetWidth > bar.clientWidth) bar.scrollLeft = on.offsetLeft - 16;
-    });
-    scroll.querySelector("#lib-create").onclick = () => this.openExerciseBuilder();
-    const search = scroll.querySelector("#lib-search");
+    const $ = (sel) => scroll.querySelector(sel);
+    const rerender = () => this.refresh();
+    $("#lib-create").onclick = () => this.openExerciseBuilder();
+    const search = $("#lib-search");
     search.oninput = () => { f.q = search.value; this.renderLibraryListOnly(); };
-    // update chips in place and re-render only the list, so the filter bar
-    // never snaps back to the start when a chip is tapped
-    const bindChips = (id, key, isNum) => {
-      scroll.querySelectorAll("#" + id + " .chip").forEach(ch => ch.onclick = () => {
-        f[key] = isNum ? Number(ch.dataset.v) : ch.dataset.v;
-        scroll.querySelectorAll("#" + id + " .chip").forEach(x => x.classList.toggle("on", x === ch));
-        this.renderLibraryListOnly();
-      });
+    $("#lib-area-toggle").onclick = () => { u.areaOpen = !u.areaOpen; rerender(); };
+    $("#lib-filter-toggle").onclick = () => { u.filtersOpen = !u.filtersOpen; rerender(); };
+    scroll.querySelectorAll(".lib-chip").forEach(ch => ch.onclick = () => {
+      const k = ch.dataset.k;
+      if (k === "region") { f.region = ""; u.side = ""; u.zone = null; }
+      else f[k] = k === "level" ? 0 : "";
+      rerender();
+    });
+    scroll.querySelectorAll(".opt-btn").forEach(b => b.onclick = () => {
+      const g = b.dataset.g, v = b.dataset.v;
+      if (g === "region") { f.region = f.region === v ? "" : v; u.side = ""; u.zone = null; }
+      else if (g === "side") { u.side = v; }
+      else if (g === "level") f.level = Number(v);
+      else f[g] = v;
+      rerender();
+    });
+    const map = $("#lib-map");
+    if (map) map.onchange = () => { u.mapOn = map.checked; u.zone = null; rerender(); };
+    scroll.querySelectorAll(".seg button").forEach(b => b.onclick = () => { u.view = b.dataset.view; u.zone = null; rerender(); });
+    scroll.querySelectorAll(".lib-map .bm-zone").forEach(z => z.onclick = () => {
+      const same = u.zone && u.zone.zone === z.dataset.zone && u.zone.label === z.dataset.label;
+      if (same) { u.zone = null; f.region = ""; }
+      else {
+        u.zone = { region: z.dataset.region, zone: z.dataset.zone, label: z.dataset.label, muscles: z.dataset.muscles };
+        f.region = z.dataset.region;
+      }
+      rerender();
+    });
+    // a side picked from the list also lights up the matching spots on the map
+    if (!u.zone && sel && sel.zone) scroll.querySelectorAll(".lib-map .bm-zone").forEach(z => {
+      if (z.dataset.zone === sel.zone) z.classList.add("sel");
+    });
+    const log = $("#lib-log");
+    if (log) log.onclick = () => {
+      const s = this.libSelection();
+      if (!s || s.needSide) return;
+      this.openRegionSheet(s.region, s.zone, s.label, s.muscles || "");
     };
-    bindChips("lib-regions", "region");
-    bindChips("lib-types", "type");
-    bindChips("lib-equip", "equip");
-    bindChips("lib-level", "level", true);
-    const clear = scroll.querySelector("#lib-clear");
-    if (clear) clear.onclick = (e) => { e.preventDefault(); App._lib = { q: "", region: "", type: "", equip: "", level: 0 }; this.renderLibrary(); };
+    const relax = $("#lib-relax");
+    if (relax) relax.onclick = () => this.openRelaxSheet();
+    const more = $("#lib-more");
+    if (more) more.onclick = () => { u.moreEquip = !u.moreEquip; rerender(); };
+    const clearF = $("#lib-clear-f");
+    if (clearF) clearF.onclick = () => { f.type = ""; f.equip = ""; f.level = 0; rerender(); };
   };
 
-  // re-render just count + list (keeps keyboard focus and filter bar scroll)
+  // re-render just count + list (keeps keyboard focus while typing in search)
   App.renderLibraryListOnly = function () {
     const scroll = document.getElementById("library-scroll");
-    const f = this._lib;
     const list = this.filteredExercises();
     const count = scroll.querySelector(".filter-count");
-    if (count) {
-      count.innerHTML = `${list.length} exercise${list.length === 1 ? "" : "s"} found` +
-        ((f.q || f.region || f.type || f.equip || f.level) ? ` · <a href="#" id="lib-clear" style="color:var(--accent-strong)">clear filters</a>` : "");
-      const clear = count.querySelector("#lib-clear");
-      if (clear) clear.onclick = (e) => { e.preventDefault(); App._lib = { q: "", region: "", type: "", equip: "", level: 0 }; this.renderLibrary(); };
-    }
+    if (count) count.textContent = `${list.length} exercise${list.length === 1 ? "" : "s"}`;
     scroll.querySelectorAll(".ex-item, .empty-state").forEach(n => n.remove());
     scroll.insertAdjacentHTML("beforeend",
       list.map(ex => this.exItemHtml(ex)).join("") ||
       `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches.</p></div>`);
+  };
+
+  // open the Exercises tab with the body map showing (used by Home and older links)
+  App.openBodyArea = function () {
+    this._libUi = Object.assign(this._libUi || {}, { areaOpen: true, mapOn: true });
+    this.showPage("library");
   };
 
   App.exItemHtml = function (ex) {

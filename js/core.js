@@ -233,6 +233,8 @@
 
     // ---------- navigation ----------
     showPage(name) {
+      // the Body Map tab now lives inside Exercises
+      if (name === "bodymap") { this.openBodyArea(); return; }
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById("page-" + name).classList.add("active");
       document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.page === name));
@@ -394,7 +396,7 @@
       on("home-new", () => { this.showPage("routines"); this.openNewRoutineChooser(); });
       on("home-pick-tpl", () => { this.showPage("routines"); this.openNewRoutineChooser(); });
       on("home-build", () => { this.showPage("routines"); this.createBlankRoutine(); });
-      on("home-where", () => this.showPage("bodymap"));
+      on("home-where", () => this.openBodyArea());
     },
 
     // replaces the hidden swipe tray with a visible options sheet
@@ -404,17 +406,19 @@
       this.pushView("rmenu:" + rid, () => this.openRoutineMenu(rid));
       this.openModal(r.name, `
         <div class="menu-list">
+          <button class="menu-item primary" data-m="start">${this.icon("play")}<span>Start now</span></button>
           <button class="menu-item" data-m="edit">${this.icon("pencil")}<span>Change exercises</span></button>
           <button class="menu-item" data-m="up">${this.icon("arrowUp")}<span>Move up the list</span></button>
           <button class="menu-item" data-m="down">${this.icon("arrowDown")}<span>Move down the list</span></button>
-          <button class="menu-item" data-m="home">${this.icon("home")}<span>Take off Home screen</span></button>
+          <button class="menu-item" data-m="home">${this.icon("home")}<span>${r.onHome ? "Take off Home screen" : "Put on Home screen"}</span></button>
           <button class="menu-item danger" data-m="archive">${this.icon("archive")}<span>Put away (archive)</span></button>
         </div>`);
       document.getElementById("modal-body").querySelectorAll("[data-m]").forEach(b => b.onclick = () => {
         const m = b.dataset.m;
         if (m === "edit") { this.closeModal(); this.openRoutineEditor(rid); return; }
         if (m === "up" || m === "down") { this.moveRoutine(r, m === "up" ? -1 : 1); this.toast(m === "up" ? "Moved up" : "Moved down"); return; }
-        if (m === "home") { r.onHome = false; this.save(); this.closeModal(); this.refresh(); this.toast("Removed from your Home screen"); return; }
+        if (m === "start") { this.closeModal(); this.startSession(rid); return; }
+        if (m === "home") { r.onHome = !r.onHome; this.save(); this.closeModal(); this.refresh(); this.toast(r.onHome ? "Added to your Home screen" : "Removed from your Home screen"); return; }
         if (m === "archive") { r.archived = true; this.save(); this.closeModal(); this.refresh(); this.toast("Put away. Find it at the bottom of Routines."); }
       });
     },

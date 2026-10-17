@@ -38,8 +38,8 @@
         text: "The full exercise library. Search or filter by body area, and every exercise comes with step-by-step instructions and the exact muscles it works."
       },
       {
-        target: ".bodymap-svg", page: "bodymap", title: "The Body Map",
-        text: "Tap the spot that bothers you to log how it feels, learn which muscles live there, and get exercises made for that exact area."
+        target: "#lib-area-toggle", page: "library", title: "Find by body area",
+        text: "Tap Body area to pick the spot that bothers you, left or right. You can log how it feels and see exercises made for that exact area."
       },
       {
         target: "#progress-scroll .chart-card, #progress-scroll .empty-state", page: "progress", title: "Your progress",

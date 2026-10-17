@@ -9,27 +9,26 @@
     const typesInUse = [...new Set(active.map(r => this.routineType(r)))];
     const typeChips = window.ROUTINE_TYPES.filter(t => typesInUse.includes(t.id));
     if (this._rlib.type && !typesInUse.includes(this._rlib.type)) this._rlib.type = "";
+    const onHome = active.filter(r => r.onHome).length;
     document.getElementById("routines-scroll").innerHTML = `
-      <span class="page-tag">${this.icon("clipboard")} Your Plan</span>
-      <div class="page-title">Routine Library</div>
-      <div class="page-sub">Routines start from your Home screen. Tap the house on a routine to put it there.</div>
-      <button class="btn big grad" onclick="App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>
+      <div class="page-title">Routines</div>
+      <div class="page-sub">${active.length ? `${active.length} routine${active.length === 1 ? "" : "s"}, ${onHome} on your Home screen. Tap one to see or change it.` : "A routine is a short list of exercises you do together."}</div>
+      <button class="btn big grad rl-new" onclick="App.openNewRoutineChooser()">${this.icon("plus")} New routine</button>
       ${active.length ? `
-        <div class="search-wrap" style="margin-top:1rem"><span class="search-icon">${this.icon("search")}</span><input type="text" id="rl-search" placeholder="Search routines" value="${this.esc(this._rlib.q)}"></div>
-        ${typeChips.length > 1 ? `<div class="filter-wrap"><div class="filter-bar" id="rl-types">
-          <button class="chip small-chip ${!this._rlib.type ? "on" : ""}" data-v="">All</button>
-          ${typeChips.map(t => `<button class="chip small-chip ${this._rlib.type === t.id ? "on" : ""}" data-v="${t.id}">${this.icon(t.icon)} ${t.name}</button>`).join("")}
-        </div></div>` : ""}
+        ${active.length > 4 ? `<div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="rl-search" placeholder="Search routines" aria-label="Search routines" value="${this.esc(this._rlib.q)}"></div>` : ""}
+        ${typeChips.length > 1 ? `<div class="rl-types" id="rl-types">
+          <button class="lib-chip rl-type ${!this._rlib.type ? "on" : ""}" data-v="">All</button>
+          ${typeChips.map(t => `<button class="lib-chip rl-type ${this._rlib.type === t.id ? "on" : ""}" data-v="${t.id}">${t.name}</button>`).join("")}
+        </div>` : ""}
         <div id="rl-list"></div>
       ` : `<div class="empty-state"><div class="empty-icon">${this.icon("clipboard")}</div><p>No routines yet.<br>Start from a ready-made plan or build your own.</p></div>`}
       ${archived.length ? `
-        <div class="section-label">Archived (${archived.length})</div>
+        <h2 class="rl-sub">Put away (${archived.length})</h2>
         ${archived.map(r => `
-          <div class="archived-row" data-arid="${r.id}">
-            <span class="archived-row-name">${this.esc(r.name)}</span>
-            <span class="archived-row-meta">${r.items.length} exercises</span>
-            <button class="mini-btn" data-act="restore" title="Restore" aria-label="Restore ${this.esc(r.name)}">${this.icon("upload")}</button>
-            <button class="mini-btn danger" data-act="destroy" title="Delete forever" aria-label="Delete ${this.esc(r.name)} forever">${this.icon("trash")}</button>
+          <div class="rl-archived" data-arid="${r.id}">
+            <div class="rl-archived-info"><div class="home-row-name">${this.esc(r.name)}</div><div class="home-row-meta">${r.items.length} exercise${r.items.length === 1 ? "" : "s"}</div></div>
+            <button class="rl-mini" data-act="restore">Bring back</button>
+            <button class="rl-mini danger" data-act="destroy" aria-label="Delete ${this.esc(r.name)} forever">${this.icon("trash")}</button>
           </div>`).join("")}` : ""}
     `;
     const root = document.getElementById("routines-scroll");
@@ -45,38 +44,29 @@
         return true;
       });
       listEl.innerHTML = shown.map(r => this.routineRowHtml(r)).join("") ||
-        `<p style="color:var(--muted);font-size:0.9rem;padding:0.8rem 0.2rem">Nothing matches. Try a different search or filter.</p>`;
-      listEl.querySelectorAll(".routine-row").forEach(row => {
-        const r = s.routines.find(x => x.id === row.dataset.rrow);
-        if (!r) return;
-        row.querySelector("[data-act='home']").onclick = (e) => {
-          e.stopPropagation();
-          r.onHome = !r.onHome;
-          this.save();
-          this.toast(r.onHome ? "Added to Home. Start it from your Home screen." : "Removed from your Home screen");
-          renderList();
-        };
-        row.onclick = () => this.openRoutineEditor(r.id);
+        `<p class="home-list-empty">Nothing matches. Try a different search or filter.</p>`;
+      listEl.querySelectorAll(".home-row").forEach(row => {
+        const rid = row.dataset.rrow;
+        row.querySelector("[data-act='open']").onclick = () => this.openRoutineEditor(rid);
+        row.querySelector("[data-act='menu']").onclick = () => this.openRoutineMenu(rid);
       });
     };
     renderList();
 
     const search = root.querySelector("#rl-search");
     if (search) search.oninput = (e) => { this._rlib.q = e.target.value; renderList(); };
-    root.querySelectorAll("#rl-types .chip").forEach(ch => ch.onclick = () => {
-      root.querySelectorAll("#rl-types .chip").forEach(x => x.classList.remove("on"));
-      ch.classList.add("on");
+    root.querySelectorAll("#rl-types .rl-type").forEach(ch => ch.onclick = () => {
+      root.querySelectorAll("#rl-types .rl-type").forEach(x => x.classList.toggle("on", x === ch));
       this._rlib.type = ch.dataset.v;
       renderList();
     });
-    this.bindFilterFades(root);
 
     root.querySelectorAll("[data-arid]").forEach(card => {
       const r = s.routines.find(x => x.id === card.dataset.arid);
       card.querySelector("[data-act='restore']").onclick = () => {
         r.archived = false;
         this.save(); this.refresh();
-        this.toast("Routine restored");
+        this.toast("Routine brought back");
       };
       card.querySelector("[data-act='destroy']").onclick = () => {
         this.confirm("Delete forever?", "“" + r.name + "” will be permanently removed. Your past session history is kept.", () => {
@@ -88,17 +78,19 @@
     });
   };
 
-  // one compact row in the routine library list
+  // one row in the Routines list: tap the name to open it, the dots for options
   App.routineRowHtml = function (r) {
     const t = this.routineTypeMeta(this.routineType(r));
+    const last = this.lastDone(r);
     return `
-      <div class="routine-row" data-rrow="${r.id}">
-        <button class="home-tgl ${r.onHome ? "on" : ""}" data-act="home" aria-label="${r.onHome ? "Remove from Home screen" : "Add to Home screen"}">${this.icon("home")}</button>
-        <div class="routine-row-info">
-          <div class="routine-row-name">${this.esc(r.name)}</div>
-          <div class="routine-row-meta">${this.esc(t.name)} · ${r.items.length} exercise${r.items.length === 1 ? "" : "s"}</div>
-        </div>
-        <div class="ex-item-chev">${this.icon("chevR")}</div>
+      <div class="home-row" data-rrow="${r.id}">
+        <div class="tile ${this.routineTone(r)} home-row-tile">${this.icon(t.icon)}</div>
+        <button class="home-row-info" data-act="open">
+          <span class="home-row-name">${this.esc(r.name)}</span>
+          <span class="home-row-meta">${r.items.length} exercise${r.items.length === 1 ? "" : "s"} · ${this.estMinutes(r)} min</span>
+          ${r.onHome || last ? `<span class="rl-badges">${r.onHome ? `<span class="rl-onhome">${this.icon("home")} On Home</span>` : ""}${last ? `<span class="rl-last">Done ${this.relDay(last)}</span>` : ""}</span>` : ""}
+        </button>
+        <button class="home-row-more" data-act="menu" aria-label="Options for ${this.esc(r.name)}">${this.icon("dots")}</button>
       </div>`;
   };
 

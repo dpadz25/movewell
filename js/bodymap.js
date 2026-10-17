@@ -53,6 +53,14 @@
     [120, 402, 14, 13, "ankle-foot", "Right Ankle (Achilles)", "Achilles tendon, ankle stabilizers"]
   ];
 
+  // The front view faces you like a mirror image of a person standing opposite, so the
+  // shape on the left of the screen is that person's RIGHT side. Relabel the front zones to
+  // match ("Your right" / "Your left" captions sit beside the map).
+  FRONT_ZONES.forEach(z => {
+    if (z[0] < 100) z[5] = z[5].replace(/^Left\b/, "Right");
+    else if (z[0] > 100) z[5] = z[5].replace(/^Right\b/, "Left");
+  });
+
   // Left/Right ellipses for a paired body part currently share one regionId (e.g. "hip"),
   // which is fine for icon/condition/exercise lookups but wrong for pain-highlighting and
   // logging, since it can't tell sides apart. Derive a side-aware key from the label text
@@ -131,10 +139,11 @@
       </div>`;
   }
 
-  function bodySvg(zones, hurtRegions, sex) {
+  function bodySvg(zones, hurtRegions, sex, selZone) {
     const zonesHtml = zones.map(z => {
       const zk = zoneKey(z);
-      return `<ellipse class="bm-zone ${hurtRegions.has(zk) ? "hurt" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-zone="${zk}" data-label="${z[5]}" data-muscles="${z[6] || ""}"><title>${z[5]} — ${z[6] || ""}</title></ellipse>`;
+      const sel = selZone && selZone === zk + "|" + z[5];
+      return `<ellipse class="bm-zone ${hurtRegions.has(zk) ? "hurt" : ""} ${sel ? "sel" : ""}" cx="${z[0]}" cy="${z[1]}" rx="${z[2]}" ry="${z[3]}" data-region="${z[4]}" data-zone="${zk}" data-label="${z[5]}" data-muscles="${z[6] || ""}"><title>${z[5]}: ${z[6] || ""}</title></ellipse>`;
     }).join("");
     return `
     <svg class="bodymap-svg" viewBox="0 0 200 430" xmlns="http://www.w3.org/2000/svg">
@@ -144,6 +153,25 @@
       </g>
     </svg>`;
   }
+
+  // ---- helpers shared with the Exercises tab (the body map now lives there) ----
+  App.bmHurtSet = function () {
+    const weekAgo = Date.now() - 7 * 86400000;
+    return new Set(this.state.bodyLogs.filter(b => new Date(b.date).getTime() > weekAgo && b.pain >= 3).map(b => b.region));
+  };
+  App.bmSvg = function (view, selZone) {
+    return bodySvg(view === "back" ? BACK_ZONES : FRONT_ZONES, this.bmHurtSet(), this.state.profile.sex, selZone);
+  };
+  App.openRelaxSheet = function () {
+    this.pushView("relax", () => this.openRelaxSheet());
+    this.openModal("Feeling tense?", `
+      <div class="bodymap-mind">
+        ${MEDITATION_SVG}
+        <p class="bodymap-mind-text">Stress does not just stay in your head. It can tighten muscles and lower your tolerance for pain, so old aches flare up and new tension builds, especially in the neck, shoulders, and back.</p>
+        <div class="bodymap-mind-source">Source: Cleveland Clinic &amp; American Psychological Association</div>
+        ${pmrHtml()}
+      </div>`);
+  };
 
   App.renderBodymap = function () {
     const isMind = this._bmView === "mind";

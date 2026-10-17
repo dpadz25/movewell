@@ -14,73 +14,93 @@
     const weightLogs = s.bodyWeightLogs || [];
     const recentWeights = weightLogs.slice(-8).reverse();
     this._heatmapMonthOffset = this._heatmapMonthOffset || 0;
+    // a plain-language read on pain: last two weeks vs the four weeks before that
+    const day = 86400000, nowMs = Date.now();
+    const avg = arr => arr.length ? arr.reduce((x, y) => x + y, 0) / arr.length : null;
+    const painIn = (from, to) => logs.filter(l => l.pain != null && nowMs - new Date(l.date).getTime() >= from * day && nowMs - new Date(l.date).getTime() < to * day).map(l => l.pain);
+    const painNow = avg(painIn(0, 14)), painBefore = avg(painIn(14, 42));
+    let painLine = "";
+    if (painNow != null && painBefore != null) {
+      const a1 = Math.round(painBefore * 10) / 10, a2 = Math.round(painNow * 10) / 10;
+      painLine = a2 < a1 ? `Your pain after sessions is down, from about ${a1} to ${a2} out of 10.`
+        : a2 > a1 ? `Your pain after sessions is up a little, from about ${a1} to ${a2} out of 10. If it keeps rising, check in with your therapist.`
+        : `Your pain after sessions is holding steady at about ${a2} out of 10.`;
+    } else if (painNow != null) painLine = `Your pain after sessions has been about ${Math.round(painNow * 10) / 10} out of 10 lately. Keep logging to see the trend.`;
+    const bodyNotes = (s.bodyLogs || []).slice(-5).reverse();
+    this._histAll = this._histAll || false;
+    const hist = logs.slice().sort((x, y) => new Date(y.date) - new Date(x.date)).slice(0, this._histAll ? 60 : 8);
+
     document.getElementById("progress-scroll").innerHTML = `
-      <span class="page-tag">${this.icon("chart")} Progress</span>
-      <div class="page-title">Your Journey</div>
-      <div class="page-sub">Consistency beats intensity. Look how far you've come.</div>
-      <div class="home-stats">
-        <div class="home-stat"><div class="home-stat-num">${logs.length}</div><div class="home-stat-label">Sessions</div></div>
-        <div class="home-stat"><div class="home-stat-num">${streak}</div><div class="home-stat-label">Day Streak</div></div>
-        <div class="home-stat"><div class="home-stat-num">${totalMin}</div><div class="home-stat-label">Minutes</div></div>
-      </div>
-      <div class="chart-card">
-        <div class="weight-card-head">
-          <h3>${this.icon("scale")} Weight over time</h3>
-          <button class="icon-btn small" id="wi-add" title="Log Weight" aria-label="Log Weight">${this.icon("plus")}</button>
-        </div>
-        ${weightLogs.length ? `<div class="chart-holder"><canvas id="chart-weight"></canvas></div>` : `<p style="color:var(--muted2);font-size:0.85rem">No weigh-ins yet. Log Weight to start tracking.</p>`}
-        ${recentWeights.length ? recentWeights.map(w => `
-          <div class="history-item" data-weight="${w.id}">
-            <div class="history-item-top">
-              <div class="history-item-name">${w.weightLb} lb</div>
-              <div class="history-item-date">${this.fmtDate(w.date)}</div>
-            </div>
-          </div>`).join("") : ""}
+      <div class="page-title">Progress</div>
+      <div class="page-sub">Small steps add up. Here is what you have done.</div>
+      <div class="pg-stats">
+        <div class="pg-stat"><div class="pg-num">${logs.length}</div><div class="pg-label">Sessions</div></div>
+        <div class="pg-stat"><div class="pg-num">${streak}</div><div class="pg-label">Day streak</div></div>
+        <div class="pg-stat"><div class="pg-num">${totalMin}</div><div class="pg-label">Minutes</div></div>
       </div>
       ${logs.length === 0 ? `
         <div class="empty-state card"><div class="empty-icon">${this.icon("chart")}</div>
-        <p>No sessions yet.<br>Complete your first routine and your progress will appear here.</p>
-        <button class="btn big grad" onclick="App.showPage('home')">Go Start One</button></div>` : `
+        <p>No sessions yet.<br>Finish your first routine and your progress shows up here.</p>
+        <button class="btn big grad" onclick="App.showPage('home')">Go start one</button></div>` : `
+        ${painLine ? `<div class="pg-insight">${this.icon("sparkle")}<p>${painLine}</p></div>` : ""}
         <div class="chart-card">
           <div class="heatmap-nav">
-            <button class="icon-btn" id="hm-prev">${this.icon("arrowLeft")}</button>
+            <button class="icon-btn" id="hm-prev" aria-label="Previous month">${this.icon("arrowLeft")}</button>
             <h3 id="hm-label" style="margin:0">${this.icon("calendar")} Workout Calendar</h3>
-            <button class="icon-btn" id="hm-next">${this.icon("arrowRight")}</button>
+            <button class="icon-btn" id="hm-next" aria-label="Next month">${this.icon("arrowRight")}</button>
           </div>
           <div id="heatmap-holder"></div>
         </div>
-        <div class="chart-card"><h3>${this.icon("calendar")} Sessions per week</h3><div class="chart-holder"><canvas id="chart-weeks"></canvas></div></div>
-        <div class="chart-card"><h3>${this.icon("face4")} How you felt after sessions</h3><div class="chart-holder"><canvas id="chart-feel"></canvas></div></div>
+        <div class="chart-card"><h3>How you felt after sessions</h3><div class="chart-holder"><canvas id="chart-feel"></canvas></div></div>
+        <div class="chart-card"><h3>Sessions each week</h3><div class="chart-holder"><canvas id="chart-weeks"></canvas></div></div>
         ${exWithData.length ? `
           <div class="chart-card">
-            <h3>${this.icon("arms")} Exercise progress</h3>
-            <select id="ex-progress-select" style="margin-bottom:0.7rem">
+            <h3>One exercise over time</h3>
+            <select id="ex-progress-select" aria-label="Pick an exercise" style="margin-bottom:0.7rem">
               ${exWithData.map(id => `<option value="${id}">${this.esc((this.ex(id) || { name: id }).name)}</option>`).join("")}
             </select>
             <div class="chart-holder"><canvas id="chart-ex"></canvas></div>
           </div>` : ""}
-        <div class="section-label">Session History</div>
-        ${logs.slice(-30).reverse().map(l => `
-          <div class="history-item" data-log="${l.id}">
-            <div class="history-item-top">
-              <div class="history-item-name">${this.esc(l.routineName)}</div>
-              <div class="history-item-date">${this.fmtDate(l.date)}</div>
-            </div>
-            <div class="history-item-meta">
-              <span>${this.icon("clock")} ${this.fmtClock(l.durationSec || 0)}</span>
-              <span>${this.icon("check")} ${l.exercisesDone} exercises</span>
-              ${l.feel ? `<span>${feelIcon(l.feel)}</span>` : ""}
-              ${l.pain != null ? `<span>pain ${l.pain}/10</span>` : ""}
-            </div>
-            ${l.note ? `<div class="history-item-meta" style="margin-top:0.2rem"><span>“${this.esc(l.note)}”</span></div>` : ""}
-          </div>`).join("")}
       `}
+      ${bodyNotes.length ? `
+        <h2 class="rl-sub">Body notes</h2>
+        ${bodyNotes.map(b => `
+          <div class="pg-row">
+            <div class="pg-pain ${b.pain <= 3 ? "lo" : b.pain <= 6 ? "mid" : "hi"}">${b.pain}</div>
+            <div class="pg-row-info">
+              <div class="home-row-name">${this.esc(b.label || this.region(String(b.region).replace(/-(left|right)$/, "")).name)}</div>
+              <div class="home-row-meta">${this.fmtDate(b.date)}${b.note ? " · “" + this.esc(b.note) + "”" : ""}</div>
+            </div>
+          </div>`).join("")}` : ""}
+      ${logs.length ? `
+        <h2 class="rl-sub">Past sessions</h2>
+        ${hist.map(l => `
+          <button class="pg-row pg-log" data-log="${l.id}">
+            <div class="pg-feel">${l.feel ? feelIcon(l.feel) : this.icon("check")}</div>
+            <div class="pg-row-info">
+              <div class="home-row-name">${this.esc(l.routineName)}</div>
+              <div class="home-row-meta">${this.fmtDate(l.date)} · ${Math.max(1, Math.round((l.durationSec || 0) / 60))} min${l.pain != null ? " · pain " + l.pain : ""}</div>
+            </div>
+            <span class="ex-item-chev">${this.icon("chevR")}</span>
+          </button>`).join("")}
+        ${logs.length > 8 ? `<button class="lib-more pg-more" id="pg-more">${this._histAll ? "Show fewer" : "Show all " + logs.length}</button>` : ""}` : ""}
+      <div class="chart-card pg-weight">
+        <div class="weight-card-head">
+          <h3>${this.icon("scale")} Body weight</h3>
+          <button class="rl-mini" id="wi-add">${this.icon("plus")} Log weight</button>
+        </div>
+        ${weightLogs.length ? `<div class="chart-holder"><canvas id="chart-weight"></canvas></div>` : `<p class="home-list-empty">Optional. Log your weight if you want to see it here.</p>`}
+        ${recentWeights.slice(0, 3).map(w => `
+          <button class="pg-wrow" data-weight="${w.id}"><span>${w.weightLb} lb</span><span>${this.fmtDate(w.date)}</span></button>`).join("")}
+      </div>
     `;
 
     const scroll = document.getElementById("progress-scroll");
     scroll.querySelector("#wi-add").onclick = () => this.openWeighInModal();
-    scroll.querySelectorAll(".history-item[data-weight]").forEach(n => n.onclick = () => this.openWeightLogDetail(n.dataset.weight));
-    scroll.querySelectorAll(".history-item[data-log]").forEach(n => n.onclick = () => this.openLogDetail(n.dataset.log));
+    scroll.querySelectorAll("[data-weight]").forEach(n => n.onclick = () => this.openWeightLogDetail(n.dataset.weight));
+    scroll.querySelectorAll("[data-log]").forEach(n => n.onclick = () => this.openLogDetail(n.dataset.log));
+    const more = scroll.querySelector("#pg-more");
+    if (more) more.onclick = () => { this._histAll = !this._histAll; this.refresh(); };
 
     // ----- charts -----
     const css = getComputedStyle(document.documentElement);
