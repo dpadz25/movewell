@@ -148,7 +148,7 @@
         <div class="filter-count">${list.length} exercise${list.length === 1 ? "" : "s"}</div>
         <button class="lib-create" id="lib-create">${this.icon("plus")} Make your own</button>
       </div>
-      ${list.map(ex => this.exItemHtml(ex)).join("") || `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches those choices.<br>Try removing one of them.</p></div>`}
+      <div class="ex-grid" id="lib-list">${list.map(ex => this.exItemHtml(ex)).join("") || `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches those choices.<br>Try removing one of them.</p></div>`}</div>
     `;
 
     const scroll = document.getElementById("library-scroll");
@@ -209,10 +209,9 @@
     const list = this.filteredExercises();
     const count = scroll.querySelector(".filter-count");
     if (count) count.textContent = `${list.length} exercise${list.length === 1 ? "" : "s"}`;
-    scroll.querySelectorAll(".ex-item, .empty-state").forEach(n => n.remove());
-    scroll.insertAdjacentHTML("beforeend",
-      list.map(ex => this.exItemHtml(ex)).join("") ||
-      `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches.</p></div>`);
+    const box = scroll.querySelector("#lib-list");
+    if (box) box.innerHTML = list.map(ex => this.exItemHtml(ex)).join("") ||
+      `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches.</p></div>`;
   };
 
   // open the Exercises tab with the body map showing (used by Home and older links)

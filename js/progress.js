@@ -64,17 +64,17 @@
       `}
       ${bodyNotes.length ? `
         <h2 class="rl-sub">Body notes</h2>
-        ${bodyNotes.map(b => `
+        <div class="ex-grid">${bodyNotes.map(b => `
           <div class="pg-row">
             <div class="pg-pain ${b.pain <= 3 ? "lo" : b.pain <= 6 ? "mid" : "hi"}">${b.pain}</div>
             <div class="pg-row-info">
               <div class="home-row-name">${this.esc(b.label || this.region(String(b.region).replace(/-(left|right)$/, "")).name)}</div>
               <div class="home-row-meta">${this.fmtDate(b.date)}${b.note ? " · “" + this.esc(b.note) + "”" : ""}</div>
             </div>
-          </div>`).join("")}` : ""}
+          </div>`).join("")}</div>` : ""}
       ${logs.length ? `
         <h2 class="rl-sub">Past sessions</h2>
-        ${hist.map(l => `
+        <div class="ex-grid">${hist.map(l => `
           <button class="pg-row pg-log" data-log="${l.id}">
             <div class="pg-feel">${l.feel ? feelIcon(l.feel) : this.icon("check")}</div>
             <div class="pg-row-info">
@@ -82,7 +82,7 @@
               <div class="home-row-meta">${this.fmtDate(l.date)} · ${Math.max(1, Math.round((l.durationSec || 0) / 60))} min${l.pain != null ? " · pain " + l.pain : ""}</div>
             </div>
             <span class="ex-item-chev">${this.icon("chevR")}</span>
-          </button>`).join("")}
+          </button>`).join("")}</div>
         ${logs.length > 8 ? `<button class="lib-more pg-more" id="pg-more">${this._histAll ? "Show fewer" : "Show all " + logs.length}</button>` : ""}` : ""}
       <div class="chart-card pg-weight">
         <div class="weight-card-head">

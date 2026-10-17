@@ -234,8 +234,8 @@
         trail += `<span class="sp-dot ${st}" title="${this.esc(shortPoseName(x.variant || (this.ex(x.exId) || {}).name || ""))}">${j + 1}</span>`;
       }
       centerHtml = `
-        <div class="sp-breath" aria-hidden="true"><span></span></div>
-        <div class="sp-big-label">${this.doseText(it)}</div>`;
+        <div class="sp-breath" aria-hidden="true"><span></span><b class="br-in">Breathe in</b><b class="br-out">Breathe out</b></div>
+        <div class="sp-big-label">Move slowly with your breath</div>`;
       underHtml = `<div class="sp-dots" aria-label="Pose ${s.idx + 1} of ${total}">${trail}</div>`;
     } else if (allDone) {
       centerHtml = `<div class="sp-done-mark">${this.icon("check")}</div><div class="sp-big-label">All ${displaySets} ${displaySets === 1 ? "set" : "sets"} done</div>`;
@@ -627,41 +627,73 @@
     this.launchConfetti();
 
     const name = this.state.profile.name;
+    // streak as it will be once this session is saved
+    this.state.logs.push(this._pendingLog);
+    const streakAfter = this.streak();
+    this.state.logs.pop();
+    // areas with pain logged in the last 30 days get their own question, one per side
+    const monthAgo = Date.now() - 30 * 86400000;
+    const latest = {};
+    (this.state.bodyLogs || []).forEach(b => { if (new Date(b.date).getTime() > monthAgo) latest[b.region] = b; });
+    const zones = Object.values(latest).filter(b => b.pain > 0).sort((x, y) => new Date(y.date) - new Date(x.date)).slice(0, 2);
+    const painAsk = zones.length ? zones.map(b => ({ key: b.region, label: b.label || this.region(String(b.region).replace(/-(left|right)$/, "")).name, before: b.pain }))
+      : [{ key: "", label: "", before: null }];
+    const painVals = {};
+    const FEELS = [[5, "Great"], [4, "Good"], [3, "Okay"], [2, "Tired"], [1, "Sore"]];
+    const mins = Math.max(1, Math.round(durationSec / 60));
+
     document.getElementById("celebrate-card").innerHTML = `
-      <span class="celebrate-emoji">${this.icon("party")}</span>
-      <div class="celebrate-title">Wonderful${name ? ", " + this.esc(name) : ""}!</div>
-      <div class="celebrate-sub">You completed <strong>${this.esc(s.routineName)}</strong>.<br>Every session is a deposit in your progress.</div>
-      <div class="celebrate-stats">
-        <div class="celebrate-stat"><div class="celebrate-stat-num">${doneItems.length}</div><div class="celebrate-stat-label">Exercises</div></div>
-        <div class="celebrate-stat"><div class="celebrate-stat-num">${totalSets}</div><div class="celebrate-stat-label">Sets</div></div>
-        <div class="celebrate-stat"><div class="celebrate-stat-num">${this.fmtClock(durationSec)}</div><div class="celebrate-stat-label">Time</div></div>
+      <section class="fin-hero">
+        <div class="fin-ring">${this.icon("check")}</div>
+        <h1 class="fin-title">Nice work${name ? ", " + this.esc(name) : ""}.</h1>
+        <div class="fin-sub">${this.esc(s.routineName)} is done for today.</div>
+        <div class="fin-stats">
+          <div><div class="fin-num">${doneItems.length}</div><div class="fin-lbl">exercise${doneItems.length === 1 ? "" : "s"}</div></div>
+          <div><div class="fin-num">${mins}</div><div class="fin-lbl">minute${mins === 1 ? "" : "s"}</div></div>
+          <div><div class="fin-num">${streakAfter}</div><div class="fin-lbl">day${streakAfter === 1 ? "" : "s"} in a row</div></div>
+        </div>
+      </section>
+      <div class="fin-body">
+        <div class="fin-card">
+          <h2>How do you feel now?</h2>
+          <div class="fin-feels" id="cel-feel">
+            ${FEELS.map(f => `<button class="fin-feel" data-f="${f[0]}" aria-pressed="false"><span class="fin-face">${this.icon("face" + f[0])}</span><span>${f[1]}</span></button>`).join("")}
+          </div>
+        </div>
+        ${painAsk.map((z, i) => `
+          <div class="fin-card">
+            <h2>${z.label ? this.esc(z.label) + " now" : "Any pain right now?"}</h2>
+            <p class="fin-hint">${z.before != null ? `It was ${z.before} out of 10 last time. ` : ""}0 means no pain, 10 is the worst.</p>
+            <div class="pain-scale fin-pain" data-z="${i}">${Array.from({ length: 11 }, (_, n) => `<button class="pain-num" data-p="${n}" aria-label="Pain ${n}">${n}</button>`).join("")}</div>
+          </div>`).join("")}
+        <input type="text" id="cel-note" placeholder="Anything to remember? (optional)" aria-label="Note about today">
       </div>
-      <div class="feel-title">How do you feel now?</div>
-      <div class="feel-btns" id="cel-feel">
-        ${[1, 2, 3, 4, 5].map(i => `<button class="feel-btn" data-f="${i}">${this.icon("face" + i)}</button>`).join("")}
-      </div>
-      <div class="feel-title" style="font-size:0.9rem">Pain level right now (0 = none)</div>
-      <div class="pain-scale" id="cel-pain">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num" data-p="${i}">${i}</button>`).join("")}</div>
-      <div class="pain-scale-labels"><span>No pain</span><span>Worst</span></div>
-      <input type="text" id="cel-note" placeholder="Optional note about today" style="margin-bottom:0.9rem">
-      <button class="btn big grad" id="cel-save">${this.icon("check")} Save & Done</button>
+      <div class="fin-foot"><button class="btn big grad" id="cel-save">Save and finish</button></div>
     `;
     const card = document.getElementById("celebrate-card");
-    card.querySelectorAll("#cel-feel .feel-btn").forEach(b => b.onclick = () => {
-      card.querySelectorAll("#cel-feel .feel-btn").forEach(x => x.classList.remove("on"));
-      b.classList.add("on");
+    card.scrollTop = 0;
+    card.querySelectorAll("#cel-feel .fin-feel").forEach(b => b.onclick = () => {
+      card.querySelectorAll("#cel-feel .fin-feel").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-pressed", x === b); });
       this._pendingLog.feel = Number(b.dataset.f);
     });
-    card.querySelectorAll("#cel-pain .pain-num").forEach(b => b.onclick = () => {
-      card.querySelectorAll("#cel-pain .pain-num").forEach(x => { x.classList.remove("on"); x.style.background = ""; });
+    card.querySelectorAll(".fin-pain").forEach(row => row.querySelectorAll(".pain-num").forEach(b => b.onclick = () => {
+      row.querySelectorAll(".pain-num").forEach(x => { x.classList.remove("on"); x.style.background = ""; });
       b.classList.add("on");
       const p = Number(b.dataset.p);
       b.style.background = p <= 3 ? "var(--accent)" : p <= 6 ? "var(--yellow)" : "var(--red)";
-      this._pendingLog.pain = p;
-    });
+      painVals[row.dataset.z] = p;
+    }));
     card.querySelector("#cel-save").onclick = () => {
-      this._pendingLog.note = card.querySelector("#cel-note").value.trim();
-      this.state.logs.push(this._pendingLog);
+      const log = this._pendingLog;
+      log.note = card.querySelector("#cel-note").value.trim();
+      const vals = Object.values(painVals);
+      log.pain = vals.length ? Math.max(...vals) : null;
+      // each side's answer also becomes a body note, so the Body area map stays current
+      Object.entries(painVals).forEach(([i, p]) => {
+        const z = painAsk[i];
+        if (z && z.key) this.state.bodyLogs.push({ date: new Date().toISOString(), region: z.key, label: z.label, pain: p, note: "After " + s.routineName });
+      });
+      this.state.logs.push(log);
       this.save();
       const streakNow = this.streak();
       const hitMilestone = [3, 7, 14, 30, 60, 100, 180, 365].includes(streakNow);
@@ -672,7 +704,7 @@
       this._sess = null;
       this.showPage("home");
       const base = "Session saved. See you next time!";
-      this.toast(hitMilestone ? "🔥 " + streakNow + "-day streak! " + base : base);
+      this.toast(hitMilestone ? streakNow + " days in a row! " + base : base);
     };
     this.chime();
     setTimeout(() => this.chime(), 400);
@@ -684,8 +716,8 @@
     const ctx = canvas.getContext("2d");
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-    const colors = ["#557a4d", "#3d7a72", "#a1762c", "#b3663a", "#4a6c9a", "#a84a45", "#84cc16"];
-    const parts = Array.from({ length: 140 }, () => ({
+    const colors = ["#F6C453", "#FFFFFF", "#9FD3F5", "#F4A98A", "#C9E4B8"];
+    const parts = Array.from({ length: (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) ? 0 : 60 }, () => ({
       x: Math.random() * canvas.width,
       y: -20 - Math.random() * canvas.height * 0.5,
       w: 6 + Math.random() * 7, h: 8 + Math.random() * 8,

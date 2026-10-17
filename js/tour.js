@@ -6,48 +6,39 @@
   // Steps whose target is missing (e.g. no routines yet) adapt or are skipped.
   function buildSteps() {
     const hasRoutines = App.state.routines.some(r => r.onHome && !r.archived);
-    const steps = [
-      {
-        target: ".streak-card", page: "home", title: "Your streak",
-        text: "Every day you complete a session adds to your streak. A little movement most days beats a lot once in a while."
-      }
-    ];
-    if (hasRoutines) {
-      steps.push({
-        target: ".swipe-wrap .routine-card", page: "home", title: "Your routines",
-        text: "These are the routines on your Home screen. Tap Start on any of them for a guided session with timers, rest breaks, and set logging."
-      });
-      steps.push({
-        target: ".swipe-wrap", page: "home", title: "Swipe for options", nudge: true,
-        text: "Swipe any routine card to the left to reorder it, edit it, or archive it out of the way."
-      });
-    } else {
-      steps.push({
-        target: "#home-scroll .empty-state", page: "home", title: "Start here",
-        text: "You don't have a routine yet. This button walks you through creating your first one in under a minute."
-      });
-    }
-    // the tour visits each tab so new users see the real thing, not just a button
+    const steps = [];
+    if (hasRoutines) steps.push({
+      target: "#home-scroll .upnext", page: "home", title: "Up next",
+      text: "This is the routine to do next. Tap Start for a guided session with timers and big, clear steps."
+    });
+    else steps.push({
+      target: "#home-scroll .home-empty", page: "home", title: "Start here",
+      text: "You do not have a routine yet. Pick a ready-made plan or build your own in under a minute."
+    });
     steps.push(
       {
-        target: "#routines-scroll .btn.grad", page: "routines", title: "The Routines tab",
-        text: "Every routine you own lives here, including archived ones. Tap New Routine to build your own or pick a ready-made plan by body area."
+        target: "#home-scroll .week-card", page: "home", title: "Your week",
+        text: "Each day you finish a session gets a check here. A little movement most days beats a lot once in a while."
+      },
+      {
+        target: "#routines-scroll .rl-new", page: "routines", title: "The Routines tab",
+        text: "Every routine you own lives here. Tap the dots on a routine to start it, change it, or put it away."
       },
       {
         target: "#library-scroll .search-wrap", page: "library", title: "The Exercises tab",
-        text: "The full exercise library. Search or filter by body area, and every exercise comes with step-by-step instructions and the exact muscles it works."
+        text: "Every exercise, with step-by-step instructions and easier or harder versions. Search for anything, like knee or stretch."
       },
       {
         target: "#lib-area-toggle", page: "library", title: "Find by body area",
-        text: "Tap Body area to pick the spot that bothers you, left or right. You can log how it feels and see exercises made for that exact area."
+        text: "Tap Body area to pick the spot that bothers you, left or right. You can log how it feels and see exercises for that exact area."
       },
       {
-        target: "#progress-scroll .chart-card, #progress-scroll .empty-state", page: "progress", title: "Your progress",
-        text: "Sessions, streaks, and pain trends collect here over time, so you can watch your work paying off."
+        target: "#progress-scroll .pg-stats", page: "progress", title: "Your progress",
+        text: "Sessions, your streak, and how your pain is changing all collect here, so you can watch your work pay off."
       },
       {
         target: "#btn-settings", page: "home", title: "Make it yours",
-        text: "Change your name, theme, text size, and dark mode here. You can also back up your data or replay this tour."
+        text: "Change your name, color, text size, and dark mode here. You can also back up your data or replay this tour."
       }
     );
     return steps;
@@ -95,7 +86,7 @@
     document.getElementById("tour-title").textContent = step.title;
     document.getElementById("tour-text").textContent = step.text;
     document.getElementById("tour-next").innerHTML = this._tourIdx === this._tourSteps.length - 1
-      ? "Done " + App.icon("check") : "Continue " + App.icon("arrowRight");
+      ? "Done " + App.icon("check") : "Next " + App.icon("arrowRight");
 
     // put the card below the target when there's room, otherwise above
     const card = document.getElementById("tour-card");
@@ -107,6 +98,7 @@
       top = Math.max(12, Math.min(top, window.innerHeight - ch - 12));
       card.style.top = top + "px";
       card.style.visibility = "";
+      card.classList.remove("tour-pop"); void card.offsetWidth; card.classList.add("tour-pop");
     });
 
     // little demo animation for the swipe step

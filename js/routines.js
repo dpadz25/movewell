@@ -182,43 +182,58 @@
     this.pushView("editor:" + rid, () => this.openRoutineEditor(rid));
     const autoType = this.routineTypeMeta(this.routineType({ items: r.items }));
     const wu = r.warmupItems || [];
-    this.openModal("Edit Routine", `
-      <label class="field-label">Routine name</label>
-      <input type="text" id="re-name" value="${this.esc(r.name)}">
-      <label class="field-label">Routine type</label>
-      <div class="chip-row" id="re-kind">
-        <button class="chip small-chip ${!r.kind ? "on" : ""}" data-k="">Auto: ${this.esc(autoType.name)}</button>
-        ${window.ROUTINE_TYPES.map(t => `<button class="chip small-chip ${r.kind === t.id ? "on" : ""}" data-k="${t.id}">${this.icon(t.icon)} ${this.esc(t.name)}</button>`).join("")}
+    this._reMore = this._reMoreRid === rid ? this._reMore : false;
+    this._reMoreRid = rid;
+    const tone = this.routineTone(r);
+    this.openModal(r.name, `
+      <div class="re-top tone-${tone}">
+        <div class="re-meta">${r.items.length} exercise${r.items.length === 1 ? "" : "s"} · about ${this.estMinutes(r)} min${wu.length ? " · " + wu.length + " warmup" : ""}</div>
+        ${r.desc ? `<p class="re-desc">${this.esc(r.desc)}</p>` : ""}
+        <button class="btn big grad re-start" id="re-start" ${r.items.length ? "" : "disabled"}>${this.icon("play")} Start this routine</button>
       </div>
-      <div class="field-hint">Used to group routines in your library. Auto picks based on the exercises inside.</div>
-      ${r.desc ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem">${this.esc(r.desc)}</p>` : ""}
+      <div class="re-list-head">
+        <h3>Exercises</h3>
+        ${r.items.length > 1 ? `<button class="link-quiet" id="re-pair">${this.icon("link")} ${this._pairMode ? "Done pairing" : "Pair"}</button>` : ""}
+      </div>
+      <p class="re-hint">${this._pairMode ? "Tap the link between two moves to pair them. Paired moves take turns during your session." : "Tap an exercise to change sets, reps or time. Hold the grip to move it."}</p>
+      <div id="re-items">${r.items.map((it, i) => this.routineItemHtml(r, it, i)).join("") || `<p class="home-list-empty">No exercises yet. Add some below.</p>`}</div>
+      <button class="btn ghost big" id="re-add">${this.icon("plus")} Add exercises</button>
       ${wu.length ? `
-      <div class="section-label">Warmup (${wu.length})</div>
-      <div id="re-warmup">${wu.map((it, i) => this.routineItemHtml(r, it, i, { warmup: true })).join("")}</div>
-      <button class="btn secondary small" id="re-warmup-more">${this.icon("plus")} Add warmup exercise</button>
-      ` : `<button class="btn secondary" id="re-warmup-add" style="margin-top:0.6rem">${this.icon("plus")} Add a warmup</button>`}
-      <div class="section-label label-row">Exercises (${r.items.length})${r.items.length > 1 ? `<button class="link-btn" id="re-pair">${this.icon("link")} ${this._pairMode ? "Done pairing" : "Pair exercises"}</button>` : ""}</div>
-      ${this._pairMode ? `<p style="font-size:0.78rem;color:var(--muted2);margin:-0.2rem 0 0.5rem">Tap the link between two moves to pair them. Paired moves take turns during your session.</p>` : ""}
-      <div id="re-items">${r.items.map((it, i) => this.routineItemHtml(r, it, i)).join("") || `<p style="color:var(--muted);font-size:0.9rem">No exercises yet. Add some below.</p>`}</div>
-      <button class="btn big" id="re-add" style="margin-top:0.6rem">${this.icon("plus")} Add Exercises</button>
-      <div class="btn-row" style="margin-top:0.8rem">
-        <button class="btn secondary" id="re-start">${this.icon("play")} Start This Routine</button>
-        <button class="btn secondary" id="re-archive">${this.icon("archive")} Archive</button>
-      </div>
-      <button class="btn danger big" id="re-delete" style="margin-top:0.5rem">${this.icon("trash")} Delete</button>
+        <div class="re-list-head"><h3>Warmup</h3></div>
+        <div id="re-warmup">${wu.map((it, i) => this.routineItemHtml(r, it, i, { warmup: true })).join("")}</div>
+        <button class="link-quiet re-wu-more" id="re-warmup-more">${this.icon("plus")} Add a warmup move</button>` : ""}
+      <button class="re-more-toggle" id="re-more" aria-expanded="${this._reMore}">${this.icon("gear")}<span>More options</span>${this.icon(this._reMore ? "chevU" : "chevD")}</button>
+      ${this._reMore ? `
+        <div class="re-more">
+          <label class="field-label" for="re-name">Name</label>
+          <input type="text" id="re-name" value="${this.esc(r.name)}">
+          <label class="field-label">Kind of routine</label>
+          <div class="chip-row" id="re-kind">
+            <button class="chip small-chip ${!r.kind ? "on" : ""}" data-k="">Auto: ${this.esc(autoType.name)}</button>
+            ${window.ROUTINE_TYPES.map(t => `<button class="chip small-chip ${r.kind === t.id ? "on" : ""}" data-k="${t.id}">${this.esc(t.name)}</button>`).join("")}
+          </div>
+          ${wu.length ? "" : `<button class="btn secondary" id="re-warmup-add">${this.icon("plus")} Add a warmup</button>`}
+          <div class="btn-row">
+            <button class="btn secondary" id="re-archive">${this.icon("archive")} Put away</button>
+            <button class="btn danger" id="re-delete">${this.icon("trash")} Delete</button>
+          </div>
+        </div>` : ""}
     `);
+    document.getElementById("modal-body").querySelector("#re-more").onclick = () => { this._reMore = !this._reMore; this.openRoutineEditor(rid); };
     const body = document.getElementById("modal-body");
-    body.querySelector("#re-name").onchange = (e) => { r.name = e.target.value.trim() || r.name; this.save(); this.refresh(); this.flashSaveIndicator(); };
+    const reName = body.querySelector("#re-name");
+    if (reName) reName.onchange = (e) => { r.name = e.target.value.trim() || r.name; this.save(); this.refresh(); this.flashSaveIndicator(); const t = document.querySelector(".modal-title"); if (t) t.textContent = r.name; };
     body.querySelectorAll("#re-kind .chip").forEach(ch => ch.onclick = () => {
       body.querySelectorAll("#re-kind .chip").forEach(x => x.classList.remove("on"));
       ch.classList.add("on");
       if (ch.dataset.k) r.kind = ch.dataset.k; else delete r.kind;
       this.save(); this.refresh(); this.flashSaveIndicator();
     });
-    body.querySelector("#re-archive").onclick = () => {
+    const reArch = body.querySelector("#re-archive");
+    if (reArch) reArch.onclick = () => {
       r.archived = true;
       this.save(); this.closeModal(); this.refresh();
-      this.toast("Archived. Find it at the bottom of Routines.");
+      this.toast("Put away. Find it at the bottom of Routines.");
     };
     body.querySelector("#re-add").onclick = () => this.openExercisePicker(r.id);
     const wuAdd = body.querySelector("#re-warmup-add");
@@ -228,7 +243,8 @@
     const pair = body.querySelector("#re-pair");
     if (pair) pair.onclick = () => { this._pairMode = !this._pairMode; this.openRoutineEditor(rid); };
     body.querySelector("#re-start").onclick = () => { this.closeModal(); this.startSession(r.id); };
-    body.querySelector("#re-delete").onclick = () => {
+    const reDel = body.querySelector("#re-delete");
+    if (reDel) reDel.onclick = () => {
       this.confirm("Delete this routine?", "“" + r.name + "” and its exercise list will be removed. Your past session history is kept.", () => {
         this.state.routines = this.state.routines.filter(x => x.id !== r.id);
         this.save(); this.closeModal(); this.refresh();
@@ -252,7 +268,7 @@
           <div class="routine-item-name">${i + 1}. ${this.esc(it.variant || ex.name)}${inGroup ? ` <span class="ss-tag">${this.icon("link")} superset</span>` : ""}</div>
           <div class="routine-item-dose">${it.variant ? `variation of ${this.esc(ex.name)} · ` : ""}${this.doseText(it)} ${this.icon("pencil", "edit-hint")}</div>
         </div>
-        <button class="mini-btn danger" data-act="remove" title="Remove">${this.icon("close")}</button>
+        <span class="ex-item-chev" data-act="dose">${this.icon("chevR")}</span>
       </div>
       ${(!wu && this._pairMode && next) ? `<button class="ss-connector ${linked ? "linked" : ""}" data-link="${i}">${this.icon("link")} ${linked ? "Paired · tap to unlink" : "Pair with next"}</button>` : ""}`;
   };
@@ -419,6 +435,7 @@
       <button class="btn secondary big" id="dv-detail" style="margin-bottom:0.6rem">${this.icon("book")} View Exercise Instructions</button>
       <button class="btn secondary big" id="dv-replace" style="margin-bottom:0.6rem">${this.icon("swap")} Replace This Exercise</button>
       <button class="btn big grad" id="dv-done">${this.icon("check")} Done</button>
+      <button class="btn danger big" id="dv-remove" style="margin-top:0.6rem">${this.icon("trash")} Remove from routine</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".stepper button").forEach(b => b.onclick = () => {
@@ -444,6 +461,15 @@
     body.querySelector("#dv-detail").onclick = () => this.openExerciseDetail(it.exId, { hideAdd: true });
     body.querySelector("#dv-replace").onclick = () => this.openExercisePicker(rid, list, i);
     body.querySelector("#dv-done").onclick = () => this.modalBack();
+    body.querySelector("#dv-remove").onclick = () => {
+      this.confirm("Remove this exercise?", "“" + (it.variant || ex.name) + "” will come out of this routine. You can add it back any time.", () => {
+        arr.splice(i, 1);
+        if (list !== "wu") this.normalizeGroups(r);
+        this.save();
+        this.toast("Removed from routine");
+        this.modalBack();
+      }, "Remove");
+    };
   };
 
   // ----- picker: add exercises to a routine or its warmup (list "wu"), or replace one in place -----
@@ -500,6 +526,10 @@
         const copies = arr.filter(x => x.exId === exId).length;
         this.toast(copies > 1 ? ex.name + " added again (" + copies + " total)" : ex.name + " added");
         render();
+        const again = document.querySelector(`#pick-list .ex-item[data-ex="${exId}"]`);
+        if (again) again.classList.add("just-added");
+        const done = document.getElementById("pick-done");
+        if (done) { const n = arr.length; done.innerHTML = this.icon("check") + " Done (" + n + " in routine)"; }
       });
     };
     this.openModal(replacing ? "Replace “" + (oldIt.variant || this.ex(oldIt.exId).name) + "”" : wu ? "Add warmup moves" : "Add to “" + r.name + "”", `
