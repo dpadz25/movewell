@@ -197,7 +197,8 @@
   App.openRegionSheet = function (regionId, zoneId, label, muscles) {
     const r = this.region(regionId);
     this.pushView("region:" + regionId + ":" + zoneId + ":" + (label || ""), () => this.openRegionSheet(regionId, zoneId, label, muscles));
-    const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId))
+    // leave out catch-all entries (general fitness, post-surgery) that read as unrelated causes
+    const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId) && (c.commonRank ?? 999) < 999)
       .sort((a, b) => (a.commonRank ?? 999) - (b.commonRank ?? 999));
     const exs = window.EXERCISES.filter(e => e.region === regionId && e.type !== "yoga");
     let painVal = null;

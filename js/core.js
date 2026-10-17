@@ -183,6 +183,8 @@
     closeModal() {
       this._modalStack = [];
       document.getElementById("modal").classList.remove("open");
+      // a pause menu closed any way (X, backdrop, Keep going) puts the session screen back in a clean state
+      if (this._pauseOpen) { this._pauseOpen = false; if (this._sess) this.renderSessionStep(); }
     },
 
     // ---------- modal navigation stack ----------
@@ -257,21 +259,61 @@
     applyAppearance() {
       const p = this.state.profile;
       document.documentElement.setAttribute("data-textsize", p.textSize === "normal" ? "" : p.textSize);
-      document.documentElement.setAttribute("data-theme", p.theme || "forest");
+      // only green and pink remain; older ocean, sunset and berry saves show as green
+      document.documentElement.setAttribute("data-theme", p.theme === "pink" ? "pink" : "forest");
       document.documentElement.setAttribute("data-dark", p.dark ? "1" : "");
     },
 
     // ---------- HOME ----------
+    // movement color for a routine's tile: therapy green, stretch coral, yoga blue, gym amber
+    routineTone(r) {
+      const t = this.routineType(r);
+      if (t === "stretching" || t === "mobility" || t === "warmup") return "orange";
+      if (t === "yoga") return "blue";
+      if (t === "gym" || t === "cardio") return "yellow";
+      return "accent";
+    },
+    // rough time estimate so people know what they are signing up for
+    estMinutes(r) {
+      const sec = r.items.reduce((sum, it) => {
+        const per = it.timeSec > 0 ? it.timeSec : it.hold > 0 ? it.hold * Math.max(1, it.reps || 1) : (it.reps || 10) * 4;
+        return sum + (per + 15) * (it.sets || 1) * (it.perSide ? 2 : 1);
+      }, 0);
+      return Math.max(1, Math.round(sec / 60));
+    },
+    lastDone(r) {
+      for (let i = this.state.logs.length - 1; i >= 0; i--) if (this.state.logs[i].routineId === r.id) return this.state.logs[i].date;
+      return null;
+    },
+    relDay(iso) {
+      const d = new Date(iso), today = new Date();
+      const days = Math.round((new Date(today.toDateString()) - new Date(d.toDateString())) / 86400000);
+      if (days <= 0) return "today";
+      if (days === 1) return "yesterday";
+      if (days < 7) return d.toLocaleDateString(undefined, { weekday: "long" });
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    },
+    // the one routine Home suggests: the one you have gone longest without doing
+    upNextRoutine(list) {
+      if (!list.length) return null;
+      return list.slice().sort((a, b) => {
+        const la = this.lastDone(a), lb = this.lastDone(b);
+        if (!la && !lb) return 0;
+        if (!la) return -1;
+        if (!lb) return 1;
+        return new Date(la) - new Date(lb);
+      })[0];
+    },
+
     renderHome() {
       const s = this.state;
-      const hour = new Date().getHours();
+      const now = new Date();
+      const hour = now.getHours();
       const greet = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
       const name = s.profile.name ? ", " + this.esc(s.profile.name) : "";
+      const dateLine = now.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
       const streak = this.streak();
       const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-      const weekLogs = s.logs.filter(l => new Date(l.date) >= new Date(weekStart.toDateString()));
-
-      // week dots (Sun..Sat)
       const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
       const doneDays = new Set(s.logs.map(l => this.todayKey(l.date)));
       let dots = "";
@@ -279,81 +321,101 @@
         const d = new Date(weekStart); d.setDate(weekStart.getDate() + i);
         const done = doneDays.has(this.todayKey(d));
         const isToday = this.todayKey(d) === this.todayKey();
-        dots += `<div class="week-dot ${done ? "done" : ""}"><div class="dot">${done ? this.icon("check") : ""}</div><div class="dot-label" style="${isToday ? "font-weight:800;color:var(--accent-strong)" : ""}">${dayNames[i]}</div></div>`;
+        dots += `<div class="week-dot ${done ? "done" : ""} ${isToday ? "today" : ""}"><div class="dot">${done ? this.icon("check") : ""}</div><div class="dot-label">${dayNames[i]}</div></div>`;
       }
 
       const homeRoutines = s.routines.filter(r => r.onHome && !r.archived);
-      let routinesHtml = "";
-      if (s.routines.length === 0) {
-        routinesHtml = `
-          <div class="empty-state card">
-            <div class="empty-icon">${this.icon("leaf")}</div>
-            <p>You don't have any routines yet.<br>Let's set one up. It only takes a minute.</p>
-            <button class="btn big grad" onclick="App.showPage('routines');App.openNewRoutineChooser()">Create My First Routine</button>
-          </div>`;
-      } else if (homeRoutines.length === 0) {
-        routinesHtml = `
-          <div class="empty-state card">
-            <div class="empty-icon">${this.icon("home")}</div>
-            <p>Nothing on your Home screen yet.<br>Pick which routines live here from your library.</p>
-            <button class="btn big grad" onclick="App.showPage('routines')">Open My Routine Library</button>
+      const next = this.upNextRoutine(homeRoutines);
+      let top = "", list = "";
+      if (s.routines.filter(r => !r.archived).length === 0) {
+        top = `
+          <div class="home-empty card">
+            <div class="home-sprout" aria-hidden="true">
+              <svg viewBox="0 0 120 110" width="120" height="110"><ellipse cx="60" cy="100" rx="38" ry="8" class="sprout-soil"></ellipse><rect class="sprout-stem" x="57" y="40" width="6" height="60" rx="3"></rect><path class="sprout-l1" d="M60 70c-4-16-18-24-34-22 2 16 16 26 34 22z"></path><path class="sprout-l2" d="M60 58c4-18 20-28 38-26-2 18-18 30-38 26z"></path></svg>
+            </div>
+            <h2>Let us start your first routine</h2>
+            <p>Pick one that is ready to go. You can change any part of it later.</p>
+            <button class="btn big" id="home-pick-tpl">Show me ready-made routines</button>
+            <button class="btn big secondary" id="home-build">Build my own</button>
+          </div>
+          <button class="home-hint-row" id="home-where">${this.icon("person")}<span><strong>Not sure where to start?</strong><br>Tell us where it hurts</span>${this.icon("chevR")}</button>`;
+      } else if (!next) {
+        top = `
+          <div class="home-empty card">
+            <h2>Nothing on Home yet</h2>
+            <p>Pick which routines live here from your Routines list.</p>
+            <button class="btn big" id="home-open-lib">Open my routines</button>
           </div>`;
       } else {
-        // group routines by category (rehab, stretching, gym, yoga, etc.) so Home stays scannable
-        this._homeCatOpen = this._homeCatOpen || {};
-        const groups = {};
-        homeRoutines.forEach(r => {
-          const kind = this.routineType(r);
-          (groups[kind] = groups[kind] || []).push(r);
-        });
-        routinesHtml = `<div class="swipe-hint">Swipe a card left to reorder, edit, or archive</div>` +
-          window.ROUTINE_TYPES.filter(t => groups[t.id]).map(t => {
-            const open = this._homeCatOpen[t.id] !== false;
-            return `
-              <div class="home-cat">
-                <button class="section-label home-cat-toggle" data-cat="${t.id}">
-                  <span style="display:inline-flex;align-items:center;gap:0.4rem">${this.icon(t.icon)} ${t.name} <span class="home-cat-count">${groups[t.id].length}</span></span>
-                  <span class="chev">${this.icon(open ? "chevU" : "chevD")}</span>
-                </button>
-                <div class="home-cat-body ${open ? "open" : ""}" data-catbody="${t.id}">
-                  ${groups[t.id].map(r => this.routineCardHtml(r, "home")).join("")}
-                </div>
-              </div>`;
-          }).join("");
+        const last = this.lastDone(next);
+        top = `
+          <section class="upnext" aria-label="Up next">
+            <div class="upnext-top"><span class="upnext-pill">Up next</span><span class="upnext-last">${last ? "Last done " + this.relDay(last) : "Not done yet"}</span></div>
+            <div class="upnext-name">${this.esc(next.name)}</div>
+            <div class="upnext-meta">${next.items.length} exercise${next.items.length === 1 ? "" : "s"} · about ${this.estMinutes(next)} min</div>
+            <button class="upnext-start" data-start="${next.id}">${this.icon("play")} Start</button>
+          </section>`;
+        const others = homeRoutines.filter(r => r !== next);
+        list = `
+          <div class="home-list-head"><h2>My routines</h2><button class="link-quiet" id="home-see-all">See all</button></div>
+          ${others.map(r => `
+            <div class="home-row" data-rid="${r.id}">
+              <div class="tile ${this.routineTone(r)} home-row-tile">${this.icon(this.routineTypeMeta(this.routineType(r)).icon)}</div>
+              <button class="home-row-info" data-act="open"><span class="home-row-name">${this.esc(r.name)}</span><span class="home-row-meta">${r.items.length} exercise${r.items.length === 1 ? "" : "s"} · ${this.estMinutes(r)} min</span></button>
+              <button class="home-row-play" data-act="start" aria-label="Start ${this.esc(r.name)}">${this.icon("play")}</button>
+            </div>`).join("") || `<p class="home-list-empty">Add more routines from the Routines tab.</p>`}
+          <button class="btn ghost big" id="home-new" style="margin-top:0.4rem">${this.icon("plus")} New routine</button>`;
       }
 
       document.getElementById("home-scroll").innerHTML = `
+        <div class="home-date">${this.esc(dateLine)}</div>
         <div class="greeting">${greet}${name}</div>
-        <div class="greeting-sub">${streak > 0 ? "You're on a roll. Keep it steady." : "A little movement today is a win."}</div>
-        <div class="streak-card">
-          <div class="streak-flame">${this.icon(streak > 0 ? "flame" : "sun")}</div>
-          <div>
-            <div class="streak-num">${streak} day${streak === 1 ? "" : "s"}</div>
-            <div class="streak-label">current streak</div>
-          </div>
-          <div style="flex:1"></div>
-          <div style="text-align:right">
-            <div class="streak-num">${weekLogs.length}</div>
-            <div class="streak-label">sessions this week</div>
-          </div>
-        </div>
-        <div class="card" style="padding:0.8rem 1rem;">
-          <div class="section-label" style="margin:0 0 0.2rem">This Week</div>
+        ${top}
+        <section class="week-card" aria-label="This week">
+          <div class="week-card-head"><span>This week</span>${streak > 0 ? `<span class="streak-chip">${this.icon("flame")} ${streak} day${streak === 1 ? "" : "s"} in a row</span>` : ""}</div>
           <div class="week-dots">${dots}</div>
-        </div>
-        <div class="section-label">Your Routines</div>
-        ${routinesHtml}
-        ${s.routines.length > 0 ? `<button class="btn ghost big" style="margin-top:0.3rem" onclick="App.showPage('routines');App.openNewRoutineChooser()">${this.icon("plus")} New Routine</button>` : ""}
+        </section>
+        ${list}
       `;
-      this.bindRoutineCards(document.getElementById("home-scroll"), "home");
-      document.querySelectorAll(".home-cat-toggle").forEach(btn => btn.onclick = () => {
-        const kind = btn.dataset.cat;
-        const catBody = document.querySelector('.home-cat-body[data-catbody="' + kind + '"]');
-        const chev = btn.querySelector(".chev");
-        const nowOpen = !catBody.classList.contains("open");
-        catBody.classList.toggle("open", nowOpen);
-        chev.innerHTML = this.icon(nowOpen ? "chevU" : "chevD");
-        this._homeCatOpen[kind] = nowOpen;
+      const root = document.getElementById("home-scroll");
+      root.querySelectorAll("[data-start]").forEach(b => b.onclick = () => this.startSession(b.dataset.start));
+      root.querySelectorAll(".home-row").forEach(row => {
+        const rid = row.dataset.rid;
+        row.querySelectorAll("[data-act]").forEach(el => el.onclick = () => {
+          const act = el.dataset.act;
+          if (act === "open") this.openRoutineEditor(rid);
+          if (act === "start") this.startSession(rid);
+          if (act === "menu") this.openRoutineMenu(rid);
+        });
+      });
+      const on = (id, fn) => { const el = root.querySelector("#" + id); if (el) el.onclick = fn; };
+      on("home-see-all", () => this.showPage("routines"));
+      on("home-open-lib", () => this.showPage("routines"));
+      on("home-new", () => { this.showPage("routines"); this.openNewRoutineChooser(); });
+      on("home-pick-tpl", () => { this.showPage("routines"); this.openNewRoutineChooser(); });
+      on("home-build", () => { this.showPage("routines"); this.createBlankRoutine(); });
+      on("home-where", () => this.showPage("bodymap"));
+    },
+
+    // replaces the hidden swipe tray with a visible options sheet
+    openRoutineMenu(rid) {
+      const r = this.state.routines.find(x => x.id === rid);
+      if (!r) return;
+      this.pushView("rmenu:" + rid, () => this.openRoutineMenu(rid));
+      this.openModal(r.name, `
+        <div class="menu-list">
+          <button class="menu-item" data-m="edit">${this.icon("pencil")}<span>Change exercises</span></button>
+          <button class="menu-item" data-m="up">${this.icon("arrowUp")}<span>Move up the list</span></button>
+          <button class="menu-item" data-m="down">${this.icon("arrowDown")}<span>Move down the list</span></button>
+          <button class="menu-item" data-m="home">${this.icon("home")}<span>Take off Home screen</span></button>
+          <button class="menu-item danger" data-m="archive">${this.icon("archive")}<span>Put away (archive)</span></button>
+        </div>`);
+      document.getElementById("modal-body").querySelectorAll("[data-m]").forEach(b => b.onclick = () => {
+        const m = b.dataset.m;
+        if (m === "edit") { this.closeModal(); this.openRoutineEditor(rid); return; }
+        if (m === "up" || m === "down") { this.moveRoutine(r, m === "up" ? -1 : 1); this.toast(m === "up" ? "Moved up" : "Moved down"); return; }
+        if (m === "home") { r.onHome = false; this.save(); this.closeModal(); this.refresh(); this.toast("Removed from your Home screen"); return; }
+        if (m === "archive") { r.archived = true; this.save(); this.closeModal(); this.refresh(); this.toast("Put away. Find it at the bottom of Routines."); }
       });
     },
 
@@ -539,7 +601,7 @@
     openSettings() {
       this.pushView("settings", () => this.openSettings());
       const p = this.state.profile;
-      const themes = [["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"], ["pink", "Pink"]];
+      const themes = [["forest", "Green"], ["pink", "Pink"]];
       this.openModal("Settings", `
         <label class="field-label">Your name</label>
         <input type="text" id="set-name" value="${this.esc(p.name)}" placeholder="Your name">
@@ -780,7 +842,7 @@
           <h1>Make it yours</h1>
           <p>Pick a color theme and a comfortable reading size. Both can change any time in Settings.</p>
           <div class="theme-options" id="ob-theme">
-            ${[["forest", "Forest"], ["ocean", "Ocean"], ["sunset", "Sunset"], ["berry", "Berry"], ["pink", "Pink"]].map(([id, label]) => `
+            ${[["forest", "Green"], ["pink", "Pink"]].map(([id, label]) => `
               <button class="theme-option ${d.theme === id ? "on" : ""}" data-theme="${id}">
                 <span class="sw sw-${id}"></span><span class="sw-label">${label}</span>
               </button>`).join("")}

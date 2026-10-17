@@ -14,6 +14,7 @@ window.ICONS = {
   close: '<path d="M6 6l12 12M18 6 6 18"/>',
   check: '<path d="m4.5 12.5 5 5L19.5 7"/>',
   chevR: '<path d="m9 5 7 7-7 7"/>',
+  dots: '<circle cx="6" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.7" fill="currentColor" stroke="none"/>',
   chevD: '<path d="m5 9 7 7 7-7"/>',
   chevU: '<path d="m5 15 7-7 7 7"/>',
   grip: '<circle cx="9" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.1" fill="currentColor" stroke="none"/>',

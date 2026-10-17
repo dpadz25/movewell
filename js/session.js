@@ -89,10 +89,53 @@
       () => this.clearSavedSession());
   };
 
-  App.exitSession = function () {
-    this.confirm("Leave this session?", "Progress in this session will not be saved.", () => {
-      this.teardownSession();
-    }, "Leave");
+  // the X button opens a calm pause menu instead of a scary "lose everything" prompt
+  App.exitSession = function (view) {
+    const s = this._sess;
+    if (!s) return;
+    const doneCount = s.items.filter(x => x.logged.length > 0).length;
+    const it = s.items[s.idx];
+    const ex = this.ex(it.exId) || {};
+    const easier = (ex.variations || [])[0];
+    this.stopHoldTimer();
+    this._pauseOpen = true;
+    if (view === "hurt") {
+      this.openModal("Sorry it hurts", `
+        <p class="sp-note" style="margin:0 0 0.9rem">Pick what feels right. You can talk to your therapist about it too.</p>
+        <div class="menu-list">
+          ${easier ? `<button class="menu-item" data-x="easier">${this.icon("swap")}<span>Try the easier version<br><small>${this.esc(easier.name)}</small></span></button>` : ""}
+          <button class="menu-item" data-x="skip">${this.icon("chevR")}<span>Skip this exercise</span></button>
+          <button class="menu-item" data-x="stop">${this.icon("check")}<span>Stop and save what I did</span></button>
+        </div>
+        <div class="exd-caution" style="margin-top:0.9rem">${this.icon("alert")}<span>Sharp pain, or pain that does not ease with rest? Stop and call your therapist or doctor.</span></div>`);
+    } else {
+      this.openModal("Paused", `
+        <p class="sp-note" style="margin:0 0 0.9rem">You have done ${doneCount} of ${s.items.length} exercises. Take your time.</p>
+        <button class="btn big" data-x="resume">${this.icon("play")} Keep going</button>
+        <div class="menu-list" style="margin-top:0.7rem">
+          <button class="menu-item" data-x="hurt">${this.icon("heart")}<span>This hurts</span></button>
+          <button class="menu-item" data-x="end">${this.icon("check")}<span>End for today${doneCount ? "" : "<br><small>Nothing done yet, so nothing is saved</small>"}</span></button>
+        </div>`);
+    }
+    const body = document.getElementById("modal-body");
+    body.querySelectorAll("[data-x]").forEach(b => b.onclick = () => {
+      const x = b.dataset.x;
+      if (x === "resume") { this.closeModal(); this.renderSessionStep(); return; }
+      if (x === "hurt") { this._modalStack = []; this.exitSession("hurt"); return; }
+      if (x === "easier") {
+        it.variant = easier.name;
+        this.closeModal(); this.renderSessionStep();
+        this.toast("Switched to " + easier.name);
+        return;
+      }
+      if (x === "skip") { this._pauseOpen = false; this.closeModal(); it.skipped = it.logged.length === 0; it.hurt = true; this.advance(); return; }
+      if (x === "stop" || x === "end") {
+        this._pauseOpen = false;
+        this.closeModal();
+        if (s.items.some(y => y.logged.length > 0)) this.finishSession();
+        else this.teardownSession();
+      }
+    });
   };
   App.teardownSession = function () {
     clearInterval(this._sessClockT);
@@ -165,111 +208,110 @@
       : "Exercise " + (s.idx + 1 - wuCount) + " of " + (total - wuCount);
     document.getElementById("session-progressbar-fill").style.width = ((s.idx) / total * 100) + "%";
 
-    let loggerHtml = "";
-    if (yoga) {
-      // no set logging, no timer widget, no rest breaks — just the pose and the nav buttons
-    } else if (done >= targetSets) {
-      // finished exercises (revisited with Back) can't log extra sets
-      loggerHtml = `
-        <div class="set-log-card">
-          <div class="set-log-title"><span>${this.icon("check")} All ${displaySets} ${displaySets === 1 ? "set" : "sets"} done</span></div>
-          <div id="sets-done">${this.setsDoneHtml(it)}</div>
-        </div>`;
-    } else if (isTimed) {
-      loggerHtml = `
-        <div class="set-log-card">
-          <div class="set-log-title"><span>Timer: ${doneSets} of ${displaySets} done</span></div>
-          <div class="hold-timer" id="hold-timer">
-            <div class="hold-timer-display" id="hold-display">${this.fmtClock(timerTarget)}</div>
-            <div class="hold-timer-sub">${it.timeSec > 0 ? "keep going until the chime" : "hold the position until the chime"}${it.perSide ? " · alternate sides each round" : ""}</div>
-            <div class="btn-row">
-              <button class="btn big grad" id="hold-start">${this.icon("play")} Start Timer</button>
-            </div>
-            <button class="btn secondary small" id="hold-manual" style="margin-top:0.7rem">${this.icon("check")} Mark one done without timer</button>
-          </div>
-          <div id="sets-done">${this.setsDoneHtml(it)}</div>
-        </div>`;
-    } else {
-      loggerHtml = `
-        <div class="set-log-card">
-          <div class="set-log-title"><span>Log your sets: ${doneSets} of ${displaySets} done</span></div>
-          ${prev ? `<button class="prev-hint" id="use-last-set">Last time: ${prev.sets.map(x => (x.reps || "") + (x.weight ? "×" + x.weight + "lb" : "")).filter(Boolean).join(", ") || prev.sets.length + " sets"} · ${this.fmtDate(prev.date)}</button>` : ""}
-          <div class="stepper-row">
-            <div class="stepper-label">Reps</div>
-            <div class="stepper"><button id="rep-minus">${this.icon("minus")}</button><span class="stepper-val" id="rep-val">${it.reps || 10}</span><button id="rep-plus">${this.icon("plus")}</button></div>
-          </div>
-          ${it.warmup ? "" : `<div class="stepper-row">
-            <div class="stepper-label">Weight (lbs)<br><span style="font-size:0.72rem;color:var(--muted2);font-weight:400">tap the number to type it</span></div>
-            <div class="stepper"><button id="wt-minus">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus">${this.icon("plus")}</button></div>
-          </div>`}
-          <button class="btn big grad" id="log-set">${this.icon("check")} Log Set ${it.perSide ? doneSets + 1 : done + 1}${it.perSide ? (done % 2 === 0 ? " (first side)" : " (other side)") : ""}</button>
-          <div id="sets-done">${this.setsDoneHtml(it)}</div>
-        </div>`;
-    }
+    // ----- calm panel layout: one big glanceable number, one main action -----
+    const tone = yoga || ex.type === "mobility" ? "blue" : ex.type === "stretch" ? "coral" : (ex.type === "lift" || ex.type === "cardio") ? "amber" : "accent";
+    const roundsTotal = displaySets;
+    const roundNow = Math.min(roundsTotal, doneSets + 1);
+    const allDone = !yoga && done >= targetSets;
+    const sideLabel = it.perSide ? (done % 2 === 0 ? "first side" : "other side") : "";
+    const roundDots = Array.from({ length: Math.min(roundsTotal, 8) }, (_, i) =>
+      `<span class="sp-dot ${i < doneSets ? "done" : i === doneSets && !allDone ? "now" : ""}">${i + 1}</span>`).join("");
+    const chips = `
+      ${it.warmup ? `<span class="sp-chip">Warmup</span>` : ""}
+      <span class="sp-chip">${this.esc(t.name)}${it.perSide ? " · each side" : ""}</span>
+      ${gMembers ? `<span class="sp-chip">${this.icon("link")} Pair ${gPos + 1} of ${gMembers.length}</span>` : ""}`;
 
-    let yogaTopHtml;
+    let centerHtml = "", underHtml = "";
     if (yoga) {
-      const regionIcon = this.region(ex.region).icon;
       const winSize = Math.min(5, total);
-      let winStart = s.idx - 2;
-      if (winStart < 0) winStart = 0;
+      let winStart = Math.max(0, s.idx - 2);
       let winEnd = winStart + winSize;
       if (winEnd > total) { winEnd = total; winStart = Math.max(0, winEnd - winSize); }
-      let trailNodes = "";
+      let trail = "";
       for (let j = winStart; j < winEnd; j++) {
         const x = s.items[j];
-        const xEx = this.ex(x.exId);
-        const label = this.esc(shortPoseName(x.variant || (xEx || {}).name || ""));
-        const state = j === s.idx ? "now" : (x.logged.length > 0 ? "done" : (x.skipped ? "skipped" : "future"));
-        trailNodes += `
-          <div class="yoga-trail-node ${state}">
-            <div class="yoga-trail-dot">${state === "done" ? this.icon("check") : ""}</div>
-            <div class="yoga-trail-label">${label}</div>
-          </div>`;
+        const st = j === s.idx ? "now" : (x.logged.length > 0 ? "done" : "");
+        trail += `<span class="sp-dot ${st}" title="${this.esc(shortPoseName(x.variant || (this.ex(x.exId) || {}).name || ""))}">${j + 1}</span>`;
       }
-      yogaTopHtml = `
-        <div class="yoga-banner">
-          <div class="yoga-banner-icon">${this.icon(regionIcon, "xl")}</div>
-          <div class="yoga-pose-name">${this.esc(displayName)}</div>
-          <div class="yoga-banner-sub">${this.doseText(it)}</div>
-        </div>
-        <div class="yoga-trail"><div class="yoga-trail-line"></div>${trailNodes}</div>
-        ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:0 0 0.7rem;text-align:center">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}`;
+      centerHtml = `
+        <div class="sp-breath" aria-hidden="true"><span></span></div>
+        <div class="sp-big-label">${this.doseText(it)}</div>`;
+      underHtml = `<div class="sp-dots" aria-label="Pose ${s.idx + 1} of ${total}">${trail}</div>`;
+    } else if (allDone) {
+      centerHtml = `<div class="sp-done-mark">${this.icon("check")}</div><div class="sp-big-label">All ${displaySets} ${displaySets === 1 ? "set" : "sets"} done</div>`;
+    } else if (isTimed) {
+      centerHtml = `
+        <div class="hold-timer" id="hold-timer">
+          <div class="sp-big hold-timer-display" id="hold-display" role="timer">${this.fmtClock(timerTarget)}</div>
+          <div class="sp-big-label">${it.timeSec > 0 ? "keep going until the chime" : "hold until the chime"}${sideLabel ? ", " + sideLabel : ""}</div>
+        </div>`;
+      underHtml = `<div class="sp-dots-label">Round ${roundNow} of ${roundsTotal}</div><div class="sp-dots">${roundDots}</div>`;
     } else {
-      yogaTopHtml = `
-        ${it.warmup ? `<span class="tag teal session-ex-type">Warmup</span>` : ""}
-        <span class="tag ${t.color} session-ex-type">${t.name}</span>
-        ${gMembers ? `<span class="tag purple session-ex-type">${this.icon("link")} Superset ${gPos + 1} of ${gMembers.length}</span>` : ""}
-        <div class="session-ex-name">${this.esc(displayName)}</div>
-        ${it.variant ? `<div style="font-size:0.85rem;color:var(--muted);margin:-0.1rem 0 0.3rem">Variation of ${this.esc(ex.name)}${variantNote ? ". " + this.esc(variantNote) : ""}</div>` : ""}
-        <div class="session-ex-dose">Goal: ${this.doseText(it)}</div>
-        ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between partners, rest after each round.</span></div>` : ""}
-        ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Superset with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}`;
+      centerHtml = `
+        <div class="sp-counter">
+          <button class="sp-round-btn" id="rep-minus" aria-label="One less rep">${this.icon("minus")}</button>
+          <div><div class="sp-big stepper-val" id="rep-val" aria-live="polite">${it.reps || 10}</div><div class="sp-big-label">reps${sideLabel ? ", " + sideLabel : ""}</div></div>
+          <button class="sp-round-btn solid" id="rep-plus" aria-label="One more rep">${this.icon("plus")}</button>
+        </div>`;
+      underHtml = `<div class="sp-dots-label">Set ${roundNow} of ${roundsTotal}</div><div class="sp-dots">${roundDots}</div>`;
     }
 
+    // only show the weight stepper when the exercise actually uses weights
+    const weightGear = ["dumbbell", "barbell", "kettlebell", "cable", "machine", "smith-machine"];
+    const usesWeight = ex.type === "lift" || (ex.equipment || []).some(e => weightGear.includes(e)) || !!(this._lastWeight && this._lastWeight[it.exId]);
+    // the one main action under the panel
+    let actionHtml = "";
+    if (yoga || allDone) {
+      actionHtml = "";
+    } else if (isTimed) {
+      actionHtml = `
+        <button class="btn big sp-main" id="hold-start">${this.icon("play")} Start timer</button>
+        <button class="sp-quiet" id="hold-manual">I did it without the timer</button>`;
+    } else {
+      actionHtml = `
+        ${(it.warmup || !usesWeight) ? "" : `<div class="sp-weight">
+          <span class="sp-weight-label">Weight (lbs)</span>
+          <div class="stepper"><button id="wt-minus" aria-label="Less weight">${this.icon("minus")}</button><input type="number" inputmode="decimal" min="0" class="stepper-input" id="wt-val" aria-label="Weight in pounds" value="${this._lastWeight && this._lastWeight[it.exId] || 0}"><button id="wt-plus" aria-label="More weight">${this.icon("plus")}</button></div>
+        </div>`}
+        ${prev ? `<button class="prev-hint" id="use-last-set">Same as last time: ${prev.sets.map(x => (x.reps || "") + (x.weight ? " × " + x.weight + " lb" : "")).filter(Boolean).join(", ") || prev.sets.length + " sets"}</button>` : ""}
+        <button class="btn big sp-main" id="log-set">${this.icon("check")} Done with set ${it.perSide ? doneSets + 1 : done + 1}${sideLabel ? " (" + sideLabel + ")" : ""}</button>`;
+    }
+
+    const cue = (ex.tips && ex.tips[0]) || ex.caution || "";
     document.getElementById("session-body").innerHTML = `
-      ${yogaTopHtml}
-      ${(ex.variations && ex.variations.length) ? `
-      <div class="filter-wrap" style="margin-bottom:0.7rem"><div class="filter-bar" style="padding-bottom:0.2rem" id="sess-variants">
-        <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
-        ${ex.variations.map(v => `<button class="chip small-chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
-      </div></div>` : ""}
-      <button class="session-howto-toggle" id="howto-toggle"><span style="display:inline-flex;align-items:center;gap:0.45rem">${this.icon("book")} Show me how to do it</span><span id="howto-chev" style="display:inline-flex">${it._howtoOpen === false ? this.icon("chevD") : this.icon("chevU")}</span></button>
-      <div class="session-howto${it._howtoOpen === false ? "" : " open"}" id="howto">
-        <div class="sess-muscles">${this.icon("person")}<span><strong>Muscles targeted:</strong> ${this.muscleDetail(ex.muscles)}</span></div>
-        <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video demonstration</a>
+      <section class="sp-panel tone-${tone}" aria-label="${this.esc(displayName)}">
+        <div class="sp-chips">${chips}</div>
+        <h1 class="sp-name session-ex-name">${this.esc(displayName)}</h1>
+        <div class="sp-goal">Goal: ${this.doseText(it)}</div>
+        <div class="sp-center">${centerHtml}</div>
+        ${underHtml}
+      </section>
+      <div class="sp-actions">${actionHtml}</div>
+      ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between them.</span></div>` : ""}
+      ${cue ? `<div class="sp-cue">${this.icon("bulb")}<span>${this.esc(cue)}</span></div>` : ""}
+      <div id="sets-done" class="sp-sets-done">${this.setsDoneHtml(it)}</div>
+      <button class="session-howto-toggle" id="howto-toggle" aria-expanded="${it._howtoOpen ? "true" : "false"}"><span style="display:inline-flex;align-items:center;gap:0.5rem">${this.icon("book")} How to do it</span><span id="howto-chev" style="display:inline-flex">${it._howtoOpen ? this.icon("chevU") : this.icon("chevD")}</span></button>
+      <div class="session-howto${it._howtoOpen ? " open" : ""}" id="howto">
+        ${(ex.variations && ex.variations.length) ? `
+        <div class="sp-sub">Easier or harder version</div>
+        <div class="chip-row" id="sess-variants" style="margin-bottom:0.8rem">
+          <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
+          ${ex.variations.map(v => `<button class="chip small-chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
+        </div>` : ""}
+        ${it.variant && variantNote ? `<p class="sp-note">${this.esc(variantNote)}</p>` : ""}
         <ol class="exd-steps">${ex.howTo.map(x => `<li>${this.esc(x)}</li>`).join("")}</ol>
-        ${ex.tips && ex.tips.length ? `<div class="exd-tip" style="margin-top:0.6rem">${this.icon("bulb")}<span>${this.esc(ex.tips[0])}</span></div>` : ""}
         ${ex.caution ? `<div class="exd-caution" style="margin-top:0.5rem">${this.icon("alert")}<span>${this.esc(ex.caution)}</span></div>` : ""}
-        ${ex.variations && ex.variations.length ? `<div style="margin-top:0.6rem">${ex.variations.map(v => `<div class="exd-variation"><strong>${this.esc(v.name)}</strong><span>${this.esc(v.note)}</span></div>`).join("")}</div>` : ""}
+        <div class="sess-muscles" style="margin-top:0.6rem">${this.icon("person")}<span><strong>Muscles:</strong> ${this.muscleDetail(ex.muscles)}</span></div>
+        <a class="video-link" href="${yt}" target="_blank" rel="noopener" style="margin-top:0.6rem">${this.icon("video")} Watch a video</a>
+        ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Pair with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}
       </div>
-      ${loggerHtml}
     `;
 
+    const isLast = s.idx === total - 1;
     document.getElementById("session-nav").innerHTML = `
-      <button class="btn secondary" id="sess-back" ${s.idx === 0 ? "disabled" : ""}>${this.icon("arrowLeft")} Back</button>
-      <button class="btn secondary" id="sess-skip">Skip</button>
-      <button class="btn grad" id="sess-next">${s.idx === total - 1 ? `Finish ${this.icon("party")}` : `Next ${this.icon("arrowRight")}`}</button>
+      <button class="sp-nav-btn" id="sess-back" ${s.idx === 0 ? "disabled" : ""}><span class="sp-nav-circle">${this.icon("arrowLeft")}</span><span>Back</span></button>
+      <button class="sp-nav-btn primary ${allDone || yoga ? "ready" : ""}" id="sess-next"><span class="sp-nav-circle">${isLast ? this.icon("check") : this.icon("arrowRight")}</span><span>${isLast ? "Finish" : yoga ? "Next pose" : "Next"}</span></button>
+      <button class="sp-nav-btn" id="sess-skip"><span class="sp-nav-circle">${this.icon("chevR")}</span><span>Skip</span></button>
     `;
 
     // bindings
@@ -313,6 +355,7 @@
       // remember the user's choice on this exercise step so re-rendering (e.g. after
       // logging a set) doesn't silently reopen or reclose it out from under them
       it._howtoOpen = h.classList.contains("open");
+      body.querySelector("#howto-toggle").setAttribute("aria-expanded", it._howtoOpen ? "true" : "false");
       body.querySelector("#howto-chev").innerHTML = it._howtoOpen ? this.icon("chevU") : this.icon("chevD");
     };
 
@@ -557,6 +600,12 @@
   // ---------- finish + celebration ----------
   App.finishSession = function () {
     const s = this._sess;
+    // a session where nothing was logged should not count toward the streak
+    if (!s.items.some(i => i.logged.length > 0)) {
+      this.teardownSession();
+      this.toast("No exercises were logged, so nothing was saved.");
+      return;
+    }
     clearInterval(this._sessClockT);
     this.stopHoldTimer();
     const durationSec = Math.floor((Date.now() - s.start) / 1000);
@@ -568,7 +617,7 @@
       id: this.uid(), date: new Date().toISOString(),
       routineId: s.routineId, routineName: s.routineName,
       durationSec, exercisesDone: doneItems.length, setsDone: totalSets,
-      items: s.items.map(i => ({ exId: i.exId, name: i.variant || (this.ex(i.exId) || {}).name || i.exId, sets: i.logged, skipped: i.skipped, warmup: !!i.warmup })),
+      items: s.items.map(i => ({ exId: i.exId, name: i.variant || (this.ex(i.exId) || {}).name || i.exId, sets: i.logged, skipped: i.skipped, warmup: !!i.warmup, hurt: !!i.hurt })),
       feel: null, pain: null, note: ""
     };
 
