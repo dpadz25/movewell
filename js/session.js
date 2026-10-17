@@ -215,7 +215,7 @@
     document.getElementById("session-progressbar-fill").style.width = ((s.idx) / total * 100) + "%";
 
     // ----- calm panel layout: one big glanceable number, one main action -----
-    const tone = yoga || ex.type === "mobility" ? "blue" : ex.type === "stretch" ? "coral" : (ex.type === "lift" || ex.type === "cardio") ? "amber" : "accent";
+    const tone = yoga || ex.type === "mobility" || ex.type === "qigong" ? "blue" : ex.type === "stretch" ? "coral" : (ex.type === "lift" || ex.type === "cardio") ? "amber" : "accent";
     const roundsTotal = displaySets;
     const roundNow = Math.min(roundsTotal, doneSets + 1);
     const allDone = !yoga && done >= targetSets;

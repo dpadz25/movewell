@@ -16,7 +16,7 @@
       }
       if (f.level && ex.level !== f.level) return false;
       if (q) {
-        const hay = (ex.name + " " + ex.muscles + " " + this.region(ex.region).name + " " +
+        const hay = (ex.name + " " + ex.muscles + " " + this.region(ex.region).name + " " + this.typeMeta(ex.type).name + " " +
           ex.helps.map(h => this.condition(h).name).join(" ") + " " +
           ex.equipment.map(q => this.equip(q).name).join(" ") + " " +
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase();

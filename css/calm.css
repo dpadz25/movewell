@@ -475,7 +475,6 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 .lib-switch { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; font-weight: 700; white-space: nowrap; cursor: pointer; min-height: 2.75rem; }
 .opt-grid { display: grid; gap: 0.5rem; }
 .opt-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.opt-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .opt-btn {
   min-height: 2.9rem; padding: 0.35rem 0.4rem; border-radius: 999px;
   border: 2px solid var(--border2); background: var(--card); color: var(--text);
@@ -501,8 +500,12 @@ html[data-dark="1"] .seg { background: rgba(255, 255, 255, 0.08); }
 .lib-map .bodymap-svg { width: min(290px, 74vw); }
 .lib-map .bm-body { fill: var(--border); stroke: var(--border2); }
 /* an odd last option fills the row so the grid stays even */
-.opt-grid.two > :last-child:nth-child(odd), .opt-grid.three > :last-child:nth-child(3n+1) { grid-column: 1 / -1; }
-.opt-grid.three > :nth-last-child(2):nth-child(3n+1) { grid-column: span 1; }
+.opt-grid.two > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+/* three across, on a six-column grid so a short last row can still be centered and even */
+.opt-grid.three { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.opt-grid.three > * { grid-column: span 2; }
+.opt-grid.three > :last-child:nth-child(3n+1) { grid-column: 1 / -1; }
+.opt-grid.three > :last-child:nth-child(3n+2), .opt-grid.three > :nth-last-child(2):nth-child(3n+1) { grid-column: span 3; }
 .bodymap-svg .bm-zone { opacity: 0.2; }
 .bodymap-svg .bm-zone.sel { fill: var(--accent); stroke: var(--accent-strong); stroke-width: 2.5; opacity: 0.85; }
 .lib-sel {
