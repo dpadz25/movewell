@@ -716,12 +716,12 @@
     },
     // what each fitness choice adds as a starter routine
     OB_FIT: [
-      ["home-strength", "Get stronger at home", "arms", "accent", ["tpl-leg-strength", "tpl-abs"]],
+      ["home-strength", "Get stronger at home", "arms", "accent", ["tpl-leg-strength"]],
       ["gym", "Lift at the gym", "barbell", "purple", ["tpl-upper", "tpl-lower"]],
       ["stretch", "Stretch and loosen up", "leaf", "teal", ["tpl-leg-stretch"]],
       ["cardio", "Cardio and stamina", "run", "red", ["tpl-cardio"]],
       ["yoga", "Yoga", "sun", "pink", ["tpl-yoga-beginner-flow"]],
-      ["qigong", "Qi Gong", "leaf", "blue", ["tpl-qigong-10"]],
+      ["core", "Core and posture", "core", "blue", ["tpl-abs", "tpl-upper-cross"]],
       ["balance", "Better balance", "balance", "yellow", ["tpl-balance"]],
       ["relax", "Relax and unwind", "heart", "orange", ["tpl-relax"]]
     ],
