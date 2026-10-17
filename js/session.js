@@ -106,7 +106,7 @@
         <div class="menu-list">
           ${easier ? `<button class="menu-item" data-x="easier">${this.icon("swap")}<span>Try the easier version<br><small>${this.esc(easier.name)}</small></span></button>` : ""}
           <button class="menu-item" data-x="skip">${this.icon("chevR")}<span>Skip this exercise</span></button>
-          <button class="menu-item" data-x="stop">${this.icon("check")}<span>Stop and save what I did</span></button>
+          <button class="menu-item" data-x="stop">${this.icon("close")}<span>Stop for today<br><small>This session will not be saved</small></span></button>
         </div>
         <div class="exd-caution" style="margin-top:0.9rem">${this.icon("alert")}<span>Sharp pain, or pain that does not ease with rest? Stop and call your therapist or doctor.</span></div>`);
     } else {
@@ -115,7 +115,7 @@
         <button class="btn big" data-x="resume">${this.icon("play")} Keep going</button>
         <div class="menu-list" style="margin-top:0.7rem">
           <button class="menu-item" data-x="hurt">${this.icon("heart")}<span>This hurts</span></button>
-          <button class="menu-item" data-x="end">${this.icon("check")}<span>End for today${doneCount ? "" : "<br><small>Nothing done yet, so nothing is saved</small>"}</span></button>
+          <button class="menu-item" data-x="end">${this.icon("close")}<span>End for today<br><small>Ending early does not save or count toward your streak</small></span></button>
         </div>`);
     }
     const body = document.getElementById("modal-body");
@@ -131,10 +131,15 @@
       }
       if (x === "skip") { this._pauseOpen = false; this.closeModal(); it.skipped = it.logged.length === 0; it.hurt = true; this.advance(); return; }
       if (x === "stop" || x === "end") {
+        // ending early never saves: only a session finished to the end counts
         this._pauseOpen = false;
         this.closeModal();
-        if (s.items.some(y => y.logged.length > 0)) this.finishSession();
-        else this.teardownSession();
+        if (!s.items.some(y => y.logged.length > 0)) { this.teardownSession(); return; }
+        this.renderSessionStep();
+        this.confirm(x === "stop" ? "Stop for today?" : "End without saving?",
+          "Sessions only count when you finish them. If you stop now, today's exercises will not be saved and will not count toward your streak.",
+          () => { this.teardownSession(); this.toast(x === "stop" ? "Stopped. Rest up and take care." : "Session ended. It was not saved."); },
+          x === "stop" ? "Stop, don't save" : "End, don't save", null, "Keep going");
       }
     });
   };
@@ -627,6 +632,33 @@
     if (!s.items.some(i => i.logged.length > 0)) {
       this.teardownSession();
       this.toast("No exercises were logged, so nothing was saved.");
+      return;
+    }
+    // skipping through to the end is not finishing: at least half of the main exercises must be done
+    const main = s.items.filter(i => !i.warmup);
+    const doneMain = main.filter(i => i.logged.length > 0).length;
+    const need = Math.ceil(main.length / 2);
+    if (main.length && doneMain < need) {
+      const firstLeft = s.items.findIndex(i => !i.warmup && i.logged.length === 0);
+      this._pauseOpen = true;
+      this.openModal("Almost there", `
+        <p class="sp-note" style="margin:0 0 0.9rem">You did ${doneMain} of ${main.length} exercises. Do at least ${need} to finish the session and have it count.</p>
+        <button class="btn big" id="fin-back">${this.icon("arrowLeft")} Go back and do more</button>
+        <div class="menu-list" style="margin-top:0.7rem">
+          <button class="menu-item" id="fin-quit">${this.icon("close")}<span>End without saving</span></button>
+        </div>`);
+      const body = document.getElementById("modal-body");
+      body.querySelector("#fin-back").onclick = () => {
+        this._pauseOpen = false; this.closeModal();
+        if (firstLeft >= 0) { s.idx = firstLeft; s.items[firstLeft].skipped = false; }
+        this.persistSession();
+        this.renderSessionStep();
+      };
+      body.querySelector("#fin-quit").onclick = () => {
+        this._pauseOpen = false; this.closeModal();
+        this.teardownSession();
+        this.toast("Session ended. It was not saved.");
+      };
       return;
     }
     clearInterval(this._sessClockT);

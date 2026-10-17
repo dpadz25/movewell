@@ -158,12 +158,13 @@
       void el.offsetWidth; // restart the animation if it's already mid-flash
       el.classList.add("show");
     },
-    confirm(title, text, onYes, yesLabel, onNo) {
+    confirm(title, text, onYes, yesLabel, onNo, noLabel) {
       const c = document.getElementById("confirm");
       document.getElementById("confirm-title").textContent = title;
       document.getElementById("confirm-text").textContent = text;
       const yes = document.getElementById("confirm-yes");
       yes.textContent = yesLabel || "Yes";
+      document.getElementById("confirm-no").textContent = noLabel || "Cancel";
       c.classList.add("open");
       yes.onclick = () => { c.classList.remove("open"); onYes(); };
       // onNo only fires on the explicit No button; a backdrop tap just dismisses
