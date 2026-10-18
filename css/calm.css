@@ -1225,3 +1225,43 @@ html[data-density="compact"] .re-hint { margin-bottom: 0.4rem; }
 /* large text: the description shows two lines so the exercises come into view sooner */
 html[data-density="roomy"] .re-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 html[data-density="roomy"] .re-top { padding: 0.8rem; }
+
+/* ============ CALENDAR PLANNING ============ */
+.upnext-pill { display: inline-flex; align-items: center; gap: 0.3rem; }
+.upnext-pill .icn { width: 1em; height: 1em; }
+.week-plan { display: flex; align-items: center; gap: 0.35rem; margin: 0.4rem auto -0.4rem; }
+.week-plan .icn { width: 1.1rem; height: 1.1rem; }
+.cal-dow { text-align: center; font-size: 0.72rem; font-weight: 800; color: var(--muted); padding-bottom: 0.15rem; }
+button.heatmap-cell { position: relative; font-family: inherit; cursor: pointer; padding: 0; min-width: 0; }
+button.heatmap-cell:active { transform: scale(0.93); }
+button.heatmap-cell:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.heatmap-cell.past.l0 { opacity: 0.7; }
+.heatmap-cell.today { box-shadow: inset 0 0 0 2px var(--accent); color: var(--accent-strong); font-weight: 800; }
+.heatmap-cell.planned { background: var(--card); color: var(--text); box-shadow: inset 0 0 0 2px var(--tone, var(--accent)); }
+.heatmap-cell.planned.orange { --tone: var(--orange); } .heatmap-cell.planned.blue { --tone: var(--blue); }
+.heatmap-cell.planned.yellow { --tone: var(--yellow); } .heatmap-cell.planned.accent { --tone: var(--accent); }
+.cal-dot { position: absolute; bottom: 14%; left: 50%; width: 0.32rem; height: 0.32rem; margin-left: -0.16rem; border-radius: 50%; background: var(--tone, var(--accent)); }
+.cal-key { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.9rem; margin-top: 0.8rem; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.cal-key > span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.cal-key i { width: 0.8rem; height: 0.8rem; border-radius: 50%; display: inline-block; }
+.cal-key .k-done { background: var(--accent); }
+.cal-key .k-plan { box-shadow: inset 0 0 0 2px var(--accent); }
+.cal-tip { flex-basis: 100%; font-weight: 600; }
+/* the day sheet */
+.dp-list { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 0.6rem; }
+.dp-row { display: flex; align-items: center; gap: 0.7rem; width: 100%; min-height: 3.5rem; padding: 0.5rem 0.8rem; border: 0; background: var(--card); color: var(--text); font-family: inherit; text-align: left; cursor: pointer; }
+.dp-row + .dp-row { border-top: 1px solid var(--border); }
+.dp-row:active { background: var(--surface2); }
+.dp-row > .icn { width: 1.1rem; height: 1.1rem; color: var(--muted2); flex: none; }
+.dp-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.dp-check { flex: none; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; }
+.dp-check .icn { width: 1.1rem; height: 1.1rem; }
+.dp-radio { flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--border2); display: flex; align-items: center; justify-content: center; color: transparent; }
+.dp-radio .icn { width: 1rem; height: 1rem; }
+.dp-pick.on { background: var(--accent-dim); }
+.dp-pick.on .dp-radio { background: var(--accent); box-shadow: none; color: #fff; }
+.dp-hint, .dp-empty { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.6rem; }
+html[data-density="roomy"] .dp-pick .rl-row-tile { display: none; }
+html[data-density="roomy"] .dp-text .rl-row-name, html[data-density="roomy"] .dp-text .rl-row-meta { white-space: normal; }
+.upnext-top { flex-wrap: wrap; row-gap: 0.4rem; }
+.upnext-pill { white-space: nowrap; }

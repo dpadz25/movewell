@@ -25,7 +25,8 @@
         customExercises: [],
         logs: [],       // completed sessions
         bodyLogs: [],   // body-feel entries from the body map
-        bodyWeightLogs: [] // weigh-in history: {id, date, weightLb}
+        bodyWeightLogs: [], // weigh-in history: {id, date, weightLb}
+        plans: {}       // planned routines from the calendar: {"YYYY-MM-DD": routineId}
       };
     },
     load() {
@@ -336,6 +337,32 @@
       if (days < 7) return d.toLocaleDateString(undefined, { weekday: "long" });
       return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
     },
+    // the routine planned for a calendar day, if it still exists
+    plannedRoutine(key) {
+      const id = (this.state.plans || {})[key];
+      return id ? this.state.routines.find(r => r.id === id && !r.archived) || null : null;
+    },
+    // the planned day closest to today (today included, unless today's plan is already done)
+    nextPlan() {
+      const todayK = this.todayKey();
+      const keys = Object.keys(this.state.plans || {}).filter(k => k >= todayK).sort();
+      for (const k of keys) {
+        const r = this.plannedRoutine(k);
+        if (!r) continue;
+        if (k === todayK && this.state.logs.some(l => l.routineId === r.id && this.todayKey(l.date) === todayK)) continue;
+        return { key: k, routine: r };
+      }
+      return null;
+    },
+    planLabel(key) {
+      const [y, m, d] = key.split("-").map(Number);
+      const dt = new Date(y, m - 1, d), today = new Date(new Date().toDateString());
+      const days = Math.round((dt - today) / 86400000);
+      if (days <= 0) return "Planned for today";
+      if (days === 1) return "Planned for tomorrow";
+      if (days < 7) return "Planned for " + dt.toLocaleDateString(undefined, { weekday: "long" });
+      return "Planned for " + dt.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    },
     // the one routine Home suggests: the one you have gone longest without doing
     upNextRoutine(list) {
       if (!list.length) return null;
@@ -370,7 +397,9 @@
       let doneThisWeek = 0;
       for (let i = 0; i < 7; i++) { const d = new Date(weekStart); d.setDate(weekStart.getDate() + i); if (doneDays.has(this.todayKey(d))) doneThisWeek++; }
       const homeRoutines = s.routines.filter(r => r.onHome && !r.archived);
-      const next = this.upNextRoutine(homeRoutines);
+      // a routine planned on the calendar comes first; otherwise the one you have gone longest without
+      const planned = this.nextPlan();
+      const next = planned ? planned.routine : this.upNextRoutine(homeRoutines);
       let top = "", list = "";
       if (s.routines.filter(r => !r.archived).length === 0) {
         top = `
@@ -395,7 +424,7 @@
         const last = this.lastDone(next);
         top = `
           <section class="upnext" aria-label="Up next">
-            <div class="upnext-top"><span class="upnext-pill">Up next</span><span class="upnext-last">${last ? "Last done " + this.relDay(last) : "Not done yet"}</span></div>
+            <div class="upnext-top"><span class="upnext-pill">${planned ? this.icon("calendar") + " " + this.planLabel(planned.key) : "Up next"}</span><span class="upnext-last">${last ? "Last done " + this.relDay(last) : "Not done yet"}</span></div>
             <div class="upnext-name">${this.esc(next.name)}</div>
             <div class="upnext-meta">${next.items.length} exercise${next.items.length === 1 ? "" : "s"} · about ${this.estMinutes(next)} min</div>
             <button class="upnext-start" data-start="${next.id}">${this.icon("play")} Start</button>
@@ -421,6 +450,7 @@
             <section class="week-card" aria-label="This week">
               <div class="week-card-head"><span>This week</span>${streak > 0 ? `<span class="streak-chip">${this.icon("flame")} ${streak} day${streak === 1 ? "" : "s"} in a row</span>` : ""}</div>
               <div class="week-dots">${dots}</div>
+              <button class="link-quiet week-plan" id="home-plan">${this.icon("calendar")} Plan your days</button>
               <div class="week-sum"><span>${doneThisWeek} of 7 days done</span><div class="week-bar" aria-hidden="true">${Array.from({ length: 7 }, (_, i) => `<i class="${i < doneThisWeek ? "on" : ""}"></i>`).join("")}</div></div>
             </section>
           </div>
@@ -445,6 +475,7 @@
       on("home-pick-tpl", () => { this.showPage("routines"); this.openNewRoutineChooser(); });
       on("home-build", () => { this.showPage("routines"); this.createBlankRoutine(); });
       on("home-where", () => this.openBodyArea());
+      on("home-plan", () => { this._heatmapMonthOffset = 0; this.showPage("progress"); });
     },
 
     // replaces the hidden swipe tray with a visible options sheet

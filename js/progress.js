@@ -37,19 +37,20 @@
         <div class="pg-stat"><div class="pg-num">${streak}</div><div class="pg-label">Day streak</div></div>
         <div class="pg-stat"><div class="pg-num">${totalMin}</div><div class="pg-label">Minutes</div></div>
       </div>
+      <div class="chart-card cal-card">
+        <div class="heatmap-nav">
+          <button class="icon-btn" id="hm-prev" aria-label="Previous month">${this.icon("arrowLeft")}</button>
+          <h3 id="hm-label" style="margin:0">${this.icon("calendar")} Calendar</h3>
+          <button class="icon-btn" id="hm-next" aria-label="Next month">${this.icon("arrowRight")}</button>
+        </div>
+        <div id="heatmap-holder"></div>
+        <div class="cal-key"><span><i class="k-done"></i>Done</span><span><i class="k-plan"></i>Planned</span><span class="cal-tip">Tap a day to plan a routine</span></div>
+      </div>
       ${logs.length === 0 ? `
         <div class="empty-state card"><div class="empty-icon">${this.icon("chart")}</div>
         <p>No sessions yet.<br>Finish your first routine and your progress shows up here.</p>
         <button class="btn big grad" onclick="App.showPage('home')">Go start one</button></div>` : `
         ${painLine ? `<div class="pg-insight">${this.icon("sparkle")}<p>${painLine}</p></div>` : ""}
-        <div class="chart-card">
-          <div class="heatmap-nav">
-            <button class="icon-btn" id="hm-prev" aria-label="Previous month">${this.icon("arrowLeft")}</button>
-            <h3 id="hm-label" style="margin:0">${this.icon("calendar")} Workout Calendar</h3>
-            <button class="icon-btn" id="hm-next" aria-label="Next month">${this.icon("arrowRight")}</button>
-          </div>
-          <div id="heatmap-holder"></div>
-        </div>
         <div class="chart-card"><h3>How you felt after sessions</h3><div class="chart-holder"><canvas id="chart-feel"></canvas></div></div>
         <div class="chart-card"><h3>Sessions each week</h3><div class="chart-holder"><canvas id="chart-weeks"></canvas></div></div>
         ${exWithData.length ? `
@@ -116,11 +117,11 @@
       });
     }
 
-    if (logs.length === 0) return;
-
     scroll.querySelector("#hm-prev").onclick = () => { this._heatmapMonthOffset--; this.renderHeatmap(this._heatmapMonthOffset); };
     scroll.querySelector("#hm-next").onclick = () => { this._heatmapMonthOffset++; this.renderHeatmap(this._heatmapMonthOffset); };
     this.renderHeatmap(this._heatmapMonthOffset);
+
+    if (logs.length === 0) return;
 
     // sessions per week (last 8 weeks)
     const weeks = [];
@@ -267,6 +268,7 @@
       <div class="ex-grid">${rows}</div>`;
   };
 
+  // the calendar shows days you worked out and days you planned; any day can be tapped
   App.renderHeatmap = function (monthOffset) {
     const holder = document.getElementById("heatmap-holder");
     if (!holder) return;
@@ -275,28 +277,79 @@
       const k = this.todayKey(l.date);
       counts[k] = (counts[k] || 0) + 1;
     });
+    const plans = this.state.plans || {};
     const now = new Date();
+    const todayK = this.todayKey();
     const target = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
     const monthLabel = target.toLocaleDateString(undefined, { month: "long", year: "numeric" });
     const label = document.getElementById("hm-label");
     if (label) label.innerHTML = this.icon("calendar") + " " + monthLabel;
+    // planning reaches three months ahead
     const nextBtn = document.querySelector("#hm-next");
-    if (nextBtn) nextBtn.disabled = monthOffset >= 0;
+    if (nextBtn) nextBtn.disabled = monthOffset >= 3;
 
     const firstDay = new Date(target.getFullYear(), target.getMonth(), 1);
     const daysInMonth = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
     const startPad = firstDay.getDay(); // 0=Sun
 
-    let cells = "";
+    let cells = ["S", "M", "T", "W", "T", "F", "S"].map(d => `<div class="cal-dow" aria-hidden="true">${d}</div>`).join("");
     for (let i = 0; i < startPad; i++) cells += `<div class="heatmap-cell blank"></div>`;
     for (let d = 1; d <= daysInMonth; d++) {
       const dt = new Date(target.getFullYear(), target.getMonth(), d);
       const k = this.todayKey(dt);
       const n = counts[k] || 0;
       const level = n === 0 ? "l0" : n === 1 ? "l1" : "l2";
-      cells += `<div class="heatmap-cell ${level}" title="${monthLabel.split(" ")[0]} ${d}: ${n} session${n === 1 ? "" : "s"}">${d}</div>`;
+      const plan = this.plannedRoutine(k);
+      const past = k < todayK;
+      const desc = dt.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) +
+        (n ? `, ${n} session${n === 1 ? "" : "s"} done` : "") + (plan ? ", planned: " + plan.name : "");
+      cells += `<button class="heatmap-cell ${level}${k === todayK ? " today" : ""}${plan && !past ? " planned " + this.routineTone(plan) : ""}${past ? " past" : ""}" data-day="${k}" aria-label="${this.esc(desc)}">${d}${plan && !past ? `<i class="cal-dot" aria-hidden="true"></i>` : ""}</button>`;
     }
     holder.innerHTML = `<div class="heatmap-grid">${cells}</div>`;
+    holder.querySelectorAll("[data-day]").forEach(c => c.onclick = () => this.openDayPlanner(c.dataset.day));
+  };
+
+  // one day: what was done, and (for today and later) which routine is planned
+  App.openDayPlanner = function (key) {
+    const [y, m, d] = key.split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    const todayK = this.todayKey();
+    const title = key === todayK ? "Today" : dt.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+    const done = this.state.logs.filter(l => this.todayKey(l.date) === key);
+    const canPlan = key >= todayK;
+    const plan = this.plannedRoutine(key);
+    const routines = this.state.routines.filter(r => !r.archived);
+    this.openModal(title, `
+      ${done.length ? `
+        <div class="section-label">Done this day</div>
+        <div class="dp-list">${done.map(l => `
+          <button class="dp-row" data-log="${l.id}"><span class="dp-check">${this.icon("check")}</span><span class="dp-text"><span class="rl-row-name">${this.esc(l.routineName)}</span><span class="rl-row-meta">${Math.max(1, Math.round((l.durationSec || 0) / 60))} min</span></span>${this.icon("chevR")}</button>`).join("")}
+        </div>` : (canPlan ? "" : `<p class="dp-empty">Nothing was logged on this day.</p>`)}
+      ${canPlan ? `
+        <div class="section-label">${plan ? "Planned routine" : "Plan a routine for this day"}</div>
+        ${routines.length ? `
+          <p class="dp-hint">The next planned routine shows as Up next on your Home screen.</p>
+          <div class="dp-list" role="radiogroup" aria-label="Routine for this day">${routines.map(r => `
+            <button class="dp-row dp-pick ${plan && plan.id === r.id ? "on" : ""}" role="radio" aria-checked="${!!(plan && plan.id === r.id)}" data-rid="${r.id}">
+              <span class="tile ${this.routineTone(r)} rl-row-tile">${this.icon(this.routineTypeMeta(this.routineType(r)).icon)}</span>
+              <span class="dp-text"><span class="rl-row-name">${this.esc(r.name)}</span><span class="rl-row-meta">${r.items.length} exercise${r.items.length === 1 ? "" : "s"} · ${this.estMinutes(r)} min</span></span>
+              <span class="dp-radio" aria-hidden="true">${this.icon("check")}</span>
+            </button>`).join("")}
+          </div>
+          ${plan ? `<button class="btn secondary big" id="dp-clear" style="margin-top:0.8rem">Remove the plan for this day</button>` : ""}` : `
+          <p class="dp-empty">You do not have any routines yet. Make one in the Routines tab, then come back to plan it.</p>`}` : ""}
+    `);
+    const body = document.getElementById("modal-body");
+    const after = (msg) => { this.save(); this.closeModal(); this.renderHeatmap(this._heatmapMonthOffset || 0); this.renderHome(); this.toast(msg); };
+    const when = key === todayK ? "today" : dt.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" });
+    body.querySelectorAll("[data-log]").forEach(b => b.onclick = () => this.openLogDetail(b.dataset.log));
+    body.querySelectorAll(".dp-pick").forEach(b => b.onclick = () => {
+      this.state.plans = this.state.plans || {};
+      this.state.plans[key] = b.dataset.rid;
+      after("Planned for " + when);
+    });
+    const clr = body.querySelector("#dp-clear");
+    if (clr) clr.onclick = () => { delete this.state.plans[key]; after("Plan removed"); };
   };
 
   App.openLogDetail = function (logId) {
