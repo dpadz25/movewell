@@ -80,9 +80,15 @@ html[data-dark="1"][data-theme="pink"] { --accent-strong: #F4B3CB; --accent-dim:
 html[data-dark="1"]:not([data-theme="pink"]) { --accent-dim: #26402B; }
 
 /* text sizes: bigger base for older eyes */
+/* seven steps, like the iPhone text size setting; nearly every size in the app is in rem,
+   so changing the root size grows or shrinks text, buttons, cards and icons together */
 html { font-size: 18px; }
+html[data-textsize="xsmall"] { font-size: 14px; }
+html[data-textsize="small"] { font-size: 15.5px; }
+html[data-textsize="medium"] { font-size: 17px; }
 html[data-textsize="large"] { font-size: 20.5px; }
 html[data-textsize="huge"] { font-size: 23px; }
+html[data-textsize="xxlarge"] { font-size: 26px; }
 
 /* ============ BASE ============ */
 body {
@@ -867,9 +873,10 @@ html[data-dark="1"] .re-top { background: var(--surface2); }
   .scroll { padding: 1rem 2rem 8rem; }
   .home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; align-items: start; }
   .home-col > :first-child { margin-top: 0; }
-  #rl-list, .ex-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; align-items: stretch; }
-  #rl-list > .home-row, .ex-grid > .ex-item, .ex-grid > .pg-row { margin: 0; }
-  .ex-grid > .empty-state, #rl-list > p { grid-column: 1 / -1; }
+  .ex-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; align-items: stretch; }
+  .ex-grid > .ex-item, .ex-grid > .pg-row { margin: 0; }
+  .ex-grid > .empty-state { grid-column: 1 / -1; }
+  .rl-list { max-width: 640px; }
   .lib-toggles, .lib-panel, .lib-chips, #library-scroll .search-wrap { max-width: 640px; }
   .modal-sheet { max-width: 640px; left: 50%; right: auto; transform: translateX(-50%); width: 100%; }
   .greeting, .page-title { font-size: 2.3rem; }
@@ -1090,3 +1097,131 @@ html[data-dark="1"] .bottom-nav { box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35); }
 .toast { bottom: calc(5.6rem + env(safe-area-inset-bottom)); }
 /* fill the whole screen when opened from the home screen */
 @supports (height: 100dvh) { html, body { height: 100dvh; } }
+
+/* ============ TEXT SIZE SLIDER ============ */
+.ts-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+.ts-help { color: var(--muted); font-size: 0.9rem; }
+.ts-chip { font-size: 0.85rem; font-weight: 800; color: var(--accent-strong); background: var(--accent-dim); padding: 0.2rem 0.75rem; border-radius: 999px; }
+.ts-row { display: flex; align-items: center; gap: 0.4rem; transition: opacity .2s ease; }
+.ts-row.off { opacity: 0.4; }
+/* the two A buttons keep a fixed, easy-to-tap size at every text size */
+.ts-a { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 0; background: var(--surface2); color: var(--text); font-family: var(--font-body); font-weight: 800; cursor: pointer; line-height: 1; }
+.ts-a-sm { font-size: 15px; } .ts-a-lg { font-size: 27px; }
+.ts-a:active { transform: scale(0.94); }
+.ts-a:disabled { cursor: default; }
+.ts-track { flex: 1; min-width: 0; position: relative; }
+.ts-range { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 46px; margin: 0; background: transparent; cursor: pointer; --fill: 50%; }
+.ts-range::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: linear-gradient(to right, var(--accent) var(--fill), var(--border2) var(--fill)); }
+.ts-range::-moz-range-track { height: 8px; border-radius: 4px; background: linear-gradient(to right, var(--accent) var(--fill), var(--border2) var(--fill)); }
+.ts-range::-webkit-slider-thumb { -webkit-appearance: none; width: 34px; height: 34px; margin-top: -13px; border-radius: 50%; border: 0; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.25), 0 0 0 1px rgba(0,0,0,.05); }
+.ts-range::-moz-range-thumb { width: 34px; height: 34px; border-radius: 50%; border: 0; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+.ts-range:disabled { cursor: default; }
+.ts-range:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 12px; }
+.ts-ticks { position: absolute; left: 17px; right: 17px; bottom: 2px; display: flex; justify-content: space-between; pointer-events: none; }
+.ts-ticks i { width: 5px; height: 5px; border-radius: 50%; background: var(--border2); }
+.ts-ticks i.in { background: transparent; }
+.ts-phone { margin-top: 0.5rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+.ts-phone .set-small { margin: 0; }
+
+/* week summary only shows in the roomy layout */
+.week-sum { display: none; }
+
+/* ============ COMPACT LAYOUT (small text) ============ */
+/* small text leaves room for two-across grids, so more fits on one screen */
+html[data-density="compact"] .home-rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-bottom: 0.6rem; }
+html[data-density="compact"] .home-rows > .home-row { margin: 0; display: grid; grid-template-columns: 1fr auto; grid-template-areas: "tile play" "info info"; align-items: center; gap: 0.5rem; padding: 0.8rem; }
+html[data-density="compact"] .home-row .home-row-tile { grid-area: tile; }
+html[data-density="compact"] .home-row .home-row-info { grid-area: info; }
+html[data-density="compact"] .home-row .home-row-play,
+html[data-density="compact"] .home-row .home-row-more { grid-area: play; }
+html[data-density="compact"] .home-rows > .home-list-empty { grid-column: 1 / -1; }
+/* buttons never shrink below a comfortable tap size */
+html[data-density="compact"] .home-row-play, html[data-density="compact"] .home-row-more { width: max(2.9rem, 44px); height: max(2.9rem, 44px); }
+html[data-density="compact"] .nav-btn { min-height: max(3.6rem, 52px); }
+
+/* ============ ROOMY LAYOUT (large text) ============ */
+html[data-density="roomy"] .week-card .week-dots { display: none; }
+html[data-density="roomy"] .week-sum { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.6rem; font-weight: 700; }
+.week-bar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.week-bar i { height: 0.55rem; border-radius: 999px; background: var(--surface2); }
+.week-bar i.on { background: var(--accent); }
+/* names get the room instead of the small picture tiles */
+html[data-density="roomy"] .home-row-tile { display: none; }
+html[data-density="roomy"] .home-row { padding-left: 1rem; }
+html[data-density="roomy"] .nav-btn { font-size: 13px; }
+/* titles grow less than body text, the way iPhone apps do, so big text still leaves room for content */
+html[data-density="roomy"] .greeting, html[data-density="roomy"] .page-title { font-size: 1.55rem; }
+html[data-density="roomy"] .fin-title { font-size: 1.6rem; }
+html[data-density="roomy"] .rest-title { font-size: 1.25rem; }
+html[data-density="roomy"] .modal-title { font-size: 1.05rem; }
+/* side-by-side controls stack so their words never get cut off */
+html[data-density="roomy"] .lib-toggles { grid-template-columns: minmax(0, 1fr); }
+html[data-density="roomy"] .lib-list-head { flex-wrap: wrap; }
+html[data-density="roomy"] .ex-item-icon { display: none; }
+html[data-density="roomy"] .ob-field-grid { flex-wrap: wrap; }
+html[data-density="roomy"] .ob-field-grid > div { flex: 1 1 40%; }
+/* the session counter and arrows stay big but stop crowding each other */
+html[data-density="roomy"] .sp-counter { grid-template-columns: 2.9rem 1fr 2.9rem; gap: 0.3rem; }
+html[data-density="roomy"] .sp-big { font-size: 3.2rem; }
+html[data-density="roomy"] .sp-nav-circle { width: 2.9rem; height: 2.9rem; margin: 0.3rem 0; }
+html[data-density="roomy"] .sp-nav-btn.primary .sp-nav-circle { width: 3.6rem; height: 3.6rem; }
+html[data-density="roomy"] .sp-nav-btn { font-size: 0.75rem; }
+
+/* ============ ROUTINES LIST ============ */
+/* one card holding slim rows with thin lines between them, like the iPhone Settings list */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.rl-list { background: var(--card); border-radius: 22px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 1rem; }
+.rl-list > .home-list-empty { margin: 0; padding: 1rem; }
+.rl-row { display: flex; align-items: center; min-height: 3.6rem; }
+.rl-row + .rl-row { border-top: 1px solid var(--border); }
+.rl-row-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0 0.55rem 0.8rem; background: none; border: 0; text-align: left; color: var(--text); font-family: inherit; cursor: pointer; }
+.rl-row-main:active { background: var(--surface2); }
+.rl-row-tile { flex: none; width: 2.2rem; height: 2.2rem; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.rl-row-tile .icn { width: 1.2rem; height: 1.2rem; }
+.rl-row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.rl-row-name { font-weight: 800; font-size: 1rem; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rl-row-meta { display: flex; align-items: center; gap: 0.3rem; font-size: 0.82rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rl-row-home { flex: none; display: inline-flex; color: var(--accent-strong); }
+.rl-row-home .icn { width: 0.95rem; height: 0.95rem; }
+/* the options button stays an easy tap size even though the row is slim */
+.rl-row-more { flex: none; width: 44px; height: 44px; margin-right: 0.3rem; border: 0; border-radius: 50%; background: none; color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.rl-row-more:active { background: var(--surface2); }
+html[data-density="roomy"] .rl-row-tile { display: none; }
+html[data-density="roomy"] .rl-row-name, html[data-density="roomy"] .rl-row-meta { white-space: normal; }
+html[data-density="roomy"] .rl-row-meta { flex-wrap: wrap; }
+/* keep the top of Routines short so the list itself shows more */
+.btn.big.rl-new { min-height: 3.1rem; font-size: 1rem; margin-bottom: 0.8rem; }
+.rl-types { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 0.4rem; margin: 0 -1.1rem 0.8rem; padding: 0 1.1rem 0.2rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.rl-types::-webkit-scrollbar { display: none; }
+.rl-types .rl-type { flex: none; }
+#routines-scroll .search-wrap { margin-bottom: 0.7rem; }
+
+/* ============ ROUTINE EDITOR LIST ============ */
+/* the exercises in a routine sit in one card as slim rows, matching the Routines list */
+#re-items, #re-warmup { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); margin-bottom: 0.9rem; }
+#re-items > .home-list-empty { margin: 0; padding: 1rem; }
+#re-items .routine-item, #re-warmup .routine-item {
+  margin: 0; border: 0; border-radius: 0; box-shadow: none; background: var(--card);
+  padding: 0.3rem 0.4rem 0.3rem 0.15rem; gap: 0.35rem; min-height: 3.3rem;
+}
+#re-items .routine-item + .routine-item, #re-warmup .routine-item + .routine-item,
+#re-items .ss-connector + .routine-item { border-top: 1px solid var(--border); }
+#re-items > .routine-item:first-child, #re-warmup > .routine-item:first-child { border-top-left-radius: 20px; border-top-right-radius: 20px; }
+#re-items > .routine-item:last-child, #re-warmup > .routine-item:last-child { border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+#re-items .routine-item.ss-grouped { box-shadow: inset 3px 0 0 var(--purple); }
+#re-warmup .routine-item.warmup-item { box-shadow: inset 3px 0 0 var(--teal); }
+#re-items .routine-item.dragging, #re-warmup .routine-item.dragging { border-radius: 16px; box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22); }
+#re-items .routine-item-name { font-size: 0.98rem; line-height: 1.25; }
+#re-items .routine-item-dose, #re-warmup .routine-item-dose { font-size: 0.82rem; margin-top: 0; }
+#re-items .ex-item-chev .icn, #re-warmup .ex-item-chev .icn { width: 1.1rem; height: 1.1rem; color: var(--muted2); }
+#re-items .ss-connector { margin: 0.25rem auto; }
+
+/* small text: tighter rows and a shorter top card so the whole routine fits on screen */
+html[data-density="compact"] #re-items .routine-item, html[data-density="compact"] #re-warmup .routine-item { min-height: 0; padding-top: 0.15rem; padding-bottom: 0.15rem; }
+html[data-density="compact"] #re-items .drag-handle, html[data-density="compact"] #re-warmup .drag-handle { min-width: 40px; min-height: 40px; }
+html[data-density="compact"] .re-top { padding: 0.8rem; gap: 0.45rem; border-radius: 20px; margin-bottom: 0.7rem; }
+html[data-density="compact"] .re-top .btn.big { min-height: 2.9rem; }
+html[data-density="compact"] .re-hint { margin-bottom: 0.4rem; }
+/* large text: the description shows two lines so the exercises come into view sooner */
+html[data-density="roomy"] .re-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+html[data-density="roomy"] .re-top { padding: 0.8rem; }

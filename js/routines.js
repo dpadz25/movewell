@@ -12,7 +12,7 @@
     const onHome = active.filter(r => r.onHome).length;
     document.getElementById("routines-scroll").innerHTML = `
       <div class="page-title">Routines</div>
-      <div class="page-sub">${active.length ? `${active.length} routine${active.length === 1 ? "" : "s"}, ${onHome} on your Home screen. Tap one to see or change it.` : "A routine is a short list of exercises you do together."}</div>
+      <div class="page-sub">${active.length ? `${active.length} routine${active.length === 1 ? "" : "s"}. A house means it is on your Home screen.` : "A routine is a short list of exercises you do together."}</div>
       <button class="btn big grad rl-new" onclick="App.openNewRoutineChooser()">${this.icon("plus")} New routine</button>
       ${active.length ? `
         ${active.length > 4 ? `<div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="rl-search" placeholder="Search routines" aria-label="Search routines" value="${this.esc(this._rlib.q)}"></div>` : ""}
@@ -20,7 +20,7 @@
           <button class="lib-chip rl-type ${!this._rlib.type ? "on" : ""}" data-v="">All</button>
           ${typeChips.map(t => `<button class="lib-chip rl-type ${this._rlib.type === t.id ? "on" : ""}" data-v="${t.id}">${t.name}</button>`).join("")}
         </div>` : ""}
-        <div id="rl-list"></div>
+        <div id="rl-list" class="rl-list"></div>
       ` : `<div class="empty-state"><div class="empty-icon">${this.icon("clipboard")}</div><p>No routines yet.<br>Start from a ready-made plan or build your own.</p></div>`}
       ${archived.length ? `
         <h2 class="rl-sub">Put away (${archived.length})</h2>
@@ -45,7 +45,7 @@
       });
       listEl.innerHTML = shown.map(r => this.routineRowHtml(r)).join("") ||
         `<p class="home-list-empty">Nothing matches. Try a different search or filter.</p>`;
-      listEl.querySelectorAll(".home-row").forEach(row => {
+      listEl.querySelectorAll(".rl-row").forEach(row => {
         const rid = row.dataset.rrow;
         row.querySelector("[data-act='open']").onclick = () => this.openRoutineEditor(rid);
         row.querySelector("[data-act='menu']").onclick = () => this.openRoutineMenu(rid);
@@ -82,15 +82,19 @@
   App.routineRowHtml = function (r) {
     const t = this.routineTypeMeta(this.routineType(r));
     const last = this.lastDone(r);
+    const meta = [`${r.items.length} exercise${r.items.length === 1 ? "" : "s"}`, `${this.estMinutes(r)} min`];
+    if (last) meta.push("Done " + this.relDay(last));
+    // a slim list row: small picture, name, one line of details, and the options button
     return `
-      <div class="home-row" data-rrow="${r.id}">
-        <div class="tile ${this.routineTone(r)} home-row-tile">${this.icon(t.icon)}</div>
-        <button class="home-row-info" data-act="open">
-          <span class="home-row-name">${this.esc(r.name)}</span>
-          <span class="home-row-meta">${r.items.length} exercise${r.items.length === 1 ? "" : "s"} · ${this.estMinutes(r)} min</span>
-          ${r.onHome || last ? `<span class="rl-badges">${r.onHome ? `<span class="rl-onhome">${this.icon("home")} On Home</span>` : ""}${last ? `<span class="rl-last">Done ${this.relDay(last)}</span>` : ""}</span>` : ""}
+      <div class="rl-row" data-rrow="${r.id}">
+        <button class="rl-row-main" data-act="open">
+          <span class="tile ${this.routineTone(r)} rl-row-tile">${this.icon(t.icon)}</span>
+          <span class="rl-row-text">
+            <span class="rl-row-name">${this.esc(r.name)}</span>
+            <span class="rl-row-meta">${r.onHome ? `<span class="rl-row-home">${this.icon("home")}<span class="sr-only">On Home</span></span>` : ""}${meta.join(" · ")}</span>
+          </span>
         </button>
-        <button class="home-row-more" data-act="menu" aria-label="Options for ${this.esc(r.name)}">${this.icon("dots")}</button>
+        <button class="rl-row-more" data-act="menu" aria-label="Options for ${this.esc(r.name)}">${this.icon("dots")}</button>
       </div>`;
   };
 

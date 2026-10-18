@@ -258,9 +258,35 @@
       if (el2) el2.scrollTop = st;
     },
 
+    // seven text sizes, smallest to largest, like the iPhone setting. Older saves used
+    // normal / large / huge, which keep their exact sizes as Standard / Large / Larger.
+    TEXT_SIZES: [["xsmall", "Smallest"], ["small", "Smaller"], ["medium", "Small"], ["normal", "Standard"], ["large", "Large"], ["huge", "Larger"], ["xxlarge", "Largest"]],
+    textStep(id) { const i = this.TEXT_SIZES.findIndex(t => t[0] === id); return i < 0 ? 3 : i; },
+    // Safari on iPhone exposes the phone's own text size through this system font
+    canMatchPhone() { return !!(window.CSS && CSS.supports && CSS.supports("font", "-apple-system-body")); },
+    applyTextSize(id) {
+      const p = this.state.profile, html = document.documentElement;
+      const size = id || p.textSize || "normal";
+      html.style.fontSize = "";
+      html.setAttribute("data-textsize", size === "normal" ? "" : size);
+      if (!id && p.textMatchPhone && this.canMatchPhone()) {
+        const probe = document.createElement("span");
+        probe.style.font = "-apple-system-body";
+        probe.style.position = "absolute"; probe.style.visibility = "hidden";
+        document.body.appendChild(probe);
+        const phonePx = parseFloat(getComputedStyle(probe).fontSize) || 17;
+        probe.remove();
+        // the iPhone default is 17pt and the app's Standard is 18px, so scale to match
+        html.style.fontSize = Math.max(13, Math.min(32, phonePx * 18 / 17)).toFixed(1) + "px";
+      }
+      // small text has room for denser layouts, large text gets roomier ones
+      const px = parseFloat(getComputedStyle(html).fontSize) || 18;
+      html.setAttribute("data-density", px <= 15.5 ? "compact" : px >= 23 ? "roomy" : "");
+    },
+
     applyAppearance() {
       const p = this.state.profile;
-      document.documentElement.setAttribute("data-textsize", p.textSize === "normal" ? "" : p.textSize);
+      this.applyTextSize();
       // only green and pink remain; older ocean, sunset and berry saves show as green
       document.documentElement.setAttribute("data-theme", p.theme === "pink" ? "pink" : "forest");
       document.documentElement.setAttribute("data-dark", p.dark ? "1" : "");
@@ -341,6 +367,8 @@
         dots += `<div class="week-dot ${done ? "done" : ""} ${isToday ? "today" : ""}"><div class="dot">${done ? this.icon("check") : ""}</div><div class="dot-label">${dayNames[i]}</div></div>`;
       }
 
+      let doneThisWeek = 0;
+      for (let i = 0; i < 7; i++) { const d = new Date(weekStart); d.setDate(weekStart.getDate() + i); if (doneDays.has(this.todayKey(d))) doneThisWeek++; }
       const homeRoutines = s.routines.filter(r => r.onHome && !r.archived);
       const next = this.upNextRoutine(homeRoutines);
       let top = "", list = "";
@@ -375,12 +403,12 @@
         const others = homeRoutines.filter(r => r !== next);
         list = `
           <div class="home-list-head"><h2>My routines</h2><button class="link-quiet" id="home-see-all">See all</button></div>
-          ${others.map(r => `
+          <div class="home-rows">${others.map(r => `
             <div class="home-row" data-rid="${r.id}">
               <div class="tile ${this.routineTone(r)} home-row-tile">${this.icon(this.routineTypeMeta(this.routineType(r)).icon)}</div>
               <button class="home-row-info" data-act="open"><span class="home-row-name">${this.esc(r.name)}</span><span class="home-row-meta">${r.items.length} exercise${r.items.length === 1 ? "" : "s"} · ${this.estMinutes(r)} min</span></button>
               <button class="home-row-play" data-act="start" aria-label="Start ${this.esc(r.name)}">${this.icon("play")}</button>
-            </div>`).join("") || `<p class="home-list-empty">Add more routines from the Routines tab.</p>`}
+            </div>`).join("") || `<p class="home-list-empty">Add more routines from the Routines tab.</p>`}</div>
           <button class="btn ghost big" id="home-new" style="margin-top:0.4rem">${this.icon("plus")} New routine</button>`;
       }
 
@@ -393,6 +421,7 @@
             <section class="week-card" aria-label="This week">
               <div class="week-card-head"><span>This week</span>${streak > 0 ? `<span class="streak-chip">${this.icon("flame")} ${streak} day${streak === 1 ? "" : "s"} in a row</span>` : ""}</div>
               <div class="week-dots">${dots}</div>
+              <div class="week-sum"><span>${doneThisWeek} of 7 days done</span><div class="week-bar" aria-hidden="true">${Array.from({ length: 7 }, (_, i) => `<i class="${i < doneThisWeek ? "on" : ""}"></i>`).join("")}</div></div>
             </section>
           </div>
           ${list ? `<div class="home-col">${list}</div>` : ""}
@@ -577,6 +606,21 @@
       const card = (title, inner) => `<section class="set-card"><h3>${title}</h3>${inner}</section>`;
       this.openModal("Settings", `
         <p class="set-note">Changes save as you make them.</p>
+        ${card("Text size", `
+          <div class="ts-head"><span class="ts-help">Makes everything bigger or smaller</span><span class="ts-chip" id="ts-name">${this.TEXT_SIZES[this.textStep(p.textSize)][1]}</span></div>
+          <div class="ts-row" id="ts-row">
+            <button class="ts-a ts-a-sm" id="ts-down" aria-label="Smaller text">A</button>
+            <div class="ts-track">
+              <input type="range" class="ts-range" id="ts-range" min="0" max="6" step="1" value="${this.textStep(p.textSize)}" aria-label="Text size" aria-valuetext="${this.TEXT_SIZES[this.textStep(p.textSize)][1]}">
+              <div class="ts-ticks" aria-hidden="true">${this.TEXT_SIZES.map(() => "<i></i>").join("")}</div>
+            </div>
+            <button class="ts-a ts-a-lg" id="ts-up" aria-label="Bigger text">A</button>
+          </div>
+          ${this.canMatchPhone() ? `
+          <div class="toggle-row ts-phone">
+            <div class="stepper-label set-lbl"><span><strong>Match my iPhone</strong><br><span class="set-small">Uses the text size from your iPhone settings</span></span></div>
+            <label class="switch"><input type="checkbox" id="ts-phone" ${p.textMatchPhone ? "checked" : ""} aria-label="Match my iPhone text size"><span class="slider"></span></label>
+          </div>` : ""}`)}
         ${card("You", `
           <label class="field-label" for="set-name">Your name</label>
           <input type="text" id="set-name" value="${this.esc(p.name)}" placeholder="Your first name" autocomplete="given-name">
@@ -591,11 +635,6 @@
           </div>
           <p class="set-small">Fitness hides the pain questions. Rehab and Both show them.</p>`)}
         ${card("Look and sound", `
-          <div class="field-label">Text size</div>
-          <div class="ob-sizes" role="radiogroup" aria-label="Text size">
-            ${[["normal", "Normal", 1.1], ["large", "Large", 1.4], ["huge", "Extra large", 1.75]].map(([id, label, px]) => `
-              <button class="ob-size ${p.textSize === id ? "on" : ""}" role="radio" aria-checked="${p.textSize === id}" data-ts="${id}"><span style="font-size:${px}rem">Aa</span><span class="ob-size-l">${label}</span></button>`).join("")}
-          </div>
           <div class="field-label">Color</div>
           <div class="ob-colors" role="radiogroup" aria-label="Color">
             ${themes.map(([id, label]) => `<button class="ob-color ${(p.theme === "pink" ? "pink" : "forest") === id ? "on" : ""}" role="radio" data-theme="${id}"><span class="sw sw-${id}"></span>${label}</button>`).join("")}
@@ -629,7 +668,34 @@
         body.querySelectorAll(sel).forEach(x => { x.classList.toggle("on", x === b); x.setAttribute(x.getAttribute("role") === "radio" ? "aria-checked" : "aria-pressed", x === b); });
         fn(b); this.applyAppearance(); saved();
       });
-      pick(".ob-size", b => { this.state.profile.textSize = b.dataset.ts; });
+      // text size slider: the whole app resizes live while dragging, and saves on release
+      const tsRange = body.querySelector("#ts-range"), tsName = body.querySelector("#ts-name"), tsRow = body.querySelector("#ts-row");
+      const tsShow = (i) => {
+        const [id, label] = this.TEXT_SIZES[i];
+        tsRange.value = i; tsName.textContent = label; tsRange.setAttribute("aria-valuetext", label);
+        tsRange.style.setProperty("--fill", (i / 6 * 100) + "%");
+        tsRange.parentNode.querySelectorAll(".ts-ticks i").forEach((t, k) => t.classList.toggle("in", k <= i));
+        return id;
+      };
+      const tsSet = (i, save) => {
+        if (this.state.profile.textMatchPhone) return;
+        i = Math.max(0, Math.min(6, i));
+        const id = tsShow(i);
+        this.applyTextSize(id);
+        if (save) { this.state.profile.textSize = id; saved(); this.refresh(); }
+      };
+      const tsLock = () => {
+        const on = !!this.state.profile.textMatchPhone;
+        tsRow.classList.toggle("off", on); tsRange.disabled = on;
+        body.querySelector("#ts-down").disabled = on; body.querySelector("#ts-up").disabled = on;
+      };
+      tsShow(this.textStep(this.state.profile.textSize)); tsLock();
+      tsRange.oninput = () => tsSet(Number(tsRange.value), false);
+      tsRange.onchange = () => tsSet(Number(tsRange.value), true);
+      body.querySelector("#ts-down").onclick = () => tsSet(Number(tsRange.value) - 1, true);
+      body.querySelector("#ts-up").onclick = () => tsSet(Number(tsRange.value) + 1, true);
+      const tsPhone = body.querySelector("#ts-phone");
+      if (tsPhone) tsPhone.onchange = (e) => { this.state.profile.textMatchPhone = e.target.checked; this.applyAppearance(); tsLock(); saved(); this.refresh(); };
       pick(".ob-color", b => { this.state.profile.theme = b.dataset.theme; });
       pick("#set-goal .opt-btn", b => { this.state.profile.goal = b.dataset.goal; this.refresh(); });
       body.querySelector("#set-dark").onchange = (e) => { this.state.profile.dark = e.target.checked; this.applyAppearance(); saved(); };
@@ -884,9 +950,9 @@
         inner.innerHTML = `
           ${this.obHead("look", { skip: true })}
           <h1 class="ob-title">Make it easy to read</h1>
-          <p class="ob-lead">Tap a size. This screen changes so you can see it.</p>
+          <p class="ob-lead">Tap a size. This screen changes so you can see it. You can fine-tune it later in Settings.</p>
           <div class="ob-sizes ob-stag" role="radiogroup" aria-label="Text size">
-            ${[["normal", "Normal", 1.1], ["large", "Large", 1.4], ["huge", "Extra large", 1.75]].map(([id, label, px]) => `
+            ${[["normal", "Standard", 1.1], ["large", "Large", 1.4], ["huge", "Larger", 1.75]].map(([id, label, px]) => `
               <button class="ob-size ${d.textSize === id ? "on" : ""}" role="radio" aria-checked="${d.textSize === id}" data-ts="${id}"><span style="font-size:${px}rem">Aa</span><span class="ob-size-l">${label}</span></button>`).join("")}
           </div>
           <div class="ob-sub-t">Pick a color</div>
@@ -898,7 +964,7 @@
         `;
         inner.querySelectorAll(".ob-size").forEach(b => b.onclick = () => {
           d.textSize = b.dataset.ts;
-          document.documentElement.setAttribute("data-textsize", d.textSize === "normal" ? "" : d.textSize);
+          this.applyTextSize(d.textSize);
           inner.querySelectorAll(".ob-size").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); });
         });
         inner.querySelectorAll(".ob-color").forEach(b => b.onclick = () => {
