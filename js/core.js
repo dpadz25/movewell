@@ -81,7 +81,7 @@
     // a routine's type: the user's manual tag wins, otherwise the majority exercise type decides
     routineType(r) {
       if (r.kind) return r.kind;
-      const map = { stretch: "stretching", strengthen: "strengthening", mobility: "mobility", "nerve-glide": "mobility", balance: "balance", lift: "gym", cardio: "cardio", yoga: "yoga", recovery: "recovery", qigong: "qigong" };
+      const map = { stretch: "stretching", strengthen: "strengthening", mobility: "mobility", "nerve-glide": "mobility", balance: "balance", lift: "gym", cardio: "cardio", yoga: "yoga", recovery: "recovery" };
       const counts = {};
       r.items.forEach(it => {
         const ex = this.ex(it.exId);
@@ -286,7 +286,7 @@
     routineTone(r) {
       const t = this.routineType(r);
       if (t === "stretching" || t === "mobility" || t === "warmup") return "orange";
-      if (t === "yoga" || t === "qigong") return "blue";
+      if (t === "yoga") return "blue";
       if (t === "gym" || t === "cardio") return "yellow";
       return "accent";
     },

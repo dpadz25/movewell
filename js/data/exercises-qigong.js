@@ -1,4 +1,4 @@
-// MoveWell exercise database, Part 7: Qi Gong, plus a few gap fillers
+// MoveWell exercise database, Part 7: Qi Gong moves (filed under Mobility), plus a few gap fillers
 // Kept in its own file so the original data files stay untouched.
 // Loads after templates.js, so it can add its own type, template and template group.
 
@@ -7,7 +7,7 @@ window.EXERCISES.push(
 
 // ============ QI GONG ============
 {
-  id: "qg-bounce-shake", name: "Bouncing and Shaking", region: "balance", type: "qigong",
+  id: "qg-bounce-shake", name: "Bouncing and Shaking", region: "balance", type: "mobility", alias: "qi gong",
   equipment: ["none"], position: "Standing, feet shoulder-width apart", level: 1,
   muscles: "Whole body, calves, shoulders, jaw",
   helps: ["general", "posture"],
@@ -26,7 +26,7 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "qg-arm-swings", name: "Arm Swings and Waist Twists", region: "lower-back", type: "qigong",
+  id: "qg-arm-swings", name: "Arm Swings and Waist Twists", region: "lower-back", type: "mobility", alias: "qi gong",
   equipment: ["none"], position: "Standing, feet shoulder-width apart", level: 1,
   muscles: "Spine, obliques, shoulders",
   helps: ["low-back-pain", "general"],
@@ -44,7 +44,7 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "qg-rowing-boat", name: "Rowing the Boat", region: "upper-back", type: "qigong",
+  id: "qg-rowing-boat", name: "Rowing the Boat", region: "upper-back", type: "mobility", alias: "qi gong",
   equipment: ["none"], position: "Standing, one foot slightly ahead", level: 1,
   muscles: "Chest, shoulders, upper back, legs",
   helps: ["posture", "upper-cross", "general"],
@@ -62,7 +62,7 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "qg-cloud-hands", name: "Cloud Hands", region: "balance", type: "qigong",
+  id: "qg-cloud-hands", name: "Cloud Hands", region: "balance", type: "mobility", alias: "qi gong",
   equipment: ["none"], position: "Standing, feet wider than hips", level: 1,
   muscles: "Legs, hips, shoulders, balance",
   helps: ["balance-falls", "general"],
@@ -80,7 +80,7 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "qg-belly-tapping", name: "Belly Tapping and Breathing", region: "core", type: "qigong",
+  id: "qg-belly-tapping", name: "Belly Tapping and Breathing", region: "core", type: "mobility", alias: "qi gong",
   equipment: ["none"], position: "Standing or sitting", level: 1,
   muscles: "Diaphragm, lower belly",
   helps: ["general", "low-back-pain"],
@@ -98,7 +98,7 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "qg-self-massage", name: "Self-Massage and Gratitude", region: "neck", type: "qigong",
+  id: "qg-self-massage", name: "Self-Massage and Gratitude", region: "neck", type: "mobility", alias: "qi gong",
   equipment: ["none"], position: "Standing or sitting", level: 1,
   muscles: "Face, scalp, neck",
   helps: ["neck-pain", "headache", "general"],
@@ -175,12 +175,7 @@ window.EXERCISES.push(
 );
 
 // ----- type, routine and plan for Qi Gong -----
-if (window.EX_TYPES && !window.EX_TYPES.some(t => t.id === "qigong")) {
-  window.EX_TYPES.push({ id: "qigong", name: "Qi Gong", color: "teal" });
-}
-if (window.ROUTINE_TYPES && !window.ROUTINE_TYPES.some(t => t.id === "qigong")) {
-  window.ROUTINE_TYPES.splice(window.ROUTINE_TYPES.length - 1, 0, { id: "qigong", name: "Qi Gong", icon: "leaf" });
-}
+// Qi Gong moves count as Mobility, so there is no separate Qi Gong filter or routine type.
 if (window.TEMPLATES && !window.TEMPLATES.some(t => t.id === "tpl-qigong-10")) {
   window.TEMPLATES.push({
     id: "tpl-qigong-10", name: "10-Minute Qi Gong", conditions: ["general"],
