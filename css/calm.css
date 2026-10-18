@@ -1265,3 +1265,24 @@ html[data-density="roomy"] .dp-pick .rl-row-tile { display: none; }
 html[data-density="roomy"] .dp-text .rl-row-name, html[data-density="roomy"] .dp-text .rl-row-meta { white-space: normal; }
 .upnext-top { flex-wrap: wrap; row-gap: 0.4rem; }
 .upnext-pill { white-space: nowrap; }
+
+/* ============ COMPACT UP NEXT ============ */
+/* a shorter card: name and details on the left, the Start button beside them */
+.upnext {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "top top" "name start" "meta start";
+  align-items: center; column-gap: 0.8rem;
+  padding: 0.85rem 0.9rem 0.9rem 1rem; border-radius: 24px; margin-bottom: 0.9rem;
+  box-shadow: 0 10px 24px var(--accent-shadow);
+}
+.upnext-top { grid-area: top; font-size: 0.75rem; }
+.upnext-pill { padding: 0.15rem 0.6rem; }
+.upnext-name { grid-area: name; margin-top: 0.55rem; font-size: 1.2rem; }
+.upnext-meta { grid-area: meta; margin-top: 0.1rem; font-size: 0.85rem; }
+.upnext-start {
+  grid-area: start; align-self: end; margin: 0.5rem 0 0; width: auto; min-height: 3rem;
+  padding: 0 1.1rem 0 0.9rem; font-size: 1rem; gap: 0.35rem;
+}
+/* large text: the button goes back underneath so the name keeps its room */
+html[data-density="roomy"] .upnext { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "name" "meta" "start"; }
+html[data-density="roomy"] .upnext-start { width: 100%; margin-top: 0.7rem; }
