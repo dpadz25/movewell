@@ -576,7 +576,7 @@ window.EXERCISES.push(
     "Push your right hip gently toward the wall until you feel a stretch along the outer right hip and thigh.",
     "Hold, then switch sides."
   ],
-  tips: ["Outer-thigh (IT band) irritation usually calms best with side-hip strengthening plus this stretch."],
+  tips: ["Side-hip strengthening plus this stretch is commonly used for outer-thigh (IT band) soreness."],
   caution: "A lean, not a collapse. Keep tall through the trunk.",
   variations: []
 },
@@ -612,7 +612,7 @@ window.EXERCISES.push(
     "Re-anchor the band to pull the foot up, then inward, then outward for the other directions.",
     "Ten slow repetitions each direction."
   ],
-  tips: ["The outward direction (eversion) is the key one after a rolled ankle."],
+  tips: ["The outward direction (eversion) is commonly emphasized after a rolled ankle."],
   caution: "Move the ankle only, keep the leg still.",
   variations: []
 },

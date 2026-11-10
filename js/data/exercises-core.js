@@ -192,7 +192,7 @@ window.EXERCISES.push(
     "Shift across to the left. Then practice shifting forward to toes and back to heels.",
     "Smooth and unhurried, like slow dancing."
   ],
-  tips: ["The gentlest doorway into balance training. Perfect first exercise after illness or surgery."],
+  tips: ["A gentle way to start balance training. Check with your doctor or PT before starting after illness or surgery."],
   caution: "Small shifts first, growing bolder as confidence builds.",
   variations: [
     { name: "Clock Reaches", note: "Balance on one leg and reach the other toe to 12, 3, and 6 o'clock positions." }

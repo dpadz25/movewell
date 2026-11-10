@@ -330,7 +330,7 @@ window.EXERCISES.push(
     "Close your eyes and breathe naturally.",
     "Stay still and let the practice settle in."
   ],
-  tips: ["A cushion under the knees eases the low back.", "This is the most skipped and most important pose. Stay for the full time."],
+  tips: ["A cushion under the knees eases the low back.", "This resting pose is easy to skip. Stay for the full time if you can."],
   caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
 },
 

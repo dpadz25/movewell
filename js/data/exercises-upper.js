@@ -348,7 +348,7 @@ window.EXERCISES.push(
   tips: ["Keep ribs down, do not arch the lower back as arms rise."],
   caution: "Stay below any painful pinch. Range improves with weeks of practice.",
   variations: [
-    { name: "Unilateral Wall Slide", note: "One arm at a time. Perfect when one shoulder is further along than the other, and it lets you focus on clean shoulder-blade motion." },
+    { name: "Unilateral Wall Slide", note: "One arm at a time. Useful when one shoulder is further along than the other, and it lets you focus on clean shoulder-blade motion." },
     { name: "Wall Angels", note: "Back against the wall instead, sliding arms like a snow angel. Harder than it looks." },
     { name: "With Band Around Wrists", note: "Push gently outward into a mini-band while sliding to wake up the cuff." }
   ]
@@ -455,7 +455,7 @@ window.EXERCISES.push(
     "Roll your shoulders up, back, and down in a smooth circle.",
     "After 10 rolls, shrug both shoulders up toward your ears, hold 2 seconds, then let them drop and fully relax."
   ],
-  tips: ["A perfect warm-up and a great tension reset during the day."],
+  tips: ["A gentle warm-up and a tension reset during the day."],
   caution: "Roll backward, not forward, to encourage open posture.",
   variations: []
 },
@@ -694,7 +694,7 @@ window.EXERCISES.push(
     "Draw slow circles with your hand, 10 one way, 10 the other.",
     "Then wave up and down, and side to side."
   ],
-  tips: ["Perfect gentle warm-up before wrist strengthening."],
+  tips: ["A gentle warm-up before wrist strengthening."],
   caution: "Stay smooth, no forcing end ranges.",
   variations: []
 },
@@ -780,7 +780,7 @@ window.EXERCISES.push(
     "Cat: round your back up to the ceiling, tuck your tailbone, let your head hang.",
     "Flow slowly between the two with your breath."
   ],
-  tips: ["One of the safest all-purpose spine mobilizers.", "Move segment by segment, like a wave along the spine."],
+  tips: ["A gentle, all-purpose spine movement.", "Move segment by segment, like a wave along the spine."],
   caution: "Keep the motion comfortable, no forcing end range.",
   variations: [
     { name: "Seated Cat-Cow", note: "Hands on knees, arch and round while sitting. Great if kneeling is uncomfortable." }
@@ -899,7 +899,7 @@ window.EXERCISES.push(
     "Gently arch your upper back over the top of the backrest, lifting your chest to the ceiling.",
     "Return upright and repeat."
   ],
-  tips: ["A perfect once-an-hour desk reset."],
+  tips: ["A simple once-an-hour desk reset."],
   caution: "The chair back should hit your mid-back, not your lower back.",
   variations: []
 },

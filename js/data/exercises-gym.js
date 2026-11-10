@@ -333,7 +333,7 @@ window.EXERCISES.push(
     "Pull the bar down to the top of your chest, driving your elbows down and back.",
     "Let the bar rise slowly until your arms are fully stretched, then repeat."
   ],
-  tips: ["Think about pulling with your elbows, not your hands.", "This is the best way to build up to your first pull-up."],
+  tips: ["Think about pulling with your elbows, not your hands.", "This is a common way to build up toward your first pull-up."],
   caution: "Always pull to the front of the chest, never behind the neck.",
   variations: [
     { name: "Close Neutral Grip", note: "Palms facing each other on a V handle. Comfortable and strong." },
@@ -356,7 +356,7 @@ window.EXERCISES.push(
   caution: "Lower under control rather than dropping. The slow descent is half the exercise.",
   variations: [
     { name: "Chin-Up", note: "Palms facing you. Uses more biceps and is a bit easier." },
-    { name: "Assisted Pull-Up Machine", note: "The knee pad offsets bodyweight so anyone can start." },
+    { name: "Assisted Pull-Up Machine", note: "The knee pad offsets bodyweight so it is easier to start." },
     { name: "Negative Pull-Up", note: "Jump to the top, lower down as slowly as possible." }
   ]
 },
@@ -566,7 +566,7 @@ window.EXERCISES.push(
     "Squat down between your knees, keeping your chest tall.",
     "Push through your feet to stand and repeat."
   ],
-  tips: ["The front-held weight acts as a counterbalance, making depth easier.", "This is the single best way to learn squatting before the barbell."],
+  tips: ["The front-held weight acts as a counterbalance, making depth easier.", "This is a common way to learn squatting before the barbell."],
   caution: "Keep your heels on the floor. If they lift, raise them on small plates or work on ankle mobility.",
   variations: [
     { name: "Goblet Squat with Pause", note: "Hold three seconds at the bottom to build control." }
@@ -756,7 +756,7 @@ window.EXERCISES.push(
     "Squeeze your buttock muscles and tighten your belly muscles.",
     "Breathe steadily and hold until the timer chimes."
   ],
-  tips: ["A shorter perfect plank beats a long saggy one.", "Push the floor away so your upper back does not sink between the shoulders."],
+  tips: ["A shorter plank with good form beats a long, sagging one.", "Push the floor away so your upper back does not sink between the shoulders."],
   caution: "Stop when your hips start to sag. That is the set, no matter what the clock says.",
   variations: [
     { name: "Incline Plank", note: "Forearms on a bench. Easier version." },
@@ -1085,7 +1085,7 @@ window.EXERCISES.push(
     "Keep your steps short and quick, landing under your body.",
     "Finish with 2 to 3 minutes of walking to cool down."
   ],
-  tips: ["A 1 percent incline best mimics outdoor running.", "Most of your running should feel easy. Speed comes from consistency, not heroics."],
+  tips: ["A 1 percent incline is often used to feel more like outdoor running.", "Most of your running should feel easy. Speed comes from consistency, not heroics."],
   caution: "Build running time gradually, no more than about 10 percent per week, or shins and knees will complain.",
   variations: [
     { name: "Walk-Jog Intervals", note: "Alternate 1 minute jogging with 2 minutes walking when starting out." }
@@ -1103,7 +1103,7 @@ window.EXERCISES.push(
     "Adjust resistance so your legs feel worked but not burning.",
     "Stay tall through your spine rather than slumping over the bars."
   ],
-  tips: ["The bike is low-impact, so it is often easier on the knees than walking or running.", "Zero impact makes it the perfect leg-day cool-down."],
+  tips: ["The bike is low-impact, so it is often easier on the knees than walking or running.", "It is low-impact, which makes it a gentle leg-day cool-down."],
   caution: "Saddle too low is the number one cause of bike knee pain. When in doubt, raise it.",
   variations: [
     { name: "Recumbent Bike", note: "The chair-style bike. Easier on the back and hips." },
@@ -1195,7 +1195,7 @@ window.EXERCISES.push(
     "Recover easy for 90 seconds or more.",
     "Repeat 4 to 8 rounds, then cool down."
   ],
-  tips: ["Interval training improves cardio fitness in roughly half the session time of steady work, which is why it is so well studied.", "The bike and rower are the safest places to sprint. Treadmill sprints demand caution."],
+  tips: ["Interval training improves cardio fitness in roughly half the session time of steady work, which is why it is so well studied.", "The bike and rower are lower-impact places to sprint. Treadmill sprints need extra caution."],
   caution: "This is the spiciest cardio there is. Build a base of easy cardio for a few weeks before adding sprints, and skip it if you have heart or blood pressure concerns without clearance.",
   variations: [
     { name: "Beginner Intervals", note: "20 seconds brisk, 100 seconds easy. Same idea, gentler dose." },

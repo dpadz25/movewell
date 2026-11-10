@@ -70,7 +70,7 @@ window.EXERCISES.push(
     "Keep your shoulders relaxed and your trunk tall.",
     "Pedal backward now and then to change the work."
   ],
-  tips: ["Perfect cardio when legs, hips, or knees need a rest."],
+  tips: ["A cardio option that keeps weight off your legs, hips, and knees."],
   caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
@@ -673,7 +673,7 @@ window.EXERCISES.push(
     "Roll slowly between the hip and just above the knee.",
     "Switch sides."
   ],
-  tips: ["This area is tender on almost everyone. Use the top leg to take off as much pressure as you need."],
+  tips: ["This area is often tender. Use the top leg to take off as much pressure as you need."],
   caution: "Aim for 'good sore', never wincing pain. Skip the bony point of the hip."
 },
 {
@@ -888,7 +888,7 @@ window.EXERCISES.push(
     "Lower with control back to the start.",
     "Keep your back against the pad throughout."
   ],
-  tips: ["The guided path makes this the safest way to press overhead when you are new or coming back."],
+  tips: ["The guided path can make pressing overhead easier to control when you are new or coming back."],
   caution: "Start with a very light weight. Skip overhead pressing if it pinches or hurts your shoulder. Keep breathing and stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
@@ -1100,7 +1100,7 @@ window.EXERCISES.push(
     "Press lightly into your hands and peel your chest up, leading with the breastbone.",
     "Elbows stay bent. Lower back down with control."
   ],
-  tips: ["The height comes from your back muscles, the hands only assist.", "Gentler than Upward Dog, a perfect starting backbend."],
+  tips: ["The height comes from your back muscles, the hands only assist.", "Gentler than Upward Dog, a gentle starting backbend."],
   caution: "Stop if you feel pinching or sharp pain in your lower back, or pain that spreads into your leg. If you have osteoporosis or a back condition, check with your doctor or physical therapist first."
 },
 {
@@ -1235,7 +1235,7 @@ window.EXERCISES.push(
     "Bring your palms together at your chest, elbows gently pressing the knees wide.",
     "Keep your chest lifted and breathe."
   ],
-  tips: ["A folded blanket under the heels makes this available to almost everyone.", "Sitting on a low block or stack of books works too."],
+  tips: ["A folded blanket under the heels can make this more comfortable.", "Sitting on a low block or stack of books works too."],
   caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain."
 },
 {
