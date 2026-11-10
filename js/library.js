@@ -391,7 +391,8 @@
           <label class="field-label" for="cb-variations">Easier or harder versions, one per line as Name: how</label>
           <textarea id="cb-variations" placeholder="Counter Push-Up: Use a kitchen counter to make it easier." style="min-height:3.6rem">${this.esc((d.variations || []).map(v => v.name + ": " + v.note).join("\n"))}</textarea>
           <div class="field-label">Often used for</div>
-          <div class="chip-row" id="cb-helps">${window.CONDITIONS.map(c => `<button class="chip ${d.helps.includes(c.id) ? "on" : ""}" data-v="${c.id}">${this.esc(c.name)}</button>`).join("")}</div>
+          <div class="chip-row" id="cb-helps">${[...window.CONDITIONS].sort((a, b) => (a.commonRank ?? 999) - (b.commonRank ?? 999)).map((c, i) => { const on = d.helps.includes(c.id), extra = i >= 8 && !on; return `<button class="chip ${on ? "on" : ""} ${extra ? "cb-extra" : ""}" ${extra ? "hidden" : ""} data-v="${c.id}">${this.esc(c.name)}</button>`; }).join("")}</div>
+          <button type="button" class="link-quiet" id="cb-helps-more" aria-expanded="false">Show more</button>
         </div>
         <div class="cb-foot"><button class="btn big grad" id="cb-save">${editing ? "Save changes" : "Add to my exercises"}</button></div>
       </div>
@@ -446,6 +447,13 @@
       ch.classList.toggle("on");
       d.helps = [...body.querySelectorAll("#cb-helps .chip.on")].map(x => x.dataset.v);
     });
+    const helpsMore = body.querySelector("#cb-helps-more");
+    helpsMore.onclick = () => {
+      const open = helpsMore.getAttribute("aria-expanded") !== "true";
+      body.querySelectorAll("#cb-helps .cb-extra").forEach(ch => { ch.hidden = !open && !ch.classList.contains("on"); });
+      helpsMore.setAttribute("aria-expanded", open);
+      helpsMore.textContent = open ? "Show fewer" : "Show more";
+    };
     body.querySelector("#cb-perside").onchange = (e) => { d.dose.perSide = e.target.checked; };
 
     body.querySelector("#cb-save").onclick = () => {

@@ -26,7 +26,10 @@
         logs: [],       // completed sessions
         bodyLogs: [],   // body-feel entries from the body map
         bodyWeightLogs: [], // weigh-in history: {id, date, weightLb}
-        plans: {}       // planned routines from the calendar: {"YYYY-MM-DD": routineId}
+        plans: {},      // planned routines from the calendar: {"YYYY-MM-DD": routineId}
+        safetyAck: false,  // has seen the safety note (onboarding sets this; older saves see it once on Home)
+        lastBackup: 0,     // ms timestamp of the last saved backup file
+        backupSnooze: 0    // ms timestamp until which the backup reminder stays hidden
       };
     },
     load() {
@@ -58,6 +61,38 @@
     },
     save() {
       localStorage.setItem(STORE_KEY, JSON.stringify(this.state));
+    },
+    // saves a backup file and remembers when, so the Home reminder knows
+    downloadBackup() {
+      this.state.lastBackup = Date.now();
+      this.save();
+      const blob = new Blob([JSON.stringify(this.state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "movewell-backup-" + this.todayKey() + ".json";
+      a.click();
+      this.toast("Backup downloaded");
+    },
+    // one gentle notice at a time on Home: the safety note first, then a backup reminder
+    homeNotice() {
+      const s = this.state;
+      if (!s.safetyAck) return `
+        <section class="home-notice card" id="home-safety">
+          <h2>A quick safety note</h2>
+          <p>MoveWell shares general exercises, not medical advice. Stop if anything hurts or feels wrong. If available, ask your doctor or PT before you begin.</p>
+          <button class="btn" id="home-safety-ok">Got it</button>
+        </section>`;
+      const day = 86400000, now = Date.now();
+      if (s.logs.length >= 3 && now - (s.lastBackup || 0) > 30 * day && now > (s.backupSnooze || 0)) return `
+        <section class="home-notice card" id="home-backup">
+          <h2>Save a backup</h2>
+          <p>Your history is stored only on this device. Save a backup file now and then so you never lose it.</p>
+          <div class="btn-row">
+            <button class="btn" id="home-backup-save">Save backup</button>
+            <button class="btn secondary" id="home-backup-later">Remind me later</button>
+          </div>
+        </section>`;
+      return "";
     },
     uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); },
 
@@ -446,6 +481,7 @@
         <div class="greeting">${greet}${name}</div>
         <div class="home-grid">
           <div class="home-col">
+            ${this.homeNotice()}
             ${top}
             <section class="week-card" aria-label="This week">
               <div class="week-card-head"><span>This week</span>${streak > 0 ? `<span class="streak-chip">${this.icon("flame")} ${streak} day${streak === 1 ? "" : "s"} in a row</span>` : ""}</div>
@@ -475,6 +511,9 @@
       on("home-pick-tpl", () => { this.showPage("routines"); this.openNewRoutineChooser(); });
       on("home-build", () => { this.showPage("routines"); this.createBlankRoutine(); });
       on("home-where", () => this.openBodyArea());
+      on("home-safety-ok", () => { this.state.safetyAck = true; this.save(); this.renderHome(); });
+      on("home-backup-save", () => { this.downloadBackup(); this.renderHome(); });
+      on("home-backup-later", () => { this.state.backupSnooze = Date.now() + 14 * 86400000; this.save(); this.renderHome(); });
       on("home-plan", () => { this._heatmapMonthOffset = 0; this.showPage("progress"); });
     },
 
@@ -734,14 +773,7 @@
       body.querySelector("#set-name").onchange = (e) => { this.state.profile.name = e.target.value.trim(); saved(); this.refresh(); };
       const num = (id, key) => body.querySelector(id).onchange = (e) => { this.state.profile[key] = Number(e.target.value) || 0; saved(); };
       num("#set-hft", "heightFt"); num("#set-hin", "heightIn"); num("#set-wt", "weightLb");
-      body.querySelector("#set-export").onclick = () => {
-        const blob = new Blob([JSON.stringify(this.state, null, 2)], { type: "application/json" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "movewell-backup-" + this.todayKey() + ".json";
-        a.click();
-        this.toast("Backup downloaded");
-      };
+      body.querySelector("#set-export").onclick = () => this.downloadBackup();
       body.querySelector("#set-import").onclick = () => body.querySelector("#set-import-file").click();
       body.querySelector("#set-import-file").onchange = (e) => {
         const f = e.target.files[0]; if (!f) return;
@@ -1091,6 +1123,7 @@
       const added = new Set();
       this.obPlannedTemplates().forEach(t => { added.add(t.id); this.state.routines.push(this.routineFromTemplate(t)); });
       this.state.onboarded = true;
+      this.state.safetyAck = true; // they just read it on the safety step
       this.save(); this.applyAppearance();
       document.getElementById("onboard").classList.remove("open");
       this.showPage("home");

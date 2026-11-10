@@ -1290,3 +1290,9 @@ html[data-density="roomy"] .dp-text .rl-row-name, html[data-density="roomy"] .dp
 /* large text: the button goes back underneath so the name keeps its room */
 html[data-density="roomy"] .upnext { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "name" "meta" "start"; }
 html[data-density="roomy"] .upnext-start { width: 100%; margin-top: 0.7rem; }
+
+/* Home notices (safety note, backup reminder) and the builder's Show more */
+.home-notice { padding: 1rem 1.1rem; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.home-notice h2 { font-size: 1.1rem; margin: 0; }
+.home-notice p { margin: 0; line-height: 1.45; color: var(--muted); }
+.chip[hidden] { display: none; }
