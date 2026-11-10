@@ -38,7 +38,7 @@ window.EXERCISES.push(
     "Let your heels pivot a little if it helps, and find an easy rhythm."
   ],
   tips: ["Your arms are empty sleeves. The turn starts at your waist and the arms simply follow."],
-  caution: "Keep the turn gentle if you have back pain. Smaller is fine.",
+  caution: "Keep the turn gentle if you have back pain. Smaller is fine. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first.",
   variations: [
     { name: "Seated Twists", note: "Sit tall and turn your shoulders side to side with hands resting on your thighs." }
   ]
@@ -166,7 +166,7 @@ window.EXERCISES.push(
     "Switch legs, like marching in place while sitting."
   ],
   tips: ["A safe way to build leg strength when standing exercise is not possible yet."],
-  caution: "Keep your back tall. Do not lean back to lift the knee higher.",
+  caution: "Keep your back tall. Do not lean back to lift the knee higher. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "Ankle Weights", note: "Add light ankle weights to make it harder." },
     { name: "Standing March", note: "March in place while holding a counter." }

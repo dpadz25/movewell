@@ -226,7 +226,7 @@ window.EXERCISES.push(
     "Keep the motion slow and controlled in both directions."
   ],
   tips: ["Not a fixed traditional pose, sometimes called a 'rock and roll' or rollback in flow yoga classes.", "Rock gently at first to find the rhythm before doing full reps."],
-  caution: "Skip this if you have a disc-related back problem or osteoporosis. A slow Modified Curl-Up is a safer substitute."
+  caution: "Skip this if you have osteoporosis, have had a spinal fracture, or have a back problem that bending makes worse."
 },
 {
   id: "yoga-pike-bent-knee-side-stretch", name: "Pike with Bent Knee, Side Stretch (Head-to-Knee / Janu Sirsasana)", region: "lower-back", type: "yoga",
@@ -316,7 +316,7 @@ window.EXERCISES.push(
     "Hold your shins, ankles, or feet, wherever you comfortably reach."
   ],
   tips: ["Bend your knees as much as you like. Folding from the hips matters more than touching your toes.", "A strap or towel around the feet helps you relax into it."],
-  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips."
 },
 {
   id: "yoga-corpse", name: "Corpse Pose (Savasana)", region: "balance", type: "yoga",
@@ -483,7 +483,7 @@ window.EXERCISES.push(
     "Sway gently side to side if it feels good."
   ],
   tips: ["Bent knees protect the low back and still stretch the back-of-thigh muscles."],
-  caution: "Rise back up slowly to avoid a head rush."
+  caution: "Rise back up slowly to avoid a head rush. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips."
 },
 
 // ============ CLOSING ============
@@ -500,7 +500,7 @@ window.EXERCISES.push(
     "Take a moment to notice how you feel compared to when you started."
   ],
   tips: ["A traditional way to close a practice. Even a few breaths count."],
-  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
+  caution: "Sit down if standing is tiring. Breathe normally if you feel lightheaded."
 },
 {
   id: "yoga-closing-self-hug", name: "Closing Self-Hug & Overhead Stretch", region: "balance", type: "yoga",
@@ -515,7 +515,7 @@ window.EXERCISES.push(
     "Lengthen your spine upward for a final full breath before finishing."
   ],
   tips: ["Not a fixed traditional pose, just a gentle way to bookend practice alongside Heart Center."],
-  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
+  caution: "Reach only as high as your shoulders allow. Stop if you feel sharp pain."
 }
 
 );

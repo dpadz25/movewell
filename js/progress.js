@@ -23,7 +23,7 @@
     if (painNow != null && painBefore != null) {
       const a1 = Math.round(painBefore * 10) / 10, a2 = Math.round(painNow * 10) / 10;
       painLine = a2 < a1 ? `Your pain after sessions is down, from about ${a1} to ${a2} out of 10.`
-        : a2 > a1 ? `Your pain after sessions is up a little, from about ${a1} to ${a2} out of 10. If it keeps rising, check in with your therapist.`
+        : a2 > a1 ? `Your pain after sessions is up, from about ${a1} to ${a2} out of 10. If it stays up, check in with your doctor or therapist.`
         : `Your pain after sessions is holding steady at about ${a2} out of 10.`;
     } else if (painNow != null) painLine = `Your pain after sessions has been about ${Math.round(painNow * 10) / 10} out of 10 lately. Keep logging to see the trend.`;
     this._histAll = this._histAll || false;

@@ -541,6 +541,52 @@
       });
     },
 
+    // ---------- SAFETY: get-help screen, high-pain card, surgery question ----------
+    // Never opens on its own. Reached from Settings, the "This hurts" sheet, condition pages, and the pain card.
+    openHelpSheet() {
+      this.pushView("help", () => this.openHelpSheet());
+      const list = items => `<ul>${items.map(x => `<li>${x}</li>`).join("")}</ul>`;
+      this.openModal("When to stop and get help", `
+        <p class="help-lead">Most aches are not an emergency. These signs are different.</p>
+        <section class="help-box urgent">
+          <h3>${this.icon("alert")}<span>Call 911 or your local emergency number</span></h3>
+          ${list(["Chest pain or pressure", "Trouble breathing that is new or unusual", "Fainting or nearly fainting", "Back pain with numbness around your groin, trouble peeing, or weakness in both legs"])}
+        </section>
+        <section class="help-box soon">
+          <h3>${this.icon("medical")}<span>Call your doctor or therapist soon</span></h3>
+          ${list(["Numbness, tingling, or weakness that spreads or will not go away", "Pain that wakes you at night or does not ease with rest", "Pain after a fall or injury", "A painful, swollen, warm calf, especially after surgery", "No improvement after a few weeks"])}
+        </section>
+        <p class="help-lead">MoveWell shares general exercises. It is not medical advice.</p>
+      `);
+    },
+    // shown once, right after someone saves a pain score of 8, 9, or 10. Lower scores keep the small "Saved" message.
+    PAIN_HIGH: 8,
+    openPainCard(pain, label) {
+      this.pushView("paincard", () => this.openPainCard(pain, label));
+      this.openModal("That is a lot of pain", `
+        <p class="help-lead">You logged ${pain} out of 10${label ? " for your " + this.esc(label.toLowerCase()) : ""}. It is saved.</p>
+        ${pain >= 10 ? `
+        <section class="help-box urgent">
+          <h3>${this.icon("alert")}<span>Call 911 or your local emergency number</span></h3>
+          <p>Do this if the pain came on suddenly, is the worst you have ever felt, or comes with chest pain, trouble breathing, or numbness.</p>
+        </section>` : ""}
+        <section class="help-box soon">
+          <h3>${this.icon("heart")}<span>Take it easy today</span></h3>
+          <ul><li>Rest, or do only what feels comfortable</li><li>If it does not settle in a day or two, call your doctor or therapist</li></ul>
+        </section>
+        <button class="menu-item" id="pc-help">${this.icon("alert")}<span>See the signs that need help now</span></button>
+        <button class="btn big" id="pc-ok" style="margin-top:0.8rem">OK</button>
+      `);
+      const body = document.getElementById("modal-body");
+      body.querySelector("#pc-help").onclick = () => this.openHelpSheet();
+      body.querySelector("#pc-ok").onclick = () => this.closeModal();
+    },
+    // one question before any after-surgery routine is added
+    surgeryCheck(onYes) {
+      this.confirm("One quick check", "Has your surgeon or therapist said you can exercise?", onYes, "Yes, they have",
+        () => this.toast("Check with them first. You can add this later."), "Not yet");
+    },
+
     // ---------- WEIGHT LOG ----------
     openWeighInModal() {
       this.pushView("weighin", () => this.openWeighInModal());
@@ -718,7 +764,8 @@
             <label class="switch"><input type="checkbox" id="set-sound" ${p.sound !== false ? "checked" : ""} aria-label="Sounds"><span class="slider"></span></label>
           </div>`)}
         ${card("Help", `
-          <button class="menu-item" id="set-tour">${this.icon("sparkle")}<span>Show me around again</span></button>`)}
+          <button class="menu-item" id="set-tour">${this.icon("sparkle")}<span>Show me around again</span></button>
+          <button class="menu-item" id="set-help">${this.icon("alert")}<span>When to stop and get help</span></button>`)}
         ${card("Your data", `
           <p class="set-small">Everything stays on this device. Save a backup file now and then so you never lose your history.</p>
           <div class="btn-row">
@@ -794,6 +841,7 @@
         };
         reader.readAsText(f);
       };
+      body.querySelector("#set-help").onclick = () => this.openHelpSheet();
       body.querySelector("#set-tour").onclick = () => {
         this.closeModal();
         this.showPage("home");
@@ -841,11 +889,11 @@
     // what each fitness choice adds as a starter routine
     OB_FIT: [
       ["home-strength", "Get stronger at home", "arms", "accent", ["tpl-leg-strength"]],
-      ["gym", "Lift at the gym", "barbell", "purple", ["tpl-upper", "tpl-lower"]],
+      ["gym", "Lift at the gym", "barbell", "purple", ["tpl-gym-start"]],
       ["stretch", "Stretch and loosen up", "leaf", "teal", ["tpl-leg-stretch"]],
-      ["cardio", "Cardio and stamina", "run", "red", ["tpl-cardio"]],
-      ["yoga", "Yoga", "sun", "pink", ["tpl-yoga-beginner-flow"]],
-      ["core", "Core and posture", "core", "blue", ["tpl-abs", "tpl-upper-cross"]],
+      ["cardio", "Cardio and stamina", "run", "red", ["tpl-cardio-start"]],
+      ["yoga", "Yoga", "sun", "pink", ["tpl-yoga-gentle", "tpl-yoga-beginner-flow"]],
+      ["core", "Core and posture", "core", "blue", ["tpl-core-gentle"]],
       ["balance", "Better balance", "balance", "yellow", ["tpl-balance"]],
       ["relax", "Relax and unwind", "heart", "orange", ["tpl-relax"]]
     ],
@@ -958,7 +1006,7 @@
           inner.innerHTML = `
             ${this.obHead("fit", { skip: true })}
             <h1 class="ob-title">What would you like to do?</h1>
-            <p class="ob-lead">Pick as many as you like. We will suggest a gentle starter routine for each one.</p>
+            <p class="ob-lead">Pick as many as you like. We will add a routine to get you started with each one.</p>
             <div class="ob-goals ob-stag">
               ${(d.fitMore ? this.OB_FIT : this.OB_FIT.slice(0, 4)).map(f => {
                 const on = d.fitGoals.includes(f[0]);
@@ -1001,7 +1049,7 @@
           inner.innerHTML = `
             ${this.obHead("pain", { skip: true })}
             <h1 class="ob-title">Where would you like to focus?</h1>
-            <p class="ob-lead">Pick any areas you like. We will suggest a gentle starting routine for each one.</p>
+            <p class="ob-lead">Pick any areas you like. We will suggest an easy routine to begin with for each one.</p>
             <div class="ob-goals ob-stag">
               ${groups.map(g => {
                 const on = d.groups.includes(g.id);
@@ -1036,11 +1084,15 @@
           });
           inner.querySelectorAll(".ob-chip[data-c]").forEach(ch => ch.onclick = () => {
             const cid = ch.dataset.c;
-            if (d.conditions.includes(cid)) d.conditions = d.conditions.filter(x => x !== cid); else d.conditions.push(cid);
-            d.notSure = false;
-            const ns = inner.querySelector("#ob-notsure");
-            if (ns) { ns.classList.remove("on"); ns.setAttribute("aria-pressed", "false"); }
-            ch.classList.toggle("on"); ch.setAttribute("aria-pressed", ch.classList.contains("on"));
+            const flip = () => {
+              if (d.conditions.includes(cid)) d.conditions = d.conditions.filter(x => x !== cid); else d.conditions.push(cid);
+              d.notSure = false;
+              const ns = inner.querySelector("#ob-notsure");
+              if (ns) { ns.classList.remove("on"); ns.setAttribute("aria-pressed", "false"); }
+              ch.classList.toggle("on"); ch.setAttribute("aria-pressed", ch.classList.contains("on"));
+            };
+            // after-surgery routines are only added once the person confirms they are cleared to exercise
+            if (cid === "post-surgery" && !d.conditions.includes(cid)) this.surgeryCheck(flip); else flip();
           });
           const ns = inner.querySelector("#ob-notsure");
           if (ns) ns.onclick = () => {
@@ -1096,7 +1148,7 @@
           <div class="ob-leaves" aria-hidden="true">${[8, 22, 38, 55, 70, 84, 94].map((x, i) => `<span class="ob-leaf" style="left:${x}%;animation-delay:${-i * 1.3}s;animation-duration:${8 + (i % 3) * 2}s">${this.icon("leaf")}</span>`).join("")}</div>
           <div class="ob-done ob-stag">
             <h1 class="ob-title">${d.name ? "You are all set, " + this.esc(d.name) + "." : "You are all set."}</h1>
-            <p class="ob-lead">${plan.length ? (plan.length === 1 ? "We picked a gentle starter routine for you. You can change it any time." : "We picked " + plan.length + " gentle starter routines for you. You can change them any time.") : "Your Home screen is ready. Pick a ready-made plan or build your own whenever you like."}</p>
+            <p class="ob-lead">${plan.length ? (plan.length === 1 ? "We picked a routine to get you started. You can change it any time." : "We picked " + plan.length + " routines to get you started. You can change them any time.") : "Your Home screen is ready. Pick a ready-made plan or build your own whenever you like."}</p>
             ${plan.map(t => `<div class="ob-plan"><span class="ob-plan-dot">${this.icon("check")}</span><span>${this.esc(t.name)}</span></div>`).join("")}
           </div>
           <button class="btn big grad ob-next ob-glow" id="ob-finish">Start using MoveWell</button>

@@ -139,7 +139,7 @@ window.EXERCISES.push(
     "Hold, breathe, lower. Switch the bent leg halfway."
   ],
   tips: ["Also from the 'Big 3'. Builds ab strength without bending the spine, unlike sit-ups."],
-  caution: "The lift is tiny. Do not curl up high or tuck the chin.",
+  caution: "The lift is tiny. Do not curl up high or tuck the chin. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine.",
   variations: []
 },
 {
@@ -388,7 +388,7 @@ window.EXERCISES.push(
     "Your kneecap should slide slightly upward. Hold, then fully relax."
   ],
   tips: ["A gentle knee exercise often used early on. Follow your therapist's or surgeon's guidance."],
-  caution: "It should feel like a strong tightening, not pain.",
+  caution: "It should feel like a strong tightening, not pain. After surgery, only do this when your surgeon or therapist says you can.",
   variations: []
 },
 {
@@ -404,7 +404,7 @@ window.EXERCISES.push(
     "Hold, then lower slowly. Keep the knee locked the whole time."
   ],
   tips: ["If the knee bends during the lift, do more Quad Sets first."],
-  caution: "Keep your lower back relaxed on the floor.",
+  caution: "Keep your lower back relaxed on the floor. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "With Ankle Weight", note: "Add a light cuff weight above the ankle as you get stronger." }
   ]
@@ -421,7 +421,7 @@ window.EXERCISES.push(
     "Squeeze the thigh hard at the top. Hold, lower slowly."
   ],
   tips: ["Small range, big payoff for the muscle that controls the kneecap."],
-  caution: "The back of the knee stays on the roll throughout.",
+  caution: "The back of the knee stays on the roll throughout. After surgery, only do this when your surgeon or therapist says you can.",
   variations: []
 },
 {
@@ -437,7 +437,7 @@ window.EXERCISES.push(
     "Slowly let it bend again."
   ],
   tips: ["Rebuilds the confident 'locked-out' feeling when standing and walking."],
-  caution: "Straighten firmly but do not snap the knee back.",
+  caution: "Straighten firmly but do not snap the knee back. After surgery, only do this when your surgeon or therapist says you can.",
   variations: []
 },
 {
@@ -453,7 +453,7 @@ window.EXERCISES.push(
     "A towel under the heel helps it glide."
   ],
   tips: ["Loop a towel around the ankle and assist with your hands for a little extra range."],
-  caution: "Expect a firm stretch after surgery, but stay out of sharp pain.",
+  caution: "Expect a firm stretch after surgery, but stay out of sharp pain. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "Seated Heel Slide", note: "Sitting in a chair, slide the foot back under the seat." }
   ]
@@ -559,7 +559,7 @@ window.EXERCISES.push(
     "Squeeze the thigh at the top, hold, then lower slowly."
   ],
   tips: ["Easy to do during television commercials. Add an ankle weight to progress.", "At the gym, the knee extension machine is the loaded version."],
-  caution: "Move slowly, no kicking or swinging.",
+  caution: "Move slowly, no kicking or swinging. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "Machine Knee Extension", note: "Gym machine version with adjustable weight." }
   ]
@@ -594,7 +594,7 @@ window.EXERCISES.push(
     "Pump smoothly, like pressing and releasing a gas pedal."
   ],
   tips: ["Also boosts circulation after surgery or long sitting. Do them often."],
-  caution: "None for most people, this is as gentle as it gets.",
+  caution: "Gentle for most people. After surgery or long bed rest, a painful, swollen, or warm calf needs urgent medical care. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "Ankle Circles", note: "Draw slow circles with your foot, both directions." },
     { name: "Ankle Alphabet", note: "Write the alphabet in the air with your big toe. Covers every direction." }

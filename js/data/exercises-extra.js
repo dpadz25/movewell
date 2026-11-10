@@ -119,7 +119,7 @@ window.EXERCISES.push(
     "Move at a pace you can control."
   ],
   tips: ["Slow it down to a march if your hips start bouncing."],
-  caution: "Skip if your wrists hurt in a plank position."
+  caution: "Skip if your wrists hurt in a plank position. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "burpees", name: "Burpees", region: "balance", type: "cardio",
@@ -134,7 +134,7 @@ window.EXERCISES.push(
     "Jump or step your feet back in, then stand or jump up with arms overhead."
   ],
   tips: ["Step back and step in for a gentler version that still works."],
-  caution: "Demanding on the whole body. Build up slowly."
+  caution: "Demanding on the whole body. Build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "shadow-boxing", name: "Shadow Boxing", region: "balance", type: "cardio",
@@ -256,7 +256,7 @@ window.EXERCISES.push(
     "Go both directions."
   ],
   tips: ["Start slow, it is a brain exercise as much as a leg exercise.", "Let your hips rotate naturally with the steps."],
-  caution: "Start gently. If jumping bothers your knees, hips, or back, march in place instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
+  caution: "Stay beside a wall or counter you can hold. Crossing your feet is a trip risk, so go slowly. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "eyes-closed-stand", name: "Eyes-Closed Stand", region: "balance", type: "balance",
@@ -496,7 +496,7 @@ window.EXERCISES.push(
   id: "sidelying-external-rotation", name: "Side-Lying External Rotation", region: "shoulder", type: "strengthen",
   equipment: ["dumbbell", "towel"], position: "Lying on your side", level: 1,
   muscles: "Rotator cuff (infraspinatus, teres minor)",
-  helps: ["rotator-cuff", "rotator-cuff"],
+  helps: ["rotator-cuff"],
   dose: { sets: 3, reps: 12, perSide: true },
   howTo: [
     "Lie on your side, top elbow bent 90 degrees and tucked against your ribs, with a rolled towel between elbow and ribs.",
@@ -505,7 +505,7 @@ window.EXERCISES.push(
     "Lower slowly and repeat, then switch sides."
   ],
   tips: ["The towel roll is the secret, it puts the cuff in its strongest position.", "A can of soup is plenty of weight to start."],
-  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
+  caution: "Move slowly and stop if you feel sharp pain or pinching in your shoulder."
 },
 {
   id: "nordic-curl", name: "Nordic Hamstring Curl", region: "knee", type: "strengthen",
@@ -689,7 +689,7 @@ window.EXERCISES.push(
     "Pause anywhere that feels tight and take a slow breath."
   ],
   tips: ["Support your head with your hands if your neck tires.", "Stay off the low back and neck, this one is for between the shoulder blades."],
-  caution: "Pressure should feel firm, not painful. Skip bones, joints, bruises, and injured areas. If you take blood thinners or have circulation problems, check with your doctor first."
+  caution: "Pressure should feel firm, not painful. Skip bones, joints, bruises, and injured areas. If you take blood thinners or have circulation problems, check with your doctor first. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine."
 },
 {
   id: "ball-glute-release", name: "Ball Release: Glutes", region: "hip", type: "recovery",
@@ -781,7 +781,7 @@ window.EXERCISES.push(
     "Squeeze the chest to bring the weights back together."
   ],
   tips: ["Go lighter than a press. The stretch position is where flys earn their keep and where they bite."],
-  caution: "Do not let the arms drop below chest level while learning."
+  caution: "Do not let the arms drop below chest level while learning. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
   id: "pec-deck", name: "Pec Deck Machine", region: "chest", type: "lift",
@@ -811,7 +811,7 @@ window.EXERCISES.push(
     "Drive up through the middle of your feet."
   ],
   tips: ["Elbows up is the golden rule, if they drop, the bar rolls forward.", "Crossed-arms grip works if your wrists complain."],
-  caution: "Learn with an empty bar first. The rack position takes practice."
+  caution: "Learn with an empty bar first. The rack position takes practice. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
   id: "sumo-deadlift", name: "Sumo Deadlift", region: "hip", type: "lift",
@@ -859,7 +859,7 @@ window.EXERCISES.push(
     "Lower slowly all the way back down."
   ],
   tips: ["The pad kills all swinging and cheating, so expect to use less weight than a normal curl."],
-  caution: "Do not bounce out of the bottom, ease into the stretched position."
+  caution: "Do not bounce out of the bottom, ease into the stretched position. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
   id: "cable-lateral-raise", name: "Cable Lateral Raise", region: "shoulder", type: "lift",
@@ -958,7 +958,7 @@ window.EXERCISES.push(
   helps: ["general", "posture"],
   dose: { sets: 3, timeSec: 30 },
   howTo: [
-    "Pick up a heavy dumbbell or kettlebell in each hand.",
+    "Pick up a dumbbell or kettlebell in each hand. Choose a weight you can carry without leaning.",
     "Stand tall, shoulders back, belly muscles tight.",
     "Walk with controlled, even steps for the time.",
     "Set the weights down with a flat back."
@@ -979,7 +979,7 @@ window.EXERCISES.push(
     "Drive your hips forward to stand tall."
   ],
   tips: ["Start with an empty bar or just a band. Good form is everything here."],
-  caution: "Keep the back flat throughout. If it rounds, the weight is too heavy."
+  caution: "Keep the back flat throughout. If it rounds, the weight is too heavy. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine."
 },
 {
   id: "landmine-press", name: "Landmine Press", region: "shoulder", type: "lift",
@@ -1251,7 +1251,7 @@ window.EXERCISES.push(
     "Let your head hang. Come up with a flat back and hands on hips."
   ],
   tips: ["Bend the knees freely. The fold is about the hips, not the knees.", "Wider feet bring the floor closer."],
-  caution: "Rise slowly to avoid a head rush."
+  caution: "Rise slowly to avoid a head rush. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips."
 },
 {
   id: "yoga-pyramid", name: "Pyramid Pose (Parsvottanasana)", region: "hip", type: "yoga",
@@ -1266,7 +1266,7 @@ window.EXERCISES.push(
     "Rest hands on the shin, blocks, or the floor. Switch sides."
   ],
   tips: ["A deep back-of-thigh stretch. A tiny knee bend in the front leg is always allowed."],
-  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips."
 },
 {
   id: "yoga-side-plank", name: "Side Plank (Vasisthasana)", region: "core", type: "yoga",

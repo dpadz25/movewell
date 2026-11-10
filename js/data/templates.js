@@ -24,7 +24,7 @@ window.REGIONS = [
 window.CONDITIONS = [
   { id: "tos", name: "Neck and arm tension", aka: "thoracic outlet syndrome", regions: ["neck", "shoulder", "upper-back"], commonRank: 23, blurb: "Tightness through the neck, chest, and shoulders. These routines use gentle stretches, posture work, and easy nerve glides. Stop if your arm tingles or feels heavy." },
   { id: "upper-cross", name: "Rounded shoulders or forward head", aka: "upper crossed syndrome posture", regions: ["neck", "shoulder", "upper-back"], commonRank: 16, blurb: "Gentle stretches for the chest and neck, with strengthening for the upper back." },
-  { id: "upper-back", name: "Upper back aches", aka: "upper back pain thoracic spine mid back between shoulder blades", regions: ["upper-back"], commonRank: 5.5, blurb: "Achiness or tightness around and between the shoulder blades, often after long sitting or desk time. Gentle upper back movement and light shoulder-blade strengthening are commonly used. If pain is severe, follows an injury, or comes with chest pain or shortness of breath, see a professional." },
+  { id: "upper-back", name: "Upper back aches", aka: "upper back pain thoracic spine mid back between shoulder blades", regions: ["upper-back"], commonRank: 5.5, blurb: "Achiness or tightness around and between the shoulder blades, often after long sitting or desk time. Gentle upper back movement and light shoulder-blade strengthening are commonly used. If pain is severe or follows an injury, see a professional. Chest pain or shortness of breath needs emergency help." },
   { id: "neck-pain", name: "Neck stiffness", aka: "neck pain", regions: ["neck", "upper-back"], commonRank: 2, blurb: "General neck stiffness or ache. Gentle movement, neck strengthening, and upper back mobility may help." },
   { id: "headache", name: "Headaches with a tight neck", aka: "tension headaches", regions: ["neck"], commonRank: 4, blurb: "Headaches that come with a tight neck or shoulders. Gentle neck and posture work may help some people." },
   { id: "shoulder-pain", name: "Shoulder aches", aka: "general shoulder pain", regions: ["shoulder"], commonRank: 3, blurb: "An achy or pinchy shoulder when reaching or lifting. Building shoulder and shoulder-blade strength may help." },
@@ -35,9 +35,10 @@ window.CONDITIONS = [
   { id: "carpal-tunnel", name: "Hand and wrist strain", aka: "carpal tunnel syndrome", regions: ["wrist"], commonRank: 14, blurb: "Wrist and hand strain from desk or hand work. Gentle tendon glides, nerve glides, and stretches are commonly used. If numbness or tingling is new or getting worse, see a professional." },
   { id: "wrist-pain", name: "Wrist soreness or weakness", aka: "wrist pain", regions: ["wrist"], commonRank: 6, blurb: "General wrist soreness or weakness. Gentle movement first, then gradual strengthening." },
   { id: "arthritis-hand", name: "Stiff, achy fingers and thumbs", aka: "hand arthritis stiffness", regions: ["wrist"], commonRank: 13, blurb: "Stiff or achy fingers and thumbs. Daily gentle movement and light strengthening can help keep hands moving." },
-  { id: "low-back-pain", name: "Low back aches", aka: "low back pain", regions: ["lower-back", "core", "hip"], commonRank: 1, blurb: "A very common complaint. Gentle movement, core endurance, hip strength, and walking are often used." },
-  { id: "sciatica", name: "Back and leg discomfort", aka: "sciatica leg nerve pain", regions: ["lower-back", "hip"], commonRank: 15, blurb: "Discomfort that runs from the back or buttock down the leg. Gentle nerve glides, back care, and hip stretches are commonly used. If it is severe or getting worse, see a professional." },
-  { id: "disc", name: "Back discomfort with bending", aka: "disc bulge back pain", regions: ["lower-back"], commonRank: 8, blurb: "Back discomfort that changes with bending or sitting. Some people find gentle back-extension movements comfortable. A professional can tell you which direction suits you." },
+  { id: "low-back-pain", name: "Low back aches", aka: "low back pain", regions: ["lower-back", "core", "hip"], commonRank: 1, blurb: "A very common complaint. Gentle movement, core endurance, hip strength, and walking are often used. Get urgent help for numbness around your groin, trouble peeing, or weakness in both legs." },
+  { id: "sciatica", name: "Back and leg discomfort", aka: "sciatica leg nerve pain", regions: ["lower-back", "hip"], commonRank: 15, blurb: "Discomfort that runs from the back or buttock down the leg. Gentle nerve glides, back care, and hip stretches are commonly used. If it is severe or getting worse, see a professional. Get urgent help for numbness around your groin, trouble peeing, or weakness in both legs." },
+  // hidden: kept so saved data and old tags still resolve, but no longer offered in onboarding, the body map, or the builder
+  { id: "disc", name: "Back discomfort with bending", aka: "disc bulge back pain", regions: ["lower-back"], commonRank: 8, hidden: true, blurb: "Back discomfort that changes with bending or sitting. Some people find gentle back-extension movements comfortable. A professional can tell you which direction suits you." },
   { id: "hip-pain", name: "Hip aches", aka: "hip pain bursitis arthritis", regions: ["hip"], commonRank: 7, blurb: "Aching in the groin, side of the hip, or buttock. Strengthening the hip muscles is commonly used." },
   { id: "knee-pain", name: "Knee aches", aka: "kneecap knee pain", regions: ["knee", "hip"], commonRank: 12, blurb: "Aching around the kneecap with stairs, squatting, or sitting. Quad and hip strengthening are commonly used." },
   { id: "knee-oa", name: "Stiff, achy knees", aka: "knee arthritis osteoarthritis", regions: ["knee"], commonRank: 5, blurb: "Stiff or sore knees. Gentle movement, strengthening, and regular walking are commonly used." },
@@ -58,7 +59,7 @@ window.CONDITIONS = [
 window.CONDITION_GROUPS = [
   { id: "grp-neck-shoulder", name: "Neck & Shoulders", icon: "shoulder", color: "blue", blurb: "Neck, shoulders, and posture", conditions: ["neck-pain", "shoulder-pain", "headache", "posture", "rotator-cuff", "upper-cross", "frozen-shoulder", "tos"] },
   { id: "grp-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbows, wrists, and hands", conditions: ["wrist-pain", "arthritis-hand", "carpal-tunnel", "tennis-elbow", "golfers-elbow"] },
-  { id: "grp-back", name: "Back", icon: "lower-back", color: "accent", blurb: "Upper back, low back, and legs", conditions: ["low-back-pain", "upper-back", "sciatica", "disc"] },
+  { id: "grp-back", name: "Back", icon: "lower-back", color: "accent", blurb: "Upper back, low back, and legs", conditions: ["low-back-pain", "upper-back", "sciatica"] },
   { id: "grp-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hips and knees", conditions: ["knee-pain", "hip-pain", "knee-oa", "itb"] },
   { id: "grp-foot", name: "Feet & Ankles", icon: "ankle-foot", color: "orange", blurb: "Ankles, heels, and feet", conditions: ["ankle-sprain", "plantar-fasciitis", "achilles"] },
   { id: "grp-balance", name: "Balance & Recovery", icon: "balance", color: "yellow", blurb: "Steadiness and getting moving again", conditions: ["balance-falls", "general", "post-surgery"] },
@@ -68,14 +69,14 @@ window.CONDITION_GROUPS = [
 window.TEMPLATE_GROUPS = [
   { id: "tg-neck", name: "Neck, Shoulders & Posture", icon: "shoulder", color: "blue", blurb: "Neck, shoulders, and posture", templates: ["tpl-neck", "tpl-tos", "tpl-upper-cross", "tpl-rotator-cuff", "tpl-frozen-shoulder"] },
   { id: "tg-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbows, wrists, and grip", templates: ["tpl-tennis-elbow", "tpl-carpal"] },
-  { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Upper and lower back care, and core strength", templates: ["tpl-low-back", "tpl-thoracic-mobility", "tpl-upper-back-strength", "tpl-sciatica", "tpl-abs"] },
+  { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Upper and lower back care, and core strength", templates: ["tpl-low-back", "tpl-thoracic-mobility", "tpl-upper-back-strength", "tpl-sciatica", "tpl-core-gentle", "tpl-abs"] },
   { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength and knee care", templates: ["tpl-hip", "tpl-knee"] },
   { id: "tg-legs", name: "Legs", icon: "step", color: "accent", blurb: "Stretches, warmups, strength, yoga, and recovery for your legs", templates: ["tpl-leg-warmup", "tpl-leg-stretch", "tpl-leg-strength", "tpl-leg-yoga", "tpl-leg-recovery", "tpl-legs"] },
   { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Ankles, heels, and steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
   { id: "tg-gentle", name: "Gentle Full-Body Start", icon: "leaf", color: "yellow", blurb: "A kind first routine after a long break", templates: ["tpl-gentle-full"] },
-  { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
-  { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness on the machines", templates: ["tpl-cardio"] },
-  { id: "tg-yoga", name: "Yoga", icon: "sun", color: "pink", blurb: "Full-length beginner flows", templates: ["tpl-yoga-beginner-flow"] }
+  { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-gym-start", "tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
+  { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness, from a first walk to the machines", templates: ["tpl-cardio-start", "tpl-cardio"] },
+  { id: "tg-yoga", name: "Yoga", icon: "sun", color: "pink", blurb: "A short flow and the full-length beginner flow", templates: ["tpl-yoga-gentle", "tpl-yoga-beginner-flow"] }
 ];
 
 // Everyday muscle names -> precise anatomical names, shown in exercise details.
@@ -310,6 +311,44 @@ window.TEMPLATES = [
     id: "tpl-gentle-full", name: "Gentle Full-Body Start", conditions: ["general", "post-surgery"],
     desc: "A kind first routine for rebuilding after illness, surgery, or a long break. Every exercise has an easier variation.",
     items: ["breathing-diaphragm", "seated-thoracic-extension-chair", "shoulder-shrug-roll", "ankle-pumps", "quad-set", "glute-bridge", "sit-to-stand", "marching-in-place", "walking-program"]
+  },
+  // Short, gentle starters. Onboarding hands these out, so every exercise is Gentle or has an easy version.
+  {
+    id: "tpl-gym-start", name: "Gym Starter (Machines)", conditions: [],
+    desc: "A short first gym session. Machines guide the movement, so they are a good place to learn. Do two light sets of each and rest a day between sessions.",
+    items: [
+      { id: "stationary-bike", timeSec: 300 },
+      { id: "leg-press", sets: 2 },
+      { id: "machine-chest-press", sets: 2 },
+      { id: "seated-cable-row", sets: 2 },
+      { id: "lat-pulldown", sets: 2 },
+      { id: "seated-leg-curl", sets: 2 }
+    ]
+  },
+  {
+    id: "tpl-cardio-start", name: "Easy Cardio Start", conditions: [],
+    desc: "A short warm-up, a 10 minute walk at a pace where you can still talk, and a calf stretch. Add a few minutes each week.",
+    items: [{ id: "marching-in-place", sets: 1 }, "walking-program", { id: "calf-stretch-wall", sets: 1 }]
+  },
+  {
+    id: "tpl-core-gentle", name: "Core and Posture Basics", conditions: [],
+    desc: "Easy core and posture moves on the floor, at a wall, and in a chair. Start with the easier version of anything that feels hard.",
+    items: [
+      "pelvic-tilt",
+      { id: "abdominal-bracing", sets: 2 },
+      { id: "dead-bug", sets: 2 },
+      { id: "plank-incline", sets: 2 },
+      "seated-thoracic-extension-chair",
+      { id: "chin-tuck", sets: 2 }
+    ]
+  },
+  {
+    id: "tpl-yoga-gentle", name: "Short Yoga Flow", conditions: [], kind: "yoga",
+    desc: "A short, slow session with no deep bends and nothing fast. Rest in Child's Pose whenever you like.",
+    items: [
+      "yoga-shoulder-rolls", "yoga-neck-rolls", "yoga-cat-cow", "yoga-childs-pose",
+      "yoga-low-lunge", "yoga-mountain", "yoga-star", "yoga-butterfly", "yoga-supine-twist", "yoga-corpse"
+    ]
   },
   {
     id: "tpl-push", name: "Push Day (Chest, Shoulders, Triceps)", conditions: ["strength-training"],

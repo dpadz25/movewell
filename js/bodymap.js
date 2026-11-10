@@ -192,7 +192,7 @@
     const r = this.region(regionId);
     this.pushView("region:" + regionId + ":" + zoneId + ":" + (label || ""), () => this.openRegionSheet(regionId, zoneId, label, muscles));
     // leave out catch-all entries (general fitness, post-surgery) that read as unrelated causes
-    const conds = window.CONDITIONS.filter(c => c.regions.includes(regionId) && (c.commonRank ?? 999) < 999)
+    const conds = window.CONDITIONS.filter(c => !c.hidden && c.regions.includes(regionId) && (c.commonRank ?? 999) < 999)
       .sort((a, b) => (a.commonRank ?? 999) - (b.commonRank ?? 999));
     const exs = window.EXERCISES.filter(e => e.region === regionId && e.type !== "yoga");
     let painVal = null;
@@ -212,6 +212,7 @@
         <div class="pain-steps" id="rs-pain" role="group" aria-label="Pain from 0 to 10">${Array.from({ length: 11 }, (_, i) => `<button class="pain-num pain-step ${i <= 3 ? "lo" : i <= 6 ? "mid" : "hi"}" data-p="${i}" aria-label="Pain ${i}" style="height:${2.4 + i * 0.22}rem">${i}</button>`).join("")}</div>
         <div class="pain-steps-ends"><span>No pain</span><span>Worst</span></div>
         <div class="rs-word" id="rs-word" aria-live="polite">Tap a number</div>
+        ${regionId === "chest" ? `<div class="exd-caution" id="rs-chest" style="display:none;margin-bottom:0.8rem">${this.icon("alert")}<span>Chest pain or pressure can be a heart problem. If it is new, or comes with trouble breathing, call 911 or your local emergency number.</span></div>` : ""}
         <input type="text" id="rs-note" placeholder="Anything to add? Like: stiff in the morning" aria-label="Note">
         <button class="btn big grad" id="rs-log" disabled>Save how it feels</button>
       </section>
@@ -255,6 +256,9 @@
       painVal = p;
       body.querySelector("#rs-word").textContent = p + " out of 10: " + WORDS[p].toLowerCase();
       body.querySelector("#rs-log").disabled = false;
+      // the heart note only appears once someone says their chest actually hurts
+      const chest = body.querySelector("#rs-chest");
+      if (chest) chest.style.display = p >= 1 ? "" : "none";
     });
     body.querySelector("#rs-log").onclick = () => {
       this.state.bodyLogs.push({
@@ -262,18 +266,23 @@
         pain: painVal, note: body.querySelector("#rs-note").value.trim()
       });
       this.save(); this.closeModal(); this.refresh();
-      this.toast("Saved. You can see it in Progress.");
+      if (painVal >= this.PAIN_HIGH) this.openPainCard(painVal, label || r.name);
+      else this.toast("Saved. You can see it in Progress.");
     };
     body.querySelectorAll(".region-issue").forEach(n => n.onclick = () => this.openConditionSheet(n.dataset.c, regionId, label));
     body.querySelector("#rs-make-routine").onclick = () => {
       // prefer a template that targets this region, otherwise build from region's gentlest exercises
-      const tpl = window.TEMPLATES.find(t => t.conditions.some(c => this.condition(c).regions[0] === regionId)) ||
-        window.TEMPLATES.find(t => t.conditions.some(c => this.condition(c).regions.includes(regionId)));
+      // gym days are never the answer to "this area bothers me", and the neck gets its plain routine first
+      const care = t => t.conditions.filter(c => c !== "strength-training" && c !== "conditioning");
+      const prefer = { neck: "tpl-neck", knee: "tpl-knee" };
+      const tpl = window.TEMPLATES.find(t => t.id === prefer[regionId]) ||
+        window.TEMPLATES.find(t => care(t).some(c => this.condition(c).regions[0] === regionId)) ||
+        window.TEMPLATES.find(t => care(t).some(c => this.condition(c).regions.includes(regionId)));
       let routine;
       if (tpl) routine = this.routineFromTemplate(tpl);
       else {
         routine = {
-          id: this.uid(), name: r.name + " Care", desc: "", onHome: true, archived: false,
+          id: this.uid(), name: r.name + (regionId === "chest" || regionId === "arms" ? " Routine" : " Care"), desc: "", onHome: true, archived: false,
           items: exs.slice().sort((a, b) => a.level - b.level).slice(0, 7).map(ex => ({
             exId: ex.id, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0,
             timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide
@@ -295,6 +304,7 @@
     this.openModal(c.name, `
       <p style="font-size:0.95rem;color:var(--muted);margin-bottom:1rem">${this.esc(c.blurb)}</p>
       <div class="exd-caution" style="margin-bottom:1rem">${this.icon("alert")}<span>This is general information, not a diagnosis. If pain is severe, worsening, or came from an injury, see a professional first.</span></div>
+      <button class="link-quiet" id="cond-help" style="margin:-0.6rem 0 0.6rem">When to stop and get help</button>
       ${tpls.length ? `
         <div class="section-label" style="margin-top:0">Ready-made plan</div>
         ${tpls.map(t => `<button class="btn big" data-tpl="${t.id}" style="margin-bottom:0.5rem">${this.icon("sparkle")} Add “${this.esc(t.name)}” Routine</button>`).join("")}` : ""}
@@ -302,13 +312,17 @@
       ${exs.map(ex => this.exItemHtml(ex)).join("")}
     `);
     const body = document.getElementById("modal-body");
+    body.querySelector("#cond-help").onclick = () => this.openHelpSheet();
     body.querySelectorAll("[data-tpl]").forEach(b => b.onclick = () => {
-      const t = window.TEMPLATES.find(x => x.id === b.dataset.tpl);
-      const routine = this.routineFromTemplate(t);
-      this.state.routines.push(routine);
-      this.save();
-      this.toast("Routine added");
-      this.openRoutineEditor(routine.id);
+      const add = () => {
+        const t = window.TEMPLATES.find(x => x.id === b.dataset.tpl);
+        const routine = this.routineFromTemplate(t);
+        this.state.routines.push(routine);
+        this.save();
+        this.toast("Routine added");
+        this.openRoutineEditor(routine.id);
+      };
+      if (condId === "post-surgery") this.surgeryCheck(add); else add();
     });
   };
 })();

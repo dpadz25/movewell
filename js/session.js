@@ -101,12 +101,15 @@
     this.stopHoldTimer();
     this._pauseOpen = true;
     if (view === "hurt") {
+      if (!this._viewRestoring) this._modalStack = [];
+      this.pushView("sess-hurt", () => this.exitSession("hurt"));
       this.openModal("Sorry it hurts", `
-        <p class="sp-note" style="margin:0 0 0.9rem">Pick what feels right. You can talk to your therapist about it too.</p>
+        <p class="sp-note" style="margin:0 0 0.9rem">Pick what feels right. Stopping is always fine.</p>
         <div class="menu-list">
           ${easier ? `<button class="menu-item" data-x="easier">${this.icon("swap")}<span>Try the easier version<br><small>${this.esc(easier.name)}</small></span></button>` : ""}
           <button class="menu-item" data-x="skip">${this.icon("chevR")}<span>Skip this exercise</span></button>
-          <button class="menu-item" data-x="stop">${this.icon("close")}<span>Stop for today<br><small>This session will not be saved</small></span></button>
+          <button class="menu-item" data-x="stop">${this.icon("close")}<span>Stop for today<br><small>What you did is saved</small></span></button>
+          <button class="menu-item" data-x="help">${this.icon("alert")}<span>When to stop and get help</span></button>
         </div>
         <div class="exd-caution" style="margin-top:0.9rem">${this.icon("alert")}<span>Sharp pain, or pain that does not ease with rest? Stop and call your therapist or doctor.</span></div>`);
     } else {
@@ -115,7 +118,7 @@
         <button class="btn big" data-x="resume">${this.icon("play")} Keep going</button>
         <div class="menu-list" style="margin-top:0.7rem">
           <button class="menu-item" data-x="hurt">${this.icon("heart")}<span>This hurts</span></button>
-          <button class="menu-item" data-x="end">${this.icon("close")}<span>End for today<br><small>Ending early does not save or count toward your streak</small></span></button>
+          <button class="menu-item" data-x="end">${this.icon("close")}<span>End for today<br><small>Ending early does not save this session</small></span></button>
         </div>`);
     }
     const body = document.getElementById("modal-body");
@@ -130,16 +133,25 @@
         return;
       }
       if (x === "skip") { this._pauseOpen = false; this.closeModal(); it.skipped = it.logged.length === 0; it.hurt = true; this.advance(); return; }
-      if (x === "stop" || x === "end") {
-        // ending early never saves: only a session finished to the end counts
+      if (x === "help") { this.openHelpSheet(); return; }
+      if (x === "stop") {
+        // stopping because it hurts is never penalized: whatever was done is saved, with no warning to keep going
+        this._pauseOpen = false;
+        this.closeModal();
+        if (!s.items.some(y => y.logged.length > 0)) { this.teardownSession(); this.toast("Stopped. Rest up and take care."); return; }
+        this.finishSession({ early: true });
+        return;
+      }
+      if (x === "end") {
+        // ending early for other reasons does not save
         this._pauseOpen = false;
         this.closeModal();
         if (!s.items.some(y => y.logged.length > 0)) { this.teardownSession(); return; }
         this.renderSessionStep();
-        this.confirm(x === "stop" ? "Stop for today?" : "End without saving?",
-          "Sessions only count when you finish them. If you stop now, today's exercises will not be saved and will not count toward your streak.",
-          () => { this.teardownSession(); this.toast(x === "stop" ? "Stopped. Rest up and take care." : "Session ended. It was not saved."); },
-          x === "stop" ? "Stop, don't save" : "End, don't save", null, "Keep going");
+        this.confirm("End without saving?",
+          "If you end now, today's exercises will not be saved.",
+          () => { this.teardownSession(); this.toast("Session ended. It was not saved."); },
+          "End, don't save", null, "Keep going");
       }
     });
   };
@@ -295,6 +307,7 @@
       <div class="sp-actions">${actionHtml}</div>
       ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between them.</span></div>` : ""}
       ${cue ? `<div class="sp-cue">${this.icon("bulb")}<span>${this.esc(cue)}</span></div>` : ""}
+      ${ex.caution && ex.caution !== cue ? `<button class="sp-care" id="sp-care" aria-expanded="false">${this.icon("alert")}<span>${this.esc(ex.caution)}</span></button>` : ""}
       <div id="sets-done" class="sp-sets-done">${this.setsDoneHtml(it)}</div>
       <button class="session-howto-toggle" id="howto-toggle" aria-expanded="${it._howtoOpen ? "true" : "false"}"><span style="display:inline-flex;align-items:center;gap:0.5rem">${this.icon("book")} How to do it</span><span id="howto-chev" style="display:inline-flex">${it._howtoOpen ? this.icon("chevU") : this.icon("chevD")}</span></button>
       <div class="session-howto${it._howtoOpen ? " open" : ""}" id="howto">
@@ -311,6 +324,7 @@
         <a class="video-link" href="${yt}" target="_blank" rel="noopener" style="margin-top:0.6rem">${this.icon("video")} Watch a video</a>
         ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Pair with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}
       </div>
+      ${this.wantsRehab() ? `<button class="link-quiet sp-hurts" id="sess-hurts">${this.icon("heart")} This hurts</button>` : ""}
     `;
 
     const isLast = s.idx === total - 1;
@@ -355,6 +369,11 @@
       this.renderSessionStep();
       this.toast("Superset linked. You'll alternate between the two.");
     };
+    // the take-care line shows two lines by default; a tap opens the rest
+    const care = body.querySelector("#sp-care");
+    if (care) care.onclick = () => { care.classList.toggle("open"); care.setAttribute("aria-expanded", care.classList.contains("open")); };
+    const hurts = body.querySelector("#sess-hurts");
+    if (hurts) hurts.onclick = () => this.exitSession("hurt");
     body.querySelector("#howto-toggle").onclick = () => {
       const h = body.querySelector("#howto");
       h.classList.toggle("open");
@@ -626,7 +645,9 @@
   };
 
   // ---------- finish + celebration ----------
-  App.finishSession = function () {
+  // opts.early: the person stopped because something hurt. Save what was done, skip the half-done rule and the confetti.
+  App.finishSession = function (opts) {
+    const early = !!(opts && opts.early);
     const s = this._sess;
     // a session where nothing was logged should not count toward the streak
     if (!s.items.some(i => i.logged.length > 0)) {
@@ -638,12 +659,12 @@
     const main = s.items.filter(i => !i.warmup);
     const doneMain = main.filter(i => i.logged.length > 0).length;
     const need = Math.ceil(main.length / 2);
-    if (main.length && doneMain < need) {
+    if (!early && main.length && doneMain < need) {
       const firstLeft = s.items.findIndex(i => !i.warmup && i.logged.length === 0);
       this._pauseOpen = true;
-      this.openModal("Almost there", `
-        <p class="sp-note" style="margin:0 0 0.9rem">You did ${doneMain} of ${main.length} exercises. Do at least ${need} to finish the session and have it count.</p>
-        <button class="btn big" id="fin-back">${this.icon("arrowLeft")} Go back and do more</button>
+      this.openModal("Not quite a full session", `
+        <p class="sp-note" style="margin:0 0 0.9rem">You did ${doneMain} of ${main.length} exercises. A session is saved once ${need} are done. If something hurts, tap This hurts instead.</p>
+        <button class="btn big" id="fin-back">${this.icon("arrowLeft")} Go back</button>
         <div class="menu-list" style="margin-top:0.7rem">
           <button class="menu-item" id="fin-quit">${this.icon("close")}<span>End without saving</span></button>
         </div>`);
@@ -679,7 +700,7 @@
     document.getElementById("session").classList.remove("open");
     const cel = document.getElementById("celebrate");
     cel.classList.add("open");
-    this.launchConfetti();
+    if (!early) this.launchConfetti();
 
     const name = this.state.profile.name;
     // streak as it will be once this session is saved
@@ -700,8 +721,8 @@
     document.getElementById("celebrate-card").innerHTML = `
       <section class="fin-hero">
         <div class="fin-ring">${this.icon("check")}</div>
-        <h1 class="fin-title">Nice work${name ? ", " + this.esc(name) : ""}.</h1>
-        <div class="fin-sub">${this.esc(s.routineName)} is done for today.</div>
+        <h1 class="fin-title">${early ? "Stopped for today" : "Nice work"}${name ? ", " + this.esc(name) : ""}.</h1>
+        <div class="fin-sub">${early ? "What you did is saved. Rest up and take care." : this.esc(s.routineName) + " is done for today."}</div>
         <div class="fin-stats">
           <div><div class="fin-num">${doneItems.length}</div><div class="fin-lbl">exercise${doneItems.length === 1 ? "" : "s"}</div></div>
           <div><div class="fin-num">${mins}</div><div class="fin-lbl">minute${mins === 1 ? "" : "s"}</div></div>
@@ -737,6 +758,7 @@
       const p = Number(b.dataset.p);
       b.style.background = p <= 3 ? "var(--accent)" : p <= 6 ? "var(--yellow)" : "var(--red)";
       painVals[row.dataset.z] = p;
+      if (p >= this.PAIN_HIGH) this.stopConfetti();
     }));
     card.querySelector("#cel-save").onclick = () => {
       const log = this._pendingLog;
@@ -758,8 +780,10 @@
       this.stopConfetti();
       this._sess = null;
       this.showPage("home");
-      const base = "Session saved. See you next time!";
-      this.toast(hitMilestone ? streakNow + " days in a row! " + base : base);
+      // high pain gets a calm card instead of a cheer
+      if (log.pain != null && log.pain >= this.PAIN_HIGH) { this.openPainCard(log.pain, ""); return; }
+      const base = early ? "Saved. Rest up and take care." : "Session saved. See you next time!";
+      this.toast(hitMilestone && !early ? streakNow + " days in a row! " + base : base);
     };
     this.chime();
     setTimeout(() => this.chime(), 400);
@@ -798,7 +822,11 @@
     };
     draw();
   };
-  App.stopConfetti = function () { cancelAnimationFrame(this._confettiT); };
+  App.stopConfetti = function () {
+    cancelAnimationFrame(this._confettiT);
+    const canvas = document.getElementById("confetti-canvas");
+    if (canvas) canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+  };
 
   document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("session-exit").onclick = () => App.exitSession();

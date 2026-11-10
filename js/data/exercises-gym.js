@@ -20,7 +20,7 @@ window.EXERCISES.push(
     "Press the bar back up until your arms are straight, then repeat."
   ],
   tips: ["Keep your wrists stacked over your elbows on the way down.", "Use a spotter or safety arms when going heavy."],
-  caution: "Never bench heavy without a spotter or safeties. Keep your shoulder blades pinched to protect the shoulders.",
+  caution: "Never bench heavy without a spotter or safeties. Keep your shoulder blades pinched to protect the shoulders. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Close-Grip Bench Press", note: "Hands shoulder width apart. Shifts the work onto the triceps." },
     { name: "Incline Barbell Press", note: "Bench set to 30 degrees. Emphasizes the upper chest." },
@@ -40,7 +40,7 @@ window.EXERCISES.push(
     "Press back up and repeat."
   ],
   tips: ["Dumbbells let each arm work on its own, which evens out strength differences.", "Kick the weights up with your knees when getting into position."],
-  caution: "Do not let the dumbbells drift out wide at the bottom. Keep them over your elbows.",
+  caution: "Do not let the dumbbells drift out wide at the bottom. Keep them over your elbows. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Floor Press", note: "Same movement lying on the floor. Friendlier on cranky shoulders." },
     { name: "Neutral Grip Press", note: "Palms facing each other. Often more comfortable for the shoulders." }
@@ -59,7 +59,7 @@ window.EXERCISES.push(
     "Lower under control to the start and repeat."
   ],
   tips: ["A lower incline hits more chest, a higher incline more shoulder.", "Keep your feet planted and your lower back lightly against the bench."],
-  caution: "Start lighter than flat bench. The incline is always harder than people expect.",
+  caution: "Start lighter than flat bench. The incline is always harder than people expect. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Incline Machine Press", note: "Same angle on a chest press machine for extra stability." }
   ]
@@ -77,7 +77,7 @@ window.EXERCISES.push(
     "Stop before the weight stack touches down and press again."
   ],
   tips: ["Machines are a great way to learn pressing before moving to free weights.", "Keep your head and back against the pad."],
-  caution: "Set the seat height first. Pressing from too low or too high strains the shoulders.",
+  caution: "Set the seat height first. Pressing from too low or too high strains the shoulders. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Arm Press", note: "Press with one arm at a time to work each side evenly." }
   ]
@@ -95,7 +95,7 @@ window.EXERCISES.push(
     "Let your arms open back out slowly until you feel a chest stretch, then repeat."
   ],
   tips: ["Think of hugging a barrel rather than pressing.", "The stretch at the back is where the magic happens, so control it."],
-  caution: "Keep the elbow bend constant. Turning it into a press defeats the purpose.",
+  caution: "Keep the elbow bend constant. Turning it into a press defeats the purpose. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Pec Deck Machine", note: "The seated machine version. Very easy to learn." },
     { name: "Dumbbell Fly", note: "Same motion lying on a bench with dumbbells." },
@@ -115,7 +115,7 @@ window.EXERCISES.push(
     "Press back up to the start and repeat."
   ],
   tips: ["Squeeze your buttock muscles and tighten your belly muscles to keep the hips from sagging.", "Elbows at about 45 degrees from your body, not flared straight out."],
-  caution: "If your lower back aches, raise your hands onto a bench or counter instead.",
+  caution: "If your lower back aches, raise your hands onto a bench or counter instead. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Incline Push-Up", note: "Hands on a bench or counter. Easier version." },
     { name: "Knee Push-Up", note: "From the knees. Great stepping stone." },
@@ -135,7 +135,7 @@ window.EXERCISES.push(
     "Press back up to straight arms and repeat."
   ],
   tips: ["More forward lean works the chest, staying upright works the triceps.", "Most gyms have an assisted dip machine if bodyweight is too much."],
-  caution: "Do not sink past a comfortable depth. Deep dips are hard on the front of the shoulder.",
+  caution: "Do not sink past a comfortable depth. Deep dips are hard on the front of the shoulder. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Assisted Dip Machine", note: "The knee pad offsets part of your bodyweight." },
     { name: "Bench Dip", note: "Hands on a bench behind you, feet on the floor. Easier version." }
@@ -156,7 +156,7 @@ window.EXERCISES.push(
     "Lower slowly back to shoulder level and repeat."
   ],
   tips: ["Keep your ribs down rather than arching your lower back to finish the press.", "A slight forward angle of the forearms is normal and fine."],
-  caution: "Skip overhead pressing if it pinches or hurts your shoulder, or if your arms tingle. Lateral raises and landmine presses are gentler options.",
+  caution: "Skip overhead pressing if it pinches or hurts your shoulder, or if your arms tingle. Lateral raises and landmine presses are gentler options. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Overhead Barbell Press", note: "Standing barbell version, a classic strength builder." },
     { name: "Arnold Press", note: "Rotate the palms from facing you to facing forward as you press." },
@@ -176,7 +176,7 @@ window.EXERCISES.push(
     "Lower slowly back to your sides and repeat."
   ],
   tips: ["Lead with your elbows, like pouring out two jugs of water.", "Lighter than you think. This is a small muscle and swinging cheats it."],
-  caution: "Do not shrug the weights up with your traps. If your neck takes over, go lighter.",
+  caution: "Do not shrug the weights up with your traps. If your neck takes over, go lighter. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Cable Lateral Raise", note: "Constant tension through the whole arc." },
     { name: "Seated Lateral Raise", note: "Sitting removes the urge to swing." }
@@ -195,7 +195,7 @@ window.EXERCISES.push(
     "Lower slowly back to your thighs and repeat."
   ],
   tips: ["Tighten your belly muscles so your lower back doesn't arch as the weights come up.", "Alternating one arm at a time makes it easier to keep the body still."],
-  caution: "No swinging or leaning back to heave the weight up. Stop at shoulder height, going higher just irritates the shoulder.",
+  caution: "No swinging or leaning back to heave the weight up. Stop at shoulder height, going higher just irritates the shoulder. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Alternating Front Raise", note: "One arm at a time. Easier to control and kinder to the lower back." },
     { name: "Plate Front Raise", note: "Hold a single weight plate with both hands like a steering wheel." },
@@ -216,7 +216,7 @@ window.EXERCISES.push(
     "Lower slowly and repeat."
   ],
   tips: ["The reverse pec deck machine is the easiest way to learn this.", "Rear delts balance out all the pressing most people do."],
-  caution: "Keep the weights light and the motion smooth. Momentum takes the rear delts out of it.",
+  caution: "Keep the weights light and the motion smooth. Momentum takes the rear delts out of it. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Reverse Pec Deck", note: "Seated machine version facing the pad." },
     { name: "Chest-Supported Fly", note: "Lying face down on an incline bench removes lower back strain." }
@@ -237,7 +237,7 @@ window.EXERCISES.push(
     "Let it rise slowly to chest height, keeping your elbows still, and repeat."
   ],
   tips: ["With a rope, pull the two ends apart slightly at the bottom.", "Everything moves below the elbow. The upper arm stays glued in place."],
-  caution: "If your elbows drift forward, the weight is too heavy.",
+  caution: "If your elbows drift forward, the weight is too heavy. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Arm Pushdown", note: "One arm at a time with a small handle." },
     { name: "Reverse Grip Pushdown", note: "Palms up, hits the triceps from a different angle." }
@@ -256,7 +256,7 @@ window.EXERCISES.push(
     "Straighten your arms back to the top and repeat."
   ],
   tips: ["The overhead stretch position grows the biggest part of the triceps.", "Keep your elbows narrow rather than letting them flare wide."],
-  caution: "Move slowly behind the head. Keep the weight light until the movement feels smooth.",
+  caution: "Move slowly behind the head. Keep the weight light until the movement feels smooth. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Cable Overhead Extension", note: "Face away from a low pulley with a rope for constant tension." },
     { name: "Skull Crusher", note: "Lying on a bench, lower a bar or dumbbells to the forehead. Same muscle, different angle." }
@@ -275,7 +275,7 @@ window.EXERCISES.push(
     "Straighten your arms back to the start and repeat."
   ],
   tips: ["Lowering slightly behind the head instead of to the forehead is easier on the elbows.", "An EZ curl bar is more comfortable on the wrists than a straight bar."],
-  caution: "The name is a warning. Use a weight you can fully control.",
+  caution: "The name is a warning. Use a weight you can fully control. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Dumbbell Skull Crusher", note: "One dumbbell per hand with neutral palms." }
   ]
@@ -295,7 +295,7 @@ window.EXERCISES.push(
     "Bend back down under control to set the bar on the floor, then repeat."
   ],
   tips: ["Think of it as a push with your legs, not a pull with your back.", "Take a big breath and tighten your belly muscles before every rep."],
-  caution: "Learn this with light weight or a trainer first. A rounded lower back under load is the classic way people get hurt.",
+  caution: "Learn this with light weight or a trainer first. A rounded lower back under load is the classic way people get hurt. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Trap Bar Deadlift", note: "The hexagon bar keeps the load centered and is easier to learn." },
     { name: "Sumo Deadlift", note: "Wide stance, hands inside the knees. More upright torso." },
@@ -315,7 +315,7 @@ window.EXERCISES.push(
     "Drive your hips forward to stand back up, squeezing your buttock muscles at the top."
   ],
   tips: ["The knees stay softly bent the whole time. All the motion comes from the hips.", "Keep the weight brushing your legs. Drifting forward strains the back."],
-  caution: "Keep your back flat throughout. Shorten the range if your back starts to round.",
+  caution: "Keep your back flat throughout. Shorten the range if your back starts to round. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Leg RDL", note: "One leg at a time. Adds a balance challenge." },
     { name: "Dumbbell RDL", note: "Same hinge with dumbbells, great for learning." }
@@ -334,7 +334,7 @@ window.EXERCISES.push(
     "Let the bar rise slowly until your arms are fully stretched, then repeat."
   ],
   tips: ["Think about pulling with your elbows, not your hands.", "This is a common way to build up toward your first pull-up."],
-  caution: "Always pull to the front of the chest, never behind the neck.",
+  caution: "Always pull to the front of the chest, never behind the neck. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Close Neutral Grip", note: "Palms facing each other on a V handle. Comfortable and strong." },
     { name: "Single Arm Pulldown", note: "One handle at a time to fix side-to-side gaps." }
@@ -353,7 +353,7 @@ window.EXERCISES.push(
     "Lower yourself all the way down under control and repeat."
   ],
   tips: ["Full hang at the bottom, chin over bar at the top. Half reps build half strength.", "Bands or the assisted machine let you train the full movement while building up."],
-  caution: "Lower under control rather than dropping. The slow descent is half the exercise.",
+  caution: "Lower under control rather than dropping. The slow descent is half the exercise. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Chin-Up", note: "Palms facing you. Uses more biceps and is a bit easier." },
     { name: "Assisted Pull-Up Machine", note: "The knee pad offsets bodyweight so it is easier to start." },
@@ -373,7 +373,7 @@ window.EXERCISES.push(
     "Lower under control and repeat without standing up between reps."
   ],
   tips: ["Tighten your belly muscles as if someone is about to poke your stomach.", "A steady bent-over position matters more than the weight on the bar."],
-  caution: "If your lower back fatigues before your upper back, switch to chest-supported rows.",
+  caution: "If your lower back fatigues before your upper back, switch to chest-supported rows. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Pendlay Row", note: "Bar rests on the floor between reps. Strict and powerful." },
     { name: "Chest-Supported Row", note: "Lying on an incline bench. Removes all lower back strain." }
@@ -392,7 +392,7 @@ window.EXERCISES.push(
     "Let your arms reach fully forward under control, then pull again."
   ],
   tips: ["Imagine pinching a pencil between your shoulder blades on every rep.", "A tall chest beats a heavy stack. Do not rock back and forth."],
-  caution: "Keep your lower back neutral. Lean from the hips only slightly, not the spine.",
+  caution: "Keep your lower back neutral. Lean from the hips only slightly, not the spine. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Wide Grip Row", note: "A long bar with a wide grip shifts work to the rear delts." },
     { name: "Machine Row", note: "Chest pad machine version, very beginner friendly." }
@@ -411,7 +411,7 @@ window.EXERCISES.push(
     "Lower it all the way down with control. Finish the set, then switch sides."
   ],
   tips: ["Pull toward your hip pocket, not straight up to your chest.", "Keep your back flat like a table top."],
-  caution: "Avoid twisting your torso to heave the weight up.",
+  caution: "Avoid twisting your torso to heave the weight up. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Meadows Row", note: "Rowing the end of a landmine barbell. A bodybuilding favorite." },
     { name: "Kroc Row", note: "Higher reps with a heavier bell and a little body english. Advanced." }
@@ -430,7 +430,7 @@ window.EXERCISES.push(
     "Lower with control and repeat."
   ],
   tips: ["Squeeze the buttock muscles to lift rather than yanking with the lower back.", "Hold a weight plate to your chest once bodyweight gets easy."],
-  caution: "Do not hyperextend past a straight line at the top.",
+  caution: "Do not hyperextend past a straight line at the top. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Glute-Focused Extension", note: "Round your upper back slightly and tuck the chin to keep it all glutes." }
   ]
@@ -448,7 +448,7 @@ window.EXERCISES.push(
     "Lower all the way down and repeat."
   ],
   tips: ["Straight up and down. Rolling the shoulders adds nothing and irritates joints.", "A slow lower builds more muscle than a heavy bounce."],
-  caution: "Skip shrugs if they make your neck or shoulders hurt, or if your arms tingle.",
+  caution: "Skip shrugs if they make your neck or shoulders hurt, or if your arms tingle. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Barbell Shrug", note: "Lets you load heavier with the bar in front of your thighs." }
   ]
@@ -466,7 +466,7 @@ window.EXERCISES.push(
     "Pause and hold the squeeze for a second, then let the blades spread apart slowly and repeat."
   ],
   tips: ["Think about pinching a pencil between your shoulder blades.", "Light weight with a hard squeeze beats heavy weight here. The range is tiny by design."],
-  caution: "Keep your neck long and relaxed. If your upper traps or neck take over, go lighter.",
+  caution: "Keep your neck long and relaxed. If your upper traps or neck take over, go lighter. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Cable Row Kelso Shrug", note: "Seated at a cable row, pull the shoulder blades back and together without bending the elbows." },
     { name: "Chest-Supported Machine Version", note: "Chest against a supported-row pad, retracting the blades only. Very easy to lock in the form." }
@@ -487,7 +487,7 @@ window.EXERCISES.push(
     "Lower slowly all the way down until your arms are straight, then repeat."
   ],
   tips: ["The slow lower is where most of the growth comes from.", "An EZ curl bar is kinder to the wrists than a straight bar."],
-  caution: "No swinging the hips to heave the bar up. If you must swing, it is too heavy.",
+  caution: "No swinging the hips to heave the bar up. If you must swing, it is too heavy. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "EZ Bar Curl", note: "Angled grips reduce wrist strain." },
     { name: "Preacher Curl", note: "Arms braced on an angled pad. Zero cheating possible." },
@@ -507,7 +507,7 @@ window.EXERCISES.push(
     "Lower slowly to straight arms and repeat."
   ],
   tips: ["Alternating arms lets you focus on each side.", "Turning the pinky up slightly at the top adds an extra biceps squeeze."],
-  caution: "Keep your shoulders back. Letting them roll forward turns curls into a front raise.",
+  caution: "Keep your shoulders back. Letting them roll forward turns curls into a front raise. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Incline Curl", note: "Seated on an incline bench, arms hanging back. A deep biceps stretch." },
     { name: "Concentration Curl", note: "Elbow braced against your inner thigh, one arm at a time." }
@@ -526,7 +526,7 @@ window.EXERCISES.push(
     "Lower slowly and repeat."
   ],
   tips: ["The neutral grip trains the forearm muscles that support achy elbows.", "You can usually go a bit heavier than regular curls."],
-  caution: "Same rule as all curls. Elbows stay pinned, no swinging.",
+  caution: "Same rule as all curls. Elbows stay pinned, no swinging. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Cross-Body Hammer Curl", note: "Curl across toward the opposite shoulder." },
     { name: "Rope Hammer Curl", note: "Cable rope version with constant tension." }
@@ -547,7 +547,7 @@ window.EXERCISES.push(
     "Drive through your whole foot to stand back up."
   ],
   tips: ["Take a big breath at the top and tighten your belly muscles before every rep.", "Depth you can control with a flat back beats forced extra depth."],
-  caution: "Squat inside a rack with safety pins set just below your bottom position.",
+  caution: "Squat inside a rack with safety pins set just below your bottom position. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Front Squat", note: "Bar on the front of the shoulders. More upright, more quads." },
     { name: "Box Squat", note: "Sit lightly to a box each rep to learn depth and stay consistent." },
@@ -567,7 +567,7 @@ window.EXERCISES.push(
     "Push through your feet to stand and repeat."
   ],
   tips: ["The front-held weight acts as a counterbalance, making depth easier.", "This is a common way to learn squatting before the barbell."],
-  caution: "Keep your heels on the floor. If they lift, raise them on small plates or work on ankle mobility.",
+  caution: "Keep your heels on the floor. If they lift, raise them on small plates or work on ankle mobility. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Goblet Squat with Pause", note: "Hold three seconds at the bottom to build control." }
   ]
@@ -585,7 +585,7 @@ window.EXERCISES.push(
     "Press the platform away until your legs are nearly straight, without locking hard."
   ],
   tips: ["Feet higher on the platform hits more buttock muscles and back-of-thigh muscles, lower hits more front-of-thigh muscles.", "A great option to load the legs without loading the spine."],
-  caution: "Never lock your knees harshly at the top, and keep your hips on the seat throughout.",
+  caution: "Never lock your knees harshly at the top, and keep your hips on the seat throughout. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Leg Press", note: "One leg at a time to fix strength gaps." },
     { name: "Calf Press", note: "Press the platform with just the balls of your feet for a calf workout." }
@@ -604,7 +604,7 @@ window.EXERCISES.push(
     "Push through the front foot and step forward into the next lunge."
   ],
   tips: ["Keep your torso upright, like a string is pulling the top of your head up.", "Longer steps hit the buttock muscles more, shorter steps hit the front-of-thigh muscles."],
-  caution: "If balance is shaky, do stationary lunges next to a rail first.",
+  caution: "If balance is shaky, do stationary lunges next to a rail first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Reverse Lunge", note: "Step backward instead. Easier on the knees." },
     { name: "Stationary Split Squat", note: "Stay in one split stance and pump up and down." }
@@ -623,7 +623,7 @@ window.EXERCISES.push(
     "Drive through the front foot to stand. Finish the set, then switch legs."
   ],
   tips: ["Hop your front foot forward or back until the bottom position feels stable.", "Famous for being brutally effective. Start with bodyweight only."],
-  caution: "Expect serious muscle soreness the first week. Ease in with low sets.",
+  caution: "Expect serious muscle soreness the first week. Ease in with low sets. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Front Foot Elevated Split Squat", note: "Front foot on a small plate for extra depth." },
     { name: "Goblet Hold Version", note: "Hold one weight at the chest to stay more upright." }
@@ -642,7 +642,7 @@ window.EXERCISES.push(
     "Squeeze your buttock muscles hard at the top, then lower with control."
   ],
   tips: ["Tuck your chin and look forward at the top rather than arching your neck back.", "A great exercise for the buttock muscles. Start light and add weight gradually."],
-  caution: "Finish flat, not hyperextended. The lift comes from glutes, not the lower back arching.",
+  caution: "Finish flat, not hyperextended. The lift comes from glutes, not the lower back arching. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Glute Bridge (Floor)", note: "Shoulders stay on the floor. Shorter range, no bench needed." },
     { name: "Single Leg Hip Thrust", note: "One foot down, one leg lifted. No barbell required." },
@@ -662,7 +662,7 @@ window.EXERCISES.push(
     "Squeeze the front-of-thigh muscles at the top, then lower slowly."
   ],
   tips: ["A one second pause at the top makes lighter weight work harder.", "Works the front of the thigh on its own."],
-  caution: "Use smooth, controlled reps. Kicking the weight up fast is rough on the kneecap.",
+  caution: "Use smooth, controlled reps. Kicking the weight up fast is rough on the kneecap. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Leg Extension", note: "One leg at a time, useful after injuries." }
   ]
@@ -680,7 +680,7 @@ window.EXERCISES.push(
     "Lower slowly until your legs are almost straight, then repeat."
   ],
   tips: ["Point your toes toward your shins to make the back-of-thigh muscles do all the work.", "Hips stay glued down. Lifting them cheats the range."],
-  caution: "Do not let the weight yank your legs straight at the bottom.",
+  caution: "Do not let the weight yank your legs straight at the bottom. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Seated Leg Curl", note: "Seated machine version. Research suggests it grows hamstrings slightly better." },
     { name: "Swiss Ball Leg Curl", note: "Bridge up on a ball and curl it toward you. No machine needed." }
@@ -699,7 +699,7 @@ window.EXERCISES.push(
     "Pause at the top, then lower slowly to the stretch."
   ],
   tips: ["Full stretch at the bottom and a pause at the top beat bouncing every time.", "Calves respond to slow reps and honest range."],
-  caution: "No bouncing out of the bottom stretch position.",
+  caution: "No bouncing out of the bottom stretch position. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Seated Calf Raise", note: "Bent knees target the deeper soleus muscle." },
     { name: "Single Leg Calf Raise", note: "One leg on a step holding a dumbbell." }
@@ -718,7 +718,7 @@ window.EXERCISES.push(
     "Let it swing back between your legs and immediately drive into the next rep."
   ],
   tips: ["The power comes from the hip snap, not the arms. Your arms are just ropes.", "Stand up hard and squeeze your buttock muscles at the top of every swing."],
-  caution: "This is a hip hinge, not a squat. If your back gets sore, practice the hinge with light weight first.",
+  caution: "This is a hip hinge, not a squat. If your back gets sore, practice the hinge with light weight first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Arm Swing", note: "One hand on the bell. Adds a core anti-rotation challenge." },
     { name: "Dead-Stop Swing", note: "Reset the bell on the floor between each rep to drill form." }
@@ -737,7 +737,7 @@ window.EXERCISES.push(
     "Push your hips back to set the bell down and repeat."
   ],
   tips: ["A good first exercise for bending at the hips before barbell deadlifts.", "Keep your chest proud and arms long the whole way."],
-  caution: "Keep the bell close to your body. Reaching forward rounds the back.",
+  caution: "Keep the bell close to your body. Reaching forward rounds the back. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Suitcase Deadlift", note: "Bell beside one foot, lifted one-handed like luggage." }
   ]
@@ -757,7 +757,7 @@ window.EXERCISES.push(
     "Breathe steadily and hold until the timer chimes."
   ],
   tips: ["A shorter plank with good form beats a long, sagging one.", "Push the floor away so your upper back does not sink between the shoulders."],
-  caution: "Stop when your hips start to sag. That is the set, no matter what the clock says.",
+  caution: "Stop when your hips start to sag. That is the set, no matter what the clock says. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Incline Plank", note: "Forearms on a bench. Easier version." },
     { name: "Side Plank", note: "On one forearm, hips stacked. Targets the obliques." },
@@ -777,7 +777,7 @@ window.EXERCISES.push(
     "Lower slowly without swinging and repeat."
   ],
   tips: ["Bent knees make it easier, straight legs make it harder.", "Control the way down to kill the swing."],
-  caution: "If you swing like a pendulum, slow down and reset between reps.",
+  caution: "If you swing like a pendulum, slow down and reset between reps. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Hanging Knee Raise", note: "Knees tucked. The starting version." },
     { name: "Captain's Chair Raise", note: "Forearms on the pads of the vertical knee raise station." }
@@ -796,7 +796,7 @@ window.EXERCISES.push(
     "Return slowly until your abs are stretched, then repeat."
   ],
   tips: ["The hips do not move. Only the spine flexes.", "One of the few easy ways to add weight to ab training."],
-  caution: "Pull with your abs, not your arms. Hands just hold the rope in place.",
+  caution: "Pull with your abs, not your arms. Hands just hold the rope in place. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine.",
   variations: [
     { name: "Machine Crunch", note: "Seated ab crunch machine with the same motion." }
   ]
@@ -814,7 +814,7 @@ window.EXERCISES.push(
     "Rotate all the way across to the other hip. That is one rep per side."
   ],
   tips: ["Rotate from the ribs, letting your eyes and chest travel together.", "Feet down is easier, feet hovering is harder."],
-  caution: "Slow and controlled. Fast twisting under load is rough on the spine.",
+  caution: "Slow and controlled. Fast twisting under load is rough on the spine. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine.",
   variations: [
     { name: "Feet Elevated Twist", note: "Hover the feet for a much harder version." },
     { name: "Cable Woodchop", note: "Standing rotation at a cable stack, high to low." }
@@ -833,7 +833,7 @@ window.EXERCISES.push(
     "Pull the wheel back to the start using your belly and back muscles."
   ],
   tips: ["Range grows with strength. Short rollouts done well are plenty at first.", "A loaded barbell with round plates works if you have no wheel."],
-  caution: "The moment your lower back arches, you have gone too far. Shorten the range.",
+  caution: "The moment your lower back arches, you have gone too far. Shorten the range. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Wall Rollout", note: "Roll toward a wall that stops the wheel, limiting the range safely." },
     { name: "Standing Rollout", note: "From the feet instead of knees. Extremely advanced." }
@@ -854,7 +854,7 @@ window.EXERCISES.push(
     "Squeeze your shoulder blades together, then lower with control."
   ],
   tips: ["The chest-pad version removes lower back strain entirely.", "Think about pulling with your elbows, not your hands."],
-  caution: "Keep your back flat. If it rounds, lower the weight.",
+  caution: "Keep your back flat. If it rounds, lower the weight. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Chest-Supported T-Bar Row", note: "Lying on the machine's pad takes the lower back out of it." },
     { name: "Landmine Row", note: "Same movement using a barbell wedged in a corner." }
@@ -873,7 +873,7 @@ window.EXERCISES.push(
     "Squeeze the shoulder blades, then lower slowly."
   ],
   tips: ["Because the bench holds your torso, every rep is pure back work with zero cheating.", "Great choice when your lower back is tired from squats or deadlifts."],
-  caution: "Keep your neck relaxed. Look at the floor, not the mirror.",
+  caution: "Keep your neck relaxed. Look at the floor, not the mirror. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Arm Version", note: "One side at a time to fix left-right imbalances." },
     { name: "Rear Delt Emphasis", note: "Row with elbows flared wide to hit the rear shoulders more." }
@@ -910,7 +910,7 @@ window.EXERCISES.push(
     "Keep your knees tracking over your toes the whole way."
   ],
   tips: ["The machine locks in your torso, so it isolates the front-of-thigh muscles more than a free squat.", "Lower foot placement hits more front-of-thigh muscle, higher placement hits more buttock muscle."],
-  caution: "Do not let your hips tuck under at the bottom. Cut the depth where your form holds.",
+  caution: "Do not let your hips tuck under at the bottom. Cut the depth where your form holds. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Narrow Stance", note: "More outer quad emphasis." },
     { name: "Reverse Hack Squat", note: "Facing the pad shifts work toward the glutes." }
@@ -929,7 +929,7 @@ window.EXERCISES.push(
     "Pause one second at the top, then lower with control."
   ],
   tips: ["The machine is faster to set up than a barbell hip thrust and easier on the hip bones.", "Tuck your chin slightly and keep your ribs down for a stronger squeeze."],
-  caution: "Do not arch your lower back at the top. The finish comes from the glutes, not the spine.",
+  caution: "Do not arch your lower back at the top. The finish comes from the glutes, not the spine. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Single Leg Version", note: "One foot at a time doubles the challenge without more weight." },
     { name: "Pause Reps", note: "Hold 3 seconds at the top for extra glute time under tension." }
@@ -948,7 +948,7 @@ window.EXERCISES.push(
     "Return slowly, resisting the weight the whole way up."
   ],
   tips: ["The seated version works the back of the thigh in a stretched position.", "Slow negatives (3 seconds up) make a light stack feel heavy."],
-  caution: "Do not let the weight yank your legs back up. Control both directions.",
+  caution: "Do not let the weight yank your legs back up. Control both directions. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Lying Leg Curl", note: "The face-down machine version. Fine if seated is taken." },
     { name: "Single Leg Version", note: "One leg at a time to catch imbalances." }
@@ -967,7 +967,7 @@ window.EXERCISES.push(
     "Drive up through your whole foot, then re-hook when done."
   ],
   tips: ["The fixed bar path means no balancing act, so you can push the legs hard safely.", "Feet forward turns it into more of a front-of-thigh muscle and buttock muscle slide, which is the point."],
-  caution: "Always know where the safety hooks are before your first rep.",
+  caution: "Always know where the safety hooks are before your first rep. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Smith Split Squat", note: "One foot forward, one back. A very stable Bulgarian split squat." },
     { name: "Smith Calf Raise", note: "Bar on your back, press up onto your toes off a small plate or block." },
@@ -987,7 +987,7 @@ window.EXERCISES.push(
     "Press up and slightly back until your arms are long."
   ],
   tips: ["The guided bar lets you chase upper-chest growth without a spotter.", "Set the safety stops just below chest level so you can always bail out."],
-  caution: "Get the bench position right before loading weight. A bar path over your neck or belly ruins the lift.",
+  caution: "Get the bench position right before loading weight. A bar path over your neck or belly ruins the lift. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Smith Flat Bench Press", note: "Flat bench under the bar for the classic press with training wheels." },
     { name: "Close Grip Version", note: "Hands shoulder-width shifts the work to the triceps." }
@@ -1006,7 +1006,7 @@ window.EXERCISES.push(
     "Lower all the way to a full stretch each rep."
   ],
   tips: ["Curling from a stretched position works the biceps through a long range.", "Go lighter than your standing curl. The stretch position is humbling."],
-  caution: "If the hanging stretch bothers your shoulder, raise the bench angle a notch.",
+  caution: "If the hanging stretch bothers your shoulder, raise the bench angle a notch. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Alternating Version", note: "One arm at a time for better focus." },
     { name: "Incline Hammer Curl", note: "Neutral grip shifts work to the brachialis and forearms." }
@@ -1027,7 +1027,7 @@ window.EXERCISES.push(
     "Lower yourself slowly, one vertebra at a time."
   ],
   tips: ["The decline adds range and resistance that floor sit-ups cannot match.", "Once 15 reps feel easy, hold a plate on your chest instead of adding reps. Abs grow with load like any muscle."],
-  caution: "Do not yank your neck with your hands. If your lower back complains, reduce the decline angle.",
+  caution: "Do not yank your neck with your hands. If your lower back complains, reduce the decline angle. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine.",
   variations: [
     { name: "Weighted Decline Sit-Up", note: "Hug a plate or dumbbell to your chest for progressive overload." },
     { name: "Twisting Decline Sit-Up", note: "Rotate a shoulder toward the opposite knee at the top to involve the obliques." }
@@ -1046,7 +1046,7 @@ window.EXERCISES.push(
     "Switch sides in a slow pedaling rhythm."
   ],
   tips: ["Works both the belly muscles and the side belly muscles.", "Slower is stronger. Racing through reps turns it into a neck exercise."],
-  caution: "Do not pull on your head. Elbows stay wide.",
+  caution: "Do not pull on your head. Elbows stay wide. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine.",
   variations: [
     { name: "Feet-Down Version", note: "Tap the free heel to the floor between reps to make it easier." },
     { name: "Slow Count Version", note: "Three seconds per side. Brutal and effective." }
@@ -1067,7 +1067,7 @@ window.EXERCISES.push(
     "You should be able to talk, but not sing."
   ],
   tips: ["Incline walking gives running-level heart work with a fraction of the joint impact.", "A favorite cool-down after lifting: 10 to 15 minutes torches extra calories without eating into recovery."],
-  caution: "Holding the rails and leaning back cancels most of the incline. Lower it instead.",
+  caution: "Holding the rails and leaning back cancels most of the incline. Lower it instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "12-3-30 Style", note: "The popular recipe: 12 percent incline, 3 mph, 30 minutes." },
     { name: "Outdoor Hill Walk", note: "Same idea on real hills." }
@@ -1086,7 +1086,7 @@ window.EXERCISES.push(
     "Finish with 2 to 3 minutes of walking to cool down."
   ],
   tips: ["A 1 percent incline is often used to feel more like outdoor running.", "Most of your running should feel easy. Speed comes from consistency, not heroics."],
-  caution: "Build running time gradually, no more than about 10 percent per week, or shins and knees will complain.",
+  caution: "Build running time gradually, no more than about 10 percent per week, or shins and knees will complain. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Walk-Jog Intervals", note: "Alternate 1 minute jogging with 2 minutes walking when starting out." }
   ]
@@ -1104,7 +1104,7 @@ window.EXERCISES.push(
     "Stay tall through your spine rather than slumping over the bars."
   ],
   tips: ["The bike is low-impact, so it is often easier on the knees than walking or running.", "It is low-impact, which makes it a gentle leg-day cool-down."],
-  caution: "Saddle too low is the number one cause of bike knee pain. When in doubt, raise it.",
+  caution: "Saddle too low is the number one cause of bike knee pain. When in doubt, raise it. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Recumbent Bike", note: "The chair-style bike. Easier on the back and hips." },
     { name: "Spin Intervals", note: "30 seconds hard, 90 seconds easy, repeated." }
@@ -1123,7 +1123,7 @@ window.EXERCISES.push(
     "Aim for a steady 20 to 26 strokes per minute."
   ],
   tips: ["The order is legs, body, arms on the way back, and arms, body, legs on the return.", "Rowing trains the upper back while doing cardio, a rare two-for-one."],
-  caution: "Keep your back tall through the drive. Rounding under fatigue is the main rowing mistake.",
+  caution: "Keep your back tall through the drive. Rounding under fatigue is the main rowing mistake. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain. If you have osteoporosis, ask your clinician first and keep your back tall.",
   variations: [
     { name: "500m Repeats", note: "Row 500 meters at effort, rest 90 seconds, repeat 4 to 6 times." }
   ]
@@ -1141,7 +1141,7 @@ window.EXERCISES.push(
     "Stand tall. Avoid leaning your weight on the handles."
   ],
   tips: ["Great choice on days your joints want a break but your heart still needs work.", "Pedaling backward for a few minutes shifts the work toward the back-of-thigh muscles and buttock muscles."],
-  caution: "If your toes go numb, wiggle them and shift your feet occasionally. It is a common quirk of the machine.",
+  caution: "If your toes go numb, wiggle them and shift your feet occasionally. It is a common quirk of the machine. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "No-Hands Version", note: "Let go of the handles to challenge balance and posture." }
   ]
@@ -1159,7 +1159,7 @@ window.EXERCISES.push(
     "Increase speed gradually as you warm up."
   ],
   tips: ["A challenging cardio machine that also works the buttock muscles. Start slowly.", "Skipping a step (every other stair) makes it much harder. Only try it if you feel steady."],
-  caution: "Death-gripping the rails and hunching over cuts the work in half. Slow down and stand tall instead.",
+  caution: "Death-gripping the rails and hunching over cuts the work in half. Slow down and stand tall instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Sideways Steps", note: "A minute facing each side works the outer hips." }
   ]
@@ -1177,7 +1177,7 @@ window.EXERCISES.push(
     "Work in short rounds with rest between."
   ],
   tips: ["Ten minutes of rope work is a serious conditioning session, and it builds bouncy, resilient calves and ankles.", "Trip on the rope? That is normal. Reset and keep the rounds short."],
-  caution: "High impact. Skip it if you have active foot, achilles, or shin pain, and jump on forgiving floors, not concrete.",
+  caution: "High impact. Skip it if you have active foot, achilles, or shin pain, and jump on forgiving floors, not concrete. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Boxer Skip", note: "Shift weight foot to foot instead of jumping with both. Easier to sustain." },
     { name: "Double Unders", note: "Two rope spins per jump. An advanced conditioning skill." }
@@ -1196,7 +1196,7 @@ window.EXERCISES.push(
     "Repeat 4 to 8 rounds, then cool down."
   ],
   tips: ["Interval training improves cardio fitness in roughly half the session time of steady work, which is why it is so well studied.", "The bike and rower are lower-impact places to sprint. Treadmill sprints need extra caution."],
-  caution: "This is the spiciest cardio there is. Build a base of easy cardio for a few weeks before adding sprints, and skip it if you have heart or blood pressure concerns without clearance.",
+  caution: "This is the spiciest cardio there is. Build a base of easy cardio for a few weeks before adding sprints, and skip it if you have heart or blood pressure concerns without clearance. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Beginner Intervals", note: "20 seconds brisk, 100 seconds easy. Same idea, gentler dose." },
     { name: "Norwegian 4x4", note: "4 minutes hard, 3 minutes easy, 4 rounds. A research favorite for building VO2 max." }

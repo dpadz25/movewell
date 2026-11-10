@@ -193,7 +193,7 @@ window.EXERCISES.push(
     "Smooth and unhurried, like slow dancing."
   ],
   tips: ["A gentle way to start balance training. Check with your doctor or PT before starting after illness or surgery."],
-  caution: "Small shifts first, growing bolder as confidence builds.",
+  caution: "Small shifts first, growing bolder as confidence builds. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "Clock Reaches", note: "Balance on one leg and reach the other toe to 12, 3, and 6 o'clock positions." }
   ]
@@ -210,7 +210,7 @@ window.EXERCISES.push(
     "March with rhythm, swinging the arms if you feel steady."
   ],
   tips: ["Counts as gentle cardio too. Put on a favorite song and march through it."],
-  caution: "Lower knee height is fine. Keep the trunk tall rather than leaning back.",
+  caution: "Lower knee height is fine. Keep the trunk tall rather than leaning back. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
     { name: "Seated Marching", note: "March sitting tall in a chair. Great starting point." },
     { name: "March with Head Turns", note: "Advanced: turn your head side to side while marching." }
@@ -261,7 +261,7 @@ window.EXERCISES.push(
     "Build up time gradually, a few minutes more each week."
   ],
   tips: ["Walking is the base layer of nearly every recovery plan. Ten minutes counts.", "Log how long you walked in the timer."],
-  caution: "Use your usual walking aid if you have one, and supportive shoes.",
+  caution: "Use your usual walking aid if you have one, and supportive shoes. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: []
 },
 {
