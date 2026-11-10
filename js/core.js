@@ -412,7 +412,7 @@
             <button class="btn big" id="home-pick-tpl">Show me ready-made routines</button>
             <button class="btn big secondary" id="home-build">Build my own</button>
           </div>
-          ${this.wantsRehab() ? `<button class="home-hint-row" id="home-where">${this.icon("person")}<span><strong>Not sure where to start?</strong><br>Tell us where it hurts</span>${this.icon("chevR")}</button>` : ""}`;
+          ${this.wantsRehab() ? `<button class="home-hint-row" id="home-where">${this.icon("person")}<span><strong>Not sure where to start?</strong><br>Tell us where you would like to focus</span>${this.icon("chevR")}</button>` : ""}`;
       } else if (!next) {
         top = `
           <div class="home-empty card">
@@ -662,9 +662,9 @@
           </div>`)}
         ${card("What you use MoveWell for", `
           <div class="opt-grid three" id="set-goal">
-            ${[["fitness", "Fitness"], ["rehab", "Rehab"], ["both", "Both"]].map(([id, l]) => `<button class="opt-btn ${(p.goal || "both") === id ? "on" : ""}" data-goal="${id}" aria-pressed="${(p.goal || "both") === id}">${l}</button>`).join("")}
+            ${[["fitness", "Fitness"], ["rehab", "Aches and stiffness"], ["both", "Both"]].map(([id, l]) => `<button class="opt-btn ${(p.goal || "both") === id ? "on" : ""}" data-goal="${id}" aria-pressed="${(p.goal || "both") === id}">${l}</button>`).join("")}
           </div>
-          <p class="set-small">Fitness hides the pain questions. Rehab and Both show them.</p>`)}
+          <p class="set-small">Fitness hides the questions about how your body feels. The other two show them.</p>`)}
         ${card("Look and sound", `
           <div class="field-label">Color</div>
           <div class="ob-colors" role="radiogroup" aria-label="Color">
@@ -689,7 +689,7 @@
           <input type="file" id="set-import-file" accept=".json" style="display:none">`)}
         <button class="btn danger big" id="set-reset">Erase everything and start over</button>
         <p class="set-foot">
-          MoveWell supports your training and therapy plan. It is not medical advice. Always follow your physical therapist's or doctor's guidance.<br>
+          <strong>Safety note.</strong> MoveWell shares general exercises. It is not medical advice. Stop if anything hurts or feels wrong. If available, ask your doctor or PT before you begin, and always follow their guidance.<br>
           Meditation picture by <a href="https://www.vecteezy.com" target="_blank" rel="noopener">Vecteezy.com</a>
         </p>
       `);
@@ -785,10 +785,10 @@
     // the steps depend on the goal: pain questions only for rehab, fitness choices only for fitness
     obSteps() {
       const g = this._obData.goal;
-      return ["name", "goal"]
+      return ["name", "look", "care", "goal"]
         .concat(g === "fitness" || g === "both" ? ["fit"] : [])
         .concat(g === "rehab" || g === "both" ? ["pain"] : [])
-        .concat(["look", "done"]);
+        .concat(["done"]);
     },
     obDots(n, total) {
       return `<div class="ob-dots" role="progressbar" aria-valuemin="1" aria-valuemax="${total}" aria-valuenow="${n}" aria-label="Step ${n} of ${total}">${Array.from({ length: total }, (_, i) => `<i class="${i + 1 === n ? "on" : i + 1 < n ? "done" : ""}"></i>`).join("")}</div>`;
@@ -831,7 +831,11 @@
           if (gid === "general") { add(byId("tpl-gentle-full")); return; }
           const g = window.CONDITION_GROUPS.find(x => x.id === gid);
           if (!g || g.conditions.some(c => d.conditions.includes(c))) return;
-          add(window.TEMPLATES.find(t => t.conditions.some(c => g.conditions.includes(c))));
+          // default to the routine for the most common item in the group, not the first one in the file
+          for (const cid of g.conditions) {
+            const t = window.TEMPLATES.find(x => x.conditions.includes(cid));
+            if (t) { add(t); break; }
+          }
         });
       }
       if (fit) (d.fitGoals || []).forEach(k => {
@@ -872,11 +876,29 @@
         inner.querySelector("#ob-next1").onclick = go;
         inner.querySelector("#ob-name").addEventListener("keydown", e => { if (e.key === "Enter") go(); });
       }
+      if (n === "care") {
+        const lines = [
+          ["heart", "General exercises, not medical advice"],
+          ["alert", "Stop if anything hurts or feels wrong"],
+          ["person", "If available, ask your doctor or PT before you begin"]
+        ];
+        inner.innerHTML = `
+          ${this.obHead("care")}
+          <h1 class="ob-title">Before we start</h1>
+          <p class="ob-lead">MoveWell shares general exercises as a starting point.</p>
+          <div class="ob-care ob-stag">
+            ${lines.map(l => `<div class="ob-plan"><span class="ob-plan-dot">${this.icon(l[0])}</span><span>${l[1]}</span></div>`).join("")}
+          </div>
+          <button class="btn big grad ob-next" id="ob-next-care">Got it</button>
+        `;
+        inner.querySelector("#ob-next-care").onclick = () => this.obGo("care", 1);
+        bindHead(() => this.obGo("care", -1));
+      }
       if (n === "goal") {
         const opts = [
-          ["fitness", "Get fit and stay active", "No pain to work on. Strength, stretching, yoga, cardio and more.", "arms"],
-          ["rehab", "Recover from pain or an injury", "Exercises for a sore back, knee, shoulder and other areas.", "medical"],
-          ["both", "A bit of both", "Stay active and work on an area that bothers you.", "sparkle"]
+          ["fitness", "Get fit and stay active", "Strength, stretching, yoga, cardio and more.", "arms"],
+          ["rehab", "Ease aches and stiffness", "Gentle exercises for areas that feel sore or stiff, like your back, knee, or shoulder.", "medical"],
+          ["both", "A bit of both", "Stay active and focus on an area that feels sore or stiff.", "sparkle"]
         ];
         inner.innerHTML = `
           ${this.obHead("goal")}
@@ -904,9 +926,9 @@
           inner.innerHTML = `
             ${this.obHead("fit", { skip: true })}
             <h1 class="ob-title">What would you like to do?</h1>
-            <p class="ob-lead">Pick as many as you like. We will add a starter routine for each one.</p>
+            <p class="ob-lead">Pick as many as you like. We will suggest a gentle starter routine for each one.</p>
             <div class="ob-goals ob-stag">
-              ${this.OB_FIT.map(f => {
+              ${(d.fitMore ? this.OB_FIT : this.OB_FIT.slice(0, 4)).map(f => {
                 const on = d.fitGoals.includes(f[0]);
                 return `<button class="ob-goal ${on ? "on" : ""}" role="checkbox" aria-checked="${on}" data-f="${f[0]}">
                   <span class="tile ${f[3]} ob-goal-icon">${this.icon(f[2])}</span>
@@ -915,6 +937,7 @@
                 </button>`;
               }).join("")}
             </div>
+            <button class="btn secondary ob-showmore" id="ob-fit-more" aria-expanded="${!!d.fitMore}">${d.fitMore ? "Show fewer" : "Show more"}</button>
             <button class="btn big grad ob-next" id="ob-next-fit">${d.fitGoals.length ? "Continue" : "Skip for now"}</button>
           `;
           inner.querySelectorAll(".ob-goal").forEach(b => b.onclick = () => {
@@ -923,6 +946,11 @@
             b.classList.toggle("on"); b.setAttribute("aria-checked", b.classList.contains("on"));
             inner.querySelector("#ob-next-fit").textContent = d.fitGoals.length ? "Continue" : "Skip for now";
           });
+          inner.querySelector("#ob-fit-more").onclick = () => {
+            d.fitMore = !d.fitMore;
+            const st = inner.scrollTop; render(); inner.scrollTop = st;
+            inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
+          };
           inner.querySelector("#ob-next-fit").onclick = () => this.obGo("fit", 1);
           inner.querySelector("#ob-back").onclick = () => this.obGo("fit", -1);
           inner.querySelector("#ob-skip").onclick = () => { d.fitGoals = []; this.obGo("fit", 1); };
@@ -934,10 +962,14 @@
         const groups = window.CONDITION_GROUPS.filter(g => g.id !== "grp-gym");
         const render2 = () => {
           const picked = groups.filter(g => d.groups.includes(g.id) && g.conditions.length);
+          // most familiar options first; the rest wait behind "Show more"
+          const all = picked.flatMap(g => g.conditions);
+          const per = Math.max(1, Math.floor(3 / Math.max(1, picked.length)));
+          const shown = d.showMore ? all : picked.flatMap(g => g.conditions.slice(0, per));
           inner.innerHTML = `
             ${this.obHead("pain", { skip: true })}
-            <h1 class="ob-title">Where does it bother you?</h1>
-            <p class="ob-lead">Pick every area that needs work. We will add a starter routine for each one.</p>
+            <h1 class="ob-title">Where would you like to focus?</h1>
+            <p class="ob-lead">Pick any areas you like. We will suggest a gentle starting routine for each one.</p>
             <div class="ob-goals ob-stag">
               ${groups.map(g => {
                 const on = d.groups.includes(g.id);
@@ -950,9 +982,12 @@
             </div>
             ${picked.length ? `
               <div class="ob-more">
-                <div class="ob-more-t">Anything more specific? <span>(optional)</span></div>
+                <div class="ob-more-t">Anything else to mention? <span>(optional)</span></div>
+                <p class="ob-more-lead">These are starting points. A professional can adjust them for you.</p>
                 <div class="ob-chips">
-                  ${picked.flatMap(g => g.conditions).map(cid => `<button class="lib-chip ob-chip ${d.conditions.includes(cid) ? "on" : ""}" data-c="${cid}" aria-pressed="${d.conditions.includes(cid)}">${this.esc(this.condition(cid).name)}</button>`).join("")}
+                  ${shown.map(cid => `<button class="lib-chip ob-chip ${d.conditions.includes(cid) ? "on" : ""}" data-c="${cid}" aria-pressed="${d.conditions.includes(cid)}">${this.esc(this.condition(cid).name)}</button>`).join("")}
+                  <button class="lib-chip ob-chip ${d.notSure ? "on" : ""}" id="ob-notsure" aria-pressed="${!!d.notSure}">Not sure, just exploring</button>
+                  ${all.length > shown.length || d.showMore ? `<button class="lib-chip ob-chip ob-chip-more" id="ob-showmore" aria-expanded="${!!d.showMore}">${d.showMore ? "Show fewer" : "Show more"}</button>` : ""}
                 </div>
               </div>` : ""}
             <button class="btn big grad ob-next" id="ob-next2">${d.groups.length ? "Continue" : "Skip for now"}</button>
@@ -967,11 +1002,27 @@
             const st = inner.scrollTop; render2(); inner.scrollTop = st;
             inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
           });
-          inner.querySelectorAll(".ob-chip").forEach(ch => ch.onclick = () => {
+          inner.querySelectorAll(".ob-chip[data-c]").forEach(ch => ch.onclick = () => {
             const cid = ch.dataset.c;
             if (d.conditions.includes(cid)) d.conditions = d.conditions.filter(x => x !== cid); else d.conditions.push(cid);
+            d.notSure = false;
+            const ns = inner.querySelector("#ob-notsure");
+            if (ns) { ns.classList.remove("on"); ns.setAttribute("aria-pressed", "false"); }
             ch.classList.toggle("on"); ch.setAttribute("aria-pressed", ch.classList.contains("on"));
           });
+          const ns = inner.querySelector("#ob-notsure");
+          if (ns) ns.onclick = () => {
+            d.notSure = !d.notSure;
+            if (d.notSure) d.conditions = [];
+            const st = inner.scrollTop; render2(); inner.scrollTop = st;
+            inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
+          };
+          const sm = inner.querySelector("#ob-showmore");
+          if (sm) sm.onclick = () => {
+            d.showMore = !d.showMore;
+            const st = inner.scrollTop; render2(); inner.scrollTop = st;
+            inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
+          };
           inner.querySelector("#ob-next2").onclick = () => this.obGo("pain", 1);
           bindHead(() => this.obGo("pain", -1), () => { d.groups = []; d.conditions = []; this.obGo("pain", 1); });
         };
@@ -1013,7 +1064,7 @@
           <div class="ob-leaves" aria-hidden="true">${[8, 22, 38, 55, 70, 84, 94].map((x, i) => `<span class="ob-leaf" style="left:${x}%;animation-delay:${-i * 1.3}s;animation-duration:${8 + (i % 3) * 2}s">${this.icon("leaf")}</span>`).join("")}</div>
           <div class="ob-done ob-stag">
             <h1 class="ob-title">${d.name ? "You are all set, " + this.esc(d.name) + "." : "You are all set."}</h1>
-            <p class="ob-lead">${plan.length ? "We made " + (plan.length === 1 ? "a starter routine" : plan.length + " starter routines") + " for you. You can change them any time." : "Your Home screen is ready. Pick a ready-made plan or build your own whenever you like."}</p>
+            <p class="ob-lead">${plan.length ? (plan.length === 1 ? "We picked a gentle starter routine for you. You can change it any time." : "We picked " + plan.length + " gentle starter routines for you. You can change them any time.") : "Your Home screen is ready. Pick a ready-made plan or build your own whenever you like."}</p>
             ${plan.map(t => `<div class="ob-plan"><span class="ob-plan-dot">${this.icon("check")}</span><span>${this.esc(t.name)}</span></div>`).join("")}
           </div>
           <button class="btn big grad ob-next ob-glow" id="ob-finish">Start using MoveWell</button>

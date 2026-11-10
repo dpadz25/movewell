@@ -22,55 +22,55 @@ window.REGIONS = [
 // Non-diagnosis catch-all entries (posture, general, strength-training, conditioning, post-surgery) use 999
 // so they always sort to the bottom; they aren't real conditions to rank by prevalence.
 window.CONDITIONS = [
-  { id: "tos", name: "Thoracic Outlet Syndrome", regions: ["neck", "shoulder", "upper-back"], commonRank: 23, blurb: "Nerves or blood vessels get pinched between the neck and shoulder, causing arm pain, tingling, or heaviness. Care focuses on posture, opening the chest, calming the scalene muscles, and gentle nerve glides." },
-  { id: "upper-cross", name: "Upper Crossed Syndrome / Rounded Shoulders", regions: ["neck", "shoulder", "upper-back"], commonRank: 16, blurb: "Tight chest and neck muscles pair with weak deep-neck and mid-back muscles, creating a forward-head, rounded-shoulder posture. Care stretches the tight front and strengthens the sleepy back." },
-  { id: "neck-pain", name: "Neck Pain & Stiffness", regions: ["neck", "upper-back"], commonRank: 2, blurb: "General neck ache and stiffness, often from posture, stress, or age-related change. Gentle motion, deep neck strengthening, and upper back mobility usually help." },
-  { id: "headache", name: "Tension Headaches", regions: ["neck"], commonRank: 4, blurb: "Headaches that start at the base of the skull or feel like a tight band, often driven by neck muscle tension and posture." },
-  { id: "shoulder-pain", name: "General Shoulder Pain", regions: ["shoulder"], commonRank: 3, blurb: "Aching or pinching shoulder with reaching or lifting. Building rotator cuff and shoulder blade strength usually calms it." },
-  { id: "rotator-cuff", name: "Rotator Cuff Injury / Impingement", regions: ["shoulder"], commonRank: 11, blurb: "The small stabilizing muscles of the shoulder are irritated, torn, or weak. Progressive cuff and shoulder-blade strengthening is the gold standard." },
-  { id: "frozen-shoulder", name: "Frozen Shoulder", regions: ["shoulder"], commonRank: 17, blurb: "The shoulder capsule tightens, badly limiting motion. Recovery is slow but steady, with frequent gentle stretching within tolerable limits." },
-  { id: "tennis-elbow", name: "Tennis Elbow (Outer)", regions: ["elbow", "wrist"], commonRank: 20, blurb: "Irritated tendon on the outside of the elbow from gripping and wrist work. Slow 'lowering-only' strengthening rebuilds the tendon." },
-  { id: "golfers-elbow", name: "Golfer's Elbow (Inner)", regions: ["elbow", "wrist"], commonRank: 21, blurb: "The inner-elbow cousin of tennis elbow. Same slow strengthening approach, opposite side." },
-  { id: "carpal-tunnel", name: "Carpal Tunnel Syndrome", regions: ["wrist"], commonRank: 14, blurb: "The median nerve is compressed at the wrist, causing numb or tingly fingers. Tendon glides, nerve glides, and gentle stretches keep things moving." },
-  { id: "wrist-pain", name: "Wrist Pain / Weakness", regions: ["wrist"], commonRank: 6, blurb: "General wrist soreness or weakness from sprains, overuse, or arthritis. Gentle motion first, then gradual strengthening." },
-  { id: "arthritis-hand", name: "Hand Arthritis / Stiffness", regions: ["wrist"], commonRank: 13, blurb: "Stiff, achy fingers and thumbs. Daily gentle motion and light strengthening keep hands functional." },
-  { id: "low-back-pain", name: "Low Back Pain", regions: ["lower-back", "core", "hip"], commonRank: 1, blurb: "The most common complaint in physical therapy. Gentle motion, core endurance (the 'Big 3'), hip strength, and walking are the recipe." },
-  { id: "sciatica", name: "Sciatica / Leg Nerve Pain", regions: ["lower-back", "hip"], commonRank: 15, blurb: "Pain running from the back or buttock down the leg along the sciatic nerve. Nerve flossing, back care, and piriformis work often ease it." },
-  { id: "disc", name: "Disc-Related Back Pain", regions: ["lower-back"], commonRank: 8, blurb: "Back pain influenced by a bulging or irritated disc. Extension-based movements (McKenzie) help many people. Follow your therapist's direction preference." },
-  { id: "hip-pain", name: "Hip Pain / Bursitis / Arthritis", regions: ["hip"], commonRank: 7, blurb: "Aching in the groin, side hip, or buttock. Strengthening the gluteals, especially the side hip, is usually the core of care." },
-  { id: "knee-pain", name: "Kneecap / General Knee Pain", regions: ["knee", "hip"], commonRank: 12, blurb: "Pain around or behind the kneecap with stairs, squatting, or sitting. Quad and hip strengthening are proven treatment." },
-  { id: "knee-oa", name: "Knee Arthritis", regions: ["knee"], commonRank: 5, blurb: "Wear-related knee change. Motion is lotion. Strengthening and regular walking reduce pain better than rest." },
-  { id: "post-surgery", name: "Post-Surgery Recovery (General)", regions: ["knee", "ankle-foot", "balance"], commonRank: 999, blurb: "Early-stage gentle motion and activation after joint surgery. Always follow your surgeon's specific protocol first." },
-  { id: "itb", name: "IT Band / Outer Thigh Pain", regions: ["knee", "hip"], commonRank: 19, blurb: "Pain along the outer thigh or outer knee, common in walkers and runners. Side-hip strengthening plus targeted stretching." },
-  { id: "ankle-sprain", name: "Ankle Sprain Recovery", regions: ["ankle-foot", "balance"], commonRank: 9, blurb: "After a rolled ankle, restore motion, rebuild strength in all four directions, then retrain balance so it does not happen again." },
-  { id: "achilles", name: "Achilles Tendon Pain", regions: ["ankle-foot"], commonRank: 18, blurb: "Pain in the cord above the heel. Slow, heavy heel work (eccentrics) is the research-backed fix." },
-  { id: "plantar-fasciitis", name: "Plantar Fasciitis (Heel Pain)", regions: ["ankle-foot"], commonRank: 10, blurb: "Sharp heel pain, worst with the first morning steps. Calf and arch stretching plus foot strengthening." },
-  { id: "posture", name: "Posture Improvement", regions: ["upper-back", "neck", "core"], commonRank: 999, blurb: "Standing and sitting taller with less effort. Open the front, strengthen the back, and move often." },
-  { id: "balance-falls", name: "Balance & Fall Prevention", regions: ["balance", "ankle-foot", "hip"], commonRank: 22, blurb: "Balance is a trainable skill at any age. Programs like these reduce falls by 30 to 40 percent." },
-  { id: "general", name: "General Strength & Mobility", regions: ["balance", "core"], commonRank: 999, blurb: "Overall conditioning, getting stronger, moving easier, and keeping independence." },
-  { id: "strength-training", name: "Strength & Muscle Building", regions: ["chest", "arms", "upper-back", "shoulder", "hip", "knee", "core"], commonRank: 999, blurb: "Classic gym training to build muscle and strength. Think push, pull, and leg days with barbells, dumbbells, kettlebells, cables, and machines. Start lighter than you think and progress gradually." },
-  { id: "conditioning", name: "Cardio & Conditioning", regions: ["balance", "hip", "knee"], commonRank: 999, blurb: "Heart and lung fitness. Treadmill, bike, rower, stairs, and intervals. Cardio improves recovery between lifting sessions, and 150 minutes a week of moderate work is the widely recommended target." }
+  { id: "tos", name: "Neck and arm tension", aka: "thoracic outlet syndrome", regions: ["neck", "shoulder", "upper-back"], commonRank: 23, blurb: "Tightness through the neck, chest, and shoulders. These routines use gentle stretches, posture work, and easy nerve glides. Stop if your arm tingles or feels heavy." },
+  { id: "upper-cross", name: "Rounded shoulders or forward head", aka: "upper crossed syndrome posture", regions: ["neck", "shoulder", "upper-back"], commonRank: 16, blurb: "Gentle stretches for the chest and neck, with strengthening for the upper back." },
+  { id: "neck-pain", name: "Neck stiffness", aka: "neck pain", regions: ["neck", "upper-back"], commonRank: 2, blurb: "General neck stiffness or ache. Gentle movement, neck strengthening, and upper back mobility may help." },
+  { id: "headache", name: "Headaches with a tight neck", aka: "tension headaches", regions: ["neck"], commonRank: 4, blurb: "Headaches that come with a tight neck or shoulders. Gentle neck and posture work may help some people." },
+  { id: "shoulder-pain", name: "Shoulder aches", aka: "general shoulder pain", regions: ["shoulder"], commonRank: 3, blurb: "An achy or pinchy shoulder when reaching or lifting. Building shoulder and shoulder-blade strength may help." },
+  { id: "rotator-cuff", name: "Sore when reaching or lifting", aka: "rotator cuff injury impingement", regions: ["shoulder"], commonRank: 11, blurb: "Soreness in the shoulder with reaching or lifting. Gradual shoulder and shoulder-blade strengthening is commonly used." },
+  { id: "frozen-shoulder", name: "Stiff, limited shoulder movement", aka: "frozen shoulder", regions: ["shoulder"], commonRank: 17, blurb: "A shoulder that feels stiff and hard to move. Frequent, gentle range-of-motion work within a comfortable limit is commonly used." },
+  { id: "tennis-elbow", name: "Outer elbow soreness", aka: "tennis elbow", regions: ["elbow", "wrist"], commonRank: 20, blurb: "Soreness on the outside of the elbow with gripping and wrist work. Slow, lowering-only strengthening is commonly used." },
+  { id: "golfers-elbow", name: "Inner elbow soreness", aka: "golfer's elbow", regions: ["elbow", "wrist"], commonRank: 21, blurb: "Soreness on the inside of the elbow. It uses the same slow strengthening approach, on the other side." },
+  { id: "carpal-tunnel", name: "Hand and wrist strain", aka: "carpal tunnel syndrome", regions: ["wrist"], commonRank: 14, blurb: "Wrist and hand strain from desk or hand work. Gentle tendon glides, nerve glides, and stretches are commonly used. If numbness or tingling is new or getting worse, see a professional." },
+  { id: "wrist-pain", name: "Wrist soreness or weakness", aka: "wrist pain", regions: ["wrist"], commonRank: 6, blurb: "General wrist soreness or weakness. Gentle movement first, then gradual strengthening." },
+  { id: "arthritis-hand", name: "Stiff, achy fingers and thumbs", aka: "hand arthritis stiffness", regions: ["wrist"], commonRank: 13, blurb: "Stiff or achy fingers and thumbs. Daily gentle movement and light strengthening can help keep hands moving." },
+  { id: "low-back-pain", name: "Low back aches", aka: "low back pain", regions: ["lower-back", "core", "hip"], commonRank: 1, blurb: "A very common complaint. Gentle movement, core endurance, hip strength, and walking are often used." },
+  { id: "sciatica", name: "Back and leg discomfort", aka: "sciatica leg nerve pain", regions: ["lower-back", "hip"], commonRank: 15, blurb: "Discomfort that runs from the back or buttock down the leg. Gentle nerve glides, back care, and hip stretches are commonly used. If it is severe or getting worse, see a professional." },
+  { id: "disc", name: "Back discomfort with bending", aka: "disc bulge back pain", regions: ["lower-back"], commonRank: 8, blurb: "Back discomfort that changes with bending or sitting. Some people find gentle back-extension movements comfortable. A professional can tell you which direction suits you." },
+  { id: "hip-pain", name: "Hip aches", aka: "hip pain bursitis arthritis", regions: ["hip"], commonRank: 7, blurb: "Aching in the groin, side of the hip, or buttock. Strengthening the hip muscles is commonly used." },
+  { id: "knee-pain", name: "Knee aches", aka: "kneecap knee pain", regions: ["knee", "hip"], commonRank: 12, blurb: "Aching around the kneecap with stairs, squatting, or sitting. Quad and hip strengthening are commonly used." },
+  { id: "knee-oa", name: "Stiff, achy knees", aka: "knee arthritis osteoarthritis", regions: ["knee"], commonRank: 5, blurb: "Stiff or sore knees. Gentle movement, strengthening, and regular walking are commonly used." },
+  { id: "post-surgery", name: "Getting moving after surgery", aka: "post-surgery recovery", regions: ["knee", "ankle-foot", "balance"], commonRank: 999, blurb: "Gentle early movement after a procedure. Always follow your surgeon's or therapist's instructions first." },
+  { id: "itb", name: "Outer thigh or knee tightness", aka: "IT band", regions: ["knee", "hip"], commonRank: 19, blurb: "Tightness along the outer thigh or outer knee. Hip strengthening and targeted stretching are commonly used." },
+  { id: "ankle-sprain", name: "Rolled or weak ankle", aka: "ankle sprain recovery", regions: ["ankle-foot", "balance"], commonRank: 9, blurb: "After a rolled ankle: restore movement, rebuild strength in every direction, then practice balance." },
+  { id: "achilles", name: "Lower calf and heel cord soreness", aka: "achilles tendon pain", regions: ["ankle-foot"], commonRank: 18, blurb: "Soreness in the cord above the heel. Slow, steady calf and heel work is commonly used." },
+  { id: "plantar-fasciitis", name: "Heel and arch soreness", aka: "plantar fasciitis heel pain", regions: ["ankle-foot"], commonRank: 10, blurb: "Heel or arch soreness, often worst with the first steps of the day. Calf and arch stretching and foot strengthening are commonly used." },
+  { id: "posture", name: "Slouching or posture", aka: "posture improvement", regions: ["upper-back", "neck", "core"], commonRank: 999, blurb: "Standing and sitting taller with less effort. Open the chest, strengthen the back, and move often." },
+  { id: "balance-falls", name: "Steadier balance", aka: "balance fall prevention", regions: ["balance", "ankle-foot", "hip"], commonRank: 22, blurb: "Balance can be practiced at any age. Regular, gentle balance work may help you feel steadier." },
+  { id: "general", name: "General strength and mobility", aka: "general fitness", regions: ["balance", "core"], commonRank: 999, blurb: "Overall conditioning: getting stronger, moving more easily, and keeping your independence." },
+  { id: "strength-training", name: "Strength and muscle building", aka: "strength training gym", regions: ["chest", "arms", "upper-back", "shoulder", "hip", "knee", "core"], commonRank: 999, blurb: "Classic gym training to build muscle and strength. Start lighter than you think and progress gradually." },
+  { id: "conditioning", name: "Cardio and conditioning", aka: "cardio conditioning", regions: ["balance", "hip", "knee"], commonRank: 999, blurb: "Heart and lung fitness with the treadmill, bike, rower, stairs, or intervals. Build up gradually." }
 ];
 
 // Broad categories so long lists (onboarding conditions, routine templates)
 // can be browsed as "pick an area first, then the specifics".
 window.CONDITION_GROUPS = [
-  { id: "grp-neck-shoulder", name: "Neck & Shoulders", icon: "shoulder", color: "blue", blurb: "Neck pain, headaches, posture, shoulder trouble", conditions: ["neck-pain", "headache", "tos", "upper-cross", "posture", "shoulder-pain", "rotator-cuff", "frozen-shoulder"] },
-  { id: "grp-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbow tendon pain, carpal tunnel, stiff hands", conditions: ["tennis-elbow", "golfers-elbow", "carpal-tunnel", "wrist-pain", "arthritis-hand"] },
-  { id: "grp-back", name: "Back", icon: "lower-back", color: "accent", blurb: "Low back pain, sciatica, disc trouble", conditions: ["low-back-pain", "sciatica", "disc"] },
-  { id: "grp-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip and knee pain, arthritis, IT band", conditions: ["hip-pain", "knee-pain", "knee-oa", "itb"] },
-  { id: "grp-foot", name: "Feet & Ankles", icon: "ankle-foot", color: "orange", blurb: "Sprains, achilles, heel pain", conditions: ["ankle-sprain", "achilles", "plantar-fasciitis"] },
-  { id: "grp-balance", name: "Balance & Recovery", icon: "balance", color: "yellow", blurb: "Steadiness, after surgery, getting moving again", conditions: ["balance-falls", "post-surgery", "general"] },
+  { id: "grp-neck-shoulder", name: "Neck & Shoulders", icon: "shoulder", color: "blue", blurb: "Neck, shoulders, and posture", conditions: ["neck-pain", "shoulder-pain", "headache", "posture", "rotator-cuff", "upper-cross", "frozen-shoulder", "tos"] },
+  { id: "grp-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbows, wrists, and hands", conditions: ["wrist-pain", "arthritis-hand", "carpal-tunnel", "tennis-elbow", "golfers-elbow"] },
+  { id: "grp-back", name: "Back", icon: "lower-back", color: "accent", blurb: "Low back and legs", conditions: ["low-back-pain", "sciatica", "disc"] },
+  { id: "grp-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hips and knees", conditions: ["knee-pain", "hip-pain", "knee-oa", "itb"] },
+  { id: "grp-foot", name: "Feet & Ankles", icon: "ankle-foot", color: "orange", blurb: "Ankles, heels, and feet", conditions: ["ankle-sprain", "plantar-fasciitis", "achilles"] },
+  { id: "grp-balance", name: "Balance & Recovery", icon: "balance", color: "yellow", blurb: "Steadiness and getting moving again", conditions: ["balance-falls", "general", "post-surgery"] },
   { id: "grp-gym", name: "Gym & Fitness", icon: "dumbbell", color: "purple", blurb: "Building muscle, strength, and cardio fitness", conditions: ["strength-training", "conditioning"] }
 ];
 
 window.TEMPLATE_GROUPS = [
-  { id: "tg-neck", name: "Neck, Shoulders & Posture", icon: "shoulder", color: "blue", blurb: "Neck pain, rounded shoulders, rotator cuff", templates: ["tpl-neck", "tpl-tos", "tpl-upper-cross", "tpl-rotator-cuff", "tpl-frozen-shoulder"] },
-  { id: "tg-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Tennis elbow, carpal tunnel, grip", templates: ["tpl-tennis-elbow", "tpl-carpal"] },
-  { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Low back care, sciatica, core strength", templates: ["tpl-low-back", "tpl-sciatica", "tpl-abs"] },
-  { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength, knee pain, arthritis", templates: ["tpl-hip", "tpl-knee"] },
+  { id: "tg-neck", name: "Neck, Shoulders & Posture", icon: "shoulder", color: "blue", blurb: "Neck, shoulders, and posture", templates: ["tpl-neck", "tpl-tos", "tpl-upper-cross", "tpl-rotator-cuff", "tpl-frozen-shoulder"] },
+  { id: "tg-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbows, wrists, and grip", templates: ["tpl-tennis-elbow", "tpl-carpal"] },
+  { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Low back care and core strength", templates: ["tpl-low-back", "tpl-sciatica", "tpl-abs"] },
+  { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength and knee care", templates: ["tpl-hip", "tpl-knee"] },
   { id: "tg-legs", name: "Legs", icon: "step", color: "accent", blurb: "Stretches, warmups, strength, yoga, and recovery for your legs", templates: ["tpl-leg-warmup", "tpl-leg-stretch", "tpl-leg-strength", "tpl-leg-yoga", "tpl-leg-recovery", "tpl-legs"] },
-  { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Sprains, heel pain, steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
+  { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Ankles, heels, and steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
   { id: "tg-gentle", name: "Gentle Full-Body Start", icon: "leaf", color: "yellow", blurb: "A kind first routine after a long break", templates: ["tpl-gentle-full"] },
   { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
   { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness on the machines", templates: ["tpl-cardio"] },
@@ -193,48 +193,48 @@ window.ROUTINE_TYPES = [
 // Routine templates. Items may override the exercise's default dose.
 window.TEMPLATES = [
   {
-    id: "tpl-tos", name: "Thoracic Outlet Relief", conditions: ["tos"],
-    desc: "Opens the chest, calms the scalenes, glides the nerves, and builds shoulder-blade support. Do daily or every other day.",
+    id: "tpl-tos", name: "Neck, Chest and Shoulder Opener", conditions: ["tos"],
+    desc: "Opens the chest, relaxes the neck, adds easy nerve glides, and builds shoulder-blade support. Go gently, and stop if your arm tingles.",
     items: ["breathing-diaphragm", "scalene-stretch", "first-rib-mobilization", "doorway-pec-stretch", "median-nerve-glide", "ulnar-nerve-glide", "chin-tuck", "band-row", "serratus-punch", "prone-ytw"]
   },
   {
     id: "tpl-upper-cross", name: "Posture Reset (Upper Body)", conditions: ["upper-cross", "posture"],
-    desc: "The classic recipe for rounded shoulders and forward head. Stretch the tight front, strengthen the sleepy back.",
+    desc: "Stretch the tight chest and neck, and strengthen the upper back.",
     items: ["doorway-pec-stretch", "upper-trap-stretch", "scm-stretch", "thoracic-extension-foam-roller", "chin-tuck", "wall-angels", "band-pull-apart", "face-pull", "prone-cobra"]
   },
   {
-    id: "tpl-neck", name: "Neck Pain Relief", conditions: ["neck-pain", "headache"],
-    desc: "Gentle motion, deep neck strengthening, and tension release for everyday neck pain and headaches.",
+    id: "tpl-neck", name: "Gentle Neck Routine", conditions: ["neck-pain", "headache"],
+    desc: "Gentle movement, neck strengthening, and tension release for a stiff neck.",
     items: ["neck-rotation", "upper-trap-stretch", "levator-stretch", "chin-tuck", "deep-neck-flexor-lift", "shoulder-shrug-roll", "suboccipital-release"]
   },
   {
-    id: "tpl-rotator-cuff", name: "Shoulder & Rotator Cuff Builder", conditions: ["rotator-cuff", "shoulder-pain"],
-    desc: "Progressive cuff and shoulder-blade strengthening. Start light, progress steadily.",
+    id: "tpl-rotator-cuff", name: "Shoulder Strength Builder", conditions: ["rotator-cuff", "shoulder-pain"],
+    desc: "Gradual shoulder and shoulder-blade strengthening. Start light and build slowly.",
     items: ["pendulum", "cross-body-stretch", "band-external-rotation", "band-internal-rotation", "scaption-raise", "band-row", "prone-ytw", "wall-slides"]
   },
   {
-    id: "tpl-frozen-shoulder", name: "Frozen Shoulder Mobility", conditions: ["frozen-shoulder"],
-    desc: "Frequent, gentle range work. Patience wins. Expect progress across months.",
+    id: "tpl-frozen-shoulder", name: "Gentle Shoulder Mobility", conditions: ["frozen-shoulder"],
+    desc: "Frequent, gentle range-of-motion work. Go at your own pace; change takes patience.",
     items: ["pendulum", "shoulder-flexion-wall-walk", "wall-slides", "behind-back-towel-stretch", "cross-body-stretch", "isometric-shoulder-abduction"]
   },
   {
-    id: "tpl-tennis-elbow", name: "Tennis / Golfer's Elbow Care", conditions: ["tennis-elbow", "golfers-elbow"],
-    desc: "Slow eccentric tendon work plus stretching. Mild ache during is okay if it settles within a day.",
+    id: "tpl-tennis-elbow", name: "Elbow and Forearm Strength", conditions: ["tennis-elbow", "golfers-elbow"],
+    desc: "Slow lowering-only strengthening plus stretching. Stop if pain increases.",
     items: ["wrist-extensor-stretch", "wrist-flexor-stretch", "eccentric-wrist-extension", "eccentric-wrist-flexion", "forearm-rotation", "grip-squeeze"]
   },
   {
-    id: "tpl-carpal", name: "Wrist & Carpal Tunnel Care", conditions: ["carpal-tunnel", "wrist-pain", "arthritis-hand"],
-    desc: "Tendon glides, nerve glides, and gentle stretches to keep the wrist tunnel moving freely.",
+    id: "tpl-carpal", name: "Wrist and Hand Care", conditions: ["carpal-tunnel", "wrist-pain", "arthritis-hand"],
+    desc: "Tendon glides, nerve glides, and gentle stretches to keep the wrist and hand moving.",
     items: ["wrist-circles", "tendon-glides", "median-nerve-glide", "wrist-flexor-stretch", "wrist-extensor-stretch", "prayer-stretch", "finger-band-extension", "grip-squeeze"]
   },
   {
     id: "tpl-low-back", name: "Low Back Care (Big 3 +)", conditions: ["low-back-pain"],
-    desc: "Gentle mobility plus the research-famous 'Big 3' core endurance exercises, finished with hip support.",
+    desc: "Gentle movement plus three well-known core endurance exercises, finished with hip support.",
     items: ["pelvic-tilt", "cat-cow", "knee-to-chest", "lower-trunk-rotation", "curl-up", "side-plank-knees", "bird-dog", "glute-bridge", "hip-flexor-stretch"]
   },
   {
-    id: "tpl-sciatica", name: "Sciatica Relief", conditions: ["sciatica"],
-    desc: "Nerve flossing, piriformis release, and back-friendly strengthening for leg nerve pain.",
+    id: "tpl-sciatica", name: "Back and Leg Mobility", conditions: ["sciatica"],
+    desc: "Gentle nerve glides, hip stretches, and back-friendly strengthening. Stop if leg pain gets worse.",
     items: ["sciatic-nerve-floss", "figure-4-stretch", "knee-to-chest", "prone-press-up", "glute-bridge", "bird-dog"]
   },
   {
@@ -244,7 +244,7 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-knee", name: "Knee Builder", conditions: ["knee-pain", "knee-oa"],
-    desc: "Quad and hip strengthening, the proven pair for kneecap pain and knee arthritis.",
+    desc: "Quad and hip strengthening for stiff or achy knees.",
     items: ["quad-set", "straight-leg-raise", "short-arc-quad", "sit-to-stand", "mini-squat", "step-up", "standing-hamstring-curl", "clamshell", "quad-stretch"]
   },
   {
@@ -281,8 +281,8 @@ window.TEMPLATES = [
     items: ["foam-roll-quads", "foam-roll-itband", "ball-glute-release", "foot-ball-roll", "yoga-legs-up-wall"]
   },
   {
-    id: "tpl-ankle", name: "Ankle Sprain Recovery", conditions: ["ankle-sprain"],
-    desc: "Motion, four-direction strength, then balance retraining so the ankle does not roll again.",
+    id: "tpl-ankle", name: "Ankle Strength and Balance", conditions: ["ankle-sprain"],
+    desc: "Movement, strength in every direction, then balance practice.",
     items: ["ankle-pumps", "band-ankle-4way", "calf-raise", "knee-to-wall", "calf-stretch-wall", "single-leg-stance", "single-leg-balance-foam"]
   },
   {
@@ -292,7 +292,7 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-balance", name: "Steady & Strong (Balance)", conditions: ["balance-falls"],
-    desc: "An evidence-based balance session in the spirit of the Otago program. Practice beside a counter.",
+    desc: "A balance session inspired by Otago-style exercises. Practice beside a counter.",
     items: ["sit-to-stand", "weight-shifts", "marching-in-place", "side-stepping", "single-leg-stance", "tandem-stance", "heel-toe-walking", "calf-raise", "toe-raises"]
   },
   {
@@ -337,7 +337,7 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-abs", name: "Core & Abs Day", conditions: ["strength-training"],
-    desc: "Science-backed ab training. Weighted flexion, hanging work, anti-rotation, and a carry to finish.",
+    desc: "Ab training with weighted flexion, hanging work, anti-rotation, and a carry to finish.",
     items: ["cable-crunch", "decline-sit-up", "hanging-leg-raise", "bicycle-crunch", "pallof-press", "suitcase-carry"]
   },
   {

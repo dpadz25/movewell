@@ -58,7 +58,8 @@ window.EXERCISES.push(
     "At each spot, notice any tightness and let it soften as you breathe out."
   ],
   tips: ["There is no wrong way to do this. If your mind wanders, gently come back to where you were."],
-  variations: []
+  variations: [],
+  caution: "Breathe gently and never strain. If you feel dizzy or lightheaded, go back to normal breathing."
 },
 {
   id: "progressive-relaxation", name: "Progressive Muscle Relaxation", region: "balance", type: "recovery",

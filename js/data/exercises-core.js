@@ -66,7 +66,7 @@ window.EXERCISES.push(
   howTo: [
     "Place your forearms or hands on a counter, wall, or sturdy table.",
     "Walk your feet back until your body forms a straight ramp.",
-    "Brace gently and hold, breathing the whole time."
+    "Gently tighten your belly muscles and hold, breathing the whole time."
   ],
   tips: ["The higher the surface, the easier. Wall is easiest, floor is hardest. Pick your rung on the ladder."],
   caution: "Do not let the hips sag or the head droop.",
@@ -137,7 +137,7 @@ window.EXERCISES.push(
     "Balance on the standing leg, staying tall.",
     "Lower, rest, and switch legs."
   ],
-  tips: ["Progression ladder: two hands on support, one hand, fingertip, hovering hands, then eyes-closed with a helper nearby.", "One of the most proven fall-prevention exercises there is."],
+  tips: ["Progression ladder: two hands on support, one hand, fingertip, hovering hands, then eyes-closed with a helper nearby.", "A simple, common balance exercise."],
   caution: "Always practice next to something solid you can grab.",
   variations: [
     { name: "Eyes Closed", note: "Advanced, only with support at hand and someone nearby." },
@@ -292,7 +292,7 @@ window.EXERCISES.push(
     "Let the arms sweep gently in the direction of each shift.",
     "Continue in slow motion, breathing deeply."
   ],
-  tips: ["Tai Chi has some of the strongest research support for preventing falls. Slowness is the point."],
+  tips: ["Tai Chi is a gentle, slow balance practice. Slowness is the point."],
   caution: "Practice in a clear space near a support at first.",
   variations: []
 }

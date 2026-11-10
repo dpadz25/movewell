@@ -114,7 +114,7 @@ window.EXERCISES.push(
     "Lower your chest toward the floor by bending your elbows.",
     "Press back up to the start and repeat."
   ],
-  tips: ["Squeeze your glutes and brace your stomach to keep the hips from sagging.", "Elbows at about 45 degrees from your body, not flared straight out."],
+  tips: ["Squeeze your buttock muscles and tighten your belly muscles to keep the hips from sagging.", "Elbows at about 45 degrees from your body, not flared straight out."],
   caution: "If your lower back aches, raise your hands onto a bench or counter instead.",
   variations: [
     { name: "Incline Push-Up", note: "Hands on a bench or counter. Easier version." },
@@ -151,12 +151,12 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Sit on a bench with the back pad upright and a dumbbell at each shoulder.",
-    "Brace your core and press both weights overhead until your arms are straight.",
+    "Tighten your belly muscles and press both weights overhead until your arms are straight.",
     "Do not bang the dumbbells together at the top.",
     "Lower slowly back to shoulder level and repeat."
   ],
   tips: ["Keep your ribs down rather than arching your lower back to finish the press.", "A slight forward angle of the forearms is normal and fine."],
-  caution: "Skip overhead pressing if you have thoracic outlet syndrome or shoulder impingement. Lateral raises and landmine presses are friendlier options.",
+  caution: "Skip overhead pressing if it pinches or hurts your shoulder, or if your arms tingle. Lateral raises and landmine presses are gentler options.",
   variations: [
     { name: "Overhead Barbell Press", note: "Standing barbell version, a classic strength builder." },
     { name: "Arnold Press", note: "Rotate the palms from facing you to facing forward as you press." },
@@ -194,7 +194,7 @@ window.EXERCISES.push(
     "Stop when your hands reach about shoulder height, palms facing down.",
     "Lower slowly back to your thighs and repeat."
   ],
-  tips: ["Brace your core so your lower back doesn't arch as the weights come up.", "Alternating one arm at a time makes it easier to keep the body still."],
+  tips: ["Tighten your belly muscles so your lower back doesn't arch as the weights come up.", "Alternating one arm at a time makes it easier to keep the body still."],
   caution: "No swinging or leaning back to heave the weight up. Stop at shoulder height, going higher just irritates the shoulder.",
   variations: [
     { name: "Alternating Front Raise", note: "One arm at a time. Easier to control and kinder to the lower back." },
@@ -210,7 +210,7 @@ window.EXERCISES.push(
   helps: ["strength-training", "posture", "upper-cross"],
   dose: { sets: 3, reps: 15 },
   howTo: [
-    "Hinge forward at the hips with a flat back, a light dumbbell in each hand.",
+    "Bend forward at the hips with a flat back, a light dumbbell in each hand.",
     "Let your arms hang straight down, palms facing each other.",
     "Sweep your arms out to the sides, squeezing between the shoulder blades.",
     "Lower slowly and repeat."
@@ -290,11 +290,11 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 5 },
   howTo: [
     "Stand with the bar over the middle of your feet, about hip width apart.",
-    "Hinge down and grip the bar just outside your legs, with a flat back and chest up.",
+    "Bend down and grip the bar just outside your legs, with a flat back and chest up.",
     "Push the floor away and stand up tall, keeping the bar close to your body.",
-    "Hinge back down under control to set the bar on the floor, then repeat."
+    "Bend back down under control to set the bar on the floor, then repeat."
   ],
-  tips: ["Think of it as a push with your legs, not a pull with your back.", "Take a big breath and brace your stomach before every rep."],
+  tips: ["Think of it as a push with your legs, not a pull with your back.", "Take a big breath and tighten your belly muscles before every rep."],
   caution: "Learn this with light weight or a trainer first. A rounded lower back under load is the classic way people get hurt.",
   variations: [
     { name: "Trap Bar Deadlift", note: "The hexagon bar keeps the load centered and is easier to learn." },
@@ -311,8 +311,8 @@ window.EXERCISES.push(
   howTo: [
     "Stand tall holding a barbell or dumbbells in front of your thighs.",
     "With a slight knee bend, push your hips straight back and let the weight slide down your legs.",
-    "Stop when you feel a strong hamstring stretch, around mid shin.",
-    "Drive your hips forward to stand back up, squeezing your glutes at the top."
+    "Stop when you feel a strong back-of-thigh stretch, around mid shin.",
+    "Drive your hips forward to stand back up, squeezing your buttock muscles at the top."
   ],
   tips: ["The knees stay softly bent the whole time. All the motion comes from the hips.", "Keep the weight brushing your legs. Drifting forward strains the back."],
   caution: "Keep your back flat throughout. Shorten the range if your back starts to round.",
@@ -367,12 +367,12 @@ window.EXERCISES.push(
   helps: ["strength-training"],
   dose: { sets: 3, reps: 8 },
   howTo: [
-    "Hold a barbell and hinge forward until your torso is about 45 degrees to the floor.",
+    "Hold a barbell and bend forward until your torso is about 45 degrees to the floor.",
     "Let the bar hang at arm's length below your shoulders.",
     "Pull the bar to your lower ribs, driving the elbows back.",
     "Lower under control and repeat without standing up between reps."
   ],
-  tips: ["Brace your core like someone is about to poke your stomach.", "A tight hinge position matters more than the weight on the bar."],
+  tips: ["Tighten your belly muscles as if someone is about to poke your stomach.", "A steady bent-over position matters more than the weight on the bar."],
   caution: "If your lower back fatigues before your upper back, switch to chest-supported rows.",
   variations: [
     { name: "Pendlay Row", note: "Bar rests on the floor between reps. Strict and powerful." },
@@ -425,11 +425,11 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Set the pad at the crease of your hips and hook your heels under the rollers.",
-    "Cross your arms over your chest and hinge down until your torso is near vertical.",
-    "Squeeze your glutes to raise your torso until your body forms a straight line.",
+    "Cross your arms over your chest and bend down until your torso is near vertical.",
+    "Squeeze your buttock muscles to raise your torso until your body forms a straight line.",
     "Lower with control and repeat."
   ],
-  tips: ["Squeeze the glutes to lift rather than yanking with the lower back.", "Hold a weight plate to your chest once bodyweight gets easy."],
+  tips: ["Squeeze the buttock muscles to lift rather than yanking with the lower back.", "Hold a weight plate to your chest once bodyweight gets easy."],
   caution: "Do not hyperextend past a straight line at the top.",
   variations: [
     { name: "Glute-Focused Extension", note: "Round your upper back slightly and tuck the chin to keep it all glutes." }
@@ -448,7 +448,7 @@ window.EXERCISES.push(
     "Lower all the way down and repeat."
   ],
   tips: ["Straight up and down. Rolling the shoulders adds nothing and irritates joints.", "A slow lower builds more muscle than a heavy bounce."],
-  caution: "Skip shrugs if you deal with neck pain or thoracic outlet syndrome. Tight upper traps are usually part of that picture.",
+  caution: "Skip shrugs if they make your neck or shoulders hurt, or if your arms tingle.",
   variations: [
     { name: "Barbell Shrug", note: "Lets you load heavier with the bar in front of your thighs." }
   ]
@@ -541,12 +541,12 @@ window.EXERCISES.push(
   helps: ["strength-training"],
   dose: { sets: 3, reps: 8 },
   howTo: [
-    "Set the bar on your upper traps, not your neck, and step back from the rack.",
+    "Set the bar on your upper back and neck muscles, not your neck, and step back from the rack.",
     "Stand with feet shoulder width, toes turned slightly out.",
     "Sit down and back, keeping your chest up, until your thighs reach about parallel.",
     "Drive through your whole foot to stand back up."
   ],
-  tips: ["Take a big breath at the top and brace before every rep.", "Depth you can control with a flat back beats forced extra depth."],
+  tips: ["Take a big breath at the top and tighten your belly muscles before every rep.", "Depth you can control with a flat back beats forced extra depth."],
   caution: "Squat inside a rack with safety pins set just below your bottom position.",
   variations: [
     { name: "Front Squat", note: "Bar on the front of the shoulders. More upright, more quads." },
@@ -584,7 +584,7 @@ window.EXERCISES.push(
     "Stop before your lower back rolls off the pad.",
     "Press the platform away until your legs are nearly straight, without locking hard."
   ],
-  tips: ["Feet higher on the platform hits more glutes and hamstrings, lower hits more quads.", "A great option to load the legs without loading the spine."],
+  tips: ["Feet higher on the platform hits more buttock muscles and back-of-thigh muscles, lower hits more front-of-thigh muscles.", "A great option to load the legs without loading the spine."],
   caution: "Never lock your knees harshly at the top, and keep your hips on the seat throughout.",
   variations: [
     { name: "Single Leg Press", note: "One leg at a time to fix strength gaps." },
@@ -603,7 +603,7 @@ window.EXERCISES.push(
     "Let the back knee hover just above the floor.",
     "Push through the front foot and step forward into the next lunge."
   ],
-  tips: ["Keep your torso upright, like a string is pulling the top of your head up.", "Longer steps hit the glutes more, shorter steps hit the quads."],
+  tips: ["Keep your torso upright, like a string is pulling the top of your head up.", "Longer steps hit the buttock muscles more, shorter steps hit the front-of-thigh muscles."],
   caution: "If balance is shaky, do stationary lunges next to a rail first.",
   variations: [
     { name: "Reverse Lunge", note: "Step backward instead. Easier on the knees." },
@@ -637,11 +637,11 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Sit on the floor with your upper back against a bench and a padded barbell over your hips.",
-    "Plant your feet flat, about hip width, close to your glutes.",
+    "Plant your feet flat, about hip width, close to your buttocks.",
     "Drive through your heels and lift your hips until your body is a flat tabletop.",
-    "Squeeze your glutes hard at the top, then lower with control."
+    "Squeeze your buttock muscles hard at the top, then lower with control."
   ],
-  tips: ["Tuck your chin and look forward at the top rather than arching your neck back.", "The strongest glute exercise there is. Most people can load it heavier than they expect."],
+  tips: ["Tuck your chin and look forward at the top rather than arching your neck back.", "A great exercise for the buttock muscles. Start light and add weight gradually."],
   caution: "Finish flat, not hyperextended. The lift comes from glutes, not the lower back arching.",
   variations: [
     { name: "Glute Bridge (Floor)", note: "Shoulders stay on the floor. Shorter range, no bench needed." },
@@ -659,9 +659,9 @@ window.EXERCISES.push(
     "Sit with your back against the pad and the roller on your shins above the ankles.",
     "Grip the handles at your sides.",
     "Straighten your knees to lift the roller until your legs are fully extended.",
-    "Squeeze the quads at the top, then lower slowly."
+    "Squeeze the front-of-thigh muscles at the top, then lower slowly."
   ],
-  tips: ["A one second pause at the top makes lighter weight work harder.", "One of the few ways to fully isolate the quads."],
+  tips: ["A one second pause at the top makes lighter weight work harder.", "Works the front of the thigh on its own."],
   caution: "Use smooth, controlled reps. Kicking the weight up fast is rough on the kneecap.",
   variations: [
     { name: "Single Leg Extension", note: "One leg at a time, useful after injuries." }
@@ -676,10 +676,10 @@ window.EXERCISES.push(
   howTo: [
     "Lie face down with the roller against the back of your ankles.",
     "Hold the handles and keep your hips pressed into the pad.",
-    "Curl your heels toward your glutes.",
+    "Curl your heels toward your buttocks.",
     "Lower slowly until your legs are almost straight, then repeat."
   ],
-  tips: ["Point your toes toward your shins to make the hamstrings do all the work.", "Hips stay glued down. Lifting them cheats the range."],
+  tips: ["Point your toes toward your shins to make the back-of-thigh muscles do all the work.", "Hips stay glued down. Lifting them cheats the range."],
   caution: "Do not let the weight yank your legs straight at the bottom.",
   variations: [
     { name: "Seated Leg Curl", note: "Seated machine version. Research suggests it grows hamstrings slightly better." },
@@ -713,11 +713,11 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 15 },
   howTo: [
     "Stand with feet shoulder width, kettlebell on the floor a foot in front of you.",
-    "Hinge at the hips, grab the bell, and hike it back between your legs.",
+    "Bend at the hips, grab the bell, and hike it back between your legs.",
     "Snap your hips forward to swing the bell up to chest height.",
     "Let it swing back between your legs and immediately drive into the next rep."
   ],
-  tips: ["The power comes from the hip snap, not the arms. Your arms are just ropes.", "Stand up hard and squeeze your glutes at the top of every swing."],
+  tips: ["The power comes from the hip snap, not the arms. Your arms are just ropes.", "Stand up hard and squeeze your buttock muscles at the top of every swing."],
   caution: "This is a hip hinge, not a squat. If your back gets sore, practice the hinge with light weight first.",
   variations: [
     { name: "Single Arm Swing", note: "One hand on the bell. Adds a core anti-rotation challenge." },
@@ -736,7 +736,7 @@ window.EXERCISES.push(
     "Flatten your back, then stand up tall by driving through your feet.",
     "Push your hips back to set the bell down and repeat."
   ],
-  tips: ["The perfect first hinge exercise before barbell deadlifts.", "Keep your chest proud and arms long the whole way."],
+  tips: ["A good first exercise for bending at the hips before barbell deadlifts.", "Keep your chest proud and arms long the whole way."],
   caution: "Keep the bell close to your body. Reaching forward rounds the back.",
   variations: [
     { name: "Suitcase Deadlift", note: "Bell beside one foot, lifted one-handed like luggage." }
@@ -753,7 +753,7 @@ window.EXERCISES.push(
   howTo: [
     "Lie face down, then prop up onto your forearms and toes.",
     "Form one straight line from head to heels.",
-    "Squeeze your glutes and brace your stomach.",
+    "Squeeze your buttock muscles and tighten your belly muscles.",
     "Breathe steadily and hold until the timer chimes."
   ],
   tips: ["A shorter perfect plank beats a long saggy one.", "Push the floor away so your upper back does not sink between the shoulders."],
@@ -828,9 +828,9 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 8 },
   howTo: [
     "Kneel with the wheel under your shoulders, arms straight.",
-    "Brace your core hard and tuck your tailbone slightly.",
+    "Tighten your belly muscles and tuck your tailbone slightly.",
     "Roll the wheel forward as far as you can without your back arching.",
-    "Pull the wheel back to the start using your abs and lats."
+    "Pull the wheel back to the start using your belly and back muscles."
   ],
   tips: ["Range grows with strength. Short rollouts done well are plenty at first.", "A loaded barbell with round plates works if you have no wheel."],
   caution: "The moment your lower back arches, you have gone too far. Shorten the range.",
@@ -849,7 +849,7 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Straddle the bar and grab the handles with a neutral grip.",
-    "Hinge to about 45 degrees with a flat back and soft knees.",
+    "Bend to about 45 degrees with a flat back and soft knees.",
     "Pull the handles to your chest, driving your elbows back.",
     "Squeeze your shoulder blades together, then lower with control."
   ],
@@ -891,7 +891,7 @@ window.EXERCISES.push(
     "The bar moves a few inches as your shoulders drop away from your ears.",
     "Hold one second, then let the blades glide back up."
   ],
-  tips: ["This teaches your shoulder blades to move before your arms do, the foundation of healthy pulling.", "Do these before pull-ups or pulldowns as a primer."],
+  tips: ["This teaches your shoulder blades to move before your arms do, a good habit for any pulling exercise.", "Do these before pull-ups or pulldowns as a primer."],
   caution: "The movement is small. If your elbows bend, you are turning it into a pulldown.",
   variations: [
     { name: "Hanging Scapular Pull", note: "Same motion hanging from a pull-up bar. Harder, and builds grip too." }
@@ -909,7 +909,7 @@ window.EXERCISES.push(
     "Drive through your whole foot to press back up.",
     "Keep your knees tracking over your toes the whole way."
   ],
-  tips: ["The machine locks in your torso, so it isolates the quads more than a free squat.", "Lower foot placement hits more quad, higher placement hits more glute."],
+  tips: ["The machine locks in your torso, so it isolates the front-of-thigh muscles more than a free squat.", "Lower foot placement hits more front-of-thigh muscle, higher placement hits more buttock muscle."],
   caution: "Do not let your hips tuck under at the bottom. Cut the depth where your form holds.",
   variations: [
     { name: "Narrow Stance", note: "More outer quad emphasis." },
@@ -925,7 +925,7 @@ window.EXERCISES.push(
   howTo: [
     "Set your upper back against the pad and the belt or pad across your hips.",
     "Plant your feet flat, shins vertical at the top position.",
-    "Drive through your heels and squeeze your glutes to full hip extension.",
+    "Drive through your heels and squeeze your buttock muscles to full hip extension.",
     "Pause one second at the top, then lower with control."
   ],
   tips: ["The machine is faster to set up than a barbell hip thrust and easier on the hip bones.", "Tuck your chin slightly and keep your ribs down for a stronger squeeze."],
@@ -944,10 +944,10 @@ window.EXERCISES.push(
   howTo: [
     "Sit with the pad on the back of your lower calves and the thigh pad locked down.",
     "Curl your heels down and under you as far as they go.",
-    "Squeeze the hamstrings hard at the bottom.",
+    "Squeeze the back-of-thigh muscles hard at the bottom.",
     "Return slowly, resisting the weight the whole way up."
   ],
-  tips: ["Research favors the seated version over lying: the hamstrings work at a longer length here, which grows them faster.", "Slow negatives (3 seconds up) make a light stack feel heavy."],
+  tips: ["The seated version works the back of the thigh in a stretched position.", "Slow negatives (3 seconds up) make a light stack feel heavy."],
   caution: "Do not let the weight yank your legs back up. Control both directions.",
   variations: [
     { name: "Lying Leg Curl", note: "The face-down machine version. Fine if seated is taken." },
@@ -961,12 +961,12 @@ window.EXERCISES.push(
   helps: ["strength-training"],
   dose: { sets: 3, reps: 10 },
   howTo: [
-    "Set the bar at shoulder height and duck under it, bar across your upper traps.",
+    "Set the bar at shoulder height and duck under it, bar across your upper back and neck muscles.",
     "Walk your feet slightly forward of the bar, about shoulder-width.",
     "Unhook the bar and squat down until thighs reach parallel.",
     "Drive up through your whole foot, then re-hook when done."
   ],
-  tips: ["The fixed bar path means no balancing act, so you can push the legs hard safely.", "Feet forward turns it into more of a quad and glute slide, which is the point."],
+  tips: ["The fixed bar path means no balancing act, so you can push the legs hard safely.", "Feet forward turns it into more of a front-of-thigh muscle and buttock muscle slide, which is the point."],
   caution: "Always know where the safety hooks are before your first rep.",
   variations: [
     { name: "Smith Split Squat", note: "One foot forward, one back. A very stable Bulgarian split squat." },
@@ -1005,7 +1005,7 @@ window.EXERCISES.push(
     "Curl both dumbbells up without letting your elbows drift forward.",
     "Lower all the way to a full stretch each rep."
   ],
-  tips: ["Training the biceps at a long muscle length like this is one of the best-supported tricks in hypertrophy research.", "Go lighter than your standing curl. The stretch position is humbling."],
+  tips: ["Curling from a stretched position works the biceps through a long range.", "Go lighter than your standing curl. The stretch position is humbling."],
   caution: "If the hanging stretch bothers your shoulder, raise the bench angle a notch.",
   variations: [
     { name: "Alternating Version", note: "One arm at a time for better focus." },
@@ -1045,7 +1045,7 @@ window.EXERCISES.push(
     "Rotate your opposite elbow toward the bent knee.",
     "Switch sides in a slow pedaling rhythm."
   ],
-  tips: ["In classic EMG research this ranked among the highest activation moves for both abs and obliques.", "Slower is stronger. Racing through reps turns it into a neck exercise."],
+  tips: ["Works both the belly muscles and the side belly muscles.", "Slower is stronger. Racing through reps turns it into a neck exercise."],
   caution: "Do not pull on your head. Elbows stay wide.",
   variations: [
     { name: "Feet-Down Version", note: "Tap the free heel to the floor between reps to make it easier." },
@@ -1103,7 +1103,7 @@ window.EXERCISES.push(
     "Adjust resistance so your legs feel worked but not burning.",
     "Stay tall through your spine rather than slumping over the bars."
   ],
-  tips: ["The bike is the most knee-friendly cardio there is, and physical therapists prescribe it for knee arthritis on purpose.", "Zero impact makes it the perfect leg-day cool-down."],
+  tips: ["The bike is low-impact, so it is often easier on the knees than walking or running.", "Zero impact makes it the perfect leg-day cool-down."],
   caution: "Saddle too low is the number one cause of bike knee pain. When in doubt, raise it.",
   variations: [
     { name: "Recumbent Bike", note: "The chair-style bike. Easier on the back and hips." },
@@ -1140,7 +1140,7 @@ window.EXERCISES.push(
     "Set resistance so the effort feels steady, about a 5 to 7 out of 10.",
     "Stand tall. Avoid leaning your weight on the handles."
   ],
-  tips: ["Great choice on days your joints want a break but your heart still needs work.", "Pedaling backward for a few minutes shifts the work toward the hamstrings and glutes."],
+  tips: ["Great choice on days your joints want a break but your heart still needs work.", "Pedaling backward for a few minutes shifts the work toward the back-of-thigh muscles and buttock muscles."],
   caution: "If your toes go numb, wiggle them and shift your feet occasionally. It is a common quirk of the machine.",
   variations: [
     { name: "No-Hands Version", note: "Let go of the handles to challenge balance and posture." }
@@ -1158,7 +1158,7 @@ window.EXERCISES.push(
     "Rest your fingertips on the rails for balance only.",
     "Increase speed gradually as you warm up."
   ],
-  tips: ["Minute for minute, one of the hardest-working cardio machines in the gym, and it doubles as glute training.", "Skipping a step (every other stair) turns it into a serious glute session."],
+  tips: ["A challenging cardio machine that also works the buttock muscles. Start slowly.", "Skipping a step (every other stair) makes it much harder. Only try it if you feel steady."],
   caution: "Death-gripping the rails and hunching over cuts the work in half. Slow down and stand tall instead.",
   variations: [
     { name: "Sideways Steps", note: "A minute facing each side works the outer hips." }

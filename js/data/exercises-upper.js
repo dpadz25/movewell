@@ -77,7 +77,7 @@ window.EXERCISES.push(
     "Now gently look slightly upward toward the ceiling.",
     "You should feel a stretch along the front-side of the right side of your neck."
   ],
-  tips: ["Very important for thoracic outlet syndrome. Tight scalenes can compress the nerves to your arm.", "Breathe with your belly, not your chest, while holding."],
+  tips: ["A gentle stretch for the sides of your neck. Go slowly and stop if your arm tingles.", "Breathe with your belly, not your chest, while holding."],
   caution: "If you feel tingling in your hand, ease off the stretch. Tension, not pain.",
   variations: [
     { name: "With Towel Anchor", note: "Sit on the end of a towel draped over the shoulder to hold it down while you stretch." }
@@ -165,7 +165,7 @@ window.EXERCISES.push(
     "You can add tiny 'yes' nods for a gentle massage."
   ],
   tips: ["Wonderful for tension headaches that start at the base of the skull."],
-  caution: "Pressure should feel relieving, not painful.",
+  caution: "Pressure should feel gentle, not painful.",
   variations: []
 },
 {
@@ -180,7 +180,7 @@ window.EXERCISES.push(
     "Gently tilt your left ear toward your left shoulder while keeping downward pressure on the towel.",
     "Hold a few seconds, release, and repeat."
   ],
-  tips: ["The towel gently holds the first rib down while the neck stretches away, opening the thoracic outlet."],
+  tips: ["The towel gently holds the first rib down while the neck stretches away. Go slowly and stop if your arm tingles."],
   caution: "Ease off if you feel arm tingling.",
   variations: []
 },
@@ -216,7 +216,7 @@ window.EXERCISES.push(
     "Rotate your forearm outward, away from your belly, keeping the elbow pinned.",
     "Slowly return. Slow on the way back matters most."
   ],
-  tips: ["Place a small towel between your elbow and ribs. If it falls, your elbow drifted.", "One of the most prescribed shoulder exercises in physical therapy."],
+  tips: ["Place a small towel between your elbow and ribs. If it falls, your elbow drifted.", "A common shoulder-strengthening exercise."],
   caution: "Use a light band first. This muscle group is small.",
   variations: [
     { name: "Side-Lying with Dumbbell", note: "Lie on your side, elbow on your top hip, and rotate a light dumbbell up toward the ceiling." },
@@ -365,7 +365,7 @@ window.EXERCISES.push(
     "Feel a stretch across your chest and front shoulder.",
     "Hold and breathe, then switch sides."
   ],
-  tips: ["A tight chest pulls you into a rounded posture. Opening it makes every posture exercise easier.", "For thoracic outlet syndrome, this is a cornerstone stretch. A tight pec minor can pinch nerves to the arm."],
+  tips: ["A tight chest pulls you into a rounded posture. Opening it makes every posture exercise easier.", "A gentle chest stretch. Stop if your arm or hand tingles."],
   caution: "Never force. If your hand tingles, lower the elbow or ease the lean.",
   variations: [
     { name: "Low Elbow (Pec Minor Bias)", note: "Elbow slightly above shoulder height and lean; targets the deeper pec minor." },
@@ -437,7 +437,7 @@ window.EXERCISES.push(
     "Slowly let the blade settle back down.",
     "That small punch is the whole exercise."
   ],
-  tips: ["The serratus keeps your shoulder blade snug against your ribs. Vital for shoulder and thoracic outlet health."],
+  tips: ["This works the muscle that holds your shoulder blade against your ribs."],
   caution: "Keep the movement small and smooth.",
   variations: [
     { name: "Wall Push-Up Plus", note: "Do a wall push-up and at the top keep pushing until your upper back rounds slightly. Gentlest version." },
@@ -491,7 +491,7 @@ window.EXERCISES.push(
     "Remove the helping hand and lower the weight slowly, counting 3 to 5 seconds down.",
     "That slow lowering is the medicine."
   ],
-  tips: ["Slow 'lowering-only' work is the gold-standard rehab for tennis elbow tendons.", "Mild ache during is acceptable if it settles within 24 hours."],
+  tips: ["Slow, lowering-only work is a common way to build forearm strength.", "Mild ache during is acceptable if it settles within 24 hours."],
   caution: "Start with 1 to 2 pounds. Sharp pain means the weight is too heavy.",
   variations: [
     { name: "Tyler Twist (FlexBar)", note: "Twist a rubber bar and slowly untwist with the sore arm. Same principle, research-backed." }
@@ -611,7 +611,7 @@ window.EXERCISES.push(
     "As the arm straightens, tilt your head gently away for a touch more glide.",
     "Return to the start. That is one slow repetition."
   ],
-  tips: ["Helps both carpal tunnel and thoracic outlet syndrome since the median nerve runs through both areas.", "Think of flossing the nerve gently back and forth."],
+  tips: ["A gentle sliding movement for the arm and hand. Stop if tingling or numbness gets worse.", "Think of flossing the nerve gently back and forth."],
   caution: "Go to light tension only, never to tingling. If symptoms flare, cut repetitions in half.",
   variations: [
     { name: "Wrist-Only Glide", note: "Gentler start: with elbow supported and bent, just extend the wrist and fingers, then relax." }
@@ -915,7 +915,7 @@ window.EXERCISES.push(
     "Exhale slowly through pursed lips, letting the belly fall.",
     "Continue for a few minutes."
   ],
-  tips: ["People with thoracic outlet syndrome and neck pain often over-breathe with their neck muscles. Belly breathing retrains this and gives the scalenes a rest.", "Try 4 seconds in, 6 seconds out."],
+  tips: ["Belly breathing can help your neck and shoulder muscles relax.", "Try 4 seconds in, 6 seconds out."],
   caution: "If you feel lightheaded, breathe normally for a bit.",
   variations: [
     { name: "Crocodile Breathing", note: "Face down, forehead on hands, breathe into the floor. Strong belly feedback." }
@@ -933,10 +933,10 @@ window.EXERCISES.push(
     "Then push the floor away hard, spreading the blades and rounding the upper back slightly. That extra push is the 'plus'.",
     "Move slowly between the two positions."
   ],
-  tips: ["EMG research consistently ranks the push-up plus among the very best serratus anterior exercises, and a strong serratus keeps the shoulder blade gliding smoothly.", "All the magic is in the 'plus' at the top. Do not rush it."],
+  tips: ["A strong serratus muscle helps your shoulder blade glide smoothly.", "All the magic is in the 'plus' at the top. Do not rush it."],
   caution: "Keep your hips in line with your shoulders. If your wrists complain, do it on fists or against a wall.",
   variations: [
-    { name: "Wall Push-Up Plus", note: "Hands on a wall. The gentlest entry point, great early in rehab." },
+    { name: "Wall Push-Up Plus", note: "Hands on a wall. The gentlest entry point, a good place to start." },
     { name: "Knee Push-Up Plus", note: "From the knees, halfway between wall and floor." },
     { name: "Beast Push-Up Plus", note: "From the beast position (hands and toes, knees hovering an inch up). The hover adds a huge core and serratus demand." },
     { name: "Full Push-Up Plus", note: "Add the plus to the top of every regular push-up." }
@@ -973,8 +973,8 @@ window.EXERCISES.push(
     "As you reach, let the shoulder blades tip and squeeze together without slumping forward.",
     "Hold, feeling a stretch across the front of the shoulders and chest, then return."
   ],
-  tips: ["A tight pec minor tips the shoulder blade forward all day. This drill moves the blade the opposite way and stretches the culprit.", "Holding a stick or towel between your hands behind you deepens the reach."],
-  caution: "Keep standing tall. If your hands tingle, shrink the range, especially with thoracic outlet syndrome.",
+  tips: ["Tight chest muscles can pull the shoulder blade forward. This drill moves the blade the opposite way.", "Holding a stick or towel between your hands behind you deepens the reach."],
+  caution: "Keep standing tall. If your hands tingle, shrink the range or stop.",
   variations: [
     { name: "With Stick or Towel", note: "Hold a stick behind you with both hands and lift it gently away from your body." },
     { name: "Chest Opener Hold", note: "Interlace your fingers behind your back and hold the open position for 20 to 30 seconds as a stretch." }

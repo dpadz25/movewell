@@ -17,7 +17,7 @@
       if (f.level && ex.level !== f.level) return false;
       if (q) {
         const hay = (ex.name + " " + ex.muscles + " " + this.region(ex.region).name + " " + this.typeMeta(ex.type).name + " " + (ex.alias || "") + " " +
-          ex.helps.map(h => this.condition(h).name).join(" ") + " " +
+          ex.helps.map(h => this.condition(h).name + " " + (this.condition(h).aka || "")).join(" ") + " " +
           ex.equipment.map(q => this.equip(q).name).join(" ") + " " +
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase();
         if (!hay.includes(q)) return false;
@@ -80,7 +80,7 @@
             <button role="tab" class="${front ? "on" : ""}" aria-selected="${front}" data-view="front">Front</button>
             <button role="tab" class="${!front ? "on" : ""}" aria-selected="${!front}" data-view="back">Back</button>
           </div>
-          <p class="lib-map-hint">${this.wantsRehab() ? "Tap where it hurts. Each side is separate." : "Tap an area to see exercises for it."}</p>
+          <p class="lib-map-hint">${this.wantsRehab() ? "Tap an area to focus on. Left and right are separate." : "Tap an area to see exercises for it."}</p>
           <div class="lib-map">
             <div class="lib-map-caps"><span>${front ? "Your right" : "Your left"}</span><span>${front ? "Your left" : "Your right"}</span></div>
             ${this.bmSvg(u.view, u.zone ? u.zone.zone + "|" + u.zone.label : null)}

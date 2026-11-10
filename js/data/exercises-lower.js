@@ -35,7 +35,7 @@ window.EXERCISES.push(
     "Hold, breathe, lower, and switch."
   ],
   tips: ["Hold behind the thigh instead of over the knee if your knee is sensitive."],
-  caution: "If this position eases your leg pain, it suits you. If it worsens leg pain, try the Press-Up direction instead and tell your therapist.",
+  caution: "Stop if this increases your pain, especially pain that travels into your leg. A professional can help you find the movements that suit you.",
   variations: [
     { name: "Both Knees to Chest", note: "Hug both knees at once for a fuller lower back stretch." }
   ]
@@ -170,7 +170,7 @@ window.EXERCISES.push(
     "Squeeze your buttocks and lift your hips until your body forms a straight line from knees to shoulders.",
     "Hold at the top, then lower slowly."
   ],
-  tips: ["Push through your heels.", "If you feel it mostly in your hamstrings, bring the feet closer to your hips."],
+  tips: ["Push through your heels.", "If you feel it mostly in your back-of-thigh muscles, bring the feet closer to your hips."],
   caution: "Lift with the glutes, not by arching the lower back.",
   variations: [
     { name: "Bridge with Band", note: "Mini-band around the knees, press out gently while bridging. Wakes up the side glutes." },
@@ -208,7 +208,7 @@ window.EXERCISES.push(
     "Point the top toes slightly down and lift the leg about 45 degrees.",
     "Lower slowly without letting the leg drift forward."
   ],
-  tips: ["Leading with the heel keeps the work in the glute instead of the front of the hip."],
+  tips: ["Leading with the heel keeps the work in the buttock muscle instead of the front of the hip."],
   caution: "If you feel it in the front of the hip, the leg has drifted forward. Re-set.",
   variations: []
 },
@@ -220,7 +220,7 @@ window.EXERCISES.push(
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
   howTo: [
     "Kneel on your right knee with your left foot planted in front (use a cushion under the knee).",
-    "Tuck your tailbone slightly and squeeze the right glute.",
+    "Tuck your tailbone slightly and squeeze the right buttock muscle.",
     "Shift your weight gently forward until you feel a stretch across the front of the right hip.",
     "Hold, breathe, switch sides."
   ],
@@ -312,7 +312,7 @@ window.EXERCISES.push(
   dose: { sets: 2, reps: 1, hold: 45, perSide: true },
   howTo: [
     "Sit with your right leg bent 90 degrees in front of you and your left leg bent 90 degrees behind.",
-    "Keep your chest tall and hinge slightly over the front shin.",
+    "Keep your chest tall and bend slightly over the front shin.",
     "Feel the stretch in the right outer hip. Hold and breathe.",
     "Swivel the legs and repeat on the other side."
   ],
@@ -366,7 +366,7 @@ window.EXERCISES.push(
     "Stand tall. Optionally hold a stick along your spine touching head, mid-back, and tailbone.",
     "Push your hips backward as if closing a drawer behind you, letting your chest tip forward.",
     "Keep the back straight (stick stays in contact) and knees soft.",
-    "Squeeze glutes to stand tall again."
+    "Squeeze buttock muscles to stand tall again."
   ],
   tips: ["This is how to bend and lift without straining the back. Practicing it protects you every day."],
   caution: "The movement is hips back, not back bending down.",
@@ -387,7 +387,7 @@ window.EXERCISES.push(
     "Tighten the muscle on top of your thigh, pressing the knee gently down into the towel.",
     "Your kneecap should slide slightly upward. Hold, then fully relax."
   ],
-  tips: ["The very first knee exercise after most injuries and surgeries. It re-teaches the quad to fire."],
+  tips: ["A gentle knee exercise often used early on. Follow your therapist's or surgeon's guidance."],
   caution: "It should feel like a strong tightening, not pain.",
   variations: []
 },
@@ -735,7 +735,7 @@ window.EXERCISES.push(
     "Keeping heels on the ground, lift your toes and forefeet toward your shins.",
     "Lower slowly."
   ],
-  tips: ["Shin strength lifts your toes as you walk. It is a quiet hero for preventing trips."],
+  tips: ["Shin strength lifts your toes as you walk. It builds the muscles that lift your toes as you walk."],
   caution: "Hold the wall lightly if needed.",
   variations: [
     { name: "Heel Walking", note: "Walk on your heels for 20 steps, toes up." }
@@ -769,7 +769,7 @@ window.EXERCISES.push(
     "Square your hips toward the floor and settle your weight down.",
     "Fold forward over the front leg for a deeper stretch, breathe, then switch."
   ],
-  tips: ["One of the deepest glute stretches there is, and a favorite for desk-tight hips.", "A pillow under the front-side hip makes it far more comfortable."],
+  tips: ["A deep stretch for the buttock and hip. Go gently.", "A pillow under the front-side hip makes it far more comfortable."],
   caution: "The front knee should feel nothing. If it does, do the Figure-4 version on your back instead.",
   variations: [
     { name: "Figure-4 Pigeon (On Back)", note: "Lying on your back with ankle over knee. All the stretch, none of the knee pressure." },
@@ -785,7 +785,7 @@ window.EXERCISES.push(
   howTo: [
     "Kneel with your back to a wall or couch, and place one shin up the wall, knee in the corner.",
     "Step the other foot forward into a lunge stance.",
-    "Squeeze the glute of the back leg and lift your chest tall.",
+    "Squeeze the buttock muscle of the back leg and lift your chest tall.",
     "You will feel a deep stretch down the front of the back thigh and hip."
   ],
   tips: ["Because the knee is bent, this reaches the rectus femoris, the one hip flexor a regular lunge stretch misses.", "Padding under the down knee is not optional. Use a cushion."],

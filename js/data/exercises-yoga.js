@@ -17,7 +17,8 @@ window.EXERCISES.push(
     "Slowly circle both wrists in one direction.",
     "After your reps, circle the other direction the same number of times."
   ],
-  tips: ["Keep the circles slow and smooth.", "Great before poses that put weight on your hands, like Plank or Downward Dog."]
+  tips: ["Keep the circles slow and smooth.", "Great before poses that put weight on your hands, like Plank or Downward Dog."],
+  caution: "Keep the movement small and slow. Stop if you feel sharp pain, pinching, or catching in the joint."
 },
 {
   id: "yoga-shoulder-rolls", name: "Shoulder Rolls", region: "shoulder", type: "yoga",
@@ -30,7 +31,8 @@ window.EXERCISES.push(
     "Lift your shoulders up toward your ears, roll them back, then let them drop down.",
     "After your reps, reverse and roll them forward."
   ],
-  tips: ["Match the movement to your breath: inhale as they lift, exhale as they roll down."]
+  tips: ["Match the movement to your breath: inhale as they lift, exhale as they roll down."],
+  caution: "Keep the movement small and slow. Stop if you feel sharp pain, pinching, or catching in the joint."
 },
 {
   id: "yoga-hip-circles", name: "Hip Circles", region: "hip", type: "yoga",
@@ -43,7 +45,8 @@ window.EXERCISES.push(
     "Slowly circle your hips in one direction, like tracing a big circle.",
     "After your reps, circle the other direction."
   ],
-  tips: ["Keep your knees soft and your feet planted.", "Make the circles bigger as your body warms up."]
+  tips: ["Keep your knees soft and your feet planted.", "Make the circles bigger as your body warms up."],
+  caution: "Keep the movement small and slow. Stop if you feel sharp pain, pinching, or catching in the joint."
 },
 {
   id: "yoga-ankle-rolls", name: "Ankle Rolls", region: "ankle-foot", type: "yoga",
@@ -56,7 +59,8 @@ window.EXERCISES.push(
     "Lift the other foot slightly and slowly circle the ankle.",
     "Circle both directions, then switch feet."
   ],
-  tips: ["Hold a wall or chair for balance if you need it."]
+  tips: ["Hold a wall or chair for balance if you need it."],
+  caution: "Keep the movement small and slow. Stop if you feel sharp pain, pinching, or catching in the joint."
 },
 {
   id: "yoga-neck-rolls", name: "Neck Rolls", region: "neck", type: "yoga",
@@ -86,7 +90,8 @@ window.EXERCISES.push(
     "Exhale: round your back toward the ceiling and tuck your chin. This is Cat.",
     "Flow slowly between the two with your breath."
   ],
-  tips: ["Let the breath set the pace, one full breath per cycle.", "Pad your knees with a folded blanket if they complain."]
+  tips: ["Let the breath set the pace, one full breath per cycle.", "Pad your knees with a folded blanket if they complain."],
+  caution: "Move gently. Stop if you feel sharp pain in your back, neck, or wrists."
 },
 {
   id: "yoga-plank", name: "Plank (Phalakasana)", region: "core", type: "yoga",
@@ -153,7 +158,7 @@ window.EXERCISES.push(
     "From hands and knees, tuck your toes and lift your hips up and back.",
     "Your body makes an upside-down V shape.",
     "Press the floor away with your hands and let your head hang relaxed.",
-    "Keep a generous bend in your knees if your hamstrings are tight."
+    "Keep a generous bend in your knees if your back-of-thigh muscles are tight."
   ],
   tips: ["Bent knees with a long spine beats straight legs with a rounded back.", "Pedal your feet slowly to warm up the calves."],
   caution: "Come down and rest in Child's Pose if your wrists or shoulders complain."
@@ -170,7 +175,8 @@ window.EXERCISES.push(
     "Stretch your arms forward, or rest them alongside your body.",
     "Breathe slowly into your back."
   ],
-  tips: ["Widen your knees to make room for your belly.", "This is your rest stop. Return here any time a sequence feels like too much."]
+  tips: ["Widen your knees to make room for your belly.", "This is your rest stop. Return here any time a sequence feels like too much."],
+  caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain."
 },
 {
   id: "yoga-sphinx", name: "Sphinx Pose (Salamba Bhujangasana)", region: "lower-back", type: "yoga",
@@ -184,7 +190,8 @@ window.EXERCISES.push(
     "Keep your legs and hips relaxed on the floor.",
     "Breathe and let your low back gently arch."
   ],
-  tips: ["A gentle backbend that most backs love. Ease off if it pinches."]
+  tips: ["A gentle backbend that most backs love. Ease off if it pinches."],
+  caution: "Stop if you feel pinching or sharp pain in your lower back, or pain that spreads into your leg. If you have osteoporosis or a back condition, check with your doctor or physical therapist first."
 },
 
 // ============ FLOOR / SEATED ============
@@ -203,7 +210,8 @@ window.EXERCISES.push(
   tips: ["Hold behind your thighs for support if needed.", "A long spine matters more than straight legs."],
   variations: [
     { name: "Full Boat", note: "Straighten both legs so your body forms a V shape. Much harder." }
-  ]
+  ],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 {
   id: "yoga-seated-roll-up", name: "Seated Roll-Up", region: "core", type: "yoga",
@@ -232,7 +240,8 @@ window.EXERCISES.push(
     "Tip your torso to the side over the straight leg, reaching the same-side hand toward your foot and the other arm up and over.",
     "Breathe into the stretch along your whole side body, then sit up and switch sides."
   ],
-  tips: ["Keep the extended knee soft, not locked.", "A towel around your foot brings the stretch to you if your reach is short."]
+  tips: ["Keep the extended knee soft, not locked.", "A towel around your foot brings the stretch to you if your reach is short."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
   id: "yoga-supine-final-stretch", name: "Supine Full-Body Stretch", region: "balance", type: "yoga",
@@ -246,7 +255,8 @@ window.EXERCISES.push(
     "Take a full breath in as you lengthen, then let it all go on the exhale.",
     "Let your body settle heavy into the floor before moving into Shavasana."
   ],
-  tips: ["Not a traditional named pose, just a full-body lengthening stretch used to transition into Corpse Pose."]
+  tips: ["Not a traditional named pose, just a full-body lengthening stretch used to transition into Corpse Pose."],
+  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
 },
 {
   id: "yoga-supine-twist", name: "Supine Spinal Twist (Jathara Parivartanasana)", region: "lower-back", type: "yoga",
@@ -260,7 +270,8 @@ window.EXERCISES.push(
     "Stretch your arms out to the sides and look the opposite way if comfortable.",
     "Breathe, then bring the knees through center and switch sides."
   ],
-  tips: ["Put a cushion under the knees if they do not reach the floor."]
+  tips: ["Put a cushion under the knees if they do not reach the floor."],
+  caution: "Twist gently and only as far as is comfortable. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first."
 },
 {
   id: "yoga-happy-baby", name: "Happy Baby (Ananda Balasana)", region: "hip", type: "yoga",
@@ -274,7 +285,8 @@ window.EXERCISES.push(
     "Gently pull down so your knees move toward the floor beside your ribs.",
     "Rock softly side to side if that feels nice."
   ],
-  tips: ["Hold behind your thighs instead if reaching your feet is a strain."]
+  tips: ["Hold behind your thighs instead if reaching your feet is a strain."],
+  caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain."
 },
 {
   id: "yoga-butterfly", name: "Butterfly Pose (Baddha Konasana)", region: "hip", type: "yoga",
@@ -285,10 +297,11 @@ window.EXERCISES.push(
   howTo: [
     "Sit tall and bring the soles of your feet together, knees falling out to the sides.",
     "Hold your feet or ankles.",
-    "Sit up tall, or hinge gently forward from the hips for more stretch.",
+    "Sit up tall, or bend gently forward from the hips for more stretch.",
     "Let gravity do the work on your knees. No pushing."
   ],
-  tips: ["Sit on a folded blanket to make sitting tall easier.", "Cushions under the knees make it restful."]
+  tips: ["Sit on a folded blanket to make sitting tall easier.", "Cushions under the knees make it restful."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
   id: "yoga-seated-forward-fold", name: "Seated Forward Fold (Paschimottanasana)", region: "lower-back", type: "yoga",
@@ -299,10 +312,11 @@ window.EXERCISES.push(
   howTo: [
     "Sit with both legs stretched out in front of you.",
     "Inhale and sit up tall.",
-    "Exhale and hinge forward from your hips, reaching toward your feet.",
+    "Exhale and bend forward from your hips, reaching toward your feet.",
     "Hold your shins, ankles, or feet, wherever you comfortably reach."
   ],
-  tips: ["Bend your knees as much as you like. Folding from the hips matters more than touching your toes.", "A strap or towel around the feet helps you relax into it."]
+  tips: ["Bend your knees as much as you like. Folding from the hips matters more than touching your toes.", "A strap or towel around the feet helps you relax into it."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
   id: "yoga-corpse", name: "Corpse Pose (Savasana)", region: "balance", type: "yoga",
@@ -316,7 +330,8 @@ window.EXERCISES.push(
     "Close your eyes and breathe naturally.",
     "Stay still and let the practice settle in."
   ],
-  tips: ["A cushion under the knees eases the low back.", "This is the most skipped and most important pose. Stay for the full time."]
+  tips: ["A cushion under the knees eases the low back.", "This is the most skipped and most important pose. Stay for the full time."],
+  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
 },
 
 // ============ STANDING ============
@@ -347,7 +362,8 @@ window.EXERCISES.push(
     "Reach both arms overhead.",
     "Breathe, then switch sides."
   ],
-  tips: ["Shorten the stance any time to feel steadier."]
+  tips: ["Shorten the stance any time to feel steadier."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-warrior-2", name: "Warrior II (Virabhadrasana II)", region: "hip", type: "yoga",
@@ -361,7 +377,8 @@ window.EXERCISES.push(
     "Stretch your arms out at shoulder height, one forward and one back.",
     "Gaze over the front fingertips and breathe."
   ],
-  tips: ["Stack your shoulders over your hips, not leaning forward."]
+  tips: ["Stack your shoulders over your hips, not leaning forward."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-warrior-3", name: "Warrior III (Virabhadrasana III)", region: "balance", type: "yoga",
@@ -370,7 +387,7 @@ window.EXERCISES.push(
   helps: [],
   dose: { sets: 1, reps: 1, hold: 15, perSide: true },
   howTo: [
-    "Stand on one leg and hinge your torso forward.",
+    "Stand on one leg and bend your torso forward.",
     "Extend your other leg straight behind you until body and leg are level with the floor, like the letter T.",
     "Reach your arms back along your sides, out wide, or forward.",
     "Keep your hips level and breathe."
@@ -390,7 +407,8 @@ window.EXERCISES.push(
     "Rest your back hand lightly on your back leg.",
     "Feel the stretch along the front side of your body."
   ],
-  tips: ["Keep the front knee bent. The legs stay Warrior while the upper body leans back."]
+  tips: ["Keep the front knee bent. The legs stay Warrior while the upper body leans back."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-star", name: "Star Pose (Utthita Tadasana)", region: "balance", type: "yoga",
@@ -404,7 +422,8 @@ window.EXERCISES.push(
     "Reach out through all five points: head, hands, and feet.",
     "Stand tall and breathe."
   ],
-  tips: ["A simple, energizing shape. Good between the Warrior poses."]
+  tips: ["A simple, energizing shape. Good between the Warrior poses."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-half-lift", name: "Half Lift / Flat Back (Ardha Uttanasana)", region: "lower-back", type: "yoga",
@@ -418,7 +437,8 @@ window.EXERCISES.push(
     "Lengthen through the crown of your head and look slightly forward.",
     "Exhale and fold back down, or continue rolling up to standing."
   ],
-  tips: ["Bend your knees as much as you need to keep your back flat.", "This move connects Standing Forward Fold to standing back up, so it shows up constantly in a flow."]
+  tips: ["Bend your knees as much as you need to keep your back flat.", "This move connects Standing Forward Fold to standing back up, so it shows up constantly in a flow."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-standing-backbend", name: "Standing Back Bend (Anuvittasana)", region: "upper-back", type: "yoga",
@@ -447,7 +467,8 @@ window.EXERCISES.push(
     "Reach your other arm up and over your ear, making one long line from back foot to fingertips.",
     "Breathe into the stretch along your side body, then switch sides."
   ],
-  tips: ["Rest your hand on a block or your shin instead of the knee if that reach is too far.", "Keep the front knee bent throughout so it does not lock or twist."]
+  tips: ["Rest your hand on a block or your shin instead of the knee if that reach is too far.", "Keep the front knee bent throughout so it does not lock or twist."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-standing-forward-fold", name: "Standing Forward Fold (Uttanasana)", region: "lower-back", type: "yoga",
@@ -461,7 +482,7 @@ window.EXERCISES.push(
     "Let your head and arms hang heavy, or hold opposite elbows.",
     "Sway gently side to side if it feels good."
   ],
-  tips: ["Bent knees protect the low back and still stretch the hamstrings."],
+  tips: ["Bent knees protect the low back and still stretch the back-of-thigh muscles."],
   caution: "Rise back up slowly to avoid a head rush."
 },
 
@@ -478,7 +499,8 @@ window.EXERCISES.push(
     "Take slow, even breaths.",
     "Take a moment to notice how you feel compared to when you started."
   ],
-  tips: ["A traditional way to close a practice. Even a few breaths count."]
+  tips: ["A traditional way to close a practice. Even a few breaths count."],
+  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
 },
 {
   id: "yoga-closing-self-hug", name: "Closing Self-Hug & Overhead Stretch", region: "balance", type: "yoga",
@@ -492,7 +514,8 @@ window.EXERCISES.push(
     "Release the hug and reach both arms overhead, palms together.",
     "Lengthen your spine upward for a final full breath before finishing."
   ],
-  tips: ["Not a fixed traditional pose, just a gentle way to bookend practice alongside Heart Center."]
+  tips: ["Not a fixed traditional pose, just a gentle way to bookend practice alongside Heart Center."],
+  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
 }
 
 );
