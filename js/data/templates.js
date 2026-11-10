@@ -24,6 +24,7 @@ window.REGIONS = [
 window.CONDITIONS = [
   { id: "tos", name: "Neck and arm tension", aka: "thoracic outlet syndrome", regions: ["neck", "shoulder", "upper-back"], commonRank: 23, blurb: "Tightness through the neck, chest, and shoulders. These routines use gentle stretches, posture work, and easy nerve glides. Stop if your arm tingles or feels heavy." },
   { id: "upper-cross", name: "Rounded shoulders or forward head", aka: "upper crossed syndrome posture", regions: ["neck", "shoulder", "upper-back"], commonRank: 16, blurb: "Gentle stretches for the chest and neck, with strengthening for the upper back." },
+  { id: "upper-back", name: "Upper back aches", aka: "upper back pain thoracic spine mid back between shoulder blades", regions: ["upper-back"], commonRank: 5.5, blurb: "Achiness or tightness around and between the shoulder blades, often after long sitting or desk time. Gentle upper back movement and light shoulder-blade strengthening are commonly used. If pain is severe, follows an injury, or comes with chest pain or shortness of breath, see a professional." },
   { id: "neck-pain", name: "Neck stiffness", aka: "neck pain", regions: ["neck", "upper-back"], commonRank: 2, blurb: "General neck stiffness or ache. Gentle movement, neck strengthening, and upper back mobility may help." },
   { id: "headache", name: "Headaches with a tight neck", aka: "tension headaches", regions: ["neck"], commonRank: 4, blurb: "Headaches that come with a tight neck or shoulders. Gentle neck and posture work may help some people." },
   { id: "shoulder-pain", name: "Shoulder aches", aka: "general shoulder pain", regions: ["shoulder"], commonRank: 3, blurb: "An achy or pinchy shoulder when reaching or lifting. Building shoulder and shoulder-blade strength may help." },
@@ -57,7 +58,7 @@ window.CONDITIONS = [
 window.CONDITION_GROUPS = [
   { id: "grp-neck-shoulder", name: "Neck & Shoulders", icon: "shoulder", color: "blue", blurb: "Neck, shoulders, and posture", conditions: ["neck-pain", "shoulder-pain", "headache", "posture", "rotator-cuff", "upper-cross", "frozen-shoulder", "tos"] },
   { id: "grp-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbows, wrists, and hands", conditions: ["wrist-pain", "arthritis-hand", "carpal-tunnel", "tennis-elbow", "golfers-elbow"] },
-  { id: "grp-back", name: "Back", icon: "lower-back", color: "accent", blurb: "Low back and legs", conditions: ["low-back-pain", "sciatica", "disc"] },
+  { id: "grp-back", name: "Back", icon: "lower-back", color: "accent", blurb: "Upper back, low back, and legs", conditions: ["low-back-pain", "upper-back", "sciatica", "disc"] },
   { id: "grp-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hips and knees", conditions: ["knee-pain", "hip-pain", "knee-oa", "itb"] },
   { id: "grp-foot", name: "Feet & Ankles", icon: "ankle-foot", color: "orange", blurb: "Ankles, heels, and feet", conditions: ["ankle-sprain", "plantar-fasciitis", "achilles"] },
   { id: "grp-balance", name: "Balance & Recovery", icon: "balance", color: "yellow", blurb: "Steadiness and getting moving again", conditions: ["balance-falls", "general", "post-surgery"] },
@@ -67,7 +68,7 @@ window.CONDITION_GROUPS = [
 window.TEMPLATE_GROUPS = [
   { id: "tg-neck", name: "Neck, Shoulders & Posture", icon: "shoulder", color: "blue", blurb: "Neck, shoulders, and posture", templates: ["tpl-neck", "tpl-tos", "tpl-upper-cross", "tpl-rotator-cuff", "tpl-frozen-shoulder"] },
   { id: "tg-arm", name: "Elbows, Wrists & Hands", icon: "wrist", color: "pink", blurb: "Elbows, wrists, and grip", templates: ["tpl-tennis-elbow", "tpl-carpal"] },
-  { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Low back care and core strength", templates: ["tpl-low-back", "tpl-sciatica", "tpl-abs"] },
+  { id: "tg-back", name: "Back & Core", icon: "lower-back", color: "accent", blurb: "Upper and lower back care, and core strength", templates: ["tpl-low-back", "tpl-thoracic-mobility", "tpl-upper-back-strength", "tpl-sciatica", "tpl-abs"] },
   { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength and knee care", templates: ["tpl-hip", "tpl-knee"] },
   { id: "tg-legs", name: "Legs", icon: "step", color: "accent", blurb: "Stretches, warmups, strength, yoga, and recovery for your legs", templates: ["tpl-leg-warmup", "tpl-leg-stretch", "tpl-leg-strength", "tpl-leg-yoga", "tpl-leg-recovery", "tpl-legs"] },
   { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Ankles, heels, and steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
@@ -231,6 +232,16 @@ window.TEMPLATES = [
     id: "tpl-low-back", name: "Low Back Care (Big 3 +)", conditions: ["low-back-pain"],
     desc: "Gentle movement plus three well-known core endurance exercises, finished with hip support.",
     items: ["pelvic-tilt", "cat-cow", "knee-to-chest", "lower-trunk-rotation", "curl-up", "side-plank-knees", "bird-dog", "glute-bridge", "hip-flexor-stretch"]
+  },
+  {
+    id: "tpl-thoracic-mobility", name: "Upper Back Mobility", conditions: ["upper-back"],
+    desc: "Gentle moves for your upper (thoracic) spine, the part of your back between your shoulder blades. Go slowly and stay in a comfortable range.",
+    items: ["cat-cow", "seated-thoracic-extension-chair", "open-book", "thread-the-needle", "childs-pose-lat-reach", "breathing-diaphragm"]
+  },
+  {
+    id: "tpl-upper-back-strength", name: "Upper Back Strength and Posture", conditions: ["upper-back"],
+    desc: "Light shoulder-blade and upper back strengthening. Start with no weight and build slowly. Every other day is plenty.",
+    items: ["doorway-pec-stretch", "band-row", "wall-angels", "prone-cobra", "bird-dog"]
   },
   {
     id: "tpl-sciatica", name: "Back and Leg Mobility", conditions: ["sciatica"],

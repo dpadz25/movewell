@@ -317,7 +317,7 @@ window.EXERCISES.push(
   id: "band-row", name: "Band Row", region: "shoulder", type: "strengthen",
   equipment: ["band"], position: "Sitting or standing", level: 1,
   muscles: "Mid back, lats, rhomboids, biceps",
-  helps: ["upper-cross", "posture", "tos", "general", "low-back-pain"],
+  helps: ["upper-cross", "posture", "tos", "general", "low-back-pain", "upper-back"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Sit tall with legs extended, loop the band around your feet.",
@@ -357,7 +357,7 @@ window.EXERCISES.push(
   id: "doorway-pec-stretch", name: "Doorway Chest Stretch", region: "shoulder", type: "stretch",
   equipment: ["doorway"], position: "Standing in doorway", level: 1,
   muscles: "Pectoralis major and minor",
-  helps: ["upper-cross", "tos", "posture", "shoulder-pain"],
+  helps: ["upper-cross", "tos", "posture", "shoulder-pain", "upper-back"],
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
   howTo: [
     "Stand in a doorway. Place your forearm on the frame, elbow at shoulder height.",
@@ -752,7 +752,7 @@ window.EXERCISES.push(
   id: "thoracic-extension-foam-roller", name: "Upper Back Extension over Foam Roller", region: "upper-back", type: "mobility",
   equipment: ["foam-roller"], position: "Lying on back over roller", level: 2,
   muscles: "Thoracic spine extension",
-  helps: ["upper-cross", "posture", "tos", "neck-pain"],
+  helps: ["upper-cross", "posture", "tos", "neck-pain", "upper-back"],
   dose: { sets: 2, reps: 8 },
   howTo: [
     "Lie on your back with a foam roller across your mid-back, knees bent.",
@@ -772,7 +772,7 @@ window.EXERCISES.push(
   id: "cat-cow", name: "Cat-Cow", region: "upper-back", type: "mobility",
   equipment: ["none"], position: "Hands and knees", level: 1,
   muscles: "Entire spine, especially mid-back",
-  helps: ["low-back-pain", "upper-cross", "posture", "general", "neck-pain"],
+  helps: ["low-back-pain", "upper-cross", "posture", "general", "neck-pain", "upper-back"],
   dose: { sets: 2, reps: 10 },
   howTo: [
     "Start on hands and knees, hands under shoulders, knees under hips.",
@@ -790,7 +790,7 @@ window.EXERCISES.push(
   id: "open-book", name: "Open Book Rotation", region: "upper-back", type: "mobility",
   equipment: ["none"], position: "Lying on side", level: 1,
   muscles: "Thoracic rotation, chest",
-  helps: ["upper-cross", "posture", "neck-pain", "low-back-pain", "tos"],
+  helps: ["upper-cross", "posture", "neck-pain", "low-back-pain", "tos", "upper-back"],
   dose: { sets: 2, reps: 8, hold: 3, perSide: true },
   howTo: [
     "Lie on your left side, knees bent and stacked, arms extended together in front at shoulder height.",
@@ -806,7 +806,7 @@ window.EXERCISES.push(
   id: "thread-the-needle", name: "Thread the Needle", region: "upper-back", type: "mobility",
   equipment: ["none"], position: "Hands and knees", level: 2,
   muscles: "Thoracic rotation, posterior shoulder",
-  helps: ["upper-cross", "posture", "shoulder-pain"],
+  helps: ["upper-cross", "posture", "shoulder-pain", "upper-back"],
   dose: { sets: 2, reps: 8, hold: 3, perSide: true },
   howTo: [
     "Start on hands and knees.",
@@ -822,7 +822,7 @@ window.EXERCISES.push(
   id: "wall-angels", name: "Wall Angels", region: "upper-back", type: "strengthen",
   equipment: ["wall"], position: "Standing against wall", level: 2,
   muscles: "Lower trapezius, postural muscles",
-  helps: ["upper-cross", "posture", "tos", "neck-pain"],
+  helps: ["upper-cross", "posture", "tos", "neck-pain", "upper-back"],
   dose: { sets: 2, reps: 8 },
   howTo: [
     "Stand with your back against a wall, feet a few inches away, lower back gently flattened.",
@@ -840,7 +840,7 @@ window.EXERCISES.push(
   id: "prone-cobra", name: "Prone Cobra", region: "upper-back", type: "strengthen",
   equipment: ["none"], position: "Lying face down", level: 2,
   muscles: "Spinal extensors, lower trapezius, rear deltoids",
-  helps: ["upper-cross", "posture", "low-back-pain"],
+  helps: ["upper-cross", "posture", "low-back-pain", "upper-back"],
   dose: { sets: 3, reps: 8, hold: 5 },
   howTo: [
     "Lie face down, arms at your sides, palms facing down.",
@@ -858,7 +858,7 @@ window.EXERCISES.push(
   id: "quadruped-thoracic-rotation", name: "Quadruped Thoracic Rotation", region: "upper-back", type: "mobility",
   equipment: ["none"], position: "Hands and knees", level: 2,
   muscles: "Thoracic rotation",
-  helps: ["upper-cross", "posture", "low-back-pain"],
+  helps: ["upper-cross", "posture", "low-back-pain", "upper-back"],
   dose: { sets: 2, reps: 8, perSide: true },
   howTo: [
     "On hands and knees, place your right hand behind your head.",
@@ -874,7 +874,7 @@ window.EXERCISES.push(
   id: "childs-pose-lat-reach", name: "Child's Pose with Side Reach", region: "upper-back", type: "stretch",
   equipment: ["none"], position: "Kneeling", level: 1,
   muscles: "Lats, mid-back, hips",
-  helps: ["low-back-pain", "upper-cross", "general", "posture"],
+  helps: ["low-back-pain", "upper-cross", "general", "posture", "upper-back"],
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
   howTo: [
     "Kneel and sit back toward your heels, reaching arms far forward on the floor, forehead down.",
@@ -891,7 +891,7 @@ window.EXERCISES.push(
   id: "seated-thoracic-extension-chair", name: "Chair Back Extension", region: "upper-back", type: "mobility",
   equipment: ["chair"], position: "Sitting", level: 1,
   muscles: "Thoracic extension",
-  helps: ["posture", "upper-cross", "neck-pain"],
+  helps: ["posture", "upper-cross", "neck-pain", "upper-back"],
   dose: { sets: 2, reps: 8, hold: 3 },
   howTo: [
     "Sit in a sturdy chair with a mid-height backrest.",
@@ -907,7 +907,7 @@ window.EXERCISES.push(
   id: "breathing-diaphragm", name: "Belly Breathing", region: "upper-back", type: "mobility",
   equipment: ["none"], position: "Lying or sitting", level: 1,
   muscles: "Diaphragm",
-  helps: ["tos", "neck-pain", "posture", "low-back-pain", "general"],
+  helps: ["tos", "neck-pain", "posture", "low-back-pain", "general", "upper-back"],
   dose: { sets: 1, reps: 1, timeSec: 180 },
   howTo: [
     "Lie on your back with knees bent, one hand on your chest, one on your belly.",

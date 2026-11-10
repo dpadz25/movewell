@@ -883,7 +883,7 @@ window.EXERCISES.push(
   id: "scapular-pulldown", name: "Scapular Pull-Down", region: "upper-back", type: "strengthen",
   equipment: ["cable", "machine"], position: "Seated at a lat pulldown station", level: 1,
   muscles: "Lower traps, lats (scapular depression)",
-  helps: ["posture", "tos", "shoulder-pain", "strength-training", "upper-cross"],
+  helps: ["posture", "tos", "shoulder-pain", "strength-training", "upper-cross", "upper-back"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Sit at a lat pulldown and hold the bar with straight arms.",

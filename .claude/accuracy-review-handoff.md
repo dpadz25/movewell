@@ -34,3 +34,9 @@ Review 1 added a caution to every exercise that had none, using one template per
 - Existing users keep their saved routine names (for example "Thoracic Outlet Relief"), because those are stored in their data.
 - The custom exercise builder's "Often used for" picker still lists all 28 conditions at once.
 - There is no disclaimer for existing users who already finished onboarding, only the Settings note.
+
+## Added after review 1: upper back routines
+- New condition "Upper back aches" and two new routines, "Upper Back Mobility" (thoracic mobility) and "Upper Back Strength and Posture". Both are built from existing exercises with their existing doses.
+- Research behind them is weak: exercise-only evidence for thoracic mobility is low quality, and the routine shape (mobility first, then shoulder-blade strengthening, no weight at first) comes from clinic guides, not trials. Check the order, the doses, and whether `prone-cobra`, `bird-dog`, and `wall-angels` suit an unsupervised app.
+- The condition blurb includes a red-flag line (severe pain, injury, chest pain, or shortness of breath means see a professional). Check the wording.
+- 14 exercises were tagged `upper-back` in their `helps` list. Check those tags.

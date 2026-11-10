@@ -680,7 +680,7 @@ window.EXERCISES.push(
   id: "foam-roll-upper-back", name: "Foam Roll: Upper Back", region: "upper-back", type: "recovery",
   equipment: ["foam-roller"], position: "Lying back over the roller", level: 1,
   muscles: "Upper back, lats",
-  helps: ["posture", "upper-cross"],
+  helps: ["posture", "upper-cross", "upper-back"],
   dose: { sets: 1, timeSec: 60 },
   howTo: [
     "Sit on the floor with the roller behind you, then lean back so it sits across your upper back.",
