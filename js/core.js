@@ -194,11 +194,13 @@
       void el.offsetWidth; // restart the animation if it's already mid-flash
       el.classList.add("show");
     },
-    confirm(title, text, onYes, yesLabel, onNo, noLabel) {
+    // calm: the yes button is an ordinary choice, not a destructive one, so it is not drawn in red
+    confirm(title, text, onYes, yesLabel, onNo, noLabel, calm) {
       const c = document.getElementById("confirm");
       document.getElementById("confirm-title").textContent = title;
       document.getElementById("confirm-text").textContent = text;
       const yes = document.getElementById("confirm-yes");
+      yes.className = calm ? "btn" : "btn danger";
       yes.textContent = yesLabel || "Yes";
       document.getElementById("confirm-no").textContent = noLabel || "Cancel";
       c.classList.add("open");
@@ -584,7 +586,7 @@
     // one question before any after-surgery routine is added
     surgeryCheck(onYes) {
       this.confirm("One quick check", "Has your surgeon or therapist said you can exercise?", onYes, "Yes, they have",
-        () => this.toast("Check with them first. You can add this later."), "Not yet");
+        () => this.toast("Check with them first. You can add this later."), "Not yet", true);
     },
 
     // ---------- WEIGHT LOG ----------

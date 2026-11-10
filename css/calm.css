@@ -414,7 +414,7 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 .sp-actions:empty { display: none; }
 .sp-main { min-height: 3.8rem; font-size: 1.12rem; }
 .sp-quiet { background: none; border: 0; color: var(--muted); font-weight: 700; text-decoration: underline; cursor: pointer; min-height: 2.75rem; font-size: 0.92rem; }
-.sp-weight { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; background: var(--card); border-radius: 22px; padding: 0.5rem 0.5rem 0.5rem 1rem; box-shadow: var(--shadow); }
+.sp-weight { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; background: var(--card); border-radius: 22px; padding: 0.5rem 0.5rem 0.5rem 1rem; box-shadow: var(--shadow); }
 .sp-weight-label { font-weight: 800; }
 .sp-weight input.stepper-input { width: 4.4rem; font-size: 1.4rem; min-height: 3rem; }
 .sp-actions .prev-hint { align-self: center; border: 0; background: var(--accent-dim); color: var(--accent-strong); font-weight: 800; padding: 0.6rem 1rem; min-height: 2.75rem; }

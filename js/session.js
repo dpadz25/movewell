@@ -97,7 +97,8 @@
     const doneCount = s.items.filter(x => x.logged.length > 0).length;
     const it = s.items[s.idx];
     const ex = this.ex(it.exId) || {};
-    const easier = (ex.variations || [])[0];
+    // only offer a variation as "easier" when its own note says so (the first one is sometimes harder)
+    const easier = (ex.variations || []).find(v => /easier|easiest|gentle|beginner|starting/i.test(v.note || ""));
     this.stopHoldTimer();
     this._pauseOpen = true;
     if (view === "hurt") {
