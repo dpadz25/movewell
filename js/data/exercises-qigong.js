@@ -110,7 +110,8 @@ window.EXERCISES.push(
     "Finish with your right hand over your heart and your left hand on your lower belly. Take a few quiet breaths and think of something you are thankful for."
   ],
   tips: ["A calm way to close any session, not only Qi Gong."],
-  variations: []
+  variations: [],
+  caution: "Use light pressure only. Skip any area that is bruised, swollen, or painful."
 },
 
 // ============ GAP FILLERS ============
@@ -127,7 +128,7 @@ window.EXERCISES.push(
     "Stay here until the chime, then lower down gently."
   ],
   tips: ["This is the gentle first step before the full Press-Up. Many people with disc-related pain find it eases leg symptoms."],
-  caution: "Stop if pain spreads further down your leg. Pain moving toward the middle of your back is usually a good sign. Check with your therapist.",
+  caution: "Stop if pain spreads down your leg or gets worse. If you are unsure, check with your doctor or physical therapist.",
   variations: [
     { name: "Lying Flat", note: "Just lie on your stomach with a pillow under your hips. The easiest version." },
     { name: "Press-Up", note: "Push up onto straight arms with hips staying down. Harder." }

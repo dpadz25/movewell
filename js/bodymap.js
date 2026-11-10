@@ -38,7 +38,7 @@
       shoulder: ["shoulder", "Shoulder", "Deltoid, rotator cuff"],
       upperarm: ["arms", "Upper arm", "Biceps brachii, brachialis"],
       forearm: ["elbow", "Elbow and forearm", "Wrist flexor and extensor tendons, forearm rotators"],
-      hand: ["wrist", "Wrist and hand", "Finger flexors and extensors, thumb muscles, carpal tunnel"],
+      hand: ["wrist", "Wrist and hand", "Finger flexors and extensors, thumb muscles"],
       hip: ["hip", "Hip", "Hip flexors (iliopsoas), adductors"],
       thigh: ["knee", "Front of thigh", "Quadriceps"],
       knee: ["knee", "Knee", "Quadriceps and patellar tendons, joint stabilizers"],
@@ -216,14 +216,14 @@
         <button class="btn big grad" id="rs-log" disabled>Save how it feels</button>
       </section>
       ${muscles ? `<div class="bm-muscle-note">${this.icon("person")}<span><strong>Muscles here:</strong> ${this.esc(muscles)}</span></div>` : ""}
-      <button class="re-more-toggle rs-toggle" data-sec="why" aria-expanded="${!!this._rsOpen.why}">${this.icon("bulb")}<span>Why might it hurt?</span>${this.icon(this._rsOpen.why ? "chevU" : "chevD")}</button>
+      <button class="re-more-toggle rs-toggle" data-sec="why" aria-expanded="${!!this._rsOpen.why}">${this.icon("bulb")}<span>Common things people notice</span>${this.icon(this._rsOpen.why ? "chevU" : "chevD")}</button>
       <div class="rs-sec" id="rs-why" ${this._rsOpen.why ? "" : "hidden"}>
-        <p class="re-hint">Common reasons this area bothers people. Only a professional can diagnose you.</p>
+        <p class="re-hint">Things many people notice in this area. These are starting points, not a diagnosis. Only a professional can tell you what is going on for you.</p>
         ${conds.map(c => `
           <button class="region-issue" data-c="${c.id}">
             <div class="region-issue-name">${this.esc(c.name)}</div>
             <div class="region-issue-blurb">${this.esc(c.blurb)}</div>
-          </button>`).join("") || `<p class="home-list-empty">No common causes listed for this area.</p>`}
+          </button>`).join("") || `<p class="home-list-empty">Nothing listed for this area.</p>`}
       </div>
       <button class="re-more-toggle rs-toggle" data-sec="ex" aria-expanded="${!!this._rsOpen.ex}">${this.icon("book")}<span>Exercises for this area (${exs.length})</span>${this.icon(this._rsOpen.ex ? "chevU" : "chevD")}</button>
       <div class="rs-sec" id="rs-ex" ${this._rsOpen.ex ? "" : "hidden"}>

@@ -22,7 +22,8 @@ window.EXERCISES.push(
   tips: ["A good pace feels like you are late for an appointment.", "Add gentle hills as it gets easier."],
   variations: [
     { name: "Hiking", note: "Trails and hills work the legs and balance harder. Poles help on uneven ground." }
-  ]
+  ],
+  caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "swimming", name: "Swimming / Water Walking", region: "balance", type: "cardio",
@@ -36,7 +37,8 @@ window.EXERCISES.push(
     "Rest at the wall whenever you need to.",
     "Build up time gradually across visits."
   ],
-  tips: ["The water carries your body weight, so this is the gentlest cardio there is for sore joints."]
+  tips: ["The water carries your body weight, so this is the gentlest cardio there is for sore joints."],
+  caution: "Swim where someone else is nearby. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "chair-aerobics", name: "Seated Chair Aerobics", region: "balance", type: "cardio",
@@ -53,7 +55,8 @@ window.EXERCISES.push(
   tips: ["Music with a steady beat makes the time fly.", "Everything counts, keep the feet or arms moving the whole time."],
   variations: [
     { name: "Seated Punches", note: "Alternate punching straight ahead at shoulder height, quick but controlled." }
-  ]
+  ],
+  caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "arm-bike", name: "Arm Bike (Upper Body Ergometer)", region: "balance", type: "cardio",
@@ -67,7 +70,8 @@ window.EXERCISES.push(
     "Keep your shoulders relaxed and your trunk tall.",
     "Pedal backward now and then to change the work."
   ],
-  tips: ["Perfect cardio when legs, hips, or knees need a rest."]
+  tips: ["Perfect cardio when legs, hips, or knees need a rest."],
+  caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "jumping-jacks", name: "Jumping Jacks", region: "balance", type: "cardio",
@@ -84,7 +88,8 @@ window.EXERCISES.push(
   tips: ["Land softly with knees slightly bent."],
   variations: [
     { name: "Step Jacks", note: "Step one foot out at a time instead of jumping. Same move, no impact." }
-  ]
+  ],
+  caution: "Start gently. If jumping bothers your knees, hips, or back, march in place instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "high-knees", name: "High Knees", region: "balance", type: "cardio",
@@ -98,7 +103,8 @@ window.EXERCISES.push(
     "Stay tall, do not lean back.",
     "Land lightly on the balls of your feet."
   ],
-  tips: ["March instead of run for a low-impact version."]
+  tips: ["March instead of run for a low-impact version."],
+  caution: "Start gently. If jumping bothers your knees, hips, or back, march in place instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "mountain-climbers-cardio", name: "Mountain Climbers", region: "balance", type: "cardio",
@@ -142,7 +148,8 @@ window.EXERCISES.push(
     "Keep your feet moving with small steps and weight shifts.",
     "Punch in combinations of two to four, breathe out with each punch."
   ],
-  tips: ["Speed matters less than staying loose and moving the whole round."]
+  tips: ["Speed matters less than staying loose and moving the whole round."],
+  caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "air-bike", name: "Air Bike (Assault Bike)", region: "balance", type: "cardio",
@@ -156,7 +163,8 @@ window.EXERCISES.push(
     "The harder you go, the harder the fan pushes back.",
     "Settle into a pace you can hold, or alternate easy and hard minutes."
   ],
-  tips: ["The fan bike is famously honest. Start easier than you think."]
+  tips: ["The fan bike is famously honest. Start easier than you think."],
+  caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "ski-erg", name: "Ski Erg", region: "balance", type: "cardio",
@@ -166,11 +174,12 @@ window.EXERCISES.push(
   dose: { sets: 1, timeSec: 600 },
   howTo: [
     "Stand facing the machine and grab both handles overhead.",
-    "Drive the handles down past your hips using your lats and a crunch of the core, letting your knees bend.",
+    "Pull the handles down past your hips using your back and belly muscles, letting your knees bend.",
     "Rise tall as your arms return overhead.",
     "Find a smooth rhythm, like cross-country skiing."
   ],
-  tips: ["Power comes from the whole body folding down, not just the arms pulling."]
+  tips: ["Power comes from the whole body folding down, not just the arms pulling."],
+  caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "sled-push", name: "Sled Push", region: "balance", type: "cardio",
@@ -184,7 +193,8 @@ window.EXERCISES.push(
     "Drive hard with your legs, taking powerful steps.",
     "One trip down the track counts as a set. Rest and repeat."
   ],
-  tips: ["Very knee-friendly for how hard it works the legs, there is no lowering phase."]
+  tips: ["Very knee-friendly for how hard it works the legs, there is no lowering phase."],
+  caution: "Use a light load and a clear path. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
   id: "dancing", name: "Dance It Out", region: "balance", type: "cardio",
@@ -198,7 +208,8 @@ window.EXERCISES.push(
     "Keep your feet moving through the whole song.",
     "String several songs together for a full session."
   ],
-  tips: ["If it gets your breathing up and makes you smile, it counts as cardio."]
+  tips: ["If it gets your breathing up and makes you smile, it counts as cardio."],
+  caution: "Start gently and build up slowly. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 
 // ============ BALANCE ============
@@ -214,7 +225,8 @@ window.EXERCISES.push(
     "Reach toward 3, then 6, then 9, returning to center each time.",
     "That full circuit is one rep. Switch legs after your reps."
   ],
-  tips: ["Keep a chair or counter within reach.", "Smaller reaches are fine, control beats distance."]
+  tips: ["Keep a chair or counter within reach.", "Smaller reaches are fine, control beats distance."],
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "backward-walking", name: "Backward Walking", region: "balance", type: "balance",
@@ -243,7 +255,8 @@ window.EXERCISES.push(
     "Keep alternating front and back as you travel sideways.",
     "Go both directions."
   ],
-  tips: ["Start slow, it is a brain exercise as much as a leg exercise.", "Let your hips rotate naturally with the steps."]
+  tips: ["Start slow, it is a brain exercise as much as a leg exercise.", "Let your hips rotate naturally with the steps."],
+  caution: "Start gently. If jumping bothers your knees, hips, or back, march in place instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
   id: "eyes-closed-stand", name: "Eyes-Closed Stand", region: "balance", type: "balance",
@@ -324,7 +337,8 @@ window.EXERCISES.push(
     "Feel the stretch low in the calf, near the Achilles.",
     "Hold, then switch sides."
   ],
-  tips: ["The bent knee is the whole trick. It moves the stretch from the upper calf down to the deep calf."]
+  tips: ["The bent knee is the whole trick. It moves the stretch from the upper calf down to the deep calf."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
   id: "lat-stretch", name: "Kneeling Lat Stretch", region: "upper-back", type: "stretch",
@@ -338,7 +352,8 @@ window.EXERCISES.push(
     "Keep your elbows narrow and feel the stretch along your sides and armpits.",
     "Breathe slowly into your ribs."
   ],
-  tips: ["Point your thumbs toward the ceiling to deepen the lat stretch."]
+  tips: ["Point your thumbs toward the ceiling to deepen the stretch."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
   id: "chair-hamstring-stretch", name: "Seated Chair Hamstring Stretch", region: "knee", type: "stretch",
@@ -349,10 +364,11 @@ window.EXERCISES.push(
   howTo: [
     "Sit near the front edge of a sturdy chair.",
     "Straighten one leg out, heel on the floor, toes up.",
-    "Sit tall, then hinge slightly forward from the hips until you feel the back of the thigh stretch.",
+    "Sit tall, then bend slightly forward from the hips until you feel the back of the thigh stretch.",
     "Hold, then switch legs."
   ],
-  tips: ["Keep your back long. Leaning from the hips beats slumping toward the toes."]
+  tips: ["Keep your back long. Leaning from the hips beats slumping toward the toes."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
   id: "chair-figure4", name: "Seated Figure-4 Stretch", region: "hip", type: "stretch",
@@ -363,10 +379,11 @@ window.EXERCISES.push(
   howTo: [
     "Sit tall and cross one ankle over the opposite knee, making a figure 4.",
     "Let the crossed knee relax toward the floor.",
-    "For more stretch, hinge gently forward from the hips.",
+    "For more stretch, bend gently forward from the hips.",
     "Hold, breathe, then switch sides."
   ],
-  tips: ["The floor version of this stretch is in the library too. This one needs no getting up or down."]
+  tips: ["The floor version of this stretch is in the library too. This one needs no getting up or down."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
   id: "side-lunge-adductor", name: "Standing Side-Lunge Inner Thigh Stretch", region: "hip", type: "stretch",
@@ -380,7 +397,8 @@ window.EXERCISES.push(
     "Feel the stretch along the straight leg's inner thigh.",
     "Hold, then shift to the other side."
   ],
-  tips: ["Hands on the bent thigh or a chair for support."]
+  tips: ["Hands on the bent thigh or a chair for support."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 
 // ============ STRENGTHENING ============
@@ -396,7 +414,8 @@ window.EXERCISES.push(
     "Tap the heel lightly, then press back up.",
     "Keep the standing knee tracking over the middle of the foot the whole time."
   ],
-  tips: ["Slow on the way down is the whole point.", "Watch the knee in a mirror, it should not dive inward."]
+  tips: ["Slow on the way down is the whole point.", "Watch the knee in a mirror, it should not dive inward."],
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "copenhagen-plank", name: "Copenhagen Plank (Knees)", region: "hip", type: "strengthen",
@@ -425,7 +444,8 @@ window.EXERCISES.push(
     "Lift only as high as your hips can stay level.",
     "Lower with control and repeat, then switch sides."
   ],
-  tips: ["Keep your trunk quiet. If your whole body tips, lift the leg lower."]
+  tips: ["Keep your trunk quiet. If your whole body tips, lift the leg lower."],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 {
   id: "donkey-kick", name: "Donkey Kick", region: "hip", type: "strengthen",
@@ -436,10 +456,11 @@ window.EXERCISES.push(
   howTo: [
     "Start on hands and knees.",
     "Keeping the knee bent at 90 degrees, press one heel up toward the ceiling.",
-    "Squeeze the glute at the top without arching your low back.",
+    "Squeeze the buttock muscle at the top without arching your low back.",
     "Lower with control and repeat, then switch sides."
   ],
-  tips: ["Think of stamping the ceiling with a flat foot.", "Small and controlled beats high and sloppy."]
+  tips: ["Think of stamping the ceiling with a flat foot.", "Small and controlled beats high and sloppy."],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 {
   id: "single-leg-glute-bridge", name: "Single-Leg Glute Bridge", region: "hip", type: "strengthen",
@@ -453,7 +474,8 @@ window.EXERCISES.push(
     "Press through the other heel and lift your hips until your body is straight from shoulder to knee.",
     "Lower slowly and repeat, then switch legs."
   ],
-  tips: ["Keep your hips level, do not let one side droop.", "Master the two-leg bridge in the library first."]
+  tips: ["Keep your hips level, do not let one side droop.", "Master the two-leg bridge in the library first."],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 {
   id: "single-leg-rdl-bw", name: "Single-Leg Romanian Deadlift (Bodyweight)", region: "hip", type: "strengthen",
@@ -463,11 +485,12 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 8, perSide: true },
   howTo: [
     "Stand on one leg with a soft knee.",
-    "Hinge forward at the hips, letting the free leg float straight back.",
+    "Bend forward at the hips, letting the free leg float straight back.",
     "Lower until your torso and back leg are near level, spine long.",
     "Drive the hips forward to stand back up."
   ],
-  tips: ["Fingertips on a counter make it a strength exercise instead of a wobble contest.", "Hips stay square to the floor."]
+  tips: ["Fingertips on a counter make it a strength exercise instead of a wobble contest.", "Hips stay square to the floor."],
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "sidelying-external-rotation", name: "Side-Lying External Rotation", region: "shoulder", type: "strengthen",
@@ -481,7 +504,8 @@ window.EXERCISES.push(
     "Keeping the elbow pinned, rotate the forearm up toward the ceiling.",
     "Lower slowly and repeat, then switch sides."
   ],
-  tips: ["The towel roll is the secret, it puts the cuff in its strongest position.", "A can of soup is plenty of weight to start."]
+  tips: ["The towel roll is the secret, it puts the cuff in its strongest position.", "A can of soup is plenty of weight to start."],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 {
   id: "nordic-curl", name: "Nordic Hamstring Curl", region: "knee", type: "strengthen",
@@ -492,7 +516,7 @@ window.EXERCISES.push(
   howTo: [
     "Kneel on a pad with your ankles held down by a partner, a couch, or heavy furniture.",
     "With a straight line from knees to head, lower your body forward as slowly as you can.",
-    "Catch yourself with your hands when the hamstrings give out.",
+    "Catch yourself with your hands when the back-of-thigh muscles give out.",
     "Push back up with your arms to the start."
   ],
   tips: ["Even two or three slow inches of lowering counts. This one builds over months."],
@@ -510,7 +534,8 @@ window.EXERCISES.push(
     "Squeeze the ball steadily, hold, then relax.",
     "Keep breathing during the squeeze."
   ],
-  tips: ["Squeeze at about 7 out of 10 effort, not an all-out crush."]
+  tips: ["Squeeze at about 7 out of 10 effort, not an all-out crush."],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 {
   id: "psoas-march", name: "Psoas March with Band", region: "hip", type: "strengthen",
@@ -520,11 +545,12 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 10, perSide: true },
   howTo: [
     "Lie on your back with a loop band around both feet, knees and hips bent to 90 degrees.",
-    "Brace your core so your low back stays gently pressed to the floor.",
+    "Tighten your belly muscles so your low back stays gently pressed to the floor.",
     "Pull one knee toward your chest against the band while the other leg holds still.",
     "Return slowly and alternate sides."
   ],
-  tips: ["The leg that holds still is doing the secret work. Do not let it drift."]
+  tips: ["The leg that holds still is doing the secret work. Do not let it drift."],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 
 // ============ MOBILITY ============
@@ -540,7 +566,8 @@ window.EXERCISES.push(
     "After your reps, face the wall and swing the leg side to side across your body.",
     "Switch legs."
   ],
-  tips: ["Let the swings grow bigger gradually as the hip loosens.", "A classic warmup before walks and workouts."]
+  tips: ["Let the swings grow bigger gradually as the hip loosens.", "A classic warmup before walks and workouts."],
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "arm-circles", name: "Arm Circles", region: "shoulder", type: "mobility",
@@ -554,7 +581,8 @@ window.EXERCISES.push(
     "Reverse and circle backward, big to small.",
     "Keep your shoulders down away from your ears."
   ],
-  tips: ["Great quick warmup before any upper body work."]
+  tips: ["Great quick warmup before any upper body work."],
+  caution: "Keep the movement small and slow. Stop if you feel sharp pain, pinching, or catching in the joint."
 },
 {
   id: "deep-squat-hold", name: "Supported Deep Squat Hold", region: "hip", type: "mobility",
@@ -568,7 +596,8 @@ window.EXERCISES.push(
     "Use your grip to stay balanced and keep your chest up.",
     "Hang out and breathe, shifting gently side to side if it feels good."
   ],
-  tips: ["The support lets your hips relax into the position instead of fighting to balance.", "Depth comes with weeks, not minutes."]
+  tips: ["The support lets your hips relax into the position instead of fighting to balance.", "Depth comes with weeks, not minutes."],
+  caution: "Hold a sturdy support. Stop if you feel sharp pain in your knees, hips, or back, or if you feel unsteady."
 },
 {
   id: "shoulder-cars", name: "Shoulder Circles (CARs)", region: "shoulder", type: "mobility",
@@ -577,12 +606,13 @@ window.EXERCISES.push(
   helps: ["frozen-shoulder", "general"],
   dose: { sets: 1, reps: 5, perSide: true },
   howTo: [
-    "Stand tall with one arm straight at your side, and brace your trunk so only the arm moves.",
+    "Stand tall with one arm straight at your side, and keep your trunk steady so only the arm moves.",
     "Slowly raise the straight arm forward and all the way overhead.",
     "Rotate the arm and continue the circle behind you, reaching back and down.",
     "One slow full circle is one rep. Do both directions, then switch arms."
   ],
-  tips: ["The slower the circle, the more it counts. Take 10 seconds per circle.", "Work around any pinchy spots, not through them."]
+  tips: ["The slower the circle, the more it counts. Take 10 seconds per circle.", "Work around any pinchy spots, not through them."],
+  caution: "Keep the movement small and slow. Stop if you feel sharp pain, pinching, or catching in the joint."
 },
 {
   id: "hip-cars", name: "Hip Circles (CARs)", region: "hip", type: "mobility",
@@ -596,7 +626,8 @@ window.EXERCISES.push(
     "Slowly sweep the knee out to the side, then rotate it back behind you before returning to the start.",
     "Draw the biggest slow circle your hip allows. Do both directions, then switch."
   ],
-  tips: ["Keep your trunk tall and still, the circle comes from the hip alone."]
+  tips: ["Keep your trunk tall and still, the circle comes from the hip alone."],
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "standing-torso-twists", name: "Standing Torso Twists", region: "lower-back", type: "mobility",
@@ -610,7 +641,8 @@ window.EXERCISES.push(
     "Let your heels pivot naturally as you turn.",
     "Keep it easy and rhythmic, like wringing out gently."
   ],
-  tips: ["A relaxed swing, not a forced stretch. The arms should flop like empty sleeves."]
+  tips: ["A relaxed swing, not a forced stretch. The arms should flop like empty sleeves."],
+  caution: "Twist gently and only as far as is comfortable. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first."
 },
 
 // ============ RECOVERY / SELF-MASSAGE ============
@@ -626,7 +658,8 @@ window.EXERCISES.push(
     "Pause and breathe on any tender spots for a few seconds.",
     "Switch legs."
   ],
-  tips: ["Slow rolling works. Racing back and forth does nothing.", "Support more weight on your arms to lighten the pressure."]
+  tips: ["Slow rolling works. Racing back and forth does nothing.", "Support more weight on your arms to lighten the pressure."],
+  caution: "Pressure should feel firm, not painful. Skip bones, joints, bruises, and injured areas. If you take blood thinners or have circulation problems, check with your doctor first."
 },
 {
   id: "foam-roll-itband", name: "Foam Roll: Outer Thigh", region: "hip", type: "recovery",
@@ -655,7 +688,8 @@ window.EXERCISES.push(
     "Roll slowly between the shoulder blades and the middle of your back.",
     "Pause anywhere that feels tight and take a slow breath."
   ],
-  tips: ["Support your head with your hands if your neck tires.", "Stay off the low back and neck, this one is for between the shoulder blades."]
+  tips: ["Support your head with your hands if your neck tires.", "Stay off the low back and neck, this one is for between the shoulder blades."],
+  caution: "Pressure should feel firm, not painful. Skip bones, joints, bruises, and injured areas. If you take blood thinners or have circulation problems, check with your doctor first."
 },
 {
   id: "ball-glute-release", name: "Ball Release: Glutes", region: "hip", type: "recovery",
@@ -669,7 +703,8 @@ window.EXERCISES.push(
     "Rest on the spot and breathe for 20 to 30 seconds while it softens.",
     "Move to the next spot, then switch sides."
   ],
-  tips: ["Standing against a wall with the ball behind you is a gentler version."]
+  tips: ["Standing against a wall with the ball behind you is a gentler version."],
+  caution: "Pressure should feel firm, not painful. Skip bones, joints, bruises, and injured areas. If you take blood thinners or have circulation problems, check with your doctor first."
 },
 {
   id: "foot-ball-roll", name: "Ball Release: Foot Roll", region: "ankle-foot", type: "recovery",
@@ -683,7 +718,8 @@ window.EXERCISES.push(
     "Linger on tender spots and let them ease.",
     "Switch feet."
   ],
-  tips: ["A frozen water bottle works wonderfully for sore, inflamed feet."]
+  tips: ["A frozen water bottle works wonderfully for sore, inflamed feet."],
+  caution: "Pressure should feel firm, not painful. Skip bones, joints, bruises, and injured areas. If you take blood thinners or have circulation problems, check with your doctor first."
 },
 {
   id: "box-breathing", name: "Box Breathing", region: "core", type: "recovery",
@@ -697,7 +733,8 @@ window.EXERCISES.push(
     "Hold for 4, breathe out for 4, hold empty for 4.",
     "That square is one round. Keep going, smooth and unhurried."
   ],
-  tips: ["Used by athletes and soldiers alike to settle the nerves.", "If 4 feels long, start with a count of 3."]
+  tips: ["Used by athletes and soldiers alike to settle the nerves.", "If 4 feels long, start with a count of 3."],
+  caution: "Breathe gently and never strain. If you feel dizzy or lightheaded, go back to normal breathing."
 },
 {
   id: "breathing-478", name: "4-7-8 Breathing", region: "core", type: "recovery",
@@ -724,11 +761,12 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 8 },
   howTo: [
     "Hold the bar at your collarbones, hands just outside shoulder width, elbows slightly forward.",
-    "Brace your core and squeeze your glutes.",
+    "Tighten your belly muscles and squeeze your buttock muscles.",
     "Press the bar straight overhead, moving your head back slightly to let it pass.",
     "Finish with the bar over the back of your head, arms locked, then lower with control."
   ],
-  tips: ["The whole body stays tight, it is as much a core lift as a shoulder lift.", "Dumbbells work if no barbell is free."]
+  tips: ["The whole body stays tight, it is as much a core lift as a shoulder lift.", "Dumbbells work if no barbell is free."],
+  caution: "Start with a very light weight. Skip overhead pressing if it pinches or hurts your shoulder. Keep breathing and stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
   id: "dumbbell-fly", name: "Dumbbell Chest Fly", region: "chest", type: "lift",
@@ -757,7 +795,8 @@ window.EXERCISES.push(
     "Squeeze the handles together in front of your chest.",
     "Open back up slowly to a comfortable stretch."
   ],
-  tips: ["The machine guides the path, making it the friendliest way to learn the fly motion."]
+  tips: ["The machine guides the path, making it the friendliest way to learn the fly motion."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "front-squat", name: "Front Squat", region: "knee", type: "lift",
@@ -789,7 +828,8 @@ window.EXERCISES.push(
   tips: ["More upright than a regular deadlift, so many people with cranky backs prefer it."],
   variations: [
     { name: "Trap Bar Deadlift", note: "Standing inside a hexagon bar with neutral handles. The easiest deadlift to learn of all." }
-  ]
+  ],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "close-grip-bench", name: "Close-Grip Bench Press", region: "arms", type: "lift",
@@ -803,7 +843,8 @@ window.EXERCISES.push(
     "Press back up, focusing on the triceps doing the pushing.",
     "Keep wrists stacked straight over elbows."
   ],
-  tips: ["Shoulder width is close enough. Ultra-narrow grips just hurt the wrists."]
+  tips: ["Shoulder width is close enough. Ultra-narrow grips just hurt the wrists."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "preacher-curl", name: "Preacher Curl", region: "arms", type: "lift",
@@ -832,7 +873,8 @@ window.EXERCISES.push(
     "Lower slowly, feeling tension the whole way down.",
     "Finish the set, then turn around for the other arm."
   ],
-  tips: ["Cables keep tension at the bottom where dumbbells go slack, so it burns more with less weight."]
+  tips: ["Cables keep tension at the bottom where dumbbells go slack, so it burns more with less weight."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "machine-shoulder-press", name: "Machine Shoulder Press", region: "shoulder", type: "lift",
@@ -846,7 +888,8 @@ window.EXERCISES.push(
     "Lower with control back to the start.",
     "Keep your back against the pad throughout."
   ],
-  tips: ["The guided path makes this the safest way to press overhead when you are new or coming back."]
+  tips: ["The guided path makes this the safest way to press overhead when you are new or coming back."],
+  caution: "Start with a very light weight. Skip overhead pressing if it pinches or hurts your shoulder. Keep breathing and stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
   id: "seated-calf-raise", name: "Seated Calf Raise", region: "ankle-foot", type: "lift",
@@ -860,7 +903,8 @@ window.EXERCISES.push(
     "Press up onto your toes as high as you can.",
     "Pause a second at the top, then lower slowly."
   ],
-  tips: ["The bent knee targets the deep calf muscle that standing raises miss. Do both for complete calves."]
+  tips: ["The bent knee targets the deep calf muscle that standing raises miss. Do both for complete calves."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "hip-abduction-machine", name: "Hip Abduction Machine", region: "hip", type: "lift",
@@ -874,7 +918,8 @@ window.EXERCISES.push(
     "Pause briefly at the widest point.",
     "Return slowly to the start."
   ],
-  tips: ["Lean slightly forward off the backrest to hit the glutes harder."]
+  tips: ["Lean slightly forward off the backrest to hit the buttock muscles harder."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "hip-adduction-machine", name: "Hip Adduction Machine", region: "hip", type: "lift",
@@ -888,7 +933,8 @@ window.EXERCISES.push(
     "Pause when the pads meet.",
     "Open back up with control."
   ],
-  tips: ["Set the starting width conservatively, you can widen it as you warm up."]
+  tips: ["Set the starting width conservatively, you can widen it as you warm up."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "assisted-pullup", name: "Assisted Pull-Up Machine", region: "upper-back", type: "lift",
@@ -902,7 +948,8 @@ window.EXERCISES.push(
     "Pull yourself up until your chin reaches hand height.",
     "Lower slowly to a full hang."
   ],
-  tips: ["Reduce the assist a little each week and a real pull-up gets closer every visit."]
+  tips: ["Reduce the assist a little each week and a real pull-up gets closer every visit."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "farmers-carry", name: "Farmer's Carry", region: "core", type: "lift",
@@ -912,11 +959,12 @@ window.EXERCISES.push(
   dose: { sets: 3, timeSec: 30 },
   howTo: [
     "Pick up a heavy dumbbell or kettlebell in each hand.",
-    "Stand tall, shoulders back, core braced.",
+    "Stand tall, shoulders back, belly muscles tight.",
     "Walk with controlled, even steps for the time.",
     "Set the weights down with a flat back."
   ],
-  tips: ["One of the most useful exercises in the gym, it is literally carrying groceries.", "Tall posture is the entire exercise, do not let the weights round you forward."]
+  tips: ["One of the most useful exercises in the gym, it is literally carrying groceries.", "Tall posture is the entire exercise, do not let the weights round you forward."],
+  caution: "Start with a very light weight and learn the movement first. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. A trainer or professional can check your form."
 },
 {
   id: "good-morning", name: "Good Morning", region: "hip", type: "lift",
@@ -926,11 +974,11 @@ window.EXERCISES.push(
   dose: { sets: 3, reps: 8 },
   howTo: [
     "Stand with a light bar on your upper back, feet hip-width, knees soft.",
-    "Push your hips straight back and hinge your chest toward the floor, back flat.",
-    "Stop when you feel a firm hamstring stretch, around chest parallel to the floor.",
+    "Push your hips straight back and bend your chest toward the floor, back flat.",
+    "Stop when you feel a firm back-of-thigh stretch, around chest parallel to the floor.",
     "Drive your hips forward to stand tall."
   ],
-  tips: ["Start with an empty bar or just a band. Position and hinge quality are everything here."],
+  tips: ["Start with an empty bar or just a band. Good form is everything here."],
   caution: "Keep the back flat throughout. If it rounds, the weight is too heavy."
 },
 {
@@ -945,7 +993,8 @@ window.EXERCISES.push(
     "Press the bar up and slightly forward until the arm is long.",
     "Lower with control and finish the set, then switch arms."
   ],
-  tips: ["The angled path is much kinder to cranky shoulders than pressing straight overhead."]
+  tips: ["The angled path is much kinder to cranky shoulders than pressing straight overhead."],
+  caution: "Start with a very light weight. Skip overhead pressing if it pinches or hurts your shoulder. Keep breathing and stop if you feel sharp pain, dizziness, or chest pain."
 },
 
 // ============ YOGA (hidden behind the Yoga filter) ============
@@ -961,7 +1010,8 @@ window.EXERCISES.push(
     "Let your arms rest at your sides, palms facing forward.",
     "Stand steady and breathe. This is the pose every standing pose starts from."
   ],
-  tips: ["It looks like just standing. Done with attention, it teaches everything about posture."]
+  tips: ["It looks like just standing. Done with attention, it teaches everything about posture."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-triangle", name: "Triangle (Trikonasana)", region: "hip", type: "yoga",
@@ -975,7 +1025,8 @@ window.EXERCISES.push(
     "Stretch your top arm to the ceiling, opening your chest sideways.",
     "Gaze up, forward, or down, wherever your neck is happy."
   ],
-  tips: ["Rest the bottom hand on your shin, not the floor, until the sides feel long.", "Both legs stay straight but not locked."]
+  tips: ["Rest the bottom hand on your shin, not the floor, until the sides feel long.", "Both legs stay straight but not locked."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-chair-pose", name: "Chair Pose (Utkatasana)", region: "knee", type: "yoga",
@@ -989,7 +1040,8 @@ window.EXERCISES.push(
     "Reach your arms overhead alongside your ears.",
     "Keep your weight in your heels and your chest lifted."
   ],
-  tips: ["Deeper is harder. Even a small sit builds serious leg strength."]
+  tips: ["Deeper is harder. Even a small sit builds serious leg strength."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-low-lunge", name: "Low Lunge (Anjaneyasana)", region: "hip", type: "yoga",
@@ -1003,7 +1055,8 @@ window.EXERCISES.push(
     "Sink your hips gently forward until the front of the back hip stretches.",
     "Reach your arms up or rest hands on the front thigh. Switch sides after the hold."
   ],
-  tips: ["Tuck the tailbone slightly to deepen the stretch without arching the low back."]
+  tips: ["Tuck the tailbone slightly to deepen the stretch without arching the low back."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-high-lunge", name: "High Lunge (Crescent)", region: "hip", type: "yoga",
@@ -1017,7 +1070,8 @@ window.EXERCISES.push(
     "Reach both arms overhead, torso tall.",
     "Press through the back heel to stay steady. Switch sides after the hold."
   ],
-  tips: ["Like Warrior I but with the back heel up, which challenges balance more."]
+  tips: ["Like Warrior I but with the back heel up, which challenges balance more."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-bridge", name: "Bridge Pose (Setu Bandhasana)", region: "lower-back", type: "yoga",
@@ -1031,7 +1085,8 @@ window.EXERCISES.push(
     "Roll your shoulders slightly under and interlace your hands beneath you if comfortable.",
     "Keep your knees tracking straight ahead. Lower down slowly, one vertebra at a time."
   ],
-  tips: ["A yoga block under the hips turns this into a lovely resting pose."]
+  tips: ["A yoga block under the hips turns this into a lovely resting pose."],
+  caution: "Move slowly and stop if you feel sharp pain, especially in your back, hip, or knee."
 },
 {
   id: "yoga-cobra", name: "Cobra (Bhujangasana)", region: "lower-back", type: "yoga",
@@ -1045,7 +1100,8 @@ window.EXERCISES.push(
     "Press lightly into your hands and peel your chest up, leading with the breastbone.",
     "Elbows stay bent. Lower back down with control."
   ],
-  tips: ["The height comes from your back muscles, the hands only assist.", "Gentler than Upward Dog, a perfect starting backbend."]
+  tips: ["The height comes from your back muscles, the hands only assist.", "Gentler than Upward Dog, a perfect starting backbend."],
+  caution: "Stop if you feel pinching or sharp pain in your lower back, or pain that spreads into your leg. If you have osteoporosis or a back condition, check with your doctor or physical therapist first."
 },
 {
   id: "yoga-legs-up-wall", name: "Legs Up the Wall (Viparita Karani)", region: "balance", type: "yoga",
@@ -1074,7 +1130,8 @@ window.EXERCISES.push(
     "Sink your hips slightly and lift your elbows to shoulder height.",
     "Fix your gaze on one point. Unwind and switch sides."
   ],
-  tips: ["Toe on the floor as a kickstand and just crossed arms is Eagle enough.", "The wrap gives the upper back a lovely stretch."]
+  tips: ["Toe on the floor as a kickstand and just crossed arms is Eagle enough.", "The wrap gives the upper back a lovely stretch."],
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "yoga-dancer", name: "Dancer Pose (Natarajasana)", region: "balance", type: "yoga",
@@ -1103,7 +1160,8 @@ window.EXERCISES.push(
     "Open your hips and chest sideways, top arm reaching up.",
     "Gaze down for balance, or up for challenge. Switch sides."
   ],
-  tips: ["A block under the bottom hand makes this pose ten times more accessible.", "Do it with your back against a wall to learn the shape safely."]
+  tips: ["A block under the bottom hand makes this pose ten times more accessible.", "Do it with your back against a wall to learn the shape safely."],
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
 },
 {
   id: "yoga-camel", name: "Camel Pose (Ustrasana)", region: "upper-back", type: "yoga",
@@ -1147,7 +1205,8 @@ window.EXERCISES.push(
     "Reach your fingertips back toward your feet, legs active and long.",
     "Gaze down to keep the neck long. Lower everything slowly."
   ],
-  tips: ["Lifting just the chest, or just the legs, are both worthy versions.", "This is the strengthening cousin of the backbend family."]
+  tips: ["Lifting just the chest, or just the legs, are both worthy versions.", "This is the strengthening cousin of the backbend family."],
+  caution: "Stop if you feel pinching or sharp pain in your lower back, or pain that spreads into your leg. If you have osteoporosis or a back condition, check with your doctor or physical therapist first."
 },
 {
   id: "yoga-seated-twist", name: "Seated Twist (Ardha Matsyendrasana)", region: "lower-back", type: "yoga",
@@ -1161,7 +1220,8 @@ window.EXERCISES.push(
     "Inhale to grow tall, exhale to twist toward the bent knee.",
     "Place your other hand on the floor behind you. Unwind and switch sides."
   ],
-  tips: ["Grow taller with every inhale, twist a touch deeper with every exhale.", "The twist comes from the middle back, not from cranking the neck."]
+  tips: ["Grow taller with every inhale, twist a touch deeper with every exhale.", "The twist comes from the middle back, not from cranking the neck."],
+  caution: "Twist gently and only as far as is comfortable. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first."
 },
 {
   id: "yoga-garland", name: "Garland Squat (Malasana)", region: "hip", type: "yoga",
@@ -1175,7 +1235,8 @@ window.EXERCISES.push(
     "Bring your palms together at your chest, elbows gently pressing the knees wide.",
     "Keep your chest lifted and breathe."
   ],
-  tips: ["A folded blanket under the heels makes this available to almost everyone.", "Sitting on a low block or stack of books works too."]
+  tips: ["A folded blanket under the heels makes this available to almost everyone.", "Sitting on a low block or stack of books works too."],
+  caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain."
 },
 {
   id: "yoga-wide-fold", name: "Wide-Legged Forward Fold (Prasarita Padottanasana)", region: "hip", type: "yoga",
@@ -1201,10 +1262,11 @@ window.EXERCISES.push(
   howTo: [
     "Take a short stance, one foot about a leg's length ahead, both hips squared forward.",
     "Keep both legs straight but not locked.",
-    "Hinge forward over the front leg with a long spine.",
+    "Bend forward over the front leg with a long spine.",
     "Rest hands on the shin, blocks, or the floor. Switch sides."
   ],
-  tips: ["A deep hamstring stretch. A tiny knee bend in the front leg is always allowed."]
+  tips: ["A deep back-of-thigh stretch. A tiny knee bend in the front leg is always allowed."],
+  caution: "Use a wall or sturdy chair for balance if needed. Stop if you feel dizzy, unsteady, or sharp pain in your knees, hips, or back."
 },
 {
   id: "yoga-side-plank", name: "Side Plank (Vasisthasana)", region: "core", type: "yoga",
@@ -1218,7 +1280,8 @@ window.EXERCISES.push(
     "Lift your hips high and reach your top arm to the ceiling.",
     "Hold and breathe, then switch sides."
   ],
-  tips: ["Bottom knee on the floor is a fully respectable version.", "Hips high is what makes it work, do not let them sag."]
+  tips: ["Bottom knee on the floor is a fully respectable version.", "Hips high is what makes it work, do not let them sag."],
+  caution: "Skip this if your wrists or shoulders hurt. Rest your knees on the floor or place your hand on a wall to make it easier. Stop if you feel sharp pain."
 }
 
 );

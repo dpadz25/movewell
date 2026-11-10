@@ -755,7 +755,9 @@ button.pg-row { cursor: pointer; }
 .ob-more-t { font-weight: 800; }
 .ob-more-t span { font-weight: 600; color: var(--muted); }
 .ob-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.lib-chip.ob-chip { padding: 0 0.95rem; background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+.lib-chip.ob-chip { padding: 0.5rem 0.95rem; line-height: 1.25; text-align: center; max-width: 100%; background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+.lib-chip.ob-chip.ob-chip-more { background: transparent; box-shadow: none; border: 2px solid var(--accent); color: var(--accent-strong); }
+.ob-more-lead { margin: 0; font-size: 0.92rem; color: var(--muted); line-height: 1.4; }
 .lib-chip.ob-chip.on { background: var(--accent); color: var(--on-accent); }
 
 /* text size + color */
@@ -791,6 +793,8 @@ button.pg-row { cursor: pointer; }
   background: var(--glass-strong); border: 1px solid var(--glass-edge); box-shadow: var(--shadow); font-weight: 800;
 }
 .ob-plan-dot { flex: none; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; }
+.ob-care { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.4rem; }
+.ob-showmore { align-self: center; margin: 0.4rem 0 0; }
 .ob-plan-dot .icn { width: 1rem; height: 1rem; stroke-width: 3; }
 .onboard-inner > .btn { position: relative; z-index: 1; }
 .ob-glow { animation: ob-glow 3s 1.4s ease-in-out infinite; }
