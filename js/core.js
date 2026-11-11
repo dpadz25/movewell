@@ -79,7 +79,7 @@
       if (!s.safetyAck) return `
         <section class="home-notice card" id="home-safety">
           <h2>A quick safety note</h2>
-          <p>MoveWell shares general exercises, not medical advice. Stop if anything hurts or feels wrong. If available, ask your doctor or PT before you begin.</p>
+          <p>MoveWell shares general exercises, not medical advice. Mild effort is normal. Stop for sharp pain, or if anything feels wrong. If available, ask your doctor or physical therapist before you begin.</p>
           <button class="btn" id="home-safety-ok">Got it</button>
         </section>`;
       const day = 86400000, now = Date.now();
@@ -552,12 +552,13 @@
         <p class="help-lead">Most aches are not an emergency. These signs are different.</p>
         <section class="help-box urgent">
           <h3>${this.icon("alert")}<span>Call 911 or your local emergency number</span></h3>
-          ${list(["Chest pain or pressure", "Trouble breathing that is new or unusual", "Fainting or nearly fainting", "Back pain with numbness around your groin, trouble peeing, or weakness in both legs"])}
+          ${list(["Chest pain or pressure", "Trouble breathing that is new or unusual", "Fainting or nearly fainting", "Sudden face drooping, arm weakness, or trouble speaking", "Back pain with numbness around your groin, trouble peeing, or weakness in both legs"])}
         </section>
         <section class="help-box soon">
           <h3>${this.icon("medical")}<span>Call your doctor or therapist soon</span></h3>
           ${list(["Numbness, tingling, or weakness that spreads or will not go away", "Pain that wakes you at night or does not ease with rest", "Pain after a fall or injury", "A painful, swollen, warm calf, especially after surgery", "No improvement after a few weeks"])}
         </section>
+        <p class="help-lead">Ask your doctor before you start if you are pregnant, recently had surgery, have a heart condition or osteoporosis, or have had falls.</p>
         <p class="help-lead">MoveWell shares general exercises. It is not medical advice.</p>
       `);
     },
@@ -777,7 +778,7 @@
           <input type="file" id="set-import-file" accept=".json" style="display:none">`)}
         <button class="btn danger big" id="set-reset">Erase everything and start over</button>
         <p class="set-foot">
-          <strong>Safety note.</strong> MoveWell shares general exercises. It is not medical advice. Stop if anything hurts or feels wrong. If available, ask your doctor or PT before you begin, and always follow their guidance.<br>
+          <strong>Safety note.</strong> MoveWell shares general exercises. It is not medical advice. Mild effort is normal. Stop for sharp pain, or if anything feels wrong. If available, ask your doctor or physical therapist before you begin, and always follow their guidance.<br>
           Meditation picture by <a href="https://www.vecteezy.com" target="_blank" rel="noopener">Vecteezy.com</a>
         </p>
       `);
@@ -961,8 +962,8 @@
       if (n === "care") {
         const lines = [
           ["heart", "General exercises, not medical advice"],
-          ["alert", "Stop if anything hurts or feels wrong"],
-          ["person", "If available, ask your doctor or PT before you begin"]
+          ["alert", "Stop for sharp pain, or if anything feels wrong"],
+          ["person", "If available, ask your doctor or physical therapist before you begin"]
         ];
         inner.innerHTML = `
           ${this.obHead("care")}

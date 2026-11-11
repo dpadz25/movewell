@@ -294,7 +294,7 @@ window.EXERCISES.push(
     "Push the floor away and stand up tall, keeping the bar close to your body.",
     "Bend back down under control to set the bar on the floor, then repeat."
   ],
-  tips: ["Think of it as a push with your legs, not a pull with your back.", "Take a big breath and tighten your belly muscles before every rep."],
+  tips: ["Think of it as a push with your legs, not a pull with your back.", "Tighten your belly muscles before every rep and breathe out as you lift."],
   caution: "Learn this with light weight or a trainer first. A rounded lower back under load is the classic way people get hurt. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Trap Bar Deadlift", note: "The hexagon bar keeps the load centered and is easier to learn." },
@@ -421,7 +421,7 @@ window.EXERCISES.push(
   id: "back-extension", name: "Back Extension (Hyperextension)", region: "lower-back", type: "lift",
   equipment: ["machine"], position: "On a 45 degree back extension bench", level: 2,
   muscles: "Lower back, glutes, hamstrings",
-  helps: ["strength-training", "low-back-pain"],
+  helps: ["strength-training"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Set the pad at the crease of your hips and hook your heels under the rollers.",
@@ -430,7 +430,7 @@ window.EXERCISES.push(
     "Lower with control and repeat."
   ],
   tips: ["Squeeze the buttock muscles to lift rather than yanking with the lower back.", "Hold a weight plate to your chest once bodyweight gets easy."],
-  caution: "Do not hyperextend past a straight line at the top. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
+  caution: "Do not hyperextend past a straight line at the top. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. Skip this if you have glaucoma, unless your eye doctor says it is fine.",
   variations: [
     { name: "Glute-Focused Extension", note: "Round your upper back slightly and tuck the chin to keep it all glutes." }
   ]
@@ -457,7 +457,7 @@ window.EXERCISES.push(
   id: "kelso-shrug", name: "Kelso Shrug", region: "upper-back", type: "lift",
   equipment: ["dumbbell", "bench"], position: "Chest down on a low incline bench", level: 2,
   muscles: "Middle and lower trapezius, rhomboids",
-  helps: ["strength-training", "upper-cross", "posture", "tos"],
+  helps: ["strength-training", "upper-cross", "posture"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Set a bench to a low incline and lie chest-down with a dumbbell in each hand hanging straight toward the floor.",
@@ -517,7 +517,7 @@ window.EXERCISES.push(
   id: "hammer-curl", name: "Hammer Curl", region: "arms", type: "lift",
   equipment: ["dumbbell"], position: "Standing", level: 1,
   muscles: "Biceps, brachialis, forearms",
-  helps: ["strength-training", "tennis-elbow"],
+  helps: ["strength-training"],
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Hold a dumbbell in each hand with palms facing your body, like holding hammers.",
@@ -525,7 +525,7 @@ window.EXERCISES.push(
     "Squeeze at the top with thumbs pointing up.",
     "Lower slowly and repeat."
   ],
-  tips: ["The neutral grip trains the forearm muscles that support achy elbows.", "You can usually go a bit heavier than regular curls."],
+  tips: ["The neutral grip also works the forearms.", "You can usually go a bit heavier than regular curls."],
   caution: "Same rule as all curls. Elbows stay pinned, no swinging. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Cross-Body Hammer Curl", note: "Curl across toward the opposite shoulder." },
@@ -546,7 +546,7 @@ window.EXERCISES.push(
     "Sit down and back, keeping your chest up, until your thighs reach about parallel.",
     "Drive through your whole foot to stand back up."
   ],
-  tips: ["Take a big breath at the top and tighten your belly muscles before every rep.", "Depth you can control with a flat back beats forced extra depth."],
+  tips: ["Tighten your belly muscles before every rep and breathe out as you stand.", "Depth you can control with a flat back beats forced extra depth."],
   caution: "Squat inside a rack with safety pins set just below your bottom position. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Front Squat", note: "Bar on the front of the shoulders. More upright, more quads." },
@@ -556,9 +556,9 @@ window.EXERCISES.push(
 },
 {
   id: "goblet-squat", name: "Goblet Squat", region: "knee", type: "lift",
-  equipment: ["kettlebell", "dumbbell"], position: "Standing", level: 1,
+  equipment: ["kettlebell", "dumbbell"], position: "Standing", level: 2,
   muscles: "Quads, glutes, core",
-  helps: ["strength-training", "general", "knee-pain"],
+  helps: ["strength-training", "general"],
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Hold a kettlebell or dumbbell with both hands against your chest.",
@@ -633,7 +633,7 @@ window.EXERCISES.push(
   id: "hip-thrust", name: "Barbell Hip Thrust", region: "hip", type: "lift",
   equipment: ["barbell", "bench"], position: "Upper back on a bench, hips on the floor", level: 2,
   muscles: "Glutes, hamstrings",
-  helps: ["strength-training", "hip-pain"],
+  helps: ["strength-training"],
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Sit on the floor with your upper back against a bench and a padded barbell over your hips.",
@@ -653,7 +653,7 @@ window.EXERCISES.push(
   id: "leg-extension", name: "Leg Extension", region: "knee", type: "lift",
   equipment: ["machine"], position: "Seated in a leg extension machine", level: 1,
   muscles: "Quadriceps",
-  helps: ["strength-training", "knee-pain", "knee-oa"],
+  helps: ["strength-training", "knee-oa"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Sit with your back against the pad and the roller on your shins above the ankles.",
@@ -682,7 +682,7 @@ window.EXERCISES.push(
   tips: ["Point your toes toward your shins to make the back-of-thigh muscles do all the work.", "Hips stay glued down. Lifting them cheats the range."],
   caution: "Do not let the weight yank your legs straight at the bottom. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
-    { name: "Seated Leg Curl", note: "Seated machine version. Research suggests it grows hamstrings slightly better." },
+    { name: "Seated Leg Curl", note: "Seated machine version." },
     { name: "Swiss Ball Leg Curl", note: "Bridge up on a ball and curl it toward you. No machine needed." }
   ]
 },
@@ -690,7 +690,7 @@ window.EXERCISES.push(
   id: "standing-calf-raise-machine", name: "Standing Calf Raise (Machine)", region: "ankle-foot", type: "lift",
   equipment: ["machine", "step"], position: "Standing on a calf raise machine or step", level: 1,
   muscles: "Calves (gastrocnemius)",
-  helps: ["strength-training", "achilles"],
+  helps: ["strength-training"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Stand with the balls of your feet on the platform, shoulders under the pads.",
@@ -707,7 +707,7 @@ window.EXERCISES.push(
 },
 {
   id: "kettlebell-swing", name: "Kettlebell Swing", region: "hip", type: "lift",
-  equipment: ["kettlebell"], position: "Standing", level: 2,
+  equipment: ["kettlebell"], position: "Standing", level: 3,
   muscles: "Glutes, hamstrings, core, grip",
   helps: ["strength-training", "general"],
   dose: { sets: 3, reps: 15 },
@@ -728,7 +728,7 @@ window.EXERCISES.push(
   id: "kettlebell-deadlift", name: "Kettlebell Deadlift", region: "hip", type: "lift",
   equipment: ["kettlebell"], position: "Standing over a kettlebell", level: 1,
   muscles: "Glutes, hamstrings, back, grip",
-  helps: ["strength-training", "general", "low-back-pain"],
+  helps: ["strength-training", "general"],
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Stand with the kettlebell between your feet.",
@@ -883,7 +883,7 @@ window.EXERCISES.push(
   id: "scapular-pulldown", name: "Scapular Pull-Down", region: "upper-back", type: "strengthen",
   equipment: ["cable", "machine"], position: "Seated at a lat pulldown station", level: 1,
   muscles: "Lower traps, lats (scapular depression)",
-  helps: ["posture", "tos", "shoulder-pain", "strength-training", "upper-cross", "upper-back"],
+  helps: ["posture", "shoulder-pain", "strength-training", "upper-cross", "upper-back"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Sit at a lat pulldown and hold the bar with straight arms.",
@@ -920,7 +920,7 @@ window.EXERCISES.push(
   id: "machine-hip-thrust", name: "Machine Hip Thrust", region: "hip", type: "lift",
   equipment: ["machine"], position: "Seated in the hip thrust machine", level: 1,
   muscles: "Glutes, hamstrings",
-  helps: ["strength-training", "hip-pain"],
+  helps: ["strength-training"],
   dose: { sets: 3, reps: 10 },
   howTo: [
     "Set your upper back against the pad and the belt or pad across your hips.",
@@ -966,7 +966,7 @@ window.EXERCISES.push(
     "Unhook the bar and squat down until thighs reach parallel.",
     "Drive up through your whole foot, then re-hook when done."
   ],
-  tips: ["The fixed bar path means no balancing act, so you can push the legs hard safely.", "Feet forward turns it into more of a front-of-thigh muscle and buttock muscle slide, which is the point."],
+  tips: ["The fixed bar path means no balancing act.", "Feet forward turns it into more of a front-of-thigh muscle and buttock muscle slide, which is the point."],
   caution: "Always know where the safety hooks are before your first rep. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain.",
   variations: [
     { name: "Smith Split Squat", note: "One foot forward, one back. A very stable Bulgarian split squat." },
@@ -1027,7 +1027,7 @@ window.EXERCISES.push(
     "Lower yourself slowly, one vertebra at a time."
   ],
   tips: ["The decline adds range and resistance that floor sit-ups cannot match.", "Once 15 reps feel easy, hold a plate on your chest instead of adding reps. Abs grow with load like any muscle."],
-  caution: "Do not yank your neck with your hands. If your lower back complains, reduce the decline angle. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine.",
+  caution: "Do not yank your neck with your hands. If your lower back complains, reduce the decline angle. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain. Skip this if you have osteoporosis or have had a spinal fracture, unless your clinician says it is fine. Skip this if you have glaucoma, unless your eye doctor says it is fine.",
   variations: [
     { name: "Weighted Decline Sit-Up", note: "Hug a plate or dumbbell to your chest for progressive overload." },
     { name: "Twisting Decline Sit-Up", note: "Rotate a shoulder toward the opposite knee at the top to involve the obliques." }
@@ -1035,7 +1035,7 @@ window.EXERCISES.push(
 },
 {
   id: "bicycle-crunch", name: "Bicycle Crunch", region: "core", type: "strengthen",
-  equipment: ["none"], position: "Lying on your back", level: 1,
+  equipment: ["none"], position: "Lying on your back", level: 2,
   muscles: "Abs and obliques together",
   helps: ["strength-training", "general"],
   dose: { sets: 3, reps: 20 },
@@ -1056,17 +1056,17 @@ window.EXERCISES.push(
 // ============ CARDIO ============
 {
   id: "incline-treadmill-walk", name: "Incline Treadmill Walk", region: "balance", type: "cardio",
-  equipment: ["cardio-machine"], position: "Treadmill at 5 to 12 percent incline", level: 1,
+  equipment: ["cardio-machine"], position: "Treadmill at a gentle incline", level: 1,
   muscles: "Heart and lungs, calves, glutes",
   helps: ["conditioning", "general", "knee-oa"],
   dose: { sets: 1, timeSec: 900 },
   howTo: [
     "Set the treadmill to a comfortable walking speed, around 2.5 to 3.5 mph.",
-    "Raise the incline until it feels like a purposeful hill, 5 to 12 percent.",
-    "Walk tall without hanging onto the rails.",
+    "Raise the incline a little at a time. Start at 1 to 3 percent.",
+    "Walk tall. A light hand on the rail is fine if you feel unsteady.",
     "You should be able to talk, but not sing."
   ],
-  tips: ["Incline walking gives running-level heart work with a fraction of the joint impact.", "A favorite cool-down after lifting: 10 to 15 minutes torches extra calories without eating into recovery."],
+  tips: ["Incline walking raises your heart rate without the impact of running.", "Lower the incline for an easy cool-down after lifting."],
   caution: "Holding the rails and leaning back cancels most of the incline. Lower it instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "12-3-30 Style", note: "The popular recipe: 12 percent incline, 3 mph, 30 minutes." },
@@ -1086,7 +1086,7 @@ window.EXERCISES.push(
     "Finish with 2 to 3 minutes of walking to cool down."
   ],
   tips: ["A 1 percent incline is often used to feel more like outdoor running.", "Most of your running should feel easy. Speed comes from consistency, not heroics."],
-  caution: "Build running time gradually, no more than about 10 percent per week, or shins and knees will complain. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
+  caution: "Build running time gradually, or shins and knees will complain. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Walk-Jog Intervals", note: "Alternate 1 minute jogging with 2 minutes walking when starting out." }
   ]
@@ -1099,12 +1099,12 @@ window.EXERCISES.push(
   dose: { sets: 1, timeSec: 1200 },
   howTo: [
     "Set the saddle so your knee has a slight bend at the bottom of the pedal stroke.",
-    "Pedal at a smooth, steady rhythm, around 80 to 100 rpm.",
+    "Pedal at a smooth, comfortable rhythm.",
     "Adjust resistance so your legs feel worked but not burning.",
     "Stay tall through your spine rather than slumping over the bars."
   ],
-  tips: ["The bike is low-impact, so it is often easier on the knees than walking or running.", "It is low-impact, which makes it a gentle leg-day cool-down."],
-  caution: "Saddle too low is the number one cause of bike knee pain. When in doubt, raise it. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
+  tips: ["The bike is low-impact, which many knees find comfortable.", "It is low-impact, which makes it a gentle leg-day cool-down."],
+  caution: "A saddle set too low can bother the knees. When in doubt, raise it. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Recumbent Bike", note: "The chair-style bike. Easier on the back and hips." },
     { name: "Spin Intervals", note: "30 seconds hard, 90 seconds easy, repeated." }
@@ -1132,7 +1132,7 @@ window.EXERCISES.push(
   id: "elliptical", name: "Elliptical", region: "balance", type: "cardio",
   equipment: ["cardio-machine"], position: "Standing on the pedals", level: 1,
   muscles: "Heart and lungs, whole body, zero impact",
-  helps: ["conditioning", "general", "post-surgery"],
+  helps: ["conditioning", "general"],
   dose: { sets: 1, timeSec: 1200 },
   howTo: [
     "Step on and start pedaling in a smooth forward motion.",
@@ -1155,13 +1155,13 @@ window.EXERCISES.push(
   howTo: [
     "Start at a slow step rate and find your rhythm.",
     "Place your whole foot on each step and push through the heel.",
-    "Rest your fingertips on the rails for balance only.",
+    "Hold the rails lightly for balance.",
     "Increase speed gradually as you warm up."
   ],
-  tips: ["A challenging cardio machine that also works the buttock muscles. Start slowly.", "Skipping a step (every other stair) makes it much harder. Only try it if you feel steady."],
+  tips: ["A challenging cardio machine that also works the buttock muscles. Start slowly.", "Use the rails whenever you need them."],
   caution: "Death-gripping the rails and hunching over cuts the work in half. Slow down and stand tall instead. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
-    { name: "Sideways Steps", note: "A minute facing each side works the outer hips." }
+    { name: "Slower Pace", note: "Drop the speed for a minute whenever you need a breather." }
   ]
 },
 {
@@ -1195,7 +1195,7 @@ window.EXERCISES.push(
     "Recover easy for 90 seconds or more.",
     "Repeat 4 to 8 rounds, then cool down."
   ],
-  tips: ["Interval training improves cardio fitness in roughly half the session time of steady work, which is why it is so well studied.", "The bike and rower are lower-impact places to sprint. Treadmill sprints need extra caution."],
+  tips: ["Short hard efforts with easy recovery are a time-efficient way to train.", "The bike and rower are lower-impact places to sprint. Treadmill sprints need extra caution."],
   caution: "This is the spiciest cardio there is. Build a base of easy cardio for a few weeks before adding sprints, and skip it if you have heart or blood pressure concerns without clearance. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain.",
   variations: [
     { name: "Beginner Intervals", note: "20 seconds brisk, 100 seconds easy. Same idea, gentler dose." },

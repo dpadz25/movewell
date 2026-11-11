@@ -83,7 +83,7 @@ window.EXERCISES.push(
   id: "qg-belly-tapping", name: "Belly Tapping and Breathing", region: "core", type: "mobility", alias: "qi gong",
   equipment: ["none"], position: "Standing or sitting", level: 1,
   muscles: "Diaphragm, lower belly",
-  helps: ["general", "low-back-pain"],
+  helps: ["general"],
   dose: { sets: 1, reps: 0, timeSec: 120 },
   howTo: [
     "Make loose, soft fists and gently tap the area about two inches below your belly button.",
@@ -119,7 +119,7 @@ window.EXERCISES.push(
   id: "prone-on-elbows", name: "Lying on Elbows (Prone Prop)", region: "lower-back", type: "mobility",
   equipment: ["none"], position: "Lying on stomach", level: 1,
   muscles: "Lower back extension",
-  helps: ["disc", "low-back-pain", "sciatica"],
+  helps: ["low-back-pain"],
   dose: { sets: 1, reps: 1, timeSec: 120 },
   howTo: [
     "Lie on your stomach for a minute and let your back relax.",
@@ -127,30 +127,30 @@ window.EXERCISES.push(
     "Let your belly and hips stay relaxed on the floor and breathe slowly.",
     "Stay here until the chime, then lower down gently."
   ],
-  tips: ["This is the gentle first step before the full Press-Up. Many people with disc-related pain find it eases leg symptoms."],
-  caution: "Stop if pain spreads down your leg or gets worse. If you are unsure, check with your doctor or physical therapist.",
+  tips: ["This is the gentle first step before the full Press-Up. Start with 30 seconds."],
+  caution: "Stop if pain spreads down your leg or gets worse. If you are unsure, check with your doctor or physical therapist. Skip this if standing or walking brings on leg pain.",
   variations: [
     { name: "Lying Flat", note: "Just lie on your stomach with a pillow under your hips. The easiest version." },
     { name: "Press-Up", note: "Push up onto straight arms with hips staying down. Harder." }
   ]
 },
 {
-  id: "isometric-wrist-extension", name: "Wrist Extension Hold (Tennis Elbow)", region: "elbow", type: "strengthen",
+  id: "isometric-wrist-extension", name: "Wrist Extension Hold", alias: "wrist extension hold tennis elbow isometric", region: "elbow", type: "strengthen",
   equipment: ["table"], position: "Sitting, forearm on a table", level: 1,
   muscles: "Wrist extensors, outer elbow tendon",
   helps: ["tennis-elbow", "wrist-pain"],
-  dose: { sets: 5, reps: 1, hold: 30 },
+  dose: { sets: 3, reps: 1, hold: 30 },
   howTo: [
     "Sit with your forearm on a table, palm down, wrist just over the edge.",
     "Place your other hand on the back of your hand.",
     "Gently push your hand up into your other hand without letting it move.",
     "Hold steady and keep breathing. Rest a minute between holds."
   ],
-  tips: ["A still hold often calms a sore tendon before you are ready for the moving version."],
+  tips: ["A still hold is a gentle place to start before the moving version."],
   caution: "Use a medium effort. A little discomfort is fine, sharp pain is not.",
   variations: [
     { name: "Elbow Bent", note: "Do it with your elbow bent at your side. Easier." },
-    { name: "Eccentric Wrist Extension", note: "Move on to the slow lowering version with a light weight." }
+    { name: "Slow Wrist Lowering", note: "Move on to the slow lowering version with a light weight." }
   ]
 },
 {

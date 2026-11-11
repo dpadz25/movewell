@@ -95,7 +95,7 @@ window.EXERCISES.push(
   id: "glute-bridge-march", name: "Bridge March", region: "core", type: "strengthen",
   equipment: ["none"], position: "Lying on back", level: 3,
   muscles: "Glutes, hamstrings, deep core",
-  helps: ["low-back-pain", "hip-pain", "general", "balance-falls"],
+  helps: ["low-back-pain", "hip-pain", "general"],
   dose: { sets: 2, reps: 6, perSide: true },
   howTo: [
     "Set up a glute bridge and hold the hips high.",
@@ -110,14 +110,14 @@ window.EXERCISES.push(
   id: "suitcase-carry", name: "Suitcase Carry", region: "core", type: "strengthen",
   equipment: ["dumbbell"], position: "Walking", level: 2,
   muscles: "Side core, grip, hips",
-  helps: ["low-back-pain", "balance-falls", "general", "posture"],
+  helps: ["low-back-pain", "general", "posture"],
   dose: { sets: 3, reps: 1, timeSec: 30, perSide: true },
   howTo: [
     "Hold a weight (dumbbell, kettlebell, or loaded shopping bag) in one hand.",
     "Stand perfectly tall. Do not lean toward or away from the weight.",
     "Walk slowly and steadily for the time, then switch hands."
   ],
-  tips: ["It is literally carrying groceries, trained. Few exercises transfer to life better."],
+  tips: ["It is carrying groceries, practiced."],
   caution: "Choose a weight you can carry with completely level shoulders.",
   variations: [
     { name: "Farmer Carry", note: "A weight in each hand. More total load, less lean challenge." }
@@ -157,7 +157,7 @@ window.EXERCISES.push(
     "Switch which foot leads."
   ],
   tips: ["Narrow stance means bigger challenge. This one bridges the gap between two-feet and one-foot balance."],
-  caution: "Keep a hand hovering over the support.",
+  caution: "Rest your fingers on a counter until you feel steady.",
   variations: [
     { name: "Semi-Tandem", note: "Front heel beside the back big toe rather than in line. Easier start." }
   ]
@@ -195,7 +195,7 @@ window.EXERCISES.push(
   tips: ["A gentle way to start balance training. Check with your doctor or PT before starting after illness or surgery."],
   caution: "Small shifts first, growing bolder as confidence builds. After surgery, only do this when your surgeon or therapist says you can.",
   variations: [
-    { name: "Clock Reaches", note: "Balance on one leg and reach the other toe to 12, 3, and 6 o'clock positions." }
+    { name: "Clock Reaches", note: "Balance on one leg and reach the other toe to 12, 3, and 6 o'clock positions. Much harder." }
   ]
 },
 {

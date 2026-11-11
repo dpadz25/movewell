@@ -34,7 +34,7 @@
       },
       {
         target: "#progress-scroll .pg-stats", page: "progress", title: "Your progress",
-        text: App.wantsRehab() ? "Sessions, your streak, and how your body feels all collect here, so you can watch your work pay off." : "Your sessions, streak and minutes all collect here, so you can watch your work pay off."
+        text: App.wantsRehab() ? "Sessions, your streak, and how your body feels all collect here, so you can look back on what you have done." : "Your sessions, streak and minutes all collect here, so you can look back on what you have done."
       },
       {
         target: "#btn-settings", page: "home", title: "Make it yours",

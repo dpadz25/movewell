@@ -308,7 +308,7 @@
       ${tpls.length ? `
         <div class="section-label" style="margin-top:0">Ready-made plan</div>
         ${tpls.map(t => `<button class="btn big" data-tpl="${t.id}" style="margin-bottom:0.5rem">${this.icon("sparkle")} Add “${this.esc(t.name)}” Routine</button>`).join("")}` : ""}
-      <div class="section-label">Exercises that often help (${exs.length})</div>
+      <div class="section-label">Exercises often used (${exs.length})</div>
       ${exs.map(ex => this.exItemHtml(ex)).join("")}
     `);
     const body = document.getElementById("modal-body");

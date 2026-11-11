@@ -37,7 +37,7 @@ window.EXERCISES.push(
     "Rest at the wall whenever you need to.",
     "Build up time gradually across visits."
   ],
-  tips: ["The water carries your body weight, so this is the gentlest cardio there is for sore joints."],
+  tips: ["The water carries your body weight, so this is easy on sore joints."],
   caution: "Swim where someone else is nearby. Stop if you feel chest pain, dizziness, unusual shortness of breath, or sharp pain."
 },
 {
@@ -108,7 +108,7 @@ window.EXERCISES.push(
 },
 {
   id: "mountain-climbers-cardio", name: "Mountain Climbers", region: "balance", type: "cardio",
-  equipment: ["none"], position: "Plank position on hands", level: 2,
+  equipment: ["none"], position: "Plank position on hands", level: 3,
   muscles: "Heart and lungs, core, shoulders",
   helps: ["conditioning", "general"],
   dose: { sets: 3, timeSec: 45 },
@@ -193,7 +193,7 @@ window.EXERCISES.push(
     "Drive hard with your legs, taking powerful steps.",
     "One trip down the track counts as a set. Rest and repeat."
   ],
-  tips: ["Very knee-friendly for how hard it works the legs, there is no lowering phase."],
+  tips: ["There is no lowering phase, which many knees find comfortable."],
   caution: "Use a light load and a clear path. Keep breathing and do not hold your breath. Stop if you feel sharp pain, dizziness, or chest pain."
 },
 {
@@ -230,22 +230,22 @@ window.EXERCISES.push(
 },
 {
   id: "backward-walking", name: "Backward Walking", region: "balance", type: "balance",
-  equipment: ["none"], position: "Standing, clear path", level: 1,
+  equipment: ["none"], position: "Standing, clear path", level: 2,
   muscles: "Legs, balance system",
-  helps: ["balance-falls", "knee-oa", "general"],
+  helps: ["balance-falls", "general"],
   dose: { sets: 2, timeSec: 60 },
   howTo: [
-    "Find a clear hallway or use a counter to trail your hand along.",
+    "Stand beside a counter or wall and keep one hand on it.",
     "Step backward slowly, reaching back with your toes first.",
     "Stand tall, resisting the urge to look down at your feet.",
     "Turn around and repeat."
   ],
-  tips: ["Surprisingly good for knees and balance at the same time."],
-  caution: "Only do this somewhere you know is free of obstacles and trip hazards."
+  tips: ["Start with a few slow steps."],
+  caution: "Only do this somewhere you know is free of obstacles and trip hazards. Keep a hand on the counter or wall the whole time."
 },
 {
   id: "carioca", name: "Grapevine Walk (Carioca)", region: "balance", type: "balance",
-  equipment: ["none"], position: "Standing, clear path", level: 2,
+  equipment: ["none"], position: "Standing, clear path", level: 3,
   muscles: "Hips, ankles, coordination",
   helps: ["balance-falls", "general"],
   dose: { sets: 2, timeSec: 60 },
@@ -260,7 +260,7 @@ window.EXERCISES.push(
 },
 {
   id: "eyes-closed-stand", name: "Eyes-Closed Stand", region: "balance", type: "balance",
-  equipment: ["none"], position: "Standing at a counter", level: 2,
+  equipment: ["none"], position: "Standing at a counter", level: 3,
   muscles: "Balance system, ankles",
   helps: ["balance-falls"],
   dose: { sets: 3, reps: 1, hold: 20 },
@@ -271,7 +271,7 @@ window.EXERCISES.push(
     "Open your eyes and rest between holds."
   ],
   tips: ["Closing the eyes makes your feet and inner ear do all the work. Wobbling is expected."],
-  caution: "Always do this at a counter or in a corner, never in open space.",
+  caution: "Always do this at a counter or in a corner, never in open space. Have someone nearby.",
   variations: [
     { name: "Head Turns", note: "Eyes open, feet together, slowly turn your head left and right while staying steady." }
   ]
@@ -295,7 +295,7 @@ window.EXERCISES.push(
 // ============ NERVE GLIDE ============
 {
   id: "femoral-nerve-glide", name: "Femoral Nerve Glide", region: "hip", type: "nerve-glide",
-  equipment: ["none"], position: "Lying on your side", level: 1,
+  equipment: ["none"], position: "Lying on your side", level: 2,
   muscles: "Femoral nerve pathway (front of thigh)",
   helps: [],
   dose: { sets: 1, reps: 10, perSide: true },
@@ -306,13 +306,13 @@ window.EXERCISES.push(
     "Then release the ankle slightly while lifting your head back up. Alternate smoothly."
   ],
   tips: ["Nerve glides should feel like a gentle flossing, never a hard stretch."],
-  caution: "Keep it pain free. If symptoms in the thigh get worse, stop and ease off for the day."
+  caution: "Go to light tension only. Stop if tingling, numbness, or weakness appears or lasts after you finish."
 },
 
 // ============ STRETCHES ============
 {
   id: "sleeper-stretch", name: "Sleeper Stretch", region: "shoulder", type: "stretch",
-  equipment: ["none"], position: "Lying on your side", level: 1,
+  equipment: ["none"], position: "Lying on your side", level: 2,
   muscles: "Back of the shoulder (posterior capsule, rotator cuff)",
   helps: [],
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
@@ -383,7 +383,7 @@ window.EXERCISES.push(
     "Hold, breathe, then switch sides."
   ],
   tips: ["The floor version of this stretch is in the library too. This one needs no getting up or down."],
-  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "side-lunge-adductor", name: "Standing Side-Lunge Inner Thigh Stretch", region: "hip", type: "stretch",
@@ -404,7 +404,7 @@ window.EXERCISES.push(
 // ============ STRENGTHENING ============
 {
   id: "lateral-step-down", name: "Lateral Step-Down", region: "knee", type: "strengthen",
-  equipment: ["step"], position: "Standing sideways on a step", level: 2,
+  equipment: ["step"], position: "Standing sideways on a step", level: 3,
   muscles: "Quads, glutes, knee control",
   helps: ["knee-pain", "knee-oa"],
   dose: { sets: 3, reps: 8, perSide: true },
@@ -556,7 +556,7 @@ window.EXERCISES.push(
 // ============ MOBILITY ============
 {
   id: "leg-swings", name: "Leg Swings", region: "hip", type: "mobility",
-  equipment: ["wall"], position: "Standing beside a wall", level: 1,
+  equipment: ["wall"], position: "Standing beside a wall", level: 2,
   muscles: "Hips, hamstrings, hip flexors",
   helps: ["hip-pain", "general"],
   dose: { sets: 1, reps: 10, perSide: true },
@@ -567,7 +567,7 @@ window.EXERCISES.push(
     "Switch legs."
   ],
   tips: ["Let the swings grow bigger gradually as the hip loosens.", "A classic warmup before walks and workouts."],
-  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain."
+  caution: "Stay beside a wall, counter, or sturdy chair you can hold. Stop if you feel unsteady, dizzy, or have sharp pain. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "arm-circles", name: "Arm Circles", region: "shoulder", type: "mobility",
@@ -597,13 +597,13 @@ window.EXERCISES.push(
     "Hang out and breathe, shifting gently side to side if it feels good."
   ],
   tips: ["The support lets your hips relax into the position instead of fighting to balance.", "Depth comes with weeks, not minutes."],
-  caution: "Hold a sturdy support. Stop if you feel sharp pain in your knees, hips, or back, or if you feel unsteady."
+  caution: "Hold a sturdy support. Stop if you feel sharp pain in your knees, hips, or back, or if you feel unsteady. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "shoulder-cars", name: "Shoulder Circles (CARs)", region: "shoulder", type: "mobility",
   equipment: ["none"], position: "Standing tall", level: 1,
   muscles: "Entire shoulder joint",
-  helps: ["frozen-shoulder", "general"],
+  helps: ["general"],
   dose: { sets: 1, reps: 5, perSide: true },
   howTo: [
     "Stand tall with one arm straight at your side, and keep your trunk steady so only the arm moves.",
@@ -695,7 +695,7 @@ window.EXERCISES.push(
   id: "ball-glute-release", name: "Ball Release: Glutes", region: "hip", type: "recovery",
   equipment: ["ball"], position: "Sitting on the ball against floor or wall", level: 2,
   muscles: "Glutes, deep hip rotators",
-  helps: ["sciatica", "hip-pain"],
+  helps: ["hip-pain"],
   dose: { sets: 1, timeSec: 45, perSide: true },
   howTo: [
     "Sit on the floor and tuck a tennis ball or massage ball under one buttock.",
@@ -718,7 +718,7 @@ window.EXERCISES.push(
     "Linger on tender spots and let them ease.",
     "Switch feet."
   ],
-  tips: ["A frozen water bottle works wonderfully for sore, inflamed feet."],
+  tips: ["A frozen water bottle is an option, but skip it if you have poor feeling or circulation in your feet."],
   caution: "Pressure should feel firm, not painful. Skip bones, joints, bruises, and injured areas. If you take blood thinners or have circulation problems, check with your doctor first."
 },
 {
@@ -734,7 +734,7 @@ window.EXERCISES.push(
     "That square is one round. Keep going, smooth and unhurried."
   ],
   tips: ["Used by athletes and soldiers alike to settle the nerves.", "If 4 feels long, start with a count of 3."],
-  caution: "Breathe gently and never strain. If you feel dizzy or lightheaded, go back to normal breathing."
+  caution: "Breathe gently and never strain. If you feel dizzy or lightheaded, go back to normal breathing. Skip the holds if you have a heart or lung condition or are pregnant, and just breathe slowly."
 },
 {
   id: "breathing-478", name: "4-7-8 Breathing", region: "core", type: "recovery",
@@ -748,8 +748,8 @@ window.EXERCISES.push(
     "Exhale slowly through your mouth for a count of 8, like fogging a mirror.",
     "That is one breath. Do about four in a row."
   ],
-  tips: ["The long exhale is what tells your body to relax.", "Lovely before sleep."],
-  caution: "Feeling lightly dizzy means slow down or shorten the counts."
+  tips: ["Many people find the long exhale calming.", "Lovely before sleep."],
+  caution: "Breathe gently and never strain. If you feel dizzy or lightheaded, go back to normal breathing. Skip the holds if you have a heart or lung condition or are pregnant, and just breathe slowly."
 },
 
 // ============ GYM LIFTS ============
@@ -825,7 +825,7 @@ window.EXERCISES.push(
     "Chest up, back flat, then push the floor apart with your feet as you stand.",
     "Lock out tall, then lower the bar with control."
   ],
-  tips: ["More upright than a regular deadlift, so many people with cranky backs prefer it."],
+  tips: ["More upright than a regular deadlift."],
   variations: [
     { name: "Trap Bar Deadlift", note: "Standing inside a hexagon bar with neutral handles. The easiest deadlift to learn of all." }
   ],
@@ -895,7 +895,7 @@ window.EXERCISES.push(
   id: "seated-calf-raise", name: "Seated Calf Raise", region: "ankle-foot", type: "lift",
   equipment: ["machine"], position: "Seated, pad across the knees", level: 1,
   muscles: "Deep calf (soleus)",
-  helps: ["achilles"],
+  helps: [],
   dose: { sets: 3, reps: 15 },
   howTo: [
     "Sit at the machine with the balls of your feet on the platform and the pad snug on your thighs.",
@@ -953,7 +953,7 @@ window.EXERCISES.push(
 },
 {
   id: "farmers-carry", name: "Farmer's Carry", region: "core", type: "lift",
-  equipment: ["dumbbell", "kettlebell"], position: "Standing, weight in each hand", level: 1,
+  equipment: ["dumbbell", "kettlebell"], position: "Standing, weight in each hand", level: 2,
   muscles: "Grip, core, traps, whole body",
   helps: ["general", "posture"],
   dose: { sets: 3, timeSec: 30 },
@@ -985,7 +985,7 @@ window.EXERCISES.push(
   id: "landmine-press", name: "Landmine Press", region: "shoulder", type: "lift",
   equipment: ["barbell"], position: "Standing, one end of the bar in a corner", level: 2,
   muscles: "Shoulders, chest, core",
-  helps: ["rotator-cuff"],
+  helps: [],
   dose: { sets: 3, reps: 8, perSide: true },
   howTo: [
     "Wedge one end of a barbell into a corner or landmine attachment.",
@@ -993,7 +993,7 @@ window.EXERCISES.push(
     "Press the bar up and slightly forward until the arm is long.",
     "Lower with control and finish the set, then switch arms."
   ],
-  tips: ["The angled path is much kinder to cranky shoulders than pressing straight overhead."],
+  tips: ["The angled path feels more comfortable than straight overhead for many people."],
   caution: "Start with a very light weight. Skip overhead pressing if it pinches or hurts your shoulder. Keep breathing and stop if you feel sharp pain, dizziness, or chest pain."
 },
 
@@ -1115,8 +1115,8 @@ window.EXERCISES.push(
     "Rest your arms out to the sides, palms up.",
     "Close your eyes and breathe. Let the wall hold your legs."
   ],
-  tips: ["Wonderful for tired, swollen legs at the end of a day.", "A folded blanket under the hips adds comfort."],
-  caution: "Roll to your side to come out, do not sit straight up quickly."
+  tips: ["A restful way to end the day. New swelling in one leg needs a doctor, not a stretch.", "A folded blanket under the hips adds comfort."],
+  caution: "Roll to your side to come out, do not sit straight up quickly. Skip this if you have glaucoma, unless your eye doctor says it is fine. Later in pregnancy, lie on your side or prop yourself up instead."
 },
 {
   id: "yoga-eagle", name: "Eagle Pose (Garudasana)", region: "balance", type: "yoga",
@@ -1165,7 +1165,7 @@ window.EXERCISES.push(
 },
 {
   id: "yoga-camel", name: "Camel Pose (Ustrasana)", region: "upper-back", type: "yoga",
-  equipment: ["none"], position: "Kneeling, arching back", level: 2,
+  equipment: ["none"], position: "Kneeling, arching back", level: 3,
   muscles: "Chest, hip flexors, spine",
   helps: [],
   dose: { sets: 1, reps: 1, hold: 15 },
@@ -1176,11 +1176,11 @@ window.EXERCISES.push(
     "Only if easy, reach back for your heels. Come up slowly, chin to chest last."
   ],
   tips: ["Hands on the low back is the full pose for most people. Heels are optional extra credit.", "Tuck your toes to raise the heels closer."],
-  caution: "Come out slowly and rest in Child's Pose after. Backbends can make you lightheaded."
+  caution: "Come out slowly and rest in Child's Pose after. Backbends can make you lightheaded. Skip this with neck problems."
 },
 {
   id: "yoga-fish", name: "Fish Pose (Matsyasana)", region: "chest", type: "yoga",
-  equipment: ["none"], position: "Lying back, chest lifted", level: 2,
+  equipment: ["none"], position: "Lying back, chest lifted", level: 3,
   muscles: "Chest, front of neck, shoulders",
   helps: [],
   dose: { sets: 1, reps: 1, hold: 20 },
@@ -1191,7 +1191,7 @@ window.EXERCISES.push(
     "Keep most of the weight on your forearms, not your head. Lift your head to come out."
   ],
   tips: ["A rolled blanket lengthwise under the spine gives the same chest opening with zero effort."],
-  caution: "Keep the neck weightless. Skip the head drop if you have neck trouble."
+  caution: "Keep the neck weightless. Skip the head drop if you have neck trouble. A rolled blanket under your upper back is the safer version."
 },
 {
   id: "yoga-locust", name: "Locust Pose (Salabhasana)", region: "lower-back", type: "yoga",
@@ -1221,7 +1221,7 @@ window.EXERCISES.push(
     "Place your other hand on the floor behind you. Unwind and switch sides."
   ],
   tips: ["Grow taller with every inhale, twist a touch deeper with every exhale.", "The twist comes from the middle back, not from cranking the neck."],
-  caution: "Twist gently and only as far as is comfortable. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first."
+  caution: "Twist gently and only as far as is comfortable. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "yoga-garland", name: "Garland Squat (Malasana)", region: "hip", type: "yoga",
@@ -1236,11 +1236,11 @@ window.EXERCISES.push(
     "Keep your chest lifted and breathe."
   ],
   tips: ["A folded blanket under the heels can make this more comfortable.", "Sitting on a low block or stack of books works too."],
-  caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain."
+  caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "yoga-wide-fold", name: "Wide-Legged Forward Fold (Prasarita Padottanasana)", region: "hip", type: "yoga",
-  equipment: ["none"], position: "Standing very wide, folded forward", level: 1,
+  equipment: ["none"], position: "Standing very wide, folded forward", level: 2,
   muscles: "Hamstrings, inner thighs, back",
   helps: [],
   dose: { sets: 1, reps: 1, hold: 30 },
@@ -1251,7 +1251,7 @@ window.EXERCISES.push(
     "Let your head hang. Come up with a flat back and hands on hips."
   ],
   tips: ["Bend the knees freely. The fold is about the hips, not the knees.", "Wider feet bring the floor closer."],
-  caution: "Rise slowly to avoid a head rush. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips."
+  caution: "Rise slowly to avoid a head rush. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips. Skip this if you have glaucoma, unless your eye doctor says it is fine."
 },
 {
   id: "yoga-pyramid", name: "Pyramid Pose (Parsvottanasana)", region: "hip", type: "yoga",

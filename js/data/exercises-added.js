@@ -10,7 +10,7 @@ window.EXERCISES.push(
   id: "supine-sciatic-glide", name: "Lying Sciatic Nerve Glide", region: "lower-back", type: "nerve-glide",
   equipment: ["towel"], position: "Lying on back", level: 1,
   muscles: "Sciatic nerve, back of the thigh",
-  helps: ["sciatica", "disc", "low-back-pain"],
+  helps: ["sciatica", "low-back-pain"],
   dose: { sets: 2, reps: 10, perSide: true },
   howTo: [
     "Lie on your back and hold behind one thigh with both hands (or loop a towel behind it), knee bent.",
@@ -29,7 +29,7 @@ window.EXERCISES.push(
   id: "neck-arm-nerve-slider", name: "Neck and Arm Nerve Slider", region: "neck", type: "nerve-glide",
   equipment: ["none"], position: "Sitting or standing tall", level: 1,
   muscles: "Nerves from the neck into the arm",
-  helps: ["tos", "carpal-tunnel", "neck-pain"],
+  helps: ["tos", "neck-pain"],
   dose: { sets: 2, reps: 10, perSide: true },
   howTo: [
     "Hold one arm out to the side at shoulder height, palm up, elbow slightly bent.",
@@ -89,8 +89,8 @@ window.EXERCISES.push(
     "Let your arms rest by your sides and your back sink into the floor.",
     "Breathe slowly into your belly and stay until the chime."
   ],
-  tips: ["A classic position to calm a flared-up back. Many people feel relief within a few minutes."],
-  caution: "Get up slowly by rolling onto your side first.",
+  tips: ["A restful position that many backs find comfortable."],
+  caution: "Get up slowly by rolling onto your side first. Later in pregnancy, lie on your side or prop yourself up instead.",
   variations: [
     { name: "Pillows Instead", note: "Stack pillows under your knees if a chair is not handy." }
   ]

@@ -26,7 +26,7 @@ window.EXERCISES.push(
   id: "knee-to-chest", name: "Knee to Chest Stretch", region: "lower-back", type: "stretch",
   equipment: ["none"], position: "Lying on back", level: 1,
   muscles: "Lower back, glutes",
-  helps: ["low-back-pain", "sciatica", "hip-pain"],
+  helps: ["low-back-pain", "hip-pain"],
   dose: { sets: 2, reps: 3, hold: 30, perSide: true },
   howTo: [
     "Lie on your back with knees bent.",
@@ -35,7 +35,7 @@ window.EXERCISES.push(
     "Hold, breathe, lower, and switch."
   ],
   tips: ["Hold behind the thigh instead of over the knee if your knee is sensitive."],
-  caution: "Stop if this increases your pain, especially pain that travels into your leg. A professional can help you find the movements that suit you.",
+  caution: "Stop if this increases your pain, especially pain that travels into your leg. A professional can help you find the movements that suit you. After a hip replacement, follow the movement limits your surgeon gave you.",
   variations: [
     { name: "Both Knees to Chest", note: "Hug both knees at once for a fuller lower back stretch." }
   ]
@@ -53,14 +53,14 @@ window.EXERCISES.push(
     "Rock gently side to side."
   ],
   tips: ["A soothing way to start and end the day for a stiff back."],
-  caution: "Keep the motion in a pain-free arc.",
+  caution: "Keep the motion in a pain-free arc. After a hip replacement, follow the movement limits your surgeon gave you.",
   variations: []
 },
 {
-  id: "prone-press-up", name: "Press-Up (McKenzie Extension)", region: "lower-back", type: "mobility",
+  id: "prone-press-up", name: "Press-Up", alias: "mckenzie extension press-up", region: "lower-back", type: "mobility",
   equipment: ["none"], position: "Lying face down", level: 2,
   muscles: "Lower back extension",
-  helps: ["low-back-pain", "sciatica", "disc"],
+  helps: ["low-back-pain"],
   dose: { sets: 3, reps: 10, hold: 2 },
   howTo: [
     "Lie face down, hands under your shoulders like a push-up.",
@@ -68,8 +68,8 @@ window.EXERCISES.push(
     "Let your back arch passively. Go only as high as comfortable.",
     "Lower back down slowly."
   ],
-  tips: ["Often helpful for back pain that runs into the leg, especially pain that eases as it moves toward the spine (centralizes).", "Let the hips sag, the arms do the lifting."],
-  caution: "If leg pain increases or spreads farther down, stop and check with your clinician.",
+  tips: ["Go slowly and stay in a comfortable range.", "Let the hips sag, the arms do the lifting."],
+  caution: "If leg pain increases or spreads farther down, stop and check with your clinician. Skip this if standing or walking brings on leg pain.",
   variations: [
     { name: "Prone on Elbows", note: "Rest propped on your forearms for 1 to 2 minutes. A gentler starting version." },
     { name: "Standing Back Bend", note: "Hands on hips, gently arch backward. The standing version for during the day." }
@@ -88,7 +88,7 @@ window.EXERCISES.push(
     "Alternate smoothly, like a slow see-saw."
   ],
   tips: ["The head and leg move in opposite pairs to slide the nerve rather than yank it."],
-  caution: "Gentle tension only. If symptoms increase afterward, do fewer and gentler.",
+  caution: "Gentle tension only. Stop if leg pain, numbness, or weakness increases or lasts after you finish.",
   variations: []
 },
 {
@@ -111,7 +111,7 @@ window.EXERCISES.push(
   id: "bird-dog", name: "Bird Dog", region: "lower-back", type: "strengthen",
   equipment: ["none"], position: "Hands and knees", level: 2,
   muscles: "Back extensors, glutes, core stabilizers",
-  helps: ["low-back-pain", "posture", "general", "balance-falls"],
+  helps: ["low-back-pain", "posture", "general"],
   dose: { sets: 3, reps: 8, hold: 5, perSide: true },
   howTo: [
     "Start on hands and knees, back flat like a tabletop.",
@@ -146,7 +146,7 @@ window.EXERCISES.push(
   id: "standing-back-extension", name: "Standing Back Bend", region: "lower-back", type: "mobility",
   equipment: ["none"], position: "Standing", level: 1,
   muscles: "Lumbar extension",
-  helps: ["low-back-pain", "posture", "disc"],
+  helps: ["low-back-pain", "posture"],
   dose: { sets: 3, reps: 8 },
   howTo: [
     "Stand tall with feet hip-width, hands on the back of your hips.",
@@ -154,7 +154,7 @@ window.EXERCISES.push(
     "Return to standing. Repeat in a slow rhythm."
   ],
   tips: ["A great antidote after lifting, bending, or long sitting."],
-  caution: "Move within comfort, and keep knees soft.",
+  caution: "Move within comfort, and keep knees soft. Stand with a counter behind you. Skip this if standing or walking brings on leg pain.",
   variations: []
 },
 
@@ -232,7 +232,7 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "figure-4-stretch", name: "Figure-4 Piriformis Stretch", region: "hip", type: "stretch",
+  id: "figure-4-stretch", name: "Figure-4 Stretch", alias: "figure-4 piriformis stretch", region: "hip", type: "stretch",
   equipment: ["none", "chair"], position: "Lying on back or sitting", level: 1,
   muscles: "Piriformis, deep hip rotators, glutes",
   helps: ["sciatica", "hip-pain", "low-back-pain"],
@@ -243,8 +243,8 @@ window.EXERCISES.push(
     "Reach through and hold behind your left thigh, gently pulling it toward you.",
     "Feel the stretch deep in the right buttock. Hold, then switch."
   ],
-  tips: ["The piriformis lies right over the sciatic nerve, so releasing it often eases buttock and leg symptoms."],
-  caution: "Gentle pull. Numbness or electric pain means back off.",
+  tips: ["A stretch for the deep muscles of the buttock."],
+  caution: "Gentle pull. Numbness or electric pain means back off. After a hip replacement, follow the movement limits your surgeon gave you.",
   variations: [
     { name: "Seated Figure-4", note: "Sitting in a chair, ankle over opposite knee, hinge slightly forward with a tall back." }
   ]
@@ -253,7 +253,7 @@ window.EXERCISES.push(
   id: "hamstring-stretch-towel", name: "Hamstring Stretch with Strap", region: "hip", type: "stretch",
   equipment: ["towel"], position: "Lying on back", level: 1,
   muscles: "Hamstrings",
-  helps: ["low-back-pain", "knee-pain", "sciatica", "general"],
+  helps: ["low-back-pain", "knee-pain", "general"],
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
   howTo: [
     "Lie on your back, loop a towel or belt around your right foot.",
@@ -290,7 +290,7 @@ window.EXERCISES.push(
   id: "monster-walk", name: "Sideways Band Walk", region: "hip", type: "strengthen",
   equipment: ["band"], position: "Standing", level: 2,
   muscles: "Gluteus medius, hip stabilizers",
-  helps: ["knee-pain", "hip-pain", "itb", "balance-falls"],
+  helps: ["knee-pain", "hip-pain", "itb"],
   dose: { sets: 3, reps: 10, perSide: true },
   howTo: [
     "Place a mini-band around your legs just above the knees (or at the ankles for harder).",
@@ -317,7 +317,7 @@ window.EXERCISES.push(
     "Swivel the legs and repeat on the other side."
   ],
   tips: ["Prop a hand or cushion under the hip if you tilt heavily to one side."],
-  caution: "Skip if getting to the floor is unsafe. Use Seated Figure-4 instead.",
+  caution: "Skip if getting to the floor is unsafe. Use Seated Figure-4 instead. After a hip replacement, follow the movement limits your surgeon gave you.",
   variations: []
 },
 {
@@ -333,7 +333,7 @@ window.EXERCISES.push(
     "Hold and breathe."
   ],
   tips: ["Sitting on a folded blanket makes it much easier to sit tall."],
-  caution: "Let gravity work, do not press the knees down hard.",
+  caution: "Let gravity work, do not press the knees down hard. After a hip replacement, follow the movement limits your surgeon gave you.",
   variations: [
     { name: "Standing Wide-Leg Lean", note: "Standing alternative: wide stance, shift hips side to side." }
   ]
@@ -543,8 +543,8 @@ window.EXERCISES.push(
     "Hold the position, breathing steadily.",
     "Slide back up to rest."
   ],
-  tips: ["Isometric holds like this can actually reduce tendon and knee pain while building strength.", "Start shallow, 10 to 15 seconds, and grow from there."],
-  caution: "Knees stay above ankles, never deeper than 90 degrees.",
+  tips: ["A steady hold builds leg strength without movement at the knee.", "Start shallow, 10 to 15 seconds, and grow from there."],
+  caution: "Knees stay above ankles, never deeper than 90 degrees. Keep breathing.",
   variations: []
 },
 {
@@ -635,22 +635,22 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "eccentric-heel-drop", name: "Eccentric Heel Drop (Achilles)", region: "ankle-foot", type: "strengthen",
-  equipment: ["step"], position: "Standing on a step", level: 3,
+  id: "eccentric-heel-drop", name: "Slow Heel Lowering", alias: "eccentric heel drop achilles", region: "ankle-foot", type: "strengthen",
+  equipment: ["table"], position: "Standing at a counter", level: 2,
   muscles: "Calf and Achilles tendon",
   helps: ["achilles"],
   dose: { sets: 3, reps: 12, perSide: true },
   howTo: [
-    "Stand on a step with your heels hanging off the edge, hands on the rail.",
+    "Stand on the floor holding a counter with both hands.",
     "Rise up on both feet.",
-    "Shift weight to the sore leg and lower that heel slowly below the step level, counting 3 to 5 seconds.",
+    "Shift your weight to one leg and lower that heel slowly to the floor, counting 3 to 5 seconds.",
     "Use both legs to rise again."
   ],
-  tips: ["The classic Alfredson protocol for Achilles tendon pain. The slow lowering rebuilds the tendon.", "Also do a set with the knee slightly bent to reach the deeper calf."],
-  caution: "Some tendon ache during is normal if it settles by the next day. Sharp pain is a stop sign.",
+  tips: ["Based on a well-known slow heel-lowering program. This is a lighter version of it.", "Also do a set with the knee slightly bent to reach the deeper calf."],
+  caution: "A mild ache, up to about 3 out of 10, that settles by the next morning is fine. More than that, stop. Sharp pain is a stop sign.",
   variations: [
     { name: "Bent-Knee Heel Drop", note: "Same drop with a soft knee, targets the soleus." },
-    { name: "Floor Version", note: "No step: rise on two feet, lower slowly on one. Gentler start." }
+    { name: "Off a Step", note: "Heels hanging off a step, holding the rail. Harder, and only once the floor version is easy." }
   ]
 },
 {
@@ -687,7 +687,7 @@ window.EXERCISES.push(
   tips: ["Do it before getting out of bed to tame those painful first steps.", "Rolling the arch over a frozen water bottle is a soothing add-on."],
   caution: "Firm stretch is fine, grinding pain is not.",
   variations: [
-    { name: "Frozen Bottle Roll", note: "Roll the sole over a frozen water bottle or firm ball for 1 to 2 minutes." }
+    { name: "Frozen Bottle Roll", note: "Roll the sole over a frozen water bottle or firm ball for 1 to 2 minutes. Skip the frozen bottle if you have poor feeling or circulation in your feet." }
   ]
 },
 {
@@ -759,9 +759,9 @@ window.EXERCISES.push(
 },
 {
   id: "pigeon-stretch", name: "Pigeon Stretch", region: "hip", type: "stretch",
-  equipment: ["none"], position: "On the floor, one leg folded in front", level: 2,
+  equipment: ["none"], position: "On the floor, one leg folded in front", level: 3,
   muscles: "Glutes, piriformis, deep hip rotators",
-  helps: ["hip-pain", "sciatica", "low-back-pain", "general", "strength-training"],
+  helps: ["hip-pain", "general", "strength-training"],
   dose: { sets: 2, reps: 1, hold: 45, perSide: true },
   howTo: [
     "From hands and knees, slide your right knee forward toward your right wrist.",
@@ -770,7 +770,7 @@ window.EXERCISES.push(
     "Fold forward over the front leg for a deeper stretch, breathe, then switch."
   ],
   tips: ["A deep stretch for the buttock and hip. Go gently.", "A pillow under the front-side hip makes it far more comfortable."],
-  caution: "The front knee should feel nothing. If it does, do the Figure-4 version on your back instead.",
+  caution: "The front knee should feel nothing. If it does, do the Figure-4 version on your back instead. After a hip replacement, follow the movement limits your surgeon gave you.",
   variations: [
     { name: "Figure-4 Pigeon (On Back)", note: "Lying on your back with ankle over knee. All the stretch, none of the knee pressure." },
     { name: "Bench Pigeon", note: "Front shin resting on a bench or bed, standing behind it. Easy to control the depth." }
@@ -778,9 +778,9 @@ window.EXERCISES.push(
 },
 {
   id: "couch-stretch", name: "Couch Stretch", region: "hip", type: "stretch",
-  equipment: ["wall", "chair"], position: "Kneeling, back foot up a wall or couch", level: 2,
+  equipment: ["wall", "chair"], position: "Kneeling, back foot up a wall or couch", level: 3,
   muscles: "Hip flexors and quads together (rectus femoris)",
-  helps: ["hip-pain", "low-back-pain", "knee-pain", "posture", "general", "strength-training"],
+  helps: ["hip-pain", "low-back-pain", "posture", "general", "strength-training"],
   dose: { sets: 2, reps: 1, hold: 45, perSide: true },
   howTo: [
     "Kneel with your back to a wall or couch, and place one shin up the wall, knee in the corner.",
@@ -799,7 +799,7 @@ window.EXERCISES.push(
   id: "frog-stretch", name: "Frog Stretch (Adductor Rock-Back)", region: "hip", type: "stretch",
   equipment: ["none"], position: "On hands and knees, knees wide", level: 2,
   muscles: "Inner thighs (adductors), groin",
-  helps: ["hip-pain", "low-back-pain", "general", "strength-training"],
+  helps: ["hip-pain", "general", "strength-training"],
   dose: { sets: 2, reps: 10, hold: 3 },
   howTo: [
     "From hands and knees, walk your knees out wide, shins parallel and feet turned out.",
@@ -808,7 +808,7 @@ window.EXERCISES.push(
     "Rock forward to ease off, then repeat in slow waves."
   ],
   tips: ["The rocking version doubles as a warm-up before squats and leg day.", "Let the stretch build over reps rather than forcing the first one."],
-  caution: "Keep the movement in the hips, not the lower back. Pad the knees well.",
+  caution: "Keep the movement in the hips, not the lower back. Pad the knees well. After a hip replacement, follow the movement limits your surgeon gave you.",
   variations: [
     { name: "Static Frog Hold", note: "Settle into the back position and hold 30 to 60 seconds, breathing slowly." },
     { name: "Cossack Squat", note: "The standing cousin: shift side to side over one bent leg with the other straight. Strength and stretch in one." }

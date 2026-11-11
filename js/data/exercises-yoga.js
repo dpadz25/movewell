@@ -161,7 +161,7 @@ window.EXERCISES.push(
     "Keep a generous bend in your knees if your back-of-thigh muscles are tight."
   ],
   tips: ["Bent knees with a long spine beats straight legs with a rounded back.", "Pedal your feet slowly to warm up the calves."],
-  caution: "Come down and rest in Child's Pose if your wrists or shoulders complain."
+  caution: "Come down and rest in Child's Pose if your wrists or shoulders complain. Skip this if you have glaucoma, unless your eye doctor says it is fine."
 },
 {
   id: "yoga-childs-pose", name: "Child's Pose (Balasana)", region: "lower-back", type: "yoga",
@@ -271,7 +271,7 @@ window.EXERCISES.push(
     "Breathe, then bring the knees through center and switch sides."
   ],
   tips: ["Put a cushion under the knees if they do not reach the floor."],
-  caution: "Twist gently and only as far as is comfortable. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first."
+  caution: "Twist gently and only as far as is comfortable. If you have osteoporosis, or recent back or hip surgery, check with your doctor or physical therapist first. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "yoga-happy-baby", name: "Happy Baby (Ananda Balasana)", region: "hip", type: "yoga",
@@ -286,7 +286,7 @@ window.EXERCISES.push(
     "Rock softly side to side if that feels nice."
   ],
   tips: ["Hold behind your thighs instead if reaching your feet is a strain."],
-  caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain."
+  caution: "Use a cushion or skip the deepest position if it bothers your knees or hips. Come up slowly to avoid dizziness, and stop if you feel sharp pain. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "yoga-butterfly", name: "Butterfly Pose (Baddha Konasana)", region: "hip", type: "yoga",
@@ -301,7 +301,7 @@ window.EXERCISES.push(
     "Let gravity do the work on your knees. No pushing."
   ],
   tips: ["Sit on a folded blanket to make sitting tall easier.", "Cushions under the knees make it restful."],
-  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling. After a hip replacement, follow the movement limits your surgeon gave you."
 },
 {
   id: "yoga-seated-forward-fold", name: "Seated Forward Fold (Paschimottanasana)", region: "lower-back", type: "yoga",
@@ -331,7 +331,7 @@ window.EXERCISES.push(
     "Stay still and let the practice settle in."
   ],
   tips: ["A cushion under the knees eases the low back.", "This resting pose is easy to skip. Stay for the full time if you can."],
-  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead."
+  caution: "Rest comfortably. If lying flat makes you dizzy or short of breath, prop yourself up or sit instead. Later in pregnancy, lie on your side or prop yourself up instead."
 },
 
 // ============ STANDING ============
@@ -483,7 +483,7 @@ window.EXERCISES.push(
     "Sway gently side to side if it feels good."
   ],
   tips: ["Bent knees protect the low back and still stretch the back-of-thigh muscles."],
-  caution: "Rise back up slowly to avoid a head rush. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips."
+  caution: "Rise back up slowly to avoid a head rush. If you have osteoporosis or have had a spinal fracture, skip this, or keep your back straight and tip from the hips. Skip this if you have glaucoma, unless your eye doctor says it is fine."
 },
 
 // ============ CLOSING ============

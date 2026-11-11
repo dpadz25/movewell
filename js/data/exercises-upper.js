@@ -67,7 +67,7 @@ window.EXERCISES.push(
 },
 {
   id: "scalene-stretch", name: "Scalene Stretch", region: "neck", type: "stretch",
-  equipment: ["none"], position: "Sitting", level: 1,
+  equipment: ["none"], position: "Sitting", level: 2,
   muscles: "Scalenes (side of neck)",
   helps: ["tos", "neck-pain", "upper-cross"],
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
@@ -78,14 +78,14 @@ window.EXERCISES.push(
     "You should feel a stretch along the front-side of the right side of your neck."
   ],
   tips: ["A gentle stretch for the sides of your neck. Go slowly and stop if your arm tingles.", "Breathe with your belly, not your chest, while holding."],
-  caution: "If you feel tingling in your hand, ease off the stretch. Tension, not pain.",
+  caution: "If you feel tingling in your hand, ease off the stretch. Tension, not pain. Stop if you feel dizzy.",
   variations: [
     { name: "With Towel Anchor", note: "Sit on the end of a towel draped over the shoulder to hold it down while you stretch." }
   ]
 },
 {
   id: "scm-stretch", name: "Front-of-Neck (SCM) Stretch", region: "neck", type: "stretch",
-  equipment: ["none"], position: "Sitting or standing", level: 1,
+  equipment: ["none"], position: "Sitting or standing", level: 2,
   muscles: "Sternocleidomastoid",
   helps: ["neck-pain", "posture", "headache", "upper-cross"],
   dose: { sets: 2, reps: 1, hold: 20, perSide: true },
@@ -164,7 +164,7 @@ window.EXERCISES.push(
     "Let your head sink and relax. Breathe slowly.",
     "You can add tiny 'yes' nods for a gentle massage."
   ],
-  tips: ["Wonderful for tension headaches that start at the base of the skull."],
+  tips: ["Many people find this relaxing after a long day."],
   caution: "Pressure should feel gentle, not painful.",
   variations: []
 },
@@ -198,7 +198,7 @@ window.EXERCISES.push(
     "Rock your body gently so the arm swings in small circles.",
     "Swing forward-and-back and side-to-side as well."
   ],
-  tips: ["The arm should feel like a wet noodle. Your body creates the motion, not the shoulder muscles.", "A classic first step after shoulder injury or surgery."],
+  tips: ["The arm should feel like a wet noodle. Your body creates the motion, not the shoulder muscles.", "After an injury or surgery, only do this if your surgeon or therapist told you to."],
   caution: "Keep circles small at first. This should feel soothing.",
   variations: [
     { name: "With Light Weight", note: "Hold a can of soup or one-pound weight to add gentle traction." }
@@ -251,7 +251,7 @@ window.EXERCISES.push(
     "Lift only to shoulder height.",
     "Lower slowly."
   ],
-  tips: ["This diagonal path is the friendliest lifting angle for the rotator cuff.", "Start with no weight, then a water bottle, then light dumbbells."],
+  tips: ["This diagonal path is a comfortable lifting angle for many shoulders.", "Start with no weight, then a water bottle, then light dumbbells."],
   caution: "Stop below any pinching point. Do not shrug as you lift.",
   variations: [
     { name: "Full Can", note: "Same movement with thumbs up (as described). Avoid the thumbs-down version." }
@@ -317,7 +317,7 @@ window.EXERCISES.push(
   id: "band-row", name: "Band Row", region: "shoulder", type: "strengthen",
   equipment: ["band"], position: "Sitting or standing", level: 1,
   muscles: "Mid back, lats, rhomboids, biceps",
-  helps: ["upper-cross", "posture", "tos", "general", "low-back-pain", "upper-back"],
+  helps: ["upper-cross", "posture", "tos", "general", "upper-back"],
   dose: { sets: 3, reps: 12 },
   howTo: [
     "Sit tall with legs extended, loop the band around your feet.",
@@ -368,7 +368,7 @@ window.EXERCISES.push(
   tips: ["A tight chest pulls you into a rounded posture. Opening it makes every posture exercise easier.", "A gentle chest stretch. Stop if your arm or hand tingles."],
   caution: "Never force. If your hand tingles, lower the elbow or ease the lean.",
   variations: [
-    { name: "Low Elbow (Pec Minor Bias)", note: "Elbow slightly above shoulder height and lean; targets the deeper pec minor." },
+    { name: "High Elbow", note: "Elbow a little above shoulder height. Stretches a slightly different part of the chest." },
     { name: "Both Arms", note: "Both forearms on both sides of the frame at once." },
     { name: "Corner Stretch", note: "Face a corner of the room with a forearm on each wall and lean in." }
   ]
@@ -404,7 +404,7 @@ window.EXERCISES.push(
     "Hold, lower, and repeat, then switch roles."
   ],
   tips: ["Rebuilds the reach-behind-your-back motion used for dressing and tucking in shirts."],
-  caution: "Progress slowly. Frozen shoulders improve over months, not days.",
+  caution: "Progress slowly. Frozen shoulders improve over months, not days. Never yank the towel. Stop at sharp pain.",
   variations: []
 },
 {
@@ -470,7 +470,7 @@ window.EXERCISES.push(
     "Press your whole arm gently outward into the wall.",
     "Nothing should move. Hold, breathe, release."
   ],
-  tips: ["Isometrics build strength and often calm pain in irritated shoulders. A great starting point when lifting hurts."],
+  tips: ["Pressing without moving builds strength gently. A common starting point when lifting is uncomfortable."],
   caution: "Press at an effort that stays comfortable, around 25 to 50 percent.",
   variations: [
     { name: "Forward Press", note: "Face the wall, fist against it, press forward." },
@@ -480,7 +480,7 @@ window.EXERCISES.push(
 
 // ============ ELBOW ============
 {
-  id: "eccentric-wrist-extension", name: "Eccentric Wrist Extension (Tennis Elbow)", region: "elbow", type: "strengthen",
+  id: "eccentric-wrist-extension", name: "Slow Wrist Lowering (Palm Down)", alias: "eccentric wrist extension tennis elbow", region: "elbow", type: "strengthen",
   equipment: ["dumbbell"], position: "Sitting, forearm on table", level: 2,
   muscles: "Wrist extensors (outer elbow tendon)",
   helps: ["tennis-elbow", "wrist-pain"],
@@ -489,16 +489,16 @@ window.EXERCISES.push(
     "Sit with your forearm on a table, palm facing down, hand hanging off the edge, light weight in hand.",
     "Use your other hand to help lift the weight up.",
     "Remove the helping hand and lower the weight slowly, counting 3 to 5 seconds down.",
-    "That slow lowering is the medicine."
+    "The slow lowering is the main part of the exercise."
   ],
-  tips: ["Slow, lowering-only work is a common way to build forearm strength.", "Mild ache during is acceptable if it settles within 24 hours."],
+  tips: ["Slow, lowering-only work is a common way to build forearm strength.", "A mild ache, up to about 3 out of 10, that settles by the next morning is fine. More than that, stop."],
   caution: "Start with 1 to 2 pounds. Sharp pain means the weight is too heavy.",
   variations: [
-    { name: "Tyler Twist (FlexBar)", note: "Twist a rubber bar and slowly untwist with the sore arm. Same principle, research-backed." }
+    { name: "Tyler Twist (FlexBar)", note: "Twist a rubber bar and slowly untwist with the sore arm. Same idea with a different tool." }
   ]
 },
 {
-  id: "eccentric-wrist-flexion", name: "Eccentric Wrist Curl (Golfer's Elbow)", region: "elbow", type: "strengthen",
+  id: "eccentric-wrist-flexion", name: "Slow Wrist Lowering (Palm Up)", alias: "eccentric wrist curl golfer's elbow", region: "elbow", type: "strengthen",
   equipment: ["dumbbell"], position: "Sitting, forearm on table", level: 2,
   muscles: "Wrist flexors (inner elbow tendon)",
   helps: ["golfers-elbow", "wrist-pain"],
@@ -509,8 +509,8 @@ window.EXERCISES.push(
     "Lower it slowly over 3 to 5 seconds using only the sore arm.",
     "Repeat."
   ],
-  tips: ["Mirror image of the tennis elbow exercise, for pain on the inner elbow."],
-  caution: "Keep the weight light and the lowering slow.",
+  tips: ["The palm-up partner to the palm-down version, for the inner forearm."],
+  caution: "Keep the weight light and the lowering slow. Stop if you feel sharp pain.",
   variations: []
 },
 {
@@ -553,7 +553,7 @@ window.EXERCISES.push(
   id: "ulnar-nerve-glide", name: "Ulnar Nerve Glide", region: "elbow", type: "nerve-glide",
   equipment: ["none"], position: "Sitting or standing", level: 2,
   muscles: "Ulnar nerve pathway (funny bone nerve)",
-  helps: ["tos", "wrist-pain", "golfers-elbow"],
+  helps: ["tos"],
   dose: { sets: 1, reps: 8, perSide: true },
   howTo: [
     "Make an 'OK' circle with your thumb and index finger.",
@@ -562,7 +562,7 @@ window.EXERCISES.push(
     "Return and repeat slowly, moving in and out of light tension."
   ],
   tips: ["Nerves like to slide, not stretch. Move gently in and out, never holding a strong pull."],
-  caution: "Tingling that lingers means you did too much. Less is more with nerves.",
+  caution: "Go to light tension only. Stop if tingling, numbness, or weakness appears or lasts after you finish.",
   variations: []
 },
 {
@@ -595,7 +595,7 @@ window.EXERCISES.push(
     "Full fist: curl into a normal fist. Hold.",
     "Tabletop: knuckles bent 90 degrees, fingers straight. Hold, then back to straight."
   ],
-  tips: ["The classic carpal tunnel exercise. Keeps tendons sliding freely through the wrist.", "Do these several times a day; they take under a minute."],
+  tips: ["A gentle finger movement sequence often given for stiff hands.", "Do these several times a day; they take under a minute."],
   caution: "Move smoothly. Mild pulling is fine, pain is not.",
   variations: []
 },
@@ -608,11 +608,11 @@ window.EXERCISES.push(
   howTo: [
     "Start with your arm at your side, elbow bent, palm facing up near your shoulder.",
     "Slowly straighten the elbow while extending the wrist and fingers back, arm slightly out to the side.",
-    "As the arm straightens, tilt your head gently away for a touch more glide.",
+    "Keep your head still and your shoulder relaxed.",
     "Return to the start. That is one slow repetition."
   ],
   tips: ["A gentle sliding movement for the arm and hand. Stop if tingling or numbness gets worse.", "Think of flossing the nerve gently back and forth."],
-  caution: "Go to light tension only, never to tingling. If symptoms flare, cut repetitions in half.",
+  caution: "Go to light tension only. Stop if tingling, numbness, or weakness appears or lasts after you finish.",
   variations: [
     { name: "Wrist-Only Glide", note: "Gentler start: with elbow supported and bent, just extend the wrist and fingers, then relax." }
   ]
@@ -621,7 +621,7 @@ window.EXERCISES.push(
   id: "radial-nerve-glide", name: "Radial Nerve Glide", region: "wrist", type: "nerve-glide",
   equipment: ["none"], position: "Standing", level: 2,
   muscles: "Radial nerve pathway",
-  helps: ["tos", "tennis-elbow", "wrist-pain"],
+  helps: ["tos"],
   dose: { sets: 1, reps: 8, perSide: true },
   howTo: [
     "Let your arm hang at your side, palm facing behind you.",
@@ -630,14 +630,14 @@ window.EXERCISES.push(
     "Return and repeat in a slow rhythm."
   ],
   tips: ["Move like a slow pendulum, in and out of gentle tension."],
-  caution: "Same nerve rules: light tension, no lingering tingling.",
+  caution: "Go to light tension only. Stop if tingling, numbness, or weakness appears or lasts after you finish.",
   variations: []
 },
 {
   id: "wrist-flexor-stretch", name: "Wrist Flexor Stretch", region: "wrist", type: "stretch",
   equipment: ["none"], position: "Sitting or standing", level: 1,
   muscles: "Forearm flexors",
-  helps: ["carpal-tunnel", "golfers-elbow", "wrist-pain"],
+  helps: ["golfers-elbow", "wrist-pain"],
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
   howTo: [
     "Straighten your right arm in front, palm facing up.",
@@ -653,7 +653,7 @@ window.EXERCISES.push(
   id: "wrist-extensor-stretch", name: "Wrist Extensor Stretch", region: "wrist", type: "stretch",
   equipment: ["none"], position: "Sitting or standing", level: 1,
   muscles: "Forearm extensors",
-  helps: ["tennis-elbow", "wrist-pain", "carpal-tunnel"],
+  helps: ["tennis-elbow", "wrist-pain"],
   dose: { sets: 2, reps: 1, hold: 30, perSide: true },
   howTo: [
     "Straighten your right arm in front, palm facing down.",
@@ -669,7 +669,7 @@ window.EXERCISES.push(
   id: "prayer-stretch", name: "Prayer Stretch", region: "wrist", type: "stretch",
   equipment: ["none"], position: "Sitting or standing", level: 1,
   muscles: "Wrist flexors, palm fascia",
-  helps: ["carpal-tunnel", "wrist-pain"],
+  helps: ["wrist-pain"],
   dose: { sets: 2, reps: 1, hold: 20 },
   howTo: [
     "Press your palms together in front of your chest, fingers up.",
@@ -702,14 +702,14 @@ window.EXERCISES.push(
   id: "grip-squeeze", name: "Grip Squeeze", region: "wrist", type: "strengthen",
   equipment: ["ball", "towel"], position: "Sitting", level: 1,
   muscles: "Grip, finger flexors",
-  helps: ["wrist-pain", "arthritis-hand", "tennis-elbow", "general"],
+  helps: ["wrist-pain", "arthritis-hand", "general"],
   dose: { sets: 3, reps: 10, hold: 5, perSide: true },
   howTo: [
     "Hold a soft ball or rolled washcloth in your hand.",
     "Squeeze firmly but comfortably.",
     "Hold, then fully relax the hand between squeezes."
   ],
-  tips: ["Grip strength predicts independence. It is worth training at every age."],
+  tips: ["A strong grip helps with jars, bags, and door handles."],
   caution: "Use a softer object if joints are flared.",
   variations: [
     { name: "Pinch Grip", note: "Pinch the ball between thumb and each fingertip in turn." }
@@ -752,7 +752,7 @@ window.EXERCISES.push(
   id: "thoracic-extension-foam-roller", name: "Upper Back Extension over Foam Roller", region: "upper-back", type: "mobility",
   equipment: ["foam-roller"], position: "Lying on back over roller", level: 2,
   muscles: "Thoracic spine extension",
-  helps: ["upper-cross", "posture", "tos", "neck-pain", "upper-back"],
+  helps: ["upper-cross", "posture", "neck-pain", "upper-back"],
   dose: { sets: 2, reps: 8 },
   howTo: [
     "Lie on your back with a foam roller across your mid-back, knees bent.",
@@ -790,7 +790,7 @@ window.EXERCISES.push(
   id: "open-book", name: "Open Book Rotation", region: "upper-back", type: "mobility",
   equipment: ["none"], position: "Lying on side", level: 1,
   muscles: "Thoracic rotation, chest",
-  helps: ["upper-cross", "posture", "neck-pain", "low-back-pain", "tos", "upper-back"],
+  helps: ["upper-cross", "posture", "neck-pain", "low-back-pain", "upper-back"],
   dose: { sets: 2, reps: 8, hold: 3, perSide: true },
   howTo: [
     "Lie on your left side, knees bent and stacked, arms extended together in front at shoulder height.",
@@ -923,7 +923,7 @@ window.EXERCISES.push(
 },
 {
   id: "push-up-plus", name: "Push-Up Plus (Scapular Push-Up)", region: "shoulder", type: "strengthen",
-  equipment: ["none", "wall"], position: "Plank or hands on wall", level: 2,
+  equipment: ["none", "wall"], position: "Plank or hands on wall", level: 3,
   muscles: "Serratus anterior",
   helps: ["shoulder-pain", "rotator-cuff", "upper-cross", "tos", "posture", "strength-training"],
   dose: { sets: 3, reps: 10 },
@@ -946,7 +946,7 @@ window.EXERCISES.push(
   id: "prone-swimmers", name: "Prone Swimmers", region: "shoulder", type: "strengthen",
   equipment: ["none"], position: "Lying face down", level: 2,
   muscles: "Lower traps, mid traps, rotator cuff, shoulder mobility",
-  helps: ["shoulder-pain", "rotator-cuff", "upper-cross", "posture", "frozen-shoulder"],
+  helps: ["shoulder-pain", "rotator-cuff", "upper-cross", "posture"],
   dose: { sets: 2, reps: 6 },
   howTo: [
     "Lie face down, forehead on a towel, arms overhead in a 'Y', thumbs up.",
@@ -962,7 +962,7 @@ window.EXERCISES.push(
   ]
 },
 {
-  id: "shoulder-extension-scap-tilt", name: "Shoulder Extension (Anterior Scapular Tilt)", region: "shoulder", type: "mobility",
+  id: "shoulder-extension-scap-tilt", name: "Arms Behind Chest Opener", alias: "shoulder extension anterior scapular tilt", region: "shoulder", type: "mobility",
   equipment: ["none", "stick"], position: "Standing, arms behind you", level: 1,
   muscles: "Pec minor, front of shoulder, scapular tilt control",
   helps: ["upper-cross", "tos", "posture", "shoulder-pain"],
@@ -973,7 +973,7 @@ window.EXERCISES.push(
     "As you reach, let the shoulder blades tip and squeeze together without slumping forward.",
     "Hold, feeling a stretch across the front of the shoulders and chest, then return."
   ],
-  tips: ["Tight chest muscles can pull the shoulder blade forward. This drill moves the blade the opposite way.", "Holding a stick or towel between your hands behind you deepens the reach."],
+  tips: ["A simple way to open the front of the shoulders and chest.", "Holding a stick or towel between your hands behind you deepens the reach."],
   caution: "Keep standing tall. If your hands tingle, shrink the range or stop.",
   variations: [
     { name: "With Stick or Towel", note: "Hold a stick behind you with both hands and lift it gently away from your body." },

@@ -22,17 +22,17 @@ window.REGIONS = [
 // Non-diagnosis catch-all entries (posture, general, strength-training, conditioning, post-surgery) use 999
 // so they always sort to the bottom; they aren't real conditions to rank by prevalence.
 window.CONDITIONS = [
-  { id: "tos", name: "Neck and arm tension", aka: "thoracic outlet syndrome", regions: ["neck", "shoulder", "upper-back"], commonRank: 23, blurb: "Tightness through the neck, chest, and shoulders. These routines use gentle stretches, posture work, and easy nerve glides. Stop if your arm tingles or feels heavy." },
+  { id: "tos", name: "Neck and arm tension", aka: "thoracic outlet syndrome", regions: ["neck", "shoulder", "upper-back"], commonRank: 23, blurb: "Tightness through the neck, chest, and shoulders. These routines use gentle stretches and posture work. Stop if your arm tingles or feels heavy." },
   { id: "upper-cross", name: "Rounded shoulders or forward head", aka: "upper crossed syndrome posture", regions: ["neck", "shoulder", "upper-back"], commonRank: 16, blurb: "Gentle stretches for the chest and neck, with strengthening for the upper back." },
   { id: "upper-back", name: "Upper back aches", aka: "upper back pain thoracic spine mid back between shoulder blades", regions: ["upper-back"], commonRank: 5.5, blurb: "Achiness or tightness around and between the shoulder blades, often after long sitting or desk time. Gentle upper back movement and light shoulder-blade strengthening are commonly used. If pain is severe or follows an injury, see a professional. Chest pain or shortness of breath needs emergency help." },
   { id: "neck-pain", name: "Neck stiffness", aka: "neck pain", regions: ["neck", "upper-back"], commonRank: 2, blurb: "General neck stiffness or ache. Gentle movement, neck strengthening, and upper back mobility may help." },
-  { id: "headache", name: "Headaches with a tight neck", aka: "tension headaches", regions: ["neck"], commonRank: 4, blurb: "Headaches that come with a tight neck or shoulders. Gentle neck and posture work may help some people." },
+  { id: "headache", name: "Headaches with a tight neck", aka: "tension headaches", regions: ["neck"], commonRank: 4, blurb: "Headaches that come with a tight neck or shoulders. Gentle neck and posture work may help some people. A sudden severe headache, or one with weakness, confusion, or vision changes, needs emergency help." },
   { id: "shoulder-pain", name: "Shoulder aches", aka: "general shoulder pain", regions: ["shoulder"], commonRank: 3, blurb: "An achy or pinchy shoulder when reaching or lifting. Building shoulder and shoulder-blade strength may help." },
   { id: "rotator-cuff", name: "Sore when reaching or lifting", aka: "rotator cuff injury impingement", regions: ["shoulder"], commonRank: 11, blurb: "Soreness in the shoulder with reaching or lifting. Gradual shoulder and shoulder-blade strengthening is commonly used." },
   { id: "frozen-shoulder", name: "Stiff, limited shoulder movement", aka: "frozen shoulder", regions: ["shoulder"], commonRank: 17, blurb: "A shoulder that feels stiff and hard to move. Frequent, gentle range-of-motion work within a comfortable limit is commonly used." },
   { id: "tennis-elbow", name: "Outer elbow soreness", aka: "tennis elbow", regions: ["elbow", "wrist"], commonRank: 20, blurb: "Soreness on the outside of the elbow with gripping and wrist work. Slow, lowering-only strengthening is commonly used." },
   { id: "golfers-elbow", name: "Inner elbow soreness", aka: "golfer's elbow", regions: ["elbow", "wrist"], commonRank: 21, blurb: "Soreness on the inside of the elbow. It uses the same slow strengthening approach, on the other side." },
-  { id: "carpal-tunnel", name: "Hand and wrist strain", aka: "carpal tunnel syndrome", regions: ["wrist"], commonRank: 14, blurb: "Wrist and hand strain from desk or hand work. Gentle tendon glides, nerve glides, and stretches are commonly used. If numbness or tingling is new or getting worse, see a professional." },
+  { id: "carpal-tunnel", name: "Hand and wrist strain", aka: "carpal tunnel syndrome", regions: ["wrist"], commonRank: 14, blurb: "Wrist and hand strain from desk or hand work. Gentle tendon glides and stretches are sometimes used. If numbness or tingling is new or getting worse, see a professional." },
   { id: "wrist-pain", name: "Wrist soreness or weakness", aka: "wrist pain", regions: ["wrist"], commonRank: 6, blurb: "General wrist soreness or weakness. Gentle movement first, then gradual strengthening." },
   { id: "arthritis-hand", name: "Stiff, achy fingers and thumbs", aka: "hand arthritis stiffness", regions: ["wrist"], commonRank: 13, blurb: "Stiff or achy fingers and thumbs. Daily gentle movement and light strengthening can help keep hands moving." },
   { id: "low-back-pain", name: "Low back aches", aka: "low back pain", regions: ["lower-back", "core", "hip"], commonRank: 1, blurb: "A very common complaint. Gentle movement, core endurance, hip strength, and walking are often used. Get urgent help for numbness around your groin, trouble peeing, or weakness in both legs." },
@@ -196,13 +196,13 @@ window.ROUTINE_TYPES = [
 window.TEMPLATES = [
   {
     id: "tpl-tos", name: "Neck, Chest and Shoulder Opener", conditions: ["tos"],
-    desc: "Opens the chest, relaxes the neck, adds easy nerve glides, and builds shoulder-blade support. Go gently, and stop if your arm tingles.",
-    items: ["breathing-diaphragm", "scalene-stretch", "first-rib-mobilization", "doorway-pec-stretch", "median-nerve-glide", "ulnar-nerve-glide", "chin-tuck", "band-row", "serratus-punch", "prone-ytw"]
+    desc: "Opens the chest, relaxes the neck, and builds shoulder-blade support. Go gently, and stop if your arm tingles. New arm numbness, weakness, or swelling means see a professional.",
+    items: ["breathing-diaphragm", "upper-trap-stretch", "doorway-pec-stretch", "chin-tuck", "band-row", "serratus-punch", "prone-ytw"]
   },
   {
     id: "tpl-upper-cross", name: "Posture Reset (Upper Body)", conditions: ["upper-cross", "posture"],
     desc: "Stretch the tight chest and neck, and strengthen the upper back.",
-    items: ["doorway-pec-stretch", "upper-trap-stretch", "scm-stretch", "thoracic-extension-foam-roller", "chin-tuck", "wall-angels", "band-pull-apart", "face-pull", "prone-cobra"]
+    items: ["doorway-pec-stretch", "upper-trap-stretch", "seated-thoracic-extension-chair", "chin-tuck", "wall-angels", "band-pull-apart", "face-pull", "prone-cobra"]
   },
   {
     id: "tpl-neck", name: "Gentle Neck Routine", conditions: ["neck-pain", "headache"],
@@ -221,17 +221,17 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-tennis-elbow", name: "Elbow and Forearm Strength", conditions: ["tennis-elbow", "golfers-elbow"],
-    desc: "Slow lowering-only strengthening plus stretching. Stop if pain increases.",
-    items: ["wrist-extensor-stretch", "wrist-flexor-stretch", "eccentric-wrist-extension", "eccentric-wrist-flexion", "forearm-rotation", "grip-squeeze"]
+    desc: "Slow lowering-only strengthening plus stretching. Every other day is plenty to start. Stop if pain increases.",
+    items: ["wrist-extensor-stretch", "wrist-flexor-stretch", "eccentric-wrist-extension", "eccentric-wrist-flexion", "forearm-rotation"]
   },
   {
     id: "tpl-carpal", name: "Wrist and Hand Care", conditions: ["carpal-tunnel", "wrist-pain", "arthritis-hand"],
-    desc: "Tendon glides, nerve glides, and gentle stretches to keep the wrist and hand moving.",
-    items: ["wrist-circles", "tendon-glides", "median-nerve-glide", "wrist-flexor-stretch", "wrist-extensor-stretch", "prayer-stretch", "finger-band-extension", "grip-squeeze"]
+    desc: "Tendon glides and gentle stretches to keep the wrist and hand moving. Fine to do daily.",
+    items: ["wrist-circles", "tendon-glides", "wrist-flexor-stretch", "wrist-extensor-stretch", "finger-band-extension", "grip-squeeze"]
   },
   {
-    id: "tpl-low-back", name: "Low Back Care (Big 3 +)", conditions: ["low-back-pain"],
-    desc: "Gentle movement plus three well-known core endurance exercises, finished with hip support.",
+    id: "tpl-low-back", name: "Low Back Care", conditions: ["low-back-pain"],
+    desc: "Gentle movement plus three well-known core endurance exercises, finished with hip support. Every other day is plenty to start.",
     items: ["pelvic-tilt", "cat-cow", "knee-to-chest", "lower-trunk-rotation", "curl-up", "side-plank-knees", "bird-dog", "glute-bridge", "hip-flexor-stretch"]
   },
   {
@@ -246,12 +246,12 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-sciatica", name: "Back and Leg Mobility", conditions: ["sciatica"],
-    desc: "Gentle nerve glides, hip stretches, and back-friendly strengthening. Stop if leg pain gets worse.",
-    items: ["sciatic-nerve-floss", "figure-4-stretch", "knee-to-chest", "prone-press-up", "glute-bridge", "bird-dog"]
+    desc: "Gentle movement, a nerve slider, a hip stretch, and back-friendly strengthening. Stop if leg pain gets worse.",
+    items: ["pelvic-tilt", "sciatic-nerve-floss", "figure-4-stretch", "glute-bridge", "bird-dog", "supported-rest-90-90"]
   },
   {
     id: "tpl-hip", name: "Hip Strength & Mobility", conditions: ["hip-pain", "itb"],
-    desc: "Wakes up the gluteals from every angle and restores hip flexibility.",
+    desc: "Works the hip muscles from every angle, then stretches them. Every other day is plenty to start.",
     items: ["glute-bridge", "clamshell", "side-lying-hip-abduction", "standing-hip-abduction", "monster-walk", "hip-flexor-stretch", "figure-4-stretch", "butterfly-stretch"]
   },
   {
@@ -261,14 +261,13 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-leg-warmup", name: "Leg Warmup", conditions: [], kind: "warmup",
-    desc: "Gentle moves that wake up the hips, knees, and ankles. Do it before walks, leg day, or any lower-body session.",
+    desc: "Easy moves that wake up the hips, knees, and ankles. Do it before walks, leg day, or any lower-body session.",
     items: [
       { id: "leg-swings", sets: 1 },
       { id: "hip-cars", sets: 1 },
       { id: "ankle-pumps", sets: 1 },
       { id: "knee-to-wall", sets: 1 },
       { id: "glute-bridge", sets: 1 },
-      { id: "deep-squat-hold", sets: 1 },
       { id: "monster-walk", sets: 1 }
     ]
   },
@@ -284,7 +283,7 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-leg-yoga", name: "Yoga for Legs & Hips", conditions: [],
-    desc: "A gentle flow of standing and floor poses that stretch and strengthen the legs from hips to ankles.",
+    desc: "A flow of standing and floor poses that stretch and strengthen the legs from hips to ankles.",
     items: ["yoga-hip-circles", "yoga-downward-dog", "yoga-low-lunge", "yoga-warrior-2", "yoga-triangle", "yoga-wide-fold", "yoga-garland", "yoga-happy-baby"]
   },
   {
@@ -299,17 +298,17 @@ window.TEMPLATES = [
   },
   {
     id: "tpl-foot", name: "Foot & Heel Care", conditions: ["plantar-fasciitis", "achilles"],
-    desc: "Stretching and strengthening for heel and arch pain, including the classic eccentric heel program.",
+    desc: "Stretching and strengthening for heel and arch soreness, including a slow heel-lowering exercise. Every other day is plenty for the strengthening.",
     items: ["plantar-fascia-stretch", "calf-stretch-wall", "towel-scrunch", "calf-raise", "eccentric-heel-drop", "toe-raises"]
   },
   {
     id: "tpl-balance", name: "Steady & Strong (Balance)", conditions: ["balance-falls"],
-    desc: "A balance session inspired by Otago-style exercises. Practice beside a counter.",
+    desc: "Common strength and balance exercises. Hold a kitchen counter. If you have fallen in the past year or often feel dizzy, ask your doctor first.",
     items: ["sit-to-stand", "weight-shifts", "marching-in-place", "side-stepping", "single-leg-stance", "tandem-stance", "heel-toe-walking", "calf-raise", "toe-raises"]
   },
   {
     id: "tpl-gentle-full", name: "Gentle Full-Body Start", conditions: ["general", "post-surgery"],
-    desc: "A kind first routine for rebuilding after illness, surgery, or a long break. Every exercise has an easier variation.",
+    desc: "A kind first routine for rebuilding after illness, surgery, or a long break. Go at your own pace and skip anything that does not feel right.",
     items: ["breathing-diaphragm", "seated-thoracic-extension-chair", "shoulder-shrug-roll", "ankle-pumps", "quad-set", "glute-bridge", "sit-to-stand", "marching-in-place", "walking-program"]
   },
   // Short, gentle starters. Onboarding hands these out, so every exercise is Gentle or has an easy version.
