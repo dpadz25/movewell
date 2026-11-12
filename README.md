@@ -10,14 +10,17 @@ PT patients rarely get good tools. The apps that exist are outdated, missing exe
 
 ## What it does
 
-1. **Personal onboarding.** The app greets you by name, asks what hurts, and builds starter routines automatically. Text size can be set to Normal, Large, or Extra Large for comfortable reading.
-2. **Exercise library.** 112 exercises across 11 body regions (neck, shoulder, upper back, elbow, wrist and hand, lower back, hip, knee, ankle and foot, core, balance). Every exercise has step-by-step plain-English instructions, coaching tips, safety cautions, easier and harder variations, a suggested dose, and a one-tap video demonstration link.
-3. **Powerful filtering.** Filter by body area, exercise type (stretch, strengthen, mobility, nerve glide, balance), equipment (bodyweight, band, dumbbell, chair, wall, towel, machine, and more), difficulty level, and free text search.
-4. **Routines.** Start from 15 ready-made plans modeled on real PT protocols (thoracic outlet syndrome, posture reset, the McGill Big 3 for low back, Alfredson heel drops for Achilles, Otago-style balance work, and more) or build your own. Adjust sets, reps, hold times, and per-side settings on every exercise.
+1. **Personal onboarding.** The app greets you by name and asks whether you are here for pain, fitness, or both. It then adds two starter routines and suggests a few more you can add later from Routines, then New routine. A short guided tour follows.
+2. **Exercise library.** 312 exercises across 13 body areas (neck, shoulder, upper back and posture, chest, arms, elbow, wrist and hand, lower back, hip, knee, ankle and foot, core, balance and whole body). Types include stretching, strengthening, mobility, nerve glides, balance, gym lifts, cardio, yoga, qi gong, and recovery. Every exercise has plain-English steps, coaching tips, safety cautions, easier and harder variations, a suggested dose, and a one-tap video link. You can also make your own exercises.
+3. **Filtering.** Filter by body area, exercise type, equipment (21 kinds, from bodyweight and bands to barbells and machines), difficulty level, and free text search.
+4. **Routines.** Start from 38 ready-made plans in 12 groups (neck and posture, back and core, hips and knees, balance, gym strength, cardio, yoga, qi gong, relaxation, and more) or build your own. Adjust sets, reps, hold times, and per-side settings, add warmups, and link exercises into supersets. Replacing an exercise opens on similar moves, closest matches first.
 5. **Guided sessions.** One exercise at a time with big buttons, set logging (reps and weight), hold timers with chimes, automatic rest timers, and a "last time you did..." memory. Finishing triggers a confetti celebration.
-6. **Feel tracking.** After each session: five labeled faces (Great to Sore), a 0 to 10 pain rating for each side you have logged recently, and notes.
+6. **Feel tracking.** After each session: five labeled faces (Great to Sore), a 0 to 10 pain rating for each side you have logged recently, and notes. High pain scores show clear guidance on when to stop and get help.
 7. **Find by body area.** Inside the Exercises tab, pick an area from a simple list or switch on the body map. Left and right are tracked separately, so you can log how each side feels, read about common causes, and make a routine for that exact spot.
-8. **Progress.** Streaks, weekly session charts, feeling and pain trends over time, per-exercise progress charts, and full session history.
+8. **Plan your week.** Put routines on days of the week from Home.
+9. **Progress.** Streaks, weekly session charts, feeling and pain trends over time, per-exercise progress charts, body weight history, and full session history.
+10. **Comfort settings.** Seven text sizes (or match the iPhone's own text size), two color themes, dark mode, chimes, and a light buzz when you tap buttons.
+11. **Backups.** Save and restore a backup file, with a gentle reminder now and then.
 
 ## Tech
 

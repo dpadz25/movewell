@@ -796,6 +796,7 @@ button.pg-row { cursor: pointer; }
 .ob-care { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.4rem; }
 .ob-showmore { align-self: center; margin: 0.4rem 0 0; }
 .ob-plan-dot .icn { width: 1rem; height: 1rem; stroke-width: 3; }
+.ob-ideas { font-size: 0.88rem; line-height: 1.45; color: var(--muted); margin: 0.5rem 0.2rem 0; }
 .onboard-inner > .btn { position: relative; z-index: 1; }
 .ob-glow { animation: ob-glow 3s 1.4s ease-in-out infinite; }
 @keyframes ob-glow { 0%, 100% { box-shadow: 0 10px 24px var(--accent-shadow); } 50% { box-shadow: 0 10px 34px var(--accent-shadow), 0 0 0 8px var(--accent-dim); } }
@@ -852,6 +853,11 @@ html[data-dark="1"] .re-top { background: var(--surface2); }
 #pick-list .ex-item.just-added .ex-item-chev { animation: pick-pop .45s cubic-bezier(.34,1.56,.64,1); }
 @keyframes pick-pop { 0% { transform: scale(0.7); } 100% { transform: none; } }
 #pick-done { position: sticky; bottom: 0.4rem; z-index: 2; }
+/* replacing: a compact pill so it covers less of the list */
+#pick-done.pick-keep {
+  width: auto; min-height: 2.9rem; font-size: 0.95rem; padding: 0.4rem 1.3rem;
+  display: flex; margin-left: auto; margin-right: auto; bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px));
+}
 
 /* yoga breathing guide: in for 4 seconds, out for 4 */
 .sp-breath { width: 11rem; height: 11rem; }

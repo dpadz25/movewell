@@ -19,7 +19,9 @@
         profile: {
           name: "", textSize: "normal", conditions: [],
           sex: "", heightFt: 0, heightIn: 0, weightLb: 0,
-          theme: "forest", dark: false
+          theme: "forest", dark: false,
+          haptics: true,     // small vibration when tapping buttons
+          suggested: []      // ready-made routine ids onboarding recommended but did not add
         },
         routines: [],
         customExercises: [],
@@ -38,6 +40,8 @@
         this.state = raw ? Object.assign(this.defaultState(), JSON.parse(raw)) : this.defaultState();
         this.state.profile = Object.assign(this.defaultState().profile, this.state.profile);
         if (!Array.isArray(this.state.customExercises)) this.state.customExercises = [];
+        // older saves predate onboarding suggestions
+        if (!Array.isArray(this.state.profile.suggested)) this.state.profile.suggested = [];
       } catch (e) {
         this.state = this.defaultState();
       }
@@ -253,6 +257,36 @@
       document.getElementById("modal-body").scrollTop = v.scroll || 0;
       const back = document.getElementById("modal-back");
       if (back) back.style.display = this._modalStack.length > 1 ? "inline-flex" : "none";
+    },
+
+    // ---------- tap feedback ----------
+    // A light buzz when a button is tapped, so people can feel that the tap landed.
+    // Android: the vibrate API. iPhone Safari has no vibrate API, but toggling a hidden
+    // iOS switch control plays the system's own tap feel (iOS 18 and newer). Older phones just skip it.
+    haptic() {
+      if (!this.state || this.state.profile.haptics === false) return;
+      try {
+        if (navigator.vibrate) { navigator.vibrate(10); return; }
+        if (!this._hapticEl) {
+          const label = document.createElement("label");
+          label.className = "mw-haptic";
+          label.setAttribute("aria-hidden", "true");
+          label.innerHTML = '<input type="checkbox" switch tabindex="-1">';
+          label.style.cssText = "position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;left:-10px;top:0";
+          document.body.appendChild(label);
+          this._hapticEl = label;
+        }
+        this._hapticEl.click();
+      } catch (e) { /* no haptics on this device */ }
+    },
+    bindHaptics() {
+      const TAPPABLE = "button, a[href], label, select, input[type=checkbox], input[type=radio], .chip, .ex-item, .cat-card, .menu-item, [role=button], [role=radio], [data-act], [onclick]";
+      document.addEventListener("click", (e) => {
+        if (!e.isTrusted || !e.target.closest) return; // skip our own hidden switch and scripted clicks
+        const t = e.target.closest(TAPPABLE);
+        if (!t || t.disabled || t.closest(".mw-haptic")) return;
+        this.haptic();
+      }, true);
     },
 
     // fade hints on horizontally scrolling filter bars
@@ -765,7 +799,12 @@
           <div class="toggle-row">
             <div class="stepper-label set-lbl">${this.icon("speaker")} Chimes and timer sounds</div>
             <label class="switch"><input type="checkbox" id="set-sound" ${p.sound !== false ? "checked" : ""} aria-label="Sounds"><span class="slider"></span></label>
-          </div>`)}
+          </div>
+          <div class="toggle-row">
+            <div class="stepper-label set-lbl">${this.icon("sparkle")} Little buzz when you tap</div>
+            <label class="switch"><input type="checkbox" id="set-haptics" ${p.haptics !== false ? "checked" : ""} aria-label="Vibrate when tapping buttons"><span class="slider"></span></label>
+          </div>
+          <p class="set-small">Works on most phones. Some older iPhones do not support it.</p>`)}
         ${card("Help", `
           <button class="menu-item" id="set-tour">${this.icon("sparkle")}<span>Show me around again</span></button>
           <button class="menu-item" id="set-help">${this.icon("alert")}<span>When to stop and get help</span></button>`)}
@@ -820,6 +859,7 @@
       pick("#set-goal .opt-btn", b => { this.state.profile.goal = b.dataset.goal; this.refresh(); });
       body.querySelector("#set-dark").onchange = (e) => { this.state.profile.dark = e.target.checked; this.applyAppearance(); saved(); };
       body.querySelector("#set-sound").onchange = (e) => { this.state.profile.sound = e.target.checked; saved(); };
+      body.querySelector("#set-haptics").onchange = (e) => { this.state.profile.haptics = e.target.checked; saved(); if (e.target.checked) this.haptic(); };
       body.querySelector("#set-name").onchange = (e) => { this.state.profile.name = e.target.value.trim(); saved(); this.refresh(); };
       const num = (id, key) => body.querySelector(id).onchange = (e) => { this.state.profile[key] = Number(e.target.value) || 0; saved(); };
       num("#set-hft", "heightFt"); num("#set-hin", "heightIn"); num("#set-wt", "weightLb");
@@ -901,10 +941,15 @@
       ["relax", "Relax and unwind", "heart", "orange", ["tpl-relax"]]
     ],
     // which ready-made routines onboarding will add, so the last step can show them
-    obPlannedTemplates() {
+    // Only the first two are added, so a new user is not handed a crowded Routines tab.
+    // The rest come back from obSuggestedTemplates() as ideas they can add themselves.
+    obPlannedTemplates() { return this.obMatchedTemplates().slice(0, 2); },
+    obSuggestedTemplates() { return this.obMatchedTemplates().slice(2, 6); },
+    obMatchedTemplates() {
       const d = this._obData;
-      const out = [];
-      const add = t => { if (t && !out.includes(t)) out.push(t); };
+      const rehabList = [], fitList = [];
+      let out = rehabList;
+      const add = t => { if (t && !rehabList.includes(t) && !fitList.includes(t)) out.push(t); };
       const byId = id => window.TEMPLATES.find(t => t.id === id);
       const rehab = d.goal === "rehab" || d.goal === "both";
       const fit = d.goal === "fitness" || d.goal === "both";
@@ -921,11 +966,18 @@
           }
         });
       }
+      out = fitList;
       if (fit) (d.fitGoals || []).forEach(k => {
         const row = this.OB_FIT.find(x => x[0] === k);
         if (row) row[4].forEach(id => add(byId(id)));
       });
-      return out.slice(0, 6);
+      // take turns between the two lists so someone with both goals starts with one of each
+      const all = [];
+      for (let i = 0; i < Math.max(rehabList.length, fitList.length); i++) {
+        if (rehabList[i]) all.push(rehabList[i]);
+        if (fitList[i]) all.push(fitList[i]);
+      }
+      return all;
     },
     onboardStep(n) {
       if (typeof n === "number") n = ["name", "pain", "look", "done"][n - 1] || "name";
@@ -1146,6 +1198,7 @@
       }
       if (n === "done") {
         const plan = this.obPlannedTemplates();
+        const ideas = this.obSuggestedTemplates();
         inner.innerHTML = `
           ${this.obHead("done")}
           <div class="ob-leaves" aria-hidden="true">${[8, 22, 38, 55, 70, 84, 94].map((x, i) => `<span class="ob-leaf" style="left:${x}%;animation-delay:${-i * 1.3}s;animation-duration:${8 + (i % 3) * 2}s">${this.icon("leaf")}</span>`).join("")}</div>
@@ -1153,6 +1206,7 @@
             <h1 class="ob-title">${d.name ? "You are all set, " + this.esc(d.name) + "." : "You are all set."}</h1>
             <p class="ob-lead">${plan.length ? (plan.length === 1 ? "We picked a routine to get you started. You can change it any time." : "We picked " + plan.length + " routines to get you started. You can change them any time.") : "Your Home screen is ready. Pick a ready-made plan or build your own whenever you like."}</p>
             ${plan.map(t => `<div class="ob-plan"><span class="ob-plan-dot">${this.icon("check")}</span><span>${this.esc(t.name)}</span></div>`).join("")}
+            ${ideas.length ? `<p class="ob-ideas">Other plans that may fit you: ${ideas.map(t => this.esc(t.name)).join(", ")}. Find them any time under <strong>Routines</strong>, then <strong>New routine</strong>.</p>` : ""}
           </div>
           <button class="btn big grad ob-next ob-glow" id="ob-finish">Start using MoveWell</button>
         `;
@@ -1177,6 +1231,7 @@
       // add the starter routines shown on the last onboarding step
       const added = new Set();
       this.obPlannedTemplates().forEach(t => { added.add(t.id); this.state.routines.push(this.routineFromTemplate(t)); });
+      p.suggested = this.obSuggestedTemplates().map(t => t.id);
       this.state.onboarded = true;
       this.state.safetyAck = true; // they just read it on the safety step
       this.save(); this.applyAppearance();
@@ -1218,6 +1273,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     App.load();
     App.applyAppearance();
+    App.bindHaptics();
     document.querySelectorAll("[data-icon]").forEach(el => { el.innerHTML = App.icon(el.dataset.icon); });
     document.querySelectorAll(".nav-btn").forEach(b => b.onclick = () => App.showPage(b.dataset.page));
     document.getElementById("btn-settings").onclick = () => App.openSettings();

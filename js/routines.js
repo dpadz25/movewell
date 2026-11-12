@@ -102,8 +102,22 @@
   // Two levels: pick a simple body area first, then the specific plan.
   App.openNewRoutineChooser = function () {
     this.pushView("chooser", () => this.openNewRoutineChooser());
+    // plans onboarding recommended but did not add, minus any the person has added since
+    const have = new Set(this.state.routines.map(r => r.name));
+    const ideas = (this.state.profile.suggested || []).map(id => window.TEMPLATES.find(t => t.id === id))
+      .filter(t => t && !have.has(t.name));
     this.openModal("New Routine", `
       <button class="btn big grad" id="new-blank">${this.icon("pencil")} Build My Own From Scratch</button>
+      ${ideas.length ? `<div class="section-label">Suggested for you</div>
+        ${ideas.map(t => `
+          <div class="ex-item" data-t="${t.id}">
+            <div class="ex-item-icon tile accent">${this.icon("sparkle")}</div>
+            <div class="ex-item-info">
+              <div class="ex-item-name">${this.esc(t.name)}</div>
+              <div class="ex-item-meta"><span class="tag">${t.items.length} exercises</span></div>
+            </div>
+            <div class="ex-item-chev">${this.icon("plus")}</div>
+          </div>`).join("")}` : ""}
       <div class="section-label">Or start from a ready-made plan</div>
       <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.7rem">Pick the part of the body you want to work on and we'll show you the plans for it.</p>
       ${window.TEMPLATE_GROUPS.map(g => `
@@ -119,6 +133,7 @@
     const body = document.getElementById("modal-body");
     body.querySelector("#new-blank").onclick = () => this.createBlankRoutine();
     body.querySelectorAll(".cat-card").forEach(n => n.onclick = () => this.openTemplateGroup(n.dataset.g));
+    body.querySelectorAll(".ex-item[data-t]").forEach(n => n.onclick = () => this.addTemplateRoutine(n.dataset.t));
   };
 
   App.openTemplateGroup = function (gid) {
@@ -140,14 +155,17 @@
         </div>`).join("")}
     `);
     const body = document.getElementById("modal-body");
-    body.querySelectorAll(".ex-item[data-t]").forEach(n => n.onclick = () => {
-      const t = window.TEMPLATES.find(x => x.id === n.dataset.t);
-      const r = this.routineFromTemplate(t);
-      this.state.routines.push(r);
-      this.save();
-      this.toast("Routine added");
-      this.openRoutineEditor(r.id);
-    });
+    body.querySelectorAll(".ex-item[data-t]").forEach(n => n.onclick = () => this.addTemplateRoutine(n.dataset.t));
+  };
+
+  App.addTemplateRoutine = function (tid) {
+    const t = window.TEMPLATES.find(x => x.id === tid);
+    if (!t) return;
+    const r = this.routineFromTemplate(t);
+    this.state.routines.push(r);
+    this.save();
+    this.toast("Routine added");
+    this.openRoutineEditor(r.id);
   };
 
   App.createBlankRoutine = function (firstExId) {
@@ -562,7 +580,7 @@
       </div></div>
       ${replacing ? `<p class="pick-hint">Closest matches are listed first. Tap <strong>All</strong> to see every exercise.</p>` : ""}
       <div id="pick-list"></div>
-      <button class="btn big" id="pick-done" style="margin-top:0.8rem">${replacing ? this.icon("close") + " Cancel, Keep Current Exercise" : this.icon("check") + " Done, Back to Routine"}</button>
+      <button class="btn big${replacing ? " pick-keep" : ""}" id="pick-done" style="margin-top:0.8rem">${replacing ? this.icon("close") + " Keep Current" : this.icon("check") + " Done, Back to Routine"}</button>
     `);
     const body = document.getElementById("modal-body");
     body.querySelector("#pick-search").oninput = (e) => { this._pick.q = e.target.value; render(); };
