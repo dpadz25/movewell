@@ -485,7 +485,20 @@
     const replacing = replaceI != null;
     const oldIt = replacing ? arr[replaceI] : null;
     this.pushView("picker:" + rid + ":" + (list || "main") + (replacing ? ":swap" + replaceI : ""), () => this.openExercisePicker(rid, list, replaceI));
-    this._pick = { q: "", region: "" };
+    // when replacing, start on the filter that matches the old exercise (Chest for a bench press,
+    // Cardio for a treadmill walk) so similar moves are right there; All is still one tap away
+    const oldEx = replacing ? this.ex(oldIt.exId) : null;
+    const startChip = !oldEx ? "" : oldEx.type === "yoga" ? "__yoga" : oldEx.type === "stretch" ? "__stretch" :
+      oldEx.type === "cardio" ? "__cardio" : (oldEx.region || "");
+    this._pick = { q: "", region: startChip };
+    // closeness to the old exercise: same kind (gym lift, cardio...) counts most, then same body area, then shared equipment
+    const likeness = ex => {
+      if (!oldEx) return 0;
+      if (ex.id === oldEx.id) return -1; // the current exercise sinks to the bottom
+      const oldEq = oldEx.equipment || [];
+      return (ex.type === oldEx.type ? 4 : 0) + (ex.region === oldEx.region ? 2 : 0) +
+        ((ex.equipment || []).some(e => e !== "bodyweight" && oldEq.includes(e)) ? 1 : 0);
+    };
     const render = () => {
       const q = this._pick.q.toLowerCase();
       const list = window.EXERCISES.filter(ex => {
@@ -493,11 +506,14 @@
         if (this._pick.region === "__yoga") { if (ex.type !== "yoga") return false; }
         else if (ex.type === "yoga") return false;
         else if (this._pick.region === "__stretch") { if (ex.type !== "stretch") return false; }
+        else if (this._pick.region === "__cardio") { if (ex.type !== "cardio") return false; }
         else if (this._pick.region && ex.region !== this._pick.region) return false;
         if (q && !(ex.name + " " + ex.muscles + " " + ex.equipment.map(x => this.equip(x).name).join(" ") + " " +
           (ex.variations || []).map(v => v.name).join(" ")).toLowerCase().includes(q)) return false;
         return true;
       });
+      // stable sort, so equally close exercises keep their usual order
+      if (oldEx) list.sort((a, b) => likeness(b) - likeness(a));
       // the same exercise can be added more than once, so show a count instead of disabling
       const inR = {};
       r.items.concat(r.warmupItems || []).forEach(i => { inR[i.exId] = (inR[i.exId] || 0) + 1; });
@@ -506,7 +522,7 @@
           <div class="ex-item-icon tile ${this.region(ex.region).color || ""}">${this.icon(this.region(ex.region).icon)}</div>
           <div class="ex-item-info">
             <div class="ex-item-name">${this.esc(ex.name)}</div>
-            <div class="ex-item-meta">${inR[ex.id] ? `<span class="tag accent">${this.icon("check")} in routine${inR[ex.id] > 1 ? " ×" + inR[ex.id] : ""}</span>` : ""}${ex.custom ? `<span class="tag pink">Custom</span>` : ""}<span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>
+            <div class="ex-item-meta">${oldEx && ex.id === oldEx.id ? `<span class="tag">Current</span>` : ""}${inR[ex.id] ? `<span class="tag accent">${this.icon("check")} in routine${inR[ex.id] > 1 ? " ×" + inR[ex.id] : ""}</span>` : ""}${ex.custom ? `<span class="tag pink">Custom</span>` : ""}<span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>
           </div>
           <div class="ex-item-chev">${this.icon("plus")}</div>
         </div>`).join("");
@@ -539,11 +555,12 @@
     this.openModal(replacing ? "Replace “" + (oldIt.variant || this.ex(oldIt.exId).name) + "”" : wu ? "Add warmup moves" : "Add to “" + r.name + "”", `
       <div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="pick-search" placeholder="Search exercises"></div>
       <div class="filter-wrap"><div class="filter-bar" id="pick-regions">
-        <button class="chip on" data-v="">All</button>
-        <button class="chip" data-v="__yoga">${this.icon("sun")} Yoga</button>
-        <button class="chip" data-v="__stretch">${this.icon("leaf")} Stretch</button>
-        ${window.REGIONS.map(rg => `<button class="chip" data-v="${rg.id}">${this.icon(rg.icon)} ${rg.name}</button>`).join("")}
+        ${[{ v: "", label: "All" }, { v: "__yoga", label: this.icon("sun") + " Yoga" }, { v: "__stretch", label: this.icon("leaf") + " Stretch" },
+          { v: "__cardio", label: this.icon("heart") + " Cardio" }]
+          .concat(window.REGIONS.map(rg => ({ v: rg.id, label: this.icon(rg.icon) + " " + rg.name })))
+          .map(c => `<button class="chip${c.v === startChip ? " on" : ""}" data-v="${c.v}">${c.label}</button>`).join("")}
       </div></div>
+      ${replacing ? `<p class="pick-hint">Closest matches are listed first. Tap <strong>All</strong> to see every exercise.</p>` : ""}
       <div id="pick-list"></div>
       <button class="btn big" id="pick-done" style="margin-top:0.8rem">${replacing ? this.icon("close") + " Cancel, Keep Current Exercise" : this.icon("check") + " Done, Back to Routine"}</button>
     `);
@@ -556,6 +573,9 @@
       render();
     });
     body.querySelector("#pick-done").onclick = () => this.modalBack();
+    // bring the preselected chip into view (Knee or Core sit far to the right)
+    const onChip = body.querySelector("#pick-regions .chip.on");
+    if (startChip && onChip) { const bar = onChip.parentElement; bar.scrollLeft = Math.max(0, onChip.offsetLeft - bar.offsetLeft - 16); }
     render();
   };
 })();

@@ -288,6 +288,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .filter-wrap.at-end::after { opacity: 0; }
 .filter-wrap.scrolled::before { opacity: 1; }
 .modal-body .filter-wrap::after { background: linear-gradient(90deg, transparent, var(--bg)); }
+.pick-hint { font-size: 0.85rem; color: var(--muted); margin: 0.1rem 0 0.6rem; line-height: 1.4; }
 .filter-count { font-size: 0.8rem; color: var(--muted2); margin: 0.3rem 0 0.7rem; }
 
 .ex-item {
