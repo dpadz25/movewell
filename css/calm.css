@@ -798,8 +798,15 @@ button.pg-row { cursor: pointer; }
 .ob-plan-dot .icn { width: 1rem; height: 1rem; stroke-width: 3; }
 .ob-ideas { font-size: 0.88rem; line-height: 1.45; color: var(--muted); margin: 0.5rem 0.2rem 0; }
 .onboard-inner > .btn { position: relative; z-index: 1; }
+/* the main button stays on screen while the rest of the step scrolls under it */
+.onboard-inner > .ob-next {
+  position: sticky; bottom: calc(1.4rem + env(safe-area-inset-bottom)); z-index: 3;
+  box-shadow: 0 10px 24px var(--accent-shadow), 0 -1rem 0.7rem 0.45rem var(--bg);
+}
+.onboard-inner > .ob-next:disabled { box-shadow: 0 -1rem 0.7rem 0.45rem var(--bg); }
+.onboard h1:focus { outline: none; }
 .ob-glow { animation: ob-glow 3s 1.4s ease-in-out infinite; }
-@keyframes ob-glow { 0%, 100% { box-shadow: 0 10px 24px var(--accent-shadow); } 50% { box-shadow: 0 10px 34px var(--accent-shadow), 0 0 0 8px var(--accent-dim); } }
+@keyframes ob-glow { 0%, 100% { box-shadow: 0 10px 24px var(--accent-shadow), 0 -1rem 0.7rem 0.45rem var(--bg); } 50% { box-shadow: 0 10px 34px var(--accent-shadow), 0 0 0 8px var(--accent-dim), 0 -1rem 0.7rem 0.45rem var(--bg); } }
 
 @media (prefers-reduced-motion: reduce) {
   .onboard::before, .onboard::after, .ob-sun, .ob-ripple, .ob-logo, .ob-logo .icn, .ob-rise, .ob-stag > *, .ob-glow, .fin-ring, .onboard-inner { animation: none !important; }
@@ -910,6 +917,8 @@ body::after {
 .modal-sheet { max-height: calc(100% - 2.5rem - env(safe-area-inset-top)); }
 .modal-body { padding-bottom: calc(1.4rem + env(safe-area-inset-bottom)); }
 .confirm-card { max-height: calc(100% - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow-y: auto; }
+/* at bigger text the two answers stack, so neither is squeezed into a tall blob */
+[data-textsize="large"] .confirm-card .btn-row, [data-textsize="huge"] .confirm-card .btn-row { flex-direction: column-reverse; }
 .session-top, .session-nav, .session-body { padding-left: max(1.1rem, env(safe-area-inset-left)); padding-right: max(1.1rem, env(safe-area-inset-right)); }
 @media (min-width: 768px) {
   .scroll { padding-left: max(2rem, env(safe-area-inset-left)); padding-right: max(2rem, env(safe-area-inset-right)); }

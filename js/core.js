@@ -903,13 +903,15 @@
       const ob = document.getElementById("onboard");
       ob.classList.add("open");
       this._obData = { name: "", goal: "", fitGoals: [], groups: [], conditions: [], textSize: "normal", sex: "", heightFt: 0, heightIn: 0, weightLb: 0, theme: "forest" };
-      this.onboardStep("name");
+      this.onboardStep("look");
     },
     // the steps depend on the goal: pain questions only for rehab, fitness choices only for fitness
     obSteps() {
       const g = this._obData.goal;
-      return ["name", "look", "care", "goal"]
-        .concat(g === "fitness" || g === "both" ? ["fit"] : [])
+      // text size comes first so everything after it is easy to read
+      // before the goal is picked we count one middle step, so the dots only change if they pick "both"
+      return ["look", "name", "goal", "care"]
+        .concat(g === "fitness" || g === "both" || !g ? ["fit"] : [])
         .concat(g === "rehab" || g === "both" ? ["pain"] : [])
         .concat(["done"]);
     },
@@ -980,7 +982,6 @@
       return all;
     },
     onboardStep(n) {
-      if (typeof n === "number") n = ["name", "pain", "look", "done"][n - 1] || "name";
       const inner = document.getElementById("onboard-inner");
       const d = this._obData;
       d.groups = d.groups || [];
@@ -999,8 +1000,8 @@
               <div class="ob-ripple"></div><div class="ob-ripple r2"></div><div class="ob-ripple r3"></div>
               <div class="ob-logo">${this.icon("leaf")}</div>
             </div>
-            <h1 class="ob-rise d1">Welcome to MoveWell</h1>
-            <p class="ob-rise d2">Your exercises, your pace. Let us set things up together. It takes about a minute.</p>
+            <h1 class="ob-rise d1">Nice to meet you</h1>
+            <p class="ob-rise d2">Your exercises, your pace. A few quick questions and you are ready.</p>
           </div>
           <label class="ob-name ob-rise d3"><span>What should we call you?</span>
             <input type="text" id="ob-name" placeholder="Your first name" autocomplete="given-name" value="${this.esc(d.name)}">
@@ -1010,6 +1011,7 @@
         const go = () => { d.name = inner.querySelector("#ob-name").value.trim(); this.obGo("name", 1); };
         inner.querySelector("#ob-next1").onclick = go;
         inner.querySelector("#ob-name").addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+        bindHead(() => this.obGo("name", -1));
       }
       if (n === "care") {
         const lines = [
@@ -1169,9 +1171,9 @@
       }
       if (n === "look") {
         inner.innerHTML = `
-          ${this.obHead("look", { skip: true })}
-          <h1 class="ob-title">Make it easy to read</h1>
-          <p class="ob-lead">Tap a size. This screen changes so you can see it. You can fine-tune it later in Settings.</p>
+          ${this.obHead("look")}
+          <h1 class="ob-title">Welcome to MoveWell</h1>
+          <p class="ob-lead">First, make it easy to read. Tap a size. This screen changes so you can see it. You can fine-tune it later in Settings.</p>
           <div class="ob-sizes ob-stag" role="radiogroup" aria-label="Text size">
             ${[["normal", "Standard", 1.1], ["large", "Large", 1.4], ["huge", "Larger", 1.75]].map(([id, label, px]) => `
               <button class="ob-size ${d.textSize === id ? "on" : ""}" role="radio" aria-checked="${d.textSize === id}" data-ts="${id}"><span style="font-size:${px}rem">Aa</span><span class="ob-size-l">${label}</span></button>`).join("")}
@@ -1194,7 +1196,7 @@
           inner.querySelectorAll(".ob-color").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); });
         });
         inner.querySelector("#ob-next3").onclick = () => this.obGo("look", 1);
-        bindHead(() => this.obGo("look", -1), () => this.obGo("look", 1));
+        bindHead(() => this.obGo("look", -1));
       }
       if (n === "done") {
         const plan = this.obPlannedTemplates();
@@ -1214,6 +1216,9 @@
         bindHead(() => this.obGo("done", -1));
       }
       inner.scrollTop = 0;
+      // move focus to the new heading so VoiceOver announces each step
+      const h = inner.querySelector("h1");
+      if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
     },
     finishOnboarding() {
       if (this.state.onboarded) return; // guard against double-taps
@@ -1237,8 +1242,10 @@
       this.save(); this.applyAppearance();
       document.getElementById("onboard").classList.remove("open");
       this.showPage("home");
-      if (added.size > 0) this.toast(added.size + " routine" + (added.size === 1 ? "" : "s") + " ready for you");
-      setTimeout(() => this.startTour(), 700);
+      // offer the tour instead of forcing it
+      setTimeout(() => this.confirm("Want a quick look around?", "A short tour shows you where things are. You can skip it, and find it again in Settings.",
+        () => this.startTour(), "Show me around",
+        () => { this.state.toured = true; this.save(); }, "Not now", true), 900);
     },
     routineFromTemplate(t) {
       const r = {
