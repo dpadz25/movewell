@@ -1,6 +1,7 @@
 // MoveWell core: state, storage, navigation, onboarding, home, settings
 (function () {
   const STORE_KEY = "movewell-data-v1";
+  const OB_DRAFT_KEY = "movewell-onboard-draft"; // answers so far, kept only until onboarding finishes
 
   window.App = {
     state: null,
@@ -902,15 +903,25 @@
     startOnboarding() {
       const ob = document.getElementById("onboard");
       ob.classList.add("open");
-      this._obData = { name: "", goal: "", fitGoals: [], groups: [], conditions: [], textSize: "normal", sex: "", heightFt: 0, heightIn: 0, weightLb: 0, theme: "forest" };
-      this.onboardStep("look");
+      this._obData = { name: "", goal: "", fitGoals: [], groups: [], conditions: [], textSize: "normal", theme: "forest" };
+      // if the app was closed halfway through, pick up where they left off
+      let first = "name";
+      try {
+        const draft = JSON.parse(localStorage.getItem(OB_DRAFT_KEY) || "null");
+        if (draft && draft.d && typeof draft.d === "object") {
+          this._obData = Object.assign(this._obData, draft.d);
+          this.applyTextSize(this._obData.textSize);
+          document.documentElement.setAttribute("data-theme", this._obData.theme === "pink" ? "pink" : "forest");
+          if (this.obSteps().includes(draft.step) && draft.step !== "done") first = draft.step;
+        }
+      } catch (e) { /* a bad draft just means we start fresh */ }
+      this.onboardStep(first);
     },
     // the steps depend on the goal: pain questions only for rehab, fitness choices only for fitness
     obSteps() {
       const g = this._obData.goal;
-      // text size comes first so everything after it is easy to read
       // before the goal is picked we count one middle step, so the dots only change if they pick "both"
-      return ["look", "name", "goal", "care"]
+      return ["name", "look", "goal", "care"]
         .concat(g === "fitness" || g === "both" || !g ? ["fit"] : [])
         .concat(g === "rehab" || g === "both" ? ["pain"] : [])
         .concat(["done"]);
@@ -933,9 +944,9 @@
     },
     // what each fitness choice adds as a starter routine
     OB_FIT: [
-      ["home-strength", "Get stronger at home", "arms", "accent", ["tpl-leg-strength"]],
+      ["home-strength", "Get stronger at home", "arms", "accent", ["tpl-home-full-body"]],
       ["gym", "Lift at the gym", "barbell", "purple", ["tpl-gym-start"]],
-      ["stretch", "Stretch and loosen up", "leaf", "teal", ["tpl-leg-stretch"]],
+      ["stretch", "Stretch and loosen up", "leaf", "teal", ["tpl-full-body-stretch"]],
       ["cardio", "Cardio and stamina", "run", "red", ["tpl-cardio-start"]],
       ["yoga", "Yoga", "sun", "pink", ["tpl-yoga-gentle", "tpl-yoga-beginner-flow"]],
       ["core", "Core and posture", "core", "blue", ["tpl-core-gentle"]],
@@ -979,6 +990,8 @@
         if (rehabList[i]) all.push(rehabList[i]);
         if (fitList[i]) all.push(fitList[i]);
       }
+      // nothing picked at all: still hand over one gentle starter so Home is never empty
+      if (!all.length) { const g = byId("tpl-gentle-full"); if (g) all.push(g); }
       return all;
     },
     onboardStep(n) {
@@ -1000,10 +1013,10 @@
               <div class="ob-ripple"></div><div class="ob-ripple r2"></div><div class="ob-ripple r3"></div>
               <div class="ob-logo">${this.icon("leaf")}</div>
             </div>
-            <h1 class="ob-rise d1">Nice to meet you</h1>
-            <p class="ob-rise d2">Your exercises, your pace. A few quick questions and you are ready.</p>
+            <h1 class="ob-rise d1">Welcome to MoveWell</h1>
+            <p class="ob-rise d2">Your exercises, your pace. Let us set things up together with a few quick questions.</p>
           </div>
-          <label class="ob-name ob-rise d3"><span>What should we call you?</span>
+          <label class="ob-name ob-rise d3"><span>What should we call you? <em class="ob-opt">(optional)</em></span>
             <input type="text" id="ob-name" placeholder="Your first name" autocomplete="given-name" value="${this.esc(d.name)}">
           </label>
           <button class="btn big grad ob-next ob-rise d3" id="ob-next1">Continue</button>
@@ -1016,17 +1029,16 @@
       if (n === "care") {
         const lines = [
           ["heart", "General exercises, not medical advice"],
-          ["alert", "Stop for sharp pain, or if anything feels wrong"],
-          ["person", "If available, ask your doctor or physical therapist before you begin"]
+          ["alert", "Stop if you feel sharp pain or anything feels wrong"],
+          ["person", "If you can, check with your doctor or physical therapist first"]
         ];
         inner.innerHTML = `
           ${this.obHead("care")}
           <h1 class="ob-title">Before we start</h1>
-          <p class="ob-lead">MoveWell shares general exercises as a starting point.</p>
           <div class="ob-care ob-stag">
             ${lines.map(l => `<div class="ob-plan"><span class="ob-plan-dot">${this.icon(l[0])}</span><span>${l[1]}</span></div>`).join("")}
           </div>
-          <button class="btn big grad ob-next" id="ob-next-care">Got it</button>
+          <button class="btn big grad ob-next" id="ob-next-care">I understand</button>
         `;
         inner.querySelector("#ob-next-care").onclick = () => this.obGo("care", 1);
         bindHead(() => this.obGo("care", -1));
@@ -1048,12 +1060,12 @@
               <span class="ob-check">${this.icon("check")}</span>
             </button>`).join("")}
           </div>
-          <button class="btn big grad ob-next" id="ob-next-goal" ${d.goal ? "" : "disabled"}>Continue</button>
+          <button class="btn big grad ob-next" id="ob-next-goal" ${d.goal ? "" : "disabled"}>${d.goal ? "Continue" : "Pick one to continue"}</button>
         `;
         inner.querySelectorAll(".ob-why").forEach(b => b.onclick = () => {
           d.goal = b.dataset.goal;
           inner.querySelectorAll(".ob-why").forEach(x => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); });
-          inner.querySelector("#ob-next-goal").disabled = false;
+          const gb = inner.querySelector("#ob-next-goal"); gb.disabled = false; gb.textContent = "Continue";
         });
         inner.querySelector("#ob-next-goal").onclick = () => { if (d.goal) this.obGo("goal", 1); };
         inner.querySelector("#ob-back").onclick = () => this.obGo("goal", -1);
@@ -1063,9 +1075,9 @@
           inner.innerHTML = `
             ${this.obHead("fit", { skip: true })}
             <h1 class="ob-title">What would you like to do?</h1>
-            <p class="ob-lead">Pick as many as you like. We will add a routine to get you started with each one.</p>
+            <p class="ob-lead">Pick as many as you like. We will start you off with a routine or two and suggest more.</p>
             <div class="ob-goals ob-stag">
-              ${(d.fitMore ? this.OB_FIT : this.OB_FIT.slice(0, 4)).map(f => {
+              ${this.OB_FIT.map(f => {
                 const on = d.fitGoals.includes(f[0]);
                 return `<button class="ob-goal ${on ? "on" : ""}" role="checkbox" aria-checked="${on}" data-f="${f[0]}">
                   <span class="tile ${f[3]} ob-goal-icon">${this.icon(f[2])}</span>
@@ -1074,7 +1086,6 @@
                 </button>`;
               }).join("")}
             </div>
-            <button class="btn secondary ob-showmore" id="ob-fit-more" aria-expanded="${!!d.fitMore}">${d.fitMore ? "Show fewer" : "Show more"}</button>
             <button class="btn big grad ob-next" id="ob-next-fit">${d.fitGoals.length ? "Continue" : "Skip for now"}</button>
           `;
           inner.querySelectorAll(".ob-goal").forEach(b => b.onclick = () => {
@@ -1083,11 +1094,6 @@
             b.classList.toggle("on"); b.setAttribute("aria-checked", b.classList.contains("on"));
             inner.querySelector("#ob-next-fit").textContent = d.fitGoals.length ? "Continue" : "Skip for now";
           });
-          inner.querySelector("#ob-fit-more").onclick = () => {
-            d.fitMore = !d.fitMore;
-            const st = inner.scrollTop; render(); inner.scrollTop = st;
-            inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
-          };
           inner.querySelector("#ob-next-fit").onclick = () => this.obGo("fit", 1);
           inner.querySelector("#ob-back").onclick = () => this.obGo("fit", -1);
           inner.querySelector("#ob-skip").onclick = () => { d.fitGoals = []; this.obGo("fit", 1); };
@@ -1100,9 +1106,9 @@
         const render2 = () => {
           const picked = groups.filter(g => d.groups.includes(g.id) && g.conditions.length);
           // most familiar options first; the rest wait behind "Show more"
-          const all = picked.flatMap(g => g.conditions);
+          const all = picked.flatMap(g => g.conditions).filter(c => c !== "general");
           const per = Math.max(1, Math.floor(3 / Math.max(1, picked.length)));
-          const shown = d.showMore ? all : picked.flatMap(g => g.conditions.slice(0, per));
+          const shown = d.showMore ? all : picked.flatMap(g => g.conditions.filter(c => c !== "general").slice(0, per));
           inner.innerHTML = `
             ${this.obHead("pain", { skip: true })}
             <h1 class="ob-title">Where would you like to focus?</h1>
@@ -1119,11 +1125,11 @@
             </div>
             ${picked.length ? `
               <div class="ob-more">
-                <div class="ob-more-t">Anything else to mention? <span>(optional)</span></div>
+                <div class="ob-more-t">Anything more specific? <span>(optional)</span></div>
                 <p class="ob-more-lead">These are starting points. A professional can adjust them for you.</p>
                 <div class="ob-chips">
                   ${shown.map(cid => `<button class="lib-chip ob-chip ${d.conditions.includes(cid) ? "on" : ""}" data-c="${cid}" aria-pressed="${d.conditions.includes(cid)}">${this.esc(this.condition(cid).name)}</button>`).join("")}
-                  <button class="lib-chip ob-chip ${d.notSure ? "on" : ""}" id="ob-notsure" aria-pressed="${!!d.notSure}">Not sure, just exploring</button>
+                  <button class="lib-chip ob-chip ${d.notSure ? "on" : ""}" id="ob-notsure" aria-pressed="${!!d.notSure}">None of these, keep it general</button>
                   ${all.length > shown.length || d.showMore ? `<button class="lib-chip ob-chip ob-chip-more" id="ob-showmore" aria-expanded="${!!d.showMore}">${d.showMore ? "Show fewer" : "Show more"}</button>` : ""}
                 </div>
               </div>` : ""}
@@ -1138,6 +1144,7 @@
             } else d.groups.push(id);
             const st = inner.scrollTop; render2(); inner.scrollTop = st;
             inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
+            const again = inner.querySelector('.ob-goal[data-g="' + id + '"]'); if (again) again.focus({ preventScroll: true });
           });
           inner.querySelectorAll(".ob-chip[data-c]").forEach(ch => ch.onclick = () => {
             const cid = ch.dataset.c;
@@ -1157,12 +1164,14 @@
             if (d.notSure) d.conditions = [];
             const st = inner.scrollTop; render2(); inner.scrollTop = st;
             inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
+            const again = inner.querySelector("#ob-notsure"); if (again) again.focus({ preventScroll: true });
           };
           const sm = inner.querySelector("#ob-showmore");
           if (sm) sm.onclick = () => {
             d.showMore = !d.showMore;
             const st = inner.scrollTop; render2(); inner.scrollTop = st;
             inner.querySelectorAll(".ob-stag > *").forEach(x => x.style.animation = "none");
+            const again = inner.querySelector("#ob-showmore"); if (again) again.focus({ preventScroll: true });
           };
           inner.querySelector("#ob-next2").onclick = () => this.obGo("pain", 1);
           bindHead(() => this.obGo("pain", -1), () => { d.groups = []; d.conditions = []; this.obGo("pain", 1); });
@@ -1172,8 +1181,8 @@
       if (n === "look") {
         inner.innerHTML = `
           ${this.obHead("look")}
-          <h1 class="ob-title">Welcome to MoveWell</h1>
-          <p class="ob-lead">First, make it easy to read. Tap a size. This screen changes so you can see it. You can fine-tune it later in Settings.</p>
+          <h1 class="ob-title">Make it easy to read</h1>
+          <p class="ob-lead">Tap a size. This screen changes so you can see it. You can fine-tune it later in Settings.</p>
           <div class="ob-sizes ob-stag" role="radiogroup" aria-label="Text size">
             ${[["normal", "Standard", 1.1], ["large", "Large", 1.4], ["huge", "Larger", 1.75]].map(([id, label, px]) => `
               <button class="ob-size ${d.textSize === id ? "on" : ""}" role="radio" aria-checked="${d.textSize === id}" data-ts="${id}"><span style="font-size:${px}rem">Aa</span><span class="ob-size-l">${label}</span></button>`).join("")}
@@ -1216,6 +1225,7 @@
         bindHead(() => this.obGo("done", -1));
       }
       inner.scrollTop = 0;
+      try { localStorage.setItem(OB_DRAFT_KEY, JSON.stringify({ d, step: n })); } catch (e) { /* private mode: nothing to keep */ }
       // move focus to the new heading so VoiceOver announces each step
       const h = inner.querySelector("h1");
       if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
@@ -1228,15 +1238,12 @@
       p.conditions = d.goal === "fitness" ? [] : d.conditions;
       p.goal = d.goal || "both";
       p.textSize = d.textSize;
-      p.sex = d.sex;
-      p.heightFt = d.heightFt;
-      p.heightIn = d.heightIn;
-      p.weightLb = d.weightLb;
       p.theme = d.theme;
       // add the starter routines shown on the last onboarding step
       const added = new Set();
       this.obPlannedTemplates().forEach(t => { added.add(t.id); this.state.routines.push(this.routineFromTemplate(t)); });
       p.suggested = this.obSuggestedTemplates().map(t => t.id);
+      try { localStorage.removeItem(OB_DRAFT_KEY); } catch (e) { /* ignore */ }
       this.state.onboarded = true;
       this.state.safetyAck = true; // they just read it on the safety step
       this.save(); this.applyAppearance();

@@ -1,5 +1,4 @@
 // MoveWell body map: tap where it hurts, log how it feels, get matching exercises
-// The silhouette adapts to the male / female choice made in onboarding or settings.
 (function () {
 
   // ---------- the body figure ----------

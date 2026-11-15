@@ -73,6 +73,7 @@ window.TEMPLATE_GROUPS = [
   { id: "tg-leg", name: "Hips & Knees", icon: "knee", color: "teal", blurb: "Hip strength and knee care", templates: ["tpl-hip", "tpl-knee"] },
   { id: "tg-legs", name: "Legs", icon: "step", color: "accent", blurb: "Stretches, warmups, strength, yoga, and recovery for your legs", templates: ["tpl-leg-warmup", "tpl-leg-stretch", "tpl-leg-strength", "tpl-leg-yoga", "tpl-leg-recovery", "tpl-legs"] },
   { id: "tg-foot", name: "Feet, Ankles & Balance", icon: "balance", color: "orange", blurb: "Ankles, heels, and steadiness", templates: ["tpl-ankle", "tpl-foot", "tpl-balance"] },
+  { id: "tg-full", name: "Full Body at Home", icon: "arms", color: "teal", blurb: "Whole-body strength and stretching with little or no equipment", templates: ["tpl-home-full-body", "tpl-full-body-stretch"] },
   { id: "tg-gentle", name: "Gentle Full-Body Start", icon: "leaf", color: "yellow", blurb: "A kind first routine after a long break", templates: ["tpl-gentle-full"] },
   { id: "tg-gym", name: "Gym Strength (Weights)", icon: "dumbbell", color: "purple", blurb: "Push / pull / legs and upper / lower plans", templates: ["tpl-gym-start", "tpl-push", "tpl-pull", "tpl-legs", "tpl-upper", "tpl-lower", "tpl-kettlebell", "tpl-abs"] },
   { id: "tg-cardio", name: "Cardio & Conditioning", icon: "run", color: "red", blurb: "Heart and lung fitness, from a first walk to the machines", templates: ["tpl-cardio-start", "tpl-cardio"] },
@@ -312,6 +313,41 @@ window.TEMPLATES = [
     items: ["breathing-diaphragm", "seated-thoracic-extension-chair", "shoulder-shrug-roll", "ankle-pumps", "quad-set", "glute-bridge", "sit-to-stand", "marching-in-place", "walking-program"]
   },
   // Short, gentle starters. Onboarding hands these out, so every exercise is Gentle or has an easy version.
+  // Full-body strength at home, built on the usual adult guideline (ACSM, WHO): every major muscle group,
+  // one exercise per movement (squat, push, pull, step, hinge, core, calves), 2 sets of 8 to 12, 2 or 3 days a week.
+  {
+    id: "tpl-home-full-body", name: "Full-Body Strength at Home", conditions: [], kind: "strengthening",
+    desc: "Works every major muscle group with just a chair, a stair step, and a resistance band. Do 2 sets of each, 2 or 3 days a week with a rest day in between. Start push-ups against a kitchen counter.",
+    items: [
+      { id: "marching-in-place", sets: 1, reps: 30 },
+      { id: "sit-to-stand", sets: 2, reps: 10 },
+      { id: "push-up", sets: 2, reps: 8 },
+      { id: "band-row", sets: 2, reps: 12 },
+      { id: "step-up", sets: 2, reps: 8 },
+      { id: "calf-raise", sets: 2, reps: 12 },
+      { id: "glute-bridge", sets: 2, reps: 10 },
+      { id: "bird-dog", sets: 2, reps: 6 }
+    ]
+  },
+  // Full-body stretching, built on the usual adult guideline (ACSM): warm up first, stretch each major
+  // muscle group, hold about 30 seconds, twice. Standing stretches first so there is only one trip to the floor.
+  {
+    id: "tpl-full-body-stretch", name: "Full-Body Stretch", conditions: [], kind: "stretching",
+    desc: "Stretches the whole body from neck to calves after a short warm-up. Hold each stretch about 30 seconds and do it twice. Ease in until you feel a gentle pull, never pain. Standing stretches come first, floor stretches last.",
+    items: [
+      { id: "marching-in-place", sets: 1, reps: 30 },
+      "upper-trap-stretch",
+      "doorway-pec-stretch",
+      "cross-body-stretch",
+      "calf-stretch-wall",
+      "quad-stretch",
+      "hip-flexor-stretch",
+      { id: "cat-cow", sets: 1, reps: 8 },
+      { id: "knee-to-chest", sets: 2, reps: 1, hold: 30 },
+      "figure-4-stretch",
+      "hamstring-stretch-towel"
+    ]
+  },
   {
     id: "tpl-gym-start", name: "Gym Starter (Machines)", conditions: [],
     desc: "A short first gym session. Machines guide the movement, so they are a good place to learn. Do two light sets of each and rest a day between sessions.",
