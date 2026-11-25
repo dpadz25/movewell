@@ -7,8 +7,9 @@
   // viewBox 0 0 260 470. Side "a" is the left of the screen, "b" the right.
   const VB_W = 260, VB_H = 470;
   const SHAPES = {
-    neck: [["line", 130, 60, 130, 74, 20]],
+    head: [["circle", 130, 34, 23]],
     chest: [["rect", 94, 78, 72, 64, 22]],
+    neck: [["line", 130, 60, 130, 74, 20]],
     belly: [["rect", 98, 146, 64, 50, 16]],
     shoulder: [["circle", 84, 90, 15]],
     upperarm: [["line", 82, 112, 70, 158, 22]],
@@ -22,15 +23,17 @@
   };
   // tap areas, at least 40 units (about 45 px) in both directions
   const HITS = {
-    neck: [108, 8, 44, 70], chest: [102, 80, 56, 62], belly: [102, 146, 56, 52],
+    head: [108, 8, 44, 46], neck: [108, 52, 44, 40], chest: [102, 92, 56, 50], belly: [102, 146, 56, 52],
     shoulder: [62, 70, 40, 40], upperarm: [56, 112, 40, 48], forearm: [40, 162, 42, 54],
     hand: [30, 218, 44, 42], hip: [88, 200, 42, 44], thigh: [86, 246, 44, 64],
     knee: [86, 312, 44, 40], lowerleg: [86, 354, 44, 62], foot: [78, 418, 52, 40]
   };
+  const OLD_HITS = { neck: [108, 8, 44, 70], chest: [102, 80, 56, 62] };
   const PAIRED = ["shoulder", "upperarm", "forearm", "hand", "hip", "thigh", "knee", "lowerleg", "foot"];
   // what each part means: [exercise region, name, muscles], front and back
   const PARTS = {
     front: {
+      head: ["jaw", "Jaw and face", "Jaw muscles (masseter, temporalis) and face muscles"],
       neck: ["neck", "Neck", "Scalenes, sternocleidomastoid (SCM), deep neck flexors"],
       chest: ["chest", "Chest", "Pectoralis major and minor"],
       belly: ["core", "Belly and core", "Rectus abdominis, obliques, transverse abdominis"],
@@ -75,12 +78,16 @@
     view = view === "back" ? "back" : "front";
     const front = view === "front";
     const out = [];
+    // the head is tappable from the front, once there are jaw and face exercises to show
+    const headOn = front && window.EXERCISES.some(e => e.region === "jaw");
     Object.keys(SHAPES).forEach(base => {
       const meta = PARTS[view][base];
+      if (base === "head" && !headOn) return;
       const sides = PAIRED.includes(base) ? ["a", "b"] : [null];
       sides.forEach(s => {
         const shapes = s === "b" ? SHAPES[base].map(mirror) : SHAPES[base];
-        const h = HITS[base];
+        // with no head zone, the neck and chest keep their old tap areas
+        const h = headOn || !OLD_HITS[base] ? HITS[base] : OLD_HITS[base];
         const hit = s === "b" ? [VB_W - h[0] - h[2], h[1], h[2], h[3]] : h;
         // facing view: the left of the screen is the person's right. From behind, their left.
         const side = s ? ((s === "a") === front ? "right" : "left") : null;

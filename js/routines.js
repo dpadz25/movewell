@@ -428,10 +428,10 @@
       ${hasVariations ? `
       <div class="section-label" style="margin-top:0">Version</div>
       <p style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.5rem">Pick the one you do.</p>
-      <div class="chip-row" id="dv-variant" style="margin-bottom:1rem">
+      ${ex.variations.length > this.MAX_VERSION_CHIPS ? this.versionButtonHtml(ex, it.variant, "dv-version") : `<div class="chip-row" id="dv-variant" style="margin-bottom:1rem">
         <button class="chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
         ${ex.variations.map(v => `<button class="chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
-      </div>` : ""}
+      </div>`}` : ""}
       <div class="stepper-row">
         <div class="stepper-label">Sets</div>
         <div class="stepper"><button data-k="sets" data-d="-1">${this.icon("minus")}</button><span class="stepper-val" id="dv-sets">${it.sets}</span><button data-k="sets" data-d="1">${this.icon("plus")}</button></div>
@@ -479,8 +479,20 @@
       this.save();
       this.flashSaveIndicator();
     });
+    const verBtn = body.querySelector("#dv-version");
+    if (verBtn) verBtn.onclick = () => this.openVersionPicker(ex, it.variant, value => {
+      it.variant = value;
+      if (!value) delete it.variant;
+      if (this.isOneSided(value)) it.perSide = true;
+      this.save();
+      this.modalBack();
+      this.flashSaveIndicator();
+    });
     body.querySelector("#dv-perside").onchange = (e) => { it.perSide = e.target.checked; this.save(); this.flashSaveIndicator(); };
-    body.querySelector("#dv-detail").onclick = () => this.openExerciseDetail(it.exId, { hideAdd: true });
+    body.querySelector("#dv-detail").onclick = () => {
+      const vi = (ex.variations || []).findIndex(v => v.name === it.variant);
+      this.openExerciseDetail(it.exId, { hideAdd: true, variant: vi < 0 ? null : vi });
+    };
     body.querySelector("#dv-replace").onclick = () => this.openExercisePicker(rid, list, i);
     body.querySelector("#dv-done").onclick = () => this.modalBack();
     body.querySelector("#dv-remove").onclick = () => {

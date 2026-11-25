@@ -2,6 +2,7 @@
 // icon fields reference keys in window.ICONS (js/icons.js)
 
 window.REGIONS = [
+  { id: "jaw", name: "Jaw & Face", icon: "jaw", color: "pink" },
   { id: "neck", name: "Neck", icon: "neck", color: "teal" },
   { id: "shoulder", name: "Shoulder", icon: "shoulder", color: "blue" },
   { id: "upper-back", name: "Upper Back & Posture", icon: "upper-back", color: "purple" },
@@ -146,6 +147,9 @@ window.EQUIPMENT = [
   { id: "dumbbell", name: "Dumbbell", icon: "dumbbell" },
   { id: "barbell", name: "Barbell", icon: "barbell" },
   { id: "kettlebell", name: "Kettlebell", icon: "kettlebell" },
+  { id: "medicine-ball", name: "Medicine Ball", icon: "medicine-ball" },
+  { id: "suspension", name: "Suspension Straps", icon: "suspension" },
+  { id: "door-pulley", name: "Door Pulley", icon: "door-pulley" },
   { id: "cable", name: "Cable Station", icon: "cable" },
   { id: "machine", name: "Gym Machine", icon: "machine" },
   { id: "smith-machine", name: "Smith Machine", icon: "smith-machine" },

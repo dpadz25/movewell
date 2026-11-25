@@ -11,8 +11,9 @@
       if (f.region && ex.region !== f.region) return false;
       if (f.type && ex.type !== f.type) return false;
       if (f.equip) {
-        if (f.equip === "none") { if (!ex.equipment.includes("none")) return false; }
-        else if (!ex.equipment.includes(f.equip)) return false;
+        // an exercise also matches when one of its versions uses that equipment
+        const gear = [ex.equipment].concat((ex.variations || []).map(v => v.equipment || []));
+        if (!gear.some(list => list.includes(f.equip))) return false;
       }
       if (f.level && ex.level !== f.level) return false;
       return true;
@@ -54,9 +55,10 @@
     list.forEach(ex => {
       const versions = ex.variations || [];
       const gear = ex.muscles + " " + ex.equipment.map(x => this.equip(x).name).join(" ");
+      const versionGear = versions.map(v => (v.equipment || []).map(x => this.equip(x).name).join(" ")).join(" ");
       const all = [ex.name, gear, this.region(ex.region).name, this.typeMeta(ex.type).name, ex.alias || "",
         ex.helps.map(h => this.condition(h).name + " " + (this.condition(h).aka || "")).join(" "),
-        versions.map(v => v.name).join(" ")].join(" ");
+        versions.map(v => v.name).join(" "), versionGear].join(" ");
       const nick = nicknameRank(ex.id, q.join(""));
       const found = has(haystack(all));
       if (found || nick !== null) rows.push({ ex, rank: Math.min(found ? rank(ex.name) : 2, nick === null ? 2 : nick) });
@@ -65,7 +67,8 @@
         const vNick = nicknameRank(ex.id + "|" + v.name, q.join(""));
         // otherwise at least one typed word has to be about the version itself
         const own = haystack(v.name);
-        const found = q.some(w => inHay(own, w)) && has(haystack(v.name + " " + ex.name + " " + gear));
+        const ownGear = (v.equipment || []).map(x => this.equip(x).name).join(" ");
+        const found = q.some(w => inHay(own, w)) && has(haystack(v.name + " " + ex.name + " " + gear + " " + ownGear));
         if (!found && vNick === null) return;
         const named = found ? Math.min(rank(v.name), rank(v.name + " " + ex.name)) : 2;
         rows.push({ ex, v, rank: vNick === null ? named : Math.min(named, vNick) });
@@ -330,52 +333,61 @@
     }).join(", ");
   };
 
+  // equipment a version needs, falling back to the exercise it belongs to
+  App.versionGear = (ex, v) => (v && v.equipment) || (ex && ex.equipment) || [];
+  App.gearText = function (ids) {
+    const list = (ids || []).filter(q => q !== "none");
+    return list.length ? "Needs: " + list.map(q => this.equip(q).name).join(", ") : "No equipment needed";
+  };
+
+  // the screen leads with the essentials; longer reading folds away until tapped
   App.openExerciseDetail = function (id, opts) {
     const ex = this.ex(id);
     if (!ex) return;
     opts = opts || {};
+    opts.open = opts.open || {}; // which folded sections are open, kept when coming back
     const v = opts.variant != null ? (ex.variations || [])[opts.variant] : null;
     const name = v ? v.name : ex.name;
     this.pushView("exd:" + id + (v ? ":v" + opts.variant : "") + (opts.hideAdd ? ":h" : ""), () => this.openExerciseDetail(id, opts));
-    const t = this.typeMeta(ex.type);
-    const r = this.region(ex.region);
     const levelNames = { 1: "Gentle", 2: "Moderate", 3: "Advanced" };
     const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(name + " exercise how to");
+    // a version with its own caution shows that one up front; the exercise's caution moves in with the steps
+    const caution = (v && v.caution) || ex.caution;
+    const alsoCaution = v && v.caution ? ex.caution : "";
+    const careBox = text => `<div class="exd-caution">${this.icon("alert")}<span><strong>Take care:</strong> ${this.esc(text)}</span></div>`;
+    const fold = (key, title, inner) => !inner ? "" : `
+      <details class="exd-fold" data-fold="${key}" ${opts.open[key] ? "open" : ""}>
+        <summary><span>${title}</span>${this.icon("chevR")}</summary>
+        <div class="exd-fold-body">${inner}</div>
+      </details>`;
+
+    const steps = ex.howTo && ex.howTo.length ? `<ol class="exd-steps">${ex.howTo.map(s => `<li>${this.esc(s)}</li>`).join("")}</ol>` : "";
+    const howTo = (alsoCaution ? careBox(alsoCaution) : "") +
+      (v && steps ? `<p class="exd-note">These steps are for the standard ${this.esc(ex.name)}.</p>` : "") + steps;
+
+    const about = [
+      ex.tips && ex.tips.length ? ex.tips.map(tip => `<div class="exd-tip">${this.icon("bulb")}<span>${this.esc(tip)}</span></div>`).join("") : "",
+      ex.muscles ? `<div class="exd-block"><h3>Muscles worked</h3><div>${this.muscleDetail(ex.muscles)}</div></div>` : "",
+      ex.position ? `<div class="exd-block"><h3>Starting position</h3><div>${this.esc(ex.position)}</div></div>` : "",
+      `<div class="exd-block"><h3>Level</h3><div>${levelNames[ex.level] || ""} · ${this.esc(this.typeMeta(ex.type).name)}${ex.custom ? " · Custom" : ""}</div></div>`,
+      ex.helps && ex.helps.length ? `<div class="exd-block"><h3>Often used for</h3><div class="chip-row">${ex.helps.map(h => `<span class="tag accent">${this.esc(this.condition(h).name)}</span>`).join("")}</div></div>` : ""
+    ].join("");
+
+    const versions = v ? "" : (ex.variations || []).map((x, i) => `
+      <button type="button" class="exd-variation exd-version" data-i="${i}">
+        <span class="exd-version-text"><strong>${this.esc(x.name)}</strong><span>${this.esc(x.note)}</span></span>${this.icon("chevR")}
+      </button>`).join("");
 
     this.openModal(name, `
-      ${v ? `<div class="exd-variation"><strong>Version of ${this.esc(ex.name)}</strong><span>${this.esc(v.note)}<br>The steps below are for the standard exercise.</span></div>` : ""}
-      <div class="exd-tags">
-        ${ex.custom ? `<span class="tag pink">${this.icon("pencil")} Custom</span>` : ""}
-        <span class="tag ${t.color}">${t.name}</span>
-        <span class="tag">${this.icon(r.icon)} ${r.name}</span>
-        <span class="tag">${levelNames[ex.level]}</span>
-        ${ex.equipment.map(q => `<span class="tag">${this.icon(this.equip(q).icon)} ${this.equip(q).name}</span>`).join("")}
-      </div>
-      ${ex.muscles || ex.position ? `<div class="exd-block">
-        <h3>${ex.muscles ? "Muscles Targeted" : "Starting position"}</h3>
-        <div style="font-size:0.95rem">${this.muscleDetail(ex.muscles)}${ex.muscles && ex.position ? " · " : ""}${ex.position ? `<span style="color:var(--muted)">${this.esc(ex.position)}</span>` : ""}</div>
-      </div>` : ""}
-      <div class="exd-block">
-        <h3>Suggested Amount</h3>
-        <div style="font-size:1.05rem;font-weight:700;color:var(--accent-strong)">${this.doseText(v && this.isOneSided(name) ? Object.assign({}, ex.dose, { perSide: true }) : ex.dose)}</div>
-      </div>
-      <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video demonstration</a>
-      ${ex.howTo && ex.howTo.length ? `
-      <div class="exd-block">
-        <h3>How To Do It</h3>
-        <ol class="exd-steps">${ex.howTo.map(s => `<li>${this.esc(s)}</li>`).join("")}</ol>
-      </div>` : ""}
-      ${ex.tips && ex.tips.length ? `<div class="exd-block"><h3>Helpful Tips</h3>${ex.tips.map(tip => `<div class="exd-tip">${this.icon("bulb")}<span>${this.esc(tip)}</span></div>`).join("")}</div>` : ""}
-      ${ex.caution ? `<div class="exd-block"><h3>Take Care</h3><div class="exd-caution">${this.icon("alert")}<span>${this.esc(ex.caution)}</span></div></div>` : ""}
-      ${ex.variations && ex.variations.length ? `
-        <div class="exd-block"><h3>Variations</h3>
-          ${ex.variations.map(v => `<div class="exd-variation"><strong>${this.esc(v.name)}</strong><span>${this.esc(v.note)}</span></div>`).join("")}
-        </div>` : ""}
-      ${ex.helps && ex.helps.length ? `
-      <div class="exd-block">
-        <h3>Often Used For</h3>
-        <div class="chip-row">${ex.helps.map(h => `<span class="tag accent">${this.esc(this.condition(h).name)}</span>`).join("")}</div>
-      </div>` : ""}
+      ${v ? `<p class="exd-of">A version of ${this.esc(ex.name)}</p>
+      ${v.note ? `<p class="exd-lead">${this.esc(v.note)}</p>` : ""}` : ""}
+      ${caution ? careBox(caution) : ""}
+      <div class="exd-amount">${this.doseText(v && this.isOneSided(name) ? Object.assign({}, ex.dose, { perSide: true }) : ex.dose)}</div>
+      <div class="exd-gear">${this.esc(this.gearText(this.versionGear(ex, v)))}</div>
+      <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video</a>
+      ${fold("how", "How to do it", howTo)}
+      ${fold("about", "Tips and muscles", about)}
+      ${fold("versions", "Other versions (" + (ex.variations || []).length + ")", versions)}
       ${opts.hideAdd ? "" : `<button class="btn big grad" id="exd-add">${this.icon("plus")} Add to a Routine</button>`}
       ${ex.custom && !opts.hideAdd ? `
         <div class="btn-row" style="margin-top:0.6rem">
@@ -384,6 +396,9 @@
         </div>` : ""}
     `);
     const body = document.getElementById("modal-body");
+    body.querySelectorAll(".exd-fold").forEach(d => d.ontoggle = () => { opts.open[d.dataset.fold] = d.open; });
+    body.querySelectorAll(".exd-version").forEach(b => b.onclick = () =>
+      this.openExerciseDetail(ex.id, { variant: Number(b.dataset.i), hideAdd: opts.hideAdd }));
     const add = body.querySelector("#exd-add");
     if (add) add.onclick = () => this.pickRoutineFor(ex.id, v ? v.name : "");
     const edit = body.querySelector("#exd-edit");
@@ -566,6 +581,44 @@
       this._modalStack.pop();
       this.openExerciseDetail(d.id);
     };
+  };
+
+  // lists longer than this become one button that opens a searchable list
+  App.MAX_VERSION_CHIPS = 6;
+  App.versionButtonHtml = function (ex, current, id) {
+    const n = (ex.variations || []).length;
+    return `<button type="button" class="ver-btn" id="${id}">
+      <span class="ver-btn-text"><strong>${this.esc(current || ex.name)}</strong><span>${n} versions</span></span>
+      <span class="ver-btn-go">Change ${this.icon("chevR")}</span></button>`;
+  };
+  App.openVersionPicker = function (ex, current, onPick) {
+    this.pushView("vpick:" + ex.id, () => this.openVersionPicker(ex, current, onPick));
+    const all = [{ name: ex.name, value: "", note: "The standard one" }]
+      .concat(ex.variations.map(v => Object.assign({ value: v.name }, v)));
+    this.openModal("Pick a version", `
+      <div class="search-wrap"><span class="search-icon">${this.icon("search")}</span><input type="text" id="ver-search" placeholder="Search versions" aria-label="Search versions"></div>
+      <div id="ver-list"></div>
+    `);
+    const body = document.getElementById("modal-body");
+    const render = q => {
+      const typed = words(q);
+      const rows = all.filter(v => {
+        const nick = (window.NICKNAMES || {})[ex.id + "|" + v.name] || [];
+        const hay = haystack([v.name, v.note, nick.join(" ")].join(" "));
+        return typed.every(w => hay.includes(w));
+      });
+      const list = body.querySelector("#ver-list");
+      list.innerHTML = rows.map(v => {
+        const on = (current || "") === v.value;
+        const extra = [v.equipment ? this.gearText(v.equipment) : "", v.caution ? "Take care" : ""].filter(Boolean).join(" · ");
+        return `<button type="button" class="ver-row${on ? " on" : ""}" data-v="${this.esc(v.value)}" aria-pressed="${on}">
+          <span class="ver-row-text"><strong>${this.esc(v.name)}</strong><span>${this.esc(v.note || "")}</span>${extra ? `<span class="ver-row-extra">${this.esc(extra)}</span>` : ""}</span>
+          ${on ? this.icon("check") : ""}</button>`;
+      }).join("") || `<p class="home-list-empty">No versions match.</p>`;
+      list.querySelectorAll(".ver-row").forEach(b => b.onclick = () => onPick(b.dataset.v));
+    };
+    body.querySelector("#ver-search").oninput = e => render(e.target.value);
+    render("");
   };
 
   // choose which routine to add an exercise to

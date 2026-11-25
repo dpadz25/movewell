@@ -218,7 +218,9 @@
     const partnerNames = gMembers ? gMembers.filter(o => o.j !== s.idx).map(o => this.esc(o.x.variant || (this.ex(o.x.exId) || {}).name)).join(" + ") : "";
     const nxt = s.items[s.idx + 1];
     const canLinkNext = !yoga && !it.warmup && !it.groupId && nxt && !nxt.warmup && !nxt.groupId;
-    const variantNote = it.variant ? (ex.variations.find(v => v.name === it.variant) || {}).note : "";
+    const version = (it.variant && (ex.variations || []).find(v => v.name === it.variant)) || {};
+    const variantNote = version.note || "";
+    const caution = version.caution || ex.caution; // a version's own caution comes first
     const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(displayName + " exercise how to");
     const shortPoseName = n => n.replace(/\s*\(.*$/, "");
 
@@ -277,8 +279,8 @@
     }
 
     // only show the weight stepper when the exercise actually uses weights
-    const weightGear = ["dumbbell", "barbell", "kettlebell", "cable", "machine", "smith-machine"];
-    const usesWeight = ex.type === "lift" || (ex.equipment || []).some(e => weightGear.includes(e)) || !!(this._lastWeight && this._lastWeight[it.exId]);
+    const weightGear = ["dumbbell", "barbell", "kettlebell", "medicine-ball", "cable", "machine", "smith-machine"];
+    const usesWeight = ex.type === "lift" || this.versionGear(ex, version).some(e => weightGear.includes(e)) || !!(this._lastWeight && this._lastWeight[it.exId]);
     // the one main action under the panel
     let actionHtml = "";
     if (yoga || allDone) {
@@ -297,7 +299,7 @@
         <button class="btn big sp-main" id="log-set">${this.icon("check")} Done with set ${it.perSide ? doneSets + 1 : done + 1}${sideLabel ? " (" + sideLabel + ")" : ""}</button>`;
     }
 
-    const cue = (ex.tips && ex.tips[0]) || ex.caution || "";
+    const cue = (ex.tips && ex.tips[0]) || caution || "";
     document.getElementById("session-body").innerHTML = `
       <section class="sp-panel tone-${tone}" aria-label="${this.esc(displayName)}">
         <div class="sp-chips">${chips}</div>
@@ -309,16 +311,16 @@
       <div class="sp-actions">${actionHtml}</div>
       ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between them.</span></div>` : ""}
       ${cue ? `<div class="sp-cue">${this.icon("bulb")}<span>${this.esc(cue)}</span></div>` : ""}
-      ${ex.caution && ex.caution !== cue ? `<button class="sp-care" id="sp-care" aria-expanded="false">${this.icon("alert")}<span>${this.esc(ex.caution)}</span></button>` : ""}
+      ${caution && caution !== cue ? `<button class="sp-care" id="sp-care" aria-expanded="false">${this.icon("alert")}<span>${this.esc(caution)}</span></button>` : ""}
       <div id="sets-done" class="sp-sets-done">${this.setsDoneHtml(it)}</div>
       <button class="session-howto-toggle" id="howto-toggle" aria-expanded="${it._howtoOpen ? "true" : "false"}"><span style="display:inline-flex;align-items:center;gap:0.5rem">${this.icon("book")} How to do it</span><span id="howto-chev" style="display:inline-flex">${it._howtoOpen ? this.icon("chevU") : this.icon("chevD")}</span></button>
       <div class="session-howto${it._howtoOpen ? " open" : ""}" id="howto">
         ${(ex.variations && ex.variations.length) ? `
         <div class="sp-sub">Easier or harder version</div>
-        <div class="chip-row" id="sess-variants" style="margin-bottom:0.8rem">
+        ${ex.variations.length > this.MAX_VERSION_CHIPS ? this.versionButtonHtml(ex, it.variant, "sess-version") : `<div class="chip-row" id="sess-variants" style="margin-bottom:0.8rem">
           <button class="chip small-chip ${!it.variant ? "on" : ""}" data-v="">${this.esc(ex.name)}</button>
           ${ex.variations.map(v => `<button class="chip small-chip ${it.variant === v.name ? "on" : ""}" data-v="${this.esc(v.name)}">${this.esc(v.name)}</button>`).join("")}
-        </div>` : ""}
+        </div>`}` : ""}
         ${it.variant && variantNote ? `<p class="sp-note">${this.esc(variantNote)}</p>` : ""}
         <ol class="exd-steps">${ex.howTo.map(x => `<li>${this.esc(x)}</li>`).join("")}</ol>
         ${ex.caution ? `<div class="exd-caution" style="margin-top:0.5rem">${this.icon("alert")}<span>${this.esc(ex.caution)}</span></div>` : ""}
@@ -338,24 +340,27 @@
 
     // bindings
     const body = document.getElementById("session-body");
+    const pickVersion = value => {
+      it.variant = value;
+      if (!it.variant) delete it.variant;
+      // persist the choice back to the routine itself (warmup items live in their own list)
+      const routine = this.state.routines.find(x => x.id === s.routineId);
+      const srcArr = routine && (it.warmup ? (routine.warmupItems || []) : routine.items);
+      if (srcArr && srcArr[it.srcIdx] && srcArr[it.srcIdx].exId === it.exId) {
+        if (it.variant) srcArr[it.srcIdx].variant = it.variant;
+        else delete srcArr[it.srcIdx].variant;
+        this.save();
+      }
+      this.stopHoldTimer();
+      this.renderSessionStep();
+    };
     const variantBar = body.querySelector("#sess-variants");
     if (variantBar) {
       this.bindFilterFades(body);
-      variantBar.querySelectorAll(".chip").forEach(ch => ch.onclick = () => {
-        it.variant = ch.dataset.v || "";
-        if (!it.variant) delete it.variant;
-        // persist the choice back to the routine itself (warmup items live in their own list)
-        const routine = this.state.routines.find(x => x.id === s.routineId);
-        const srcArr = routine && (it.warmup ? (routine.warmupItems || []) : routine.items);
-        if (srcArr && srcArr[it.srcIdx] && srcArr[it.srcIdx].exId === it.exId) {
-          if (it.variant) srcArr[it.srcIdx].variant = it.variant;
-          else delete srcArr[it.srcIdx].variant;
-          this.save();
-        }
-        this.stopHoldTimer();
-        this.renderSessionStep();
-      });
+      variantBar.querySelectorAll(".chip").forEach(ch => ch.onclick = () => pickVersion(ch.dataset.v || ""));
     }
+    const verBtn = body.querySelector("#sess-version");
+    if (verBtn) verBtn.onclick = () => this.openVersionPicker(ex, it.variant, value => { this.closeModal(); pickVersion(value); });
     const ssLink = body.querySelector("#sess-ss-link");
     if (ssLink) ssLink.onclick = () => {
       const gid = this.uid();
