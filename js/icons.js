@@ -93,6 +93,7 @@ window.ICONS = {
   ball: '<circle cx="12" cy="12" r="8.3"/><path d="M4.5 8.8c5-2 10-2 15 0M4.5 15.2c5 2 10 2 15 0"/>',
   jaw: '<path d="M6 4.5v6c0 5 2.7 9 6 9s6-4 6-9v-6"/><path d="M9 13.5c1.8 1.4 4.2 1.4 6 0"/><circle cx="9.5" cy="8.5" r=".9" fill="currentColor" stroke="none"/><circle cx="14.5" cy="8.5" r=".9" fill="currentColor" stroke="none"/>',
   "medicine-ball": '<circle cx="12" cy="12" r="8.3"/><path d="M12 8.5v7M8.5 12h7"/>',
+  "putty": '<path d="M6.5 8c2-2.600 5.500-3 8-1.500 3 .500 5 3 4.500 6-.300 3-2.800 5.500-6 5.500-2 .800-5.500.500-7-1.500-2-2-1.800-6.500.500-8.500z"/><path d="M9 12.500c1-1.500 3-2 4.500-1"/>',
   suspension: '<path d="M12 3.5 6.5 16M12 3.5 17.5 16"/><path d="M4 16.5h5v3.5H4zM15 16.5h5v3.5h-5z"/>',
   "door-pulley": '<path d="M4 3.5h16"/><circle cx="12" cy="7" r="2.5"/><path d="M9.5 7v10M14.5 7v7"/><path d="M7.5 17h4v3h-4zM12.5 14h4v3h-4z"/>',
   stick: '<path d="M4.5 19.5 19.5 4.5"/><path d="m3.5 16.5 4 4M16.5 3.5l4 4"/>',

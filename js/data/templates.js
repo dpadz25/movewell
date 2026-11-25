@@ -148,6 +148,7 @@ window.EQUIPMENT = [
   { id: "barbell", name: "Barbell", icon: "barbell" },
   { id: "kettlebell", name: "Kettlebell", icon: "kettlebell" },
   { id: "medicine-ball", name: "Medicine Ball", icon: "medicine-ball" },
+  { id: "putty", name: "Therapy Putty", icon: "putty" },
   { id: "suspension", name: "Suspension Straps", icon: "suspension" },
   { id: "door-pulley", name: "Door Pulley", icon: "door-pulley" },
   { id: "cable", name: "Cable Station", icon: "cable" },
