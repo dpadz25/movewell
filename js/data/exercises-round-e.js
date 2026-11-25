@@ -225,9 +225,9 @@ window.EXERCISES = window.EXERCISES || [];
     ["Smith Machine Good Morning", "Do the movement under the Smith machine bar.", ["smith-machine"]]
   ]);
   addTo("back-extension", [
-    ["Flat Bench Back Extension", "Lie face down with your hips at the end of a high flat bench and feet held, then raise your trunk.", ["bench"], "Be sure your feet are held securely. " + BONES + " " + HARD],
-    ["Weighted Back Extension", "Hold a light weight on your chest.", ["bench", "dumbbell"], "Add weight only when the standard one is steady. " + BONES + " " + HARD],
+    ["Flat Bench Back Extension", "Lie face down with your hips at the end of a high flat bench and feet held, then raise your trunk.", ["bench"], "Be sure your feet are held securely. " + BONES + " " + HARD + " Skip this if you have glaucoma, unless your eye doctor says it is fine."],
+    ["Weighted Back Extension", "Hold a light weight on your chest.", ["bench", "dumbbell"], "Add weight only when the standard one is steady. " + BONES + " " + HARD + " Skip this if you have glaucoma, unless your eye doctor says it is fine."],
     ["Seated Machine Back Extension", "Sit at a back machine and press back against the pad.", ["machine"]],
-    ["Exercise Ball Back Extension", "Lie face down over an exercise ball with feet braced and lift your chest.", ["ball"], BALL + " " + BONES]
+    ["Exercise Ball Back Extension", "Lie face down over an exercise ball with feet braced and lift your chest.", ["ball"], BALL + " " + BONES + " Skip this if you have glaucoma, unless your eye doctor says it is fine."]
   ]);
 })();
