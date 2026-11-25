@@ -67,10 +67,21 @@
       this.syncCustomExercises();
     },
     renameOldVersions(items) {
-      const renamed = { "band-external-rotation|Isometric at Doorway": "Doorway Hold" };
+      // old "exercise|version" to where it lives now. No version means the main exercise.
+      const moved = {
+        "band-external-rotation|Isometric at Doorway": ["band-external-rotation", "Doorway Hold"],
+        // duplicate versions that were removed, so saves point at the one exercise instead
+        "upper-trap-stretch|Levator Scapulae Stretch": ["levator-stretch"],
+        "levator-stretch|Armpit Sniffer": ["levator-stretch"],
+        "calf-stretch-wall|Soleus Stretch": ["soleus-stretch"],
+        "lying-head-lift|Head Nod": ["deep-neck-flexor-lift"]
+      };
       items.forEach(it => {
-        const now = it && renamed[it.exId + "|" + it.variant];
-        if (now) it.variant = now;
+        const now = it && moved[it.exId + "|" + it.variant];
+        if (!now) return;
+        it.exId = now[0];
+        if (now[1]) it.variant = now[1];
+        else delete it.variant;
       });
     },
     save() {
