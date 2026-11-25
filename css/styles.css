@@ -594,7 +594,9 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
   position: fixed; bottom: 6.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
   background: var(--text); color: var(--bg); font-size: 0.95rem; font-weight: 700;
   padding: 0.8rem 1.4rem; border-radius: 24px; opacity: 0; transition: all .3s;
-  pointer-events: none; white-space: nowrap; z-index: 600; max-width: 92vw;
+  pointer-events: none; z-index: 600;
+  /* long messages wrap onto more lines instead of running off the screen */
+  width: max-content; max-width: 92vw; box-sizing: border-box; text-align: center; line-height: 1.35;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
