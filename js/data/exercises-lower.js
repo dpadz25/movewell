@@ -668,7 +668,6 @@ window.EXERCISES.push(
   tips: ["Point the back foot straight at the wall like a ski, not turned out."],
   caution: "Keep it a steady stretch, no bouncing.",
   variations: [
-    { name: "Soleus Stretch", note: "Same position but bend the back knee slightly, keeping the heel down. Reaches the lower calf." },
     { name: "Step Calf Stretch", note: "Ball of foot on a step edge, let the heel sink below." }
   ]
 },

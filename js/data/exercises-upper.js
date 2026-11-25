@@ -43,9 +43,7 @@ window.EXERCISES.push(
   ],
   tips: ["Keep both shoulders relaxed and down.", "The stretch should feel gentle, never sharp."],
   caution: "Never pull hard on your head. If you feel numbness or tingling down the arm, ease off.",
-  variations: [
-    { name: "Levator Scapulae Stretch", note: "Turn your nose toward your armpit before tilting. Stretches a different corner of the neck." }
-  ]
+  variations: []
 },
 {
   id: "levator-stretch", name: "Levator Scapulae Stretch", region: "neck", type: "stretch",
@@ -59,11 +57,9 @@ window.EXERCISES.push(
     "Place your left hand gently on the back of your head and let its weight guide the stretch.",
     "Hold and breathe, then switch sides."
   ],
-  tips: ["Reaching your other hand toward the floor deepens the stretch.", "Move slowly in and out of the stretch.", "PTs nickname this one the 'armpit sniffer': nose toward armpit is the whole cue."],
+  tips: ["Reaching your other hand toward the floor deepens the stretch.", "Move slowly in and out of the stretch.", "A simple cue: nose toward your armpit, then nod down, letting your hand add gentle weight."],
   caution: "Keep it gentle. Do not force the head down.",
-  variations: [
-    { name: "Armpit Sniffer", note: "The classic clinic cue. Turn your nose directly toward your armpit and nod down, letting your hand add gentle weight." }
-  ]
+  variations: []
 },
 {
   id: "scalene-stretch", name: "Scalene Stretch", region: "neck", type: "stretch",
@@ -220,7 +216,7 @@ window.EXERCISES.push(
   caution: "Use a light band first. This muscle group is small.",
   variations: [
     { name: "Side-Lying with Dumbbell", note: "Lie on your side, elbow on your top hip, and rotate a light dumbbell up toward the ceiling." },
-    { name: "Isometric at Doorway", note: "Press the back of your wrist outward into a door frame and hold. No movement version." }
+    { name: "Doorway Hold", note: "Press the back of your wrist outward into a door frame and hold. No movement version." }
   ]
 },
 {
@@ -460,7 +456,7 @@ window.EXERCISES.push(
   variations: []
 },
 {
-  id: "isometric-shoulder-abduction", name: "Wall Press (Isometric Shoulder)", region: "shoulder", type: "strengthen",
+  id: "isometric-shoulder-abduction", name: "Wall Press (Shoulder Hold)", region: "shoulder", type: "strengthen",
   equipment: ["wall"], position: "Standing beside wall", level: 1,
   muscles: "Deltoid, rotator cuff",
   helps: ["rotator-cuff", "shoulder-pain", "frozen-shoulder"],
@@ -514,7 +510,7 @@ window.EXERCISES.push(
   variations: []
 },
 {
-  id: "forearm-rotation", name: "Forearm Pronation & Supination", region: "elbow", type: "strengthen",
+  id: "forearm-rotation", name: "Forearm Rotation (Pronation & Supination)", region: "elbow", type: "strengthen",
   equipment: ["dumbbell", "stick"], position: "Sitting, elbow at side", level: 1,
   muscles: "Forearm rotators (pronators and supinators)",
   helps: ["tennis-elbow", "golfers-elbow", "wrist-pain"],

@@ -111,9 +111,7 @@ window.EXERCISES.push(
   ],
   tips: ["The next step up from the Head Nod. Keep the chin tucked the whole time."],
   caution: "Lower down if your chin pokes forward or your neck shakes. Build up slowly.",
-  variations: [
-    { name: "Head Nod", note: "Just the nod with your head resting on the floor. Easier." }
-  ]
+  variations: []
 },
 {
   id: "prone-head-lift", name: "Lying Neck Lift (Face Down)", region: "neck", type: "strengthen",
@@ -133,8 +131,65 @@ window.EXERCISES.push(
     { name: "On Hands and Knees", note: "Do the same small lift on hands and knees. Easier for some people." }
   ]
 }
+,
+
+// ============ ANKLE & FOOT ============
+{
+  id: "towel-calf-stretch", name: "Towel Calf Stretch", region: "ankle-foot", type: "stretch",
+  equipment: ["towel"], position: "Sitting, leg straight", level: 1,
+  muscles: "Calf",
+  helps: ["plantar-fasciitis", "achilles", "ankle-sprain"],
+  dose: { sets: 3, reps: 1, hold: 30, perSide: true },
+  howTo: [
+    "Sit on the floor or a bed with one leg straight out in front of you.",
+    "Loop a towel or strap around the ball of that foot and hold both ends.",
+    "Gently pull your toes toward your shin until you feel a stretch in your calf.",
+    "Keep your knee straight and your back tall. Hold while breathing, then relax and switch."
+  ],
+  tips: ["A gentle option for first thing in the morning, before you stand up."],
+  caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling. New calf swelling, warmth, or pain needs urgent medical care, so do not stretch it.",
+  variations: [
+    { name: "Seated Bent-Knee Calf Stretch", note: "Bend the knee a comfortable amount, with a rolled towel under it, then pull the toes toward you. Reaches lower in the calf." }
+  ]
+},
+{
+  id: "towel-side-slides", name: "Towel Side Slides", region: "ankle-foot", type: "strengthen",
+  equipment: ["towel", "chair"], position: "Sitting tall on a chair", level: 1,
+  muscles: "Muscles on the inner and outer ankle",
+  helps: ["ankle-sprain", "balance-falls", "plantar-fasciitis"],
+  dose: { sets: 2, reps: 10, perSide: true },
+  howTo: [
+    "Sit in a sturdy chair with your bare foot flat on one end of a towel on a smooth floor.",
+    "Keeping your heel down, use the front of your foot to sweep the towel outward, away from your other foot.",
+    "Lift the foot, bring it back to the middle, and sweep again. Your knee stays still.",
+    "Then repeat the sweeps inward, toward your other foot."
+  ],
+  tips: ["Move from the ankle. If your knee swings side to side, rest a hand on it to remind it to stay put."],
+  caution: "Gentle effort only. Stop if you feel sharp pain. After a recent sprain or surgery, wait until your therapist says it is okay.",
+  variations: []
+}
 
 );
+
+// ----- versions added to exercises from the other data files -----
+(function () {
+  const add = (id, list) => {
+    const ex = window.EXERCISES.find(x => x.id === id);
+    if (!ex) return;
+    ex.variations = ex.variations || [];
+    list.forEach(v => { if (!ex.variations.some(x => x.name === v.name)) ex.variations.push(v); });
+  };
+  add("calf-raise", [
+    { name: "Step Heel Raise", note: "Stand with the balls of both feet on a bottom step, holding the rail. Let your heels sink a little below the step, then rise up. Harder than on the floor." },
+    { name: "Heel and Toe Raises", note: "Holding a counter, rise onto the balls of your feet and lower. Then rock back and lift your toes. Alternate slowly." }
+  ]);
+  add("band-ankle-4way", [
+    { name: "Band Ankle: Point Down", note: "Sitting or lying with the leg straight, loop the band around the ball of the foot and hold the ends. Point your toes away, then return slowly." },
+    { name: "Band Ankle: Pull Up", note: "Anchor the band to something sturdy past your feet and loop it over the top of the foot. Pull your toes toward your shin, then return slowly." },
+    { name: "Band Ankle: Turn In", note: "Anchor the band to the outer side of the working foot. Turn the sole inward against the band without moving your leg, then return slowly." },
+    { name: "Band Ankle: Turn Out", note: "Anchor the band to the inner side of the working foot, or loop it around the other foot. Turn the sole outward without moving your leg, then return slowly." }
+  ]);
+})();
 
 // ----- ready-made plans -----
 (function () {

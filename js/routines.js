@@ -168,12 +168,11 @@
     this.openRoutineEditor(r.id);
   };
 
-  App.createBlankRoutine = function (firstExId) {
-    this.pushView("blank-name", () => this.createBlankRoutine(firstExId));
+  App.createBlankRoutine = function (firstExId, variant) {
+    this.pushView("blank-name", () => this.createBlankRoutine(firstExId, variant));
     const r = { id: this.uid(), name: "", desc: "", onHome: true, archived: false, warmupItems: [], items: [] };
     if (firstExId) {
-      const ex = this.ex(firstExId);
-      r.items.push({ exId: firstExId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide });
+      r.items.push(this.newRoutineItem(this.ex(firstExId), variant));
     }
     this.openModal("Name Your Routine", `
       <label class="field-label">Routine name</label>
@@ -476,6 +475,7 @@
       ch.classList.add("on");
       it.variant = ch.dataset.v || "";
       if (!it.variant) delete it.variant;
+      if (this.isOneSided(it.variant)) { it.perSide = true; body.querySelector("#dv-perside").checked = true; }
       this.save();
       this.flashSaveIndicator();
     });
@@ -518,42 +518,53 @@
         ((ex.equipment || []).some(e => e !== "bodyweight" && oldEq.includes(e)) ? 1 : 0);
     };
     const render = () => {
-      const q = this._pick.q.toLowerCase();
-      const list = window.EXERCISES.filter(ex => {
+      const q = this._pick.q.trim();
+      const pool = window.EXERCISES.filter(ex => {
         // yoga poses only appear under the Yoga chip, never mixed into the other lists
         if (this._pick.region === "__yoga") { if (ex.type !== "yoga") return false; }
         else if (ex.type === "yoga") return false;
         else if (this._pick.region === "__stretch") { if (ex.type !== "stretch") return false; }
         else if (this._pick.region === "__cardio") { if (ex.type !== "cardio") return false; }
         else if (this._pick.region && ex.region !== this._pick.region) return false;
-        if (q && !(ex.name + " " + ex.muscles + " " + ex.equipment.map(x => this.equip(x).name).join(" ") + " " +
-          (ex.variations || []).map(v => v.name).join(" ")).toLowerCase().includes(q)) return false;
         return true;
       });
       // stable sort, so equally close exercises keep their usual order
-      if (oldEx) list.sort((a, b) => likeness(b) - likeness(a));
+      if (oldEx) pool.sort((a, b) => likeness(b) - likeness(a));
+      const rows = this.searchExercises(pool, q);
       // the same exercise can be added more than once, so show a count instead of disabling
       const inR = {};
-      r.items.concat(r.warmupItems || []).forEach(i => { inR[i.exId] = (inR[i.exId] || 0) + 1; });
-      document.getElementById("pick-list").innerHTML = list.map(ex => `
-        <div class="ex-item" data-ex="${ex.id}">
+      r.items.concat(r.warmupItems || []).forEach(i => {
+        inR[i.exId] = (inR[i.exId] || 0) + 1;
+        const k = i.exId + "|" + (i.variant || "");
+        inR[k] = (inR[k] || 0) + 1;
+      });
+      const inTag = n => n ? `<span class="tag accent">${this.icon("check")} in routine${n > 1 ? " ×" + n : ""}</span>` : "";
+      const isCurrent = (ex, v) => oldEx && ex.id === oldEx.id && (oldIt.variant || "") === (v ? v.name : "");
+      document.getElementById("pick-list").innerHTML = rows.map(({ ex, v }) => `
+        <div class="ex-item" data-ex="${ex.id}"${v ? ` data-v="${ex.variations.indexOf(v)}"` : ""}>
           <div class="ex-item-icon tile ${this.region(ex.region).color || ""}">${this.icon(this.region(ex.region).icon)}</div>
           <div class="ex-item-info">
-            <div class="ex-item-name">${this.esc(ex.name)}</div>
-            <div class="ex-item-meta">${oldEx && ex.id === oldEx.id ? `<span class="tag">Current</span>` : ""}${inR[ex.id] ? `<span class="tag accent">${this.icon("check")} in routine${inR[ex.id] > 1 ? " ×" + inR[ex.id] : ""}</span>` : ""}${ex.custom ? `<span class="tag pink">Custom</span>` : ""}<span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>
+            <div class="ex-item-name">${this.esc(v ? v.name : ex.name)}</div>
+            ${v ? `<div class="ex-item-version">Version of ${this.esc(ex.name)}</div>
+            <div class="ex-item-meta">${isCurrent(ex, v) ? `<span class="tag">Current</span>` : ""}${inTag(inR[ex.id + "|" + v.name])}</div>` : `
+            <div class="ex-item-meta">${isCurrent(ex) ? `<span class="tag">Current</span>` : ""}${inTag(inR[q ? ex.id + "|" : ex.id])}${ex.custom ? `<span class="tag pink">Custom</span>` : ""}<span class="tag ${this.typeMeta(ex.type).color}">${this.typeMeta(ex.type).name}</span><span class="tag">${this.region(ex.region).name}</span></div>`}
           </div>
           <div class="ex-item-chev">${this.icon("plus")}</div>
         </div>`).join("");
       document.getElementById("pick-list").querySelectorAll(".ex-item").forEach(n => n.onclick = () => {
         const exId = n.dataset.ex;
         const ex = this.ex(exId);
-        const item = { exId, sets: wu ? 1 : (ex.dose.sets || 1), reps: ex.dose.reps || 0, hold: ex.dose.hold || 0, timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide };
+        const vi = n.dataset.v;
+        const variant = vi != null ? ex.variations[Number(vi)].name : "";
+        const name = variant || ex.name;
+        const item = this.newRoutineItem(ex, variant);
+        if (wu) item.sets = 1;
         if (replacing) {
           // swap in place: keep the spot in the order and any superset link
           if (!wu && oldIt.groupId) item.groupId = oldIt.groupId;
           arr[replaceI] = item;
           this.save();
-          this.toast("Replaced with " + ex.name);
+          this.toast("Replaced with " + name);
           // jump straight back to the routine editor, skipping the old exercise's adjust screen
           this._modalStack.pop();
           this.modalBack();
@@ -561,10 +572,10 @@
         }
         arr.push(item);
         this.save();
-        const copies = arr.filter(x => x.exId === exId).length;
-        this.toast(copies > 1 ? ex.name + " added again (" + copies + " total)" : ex.name + " added");
+        const copies = arr.filter(x => x.exId === exId && (x.variant || "") === variant).length;
+        this.toast(copies > 1 ? name + " added again (" + copies + " total)" : name + " added");
         render();
-        const again = document.querySelector(`#pick-list .ex-item[data-ex="${exId}"]`);
+        const again = document.querySelector(`#pick-list .ex-item[data-ex="${exId}"]${vi != null ? `[data-v="${vi}"]` : ":not([data-v])"}`);
         if (again) again.classList.add("just-added");
         const done = document.getElementById("pick-done");
         if (done) { const n = arr.length; done.innerHTML = this.icon("check") + " Done (" + n + " in routine)"; }

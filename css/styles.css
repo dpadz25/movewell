@@ -305,6 +305,7 @@ input.stepper-input::-webkit-outer-spin-button, input.stepper-input::-webkit-inn
 .ex-item-icon .icn { width: 1.4rem; height: 1.4rem; }
 .ex-item-info { flex: 1; min-width: 0; }
 .ex-item-name { font-size: 1rem; font-weight: 800; overflow-wrap: anywhere; }
+.ex-item-version { font-size: 0.85rem; color: var(--muted); overflow-wrap: anywhere; }
 .ex-item-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
 .ex-item-chev { color: var(--muted2); display: flex; }
 .ex-item-chev .icn { width: 1.1rem; height: 1.1rem; }

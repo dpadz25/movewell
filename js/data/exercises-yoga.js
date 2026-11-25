@@ -244,7 +244,7 @@ window.EXERCISES.push(
   caution: "Stretch only to a gentle pull, never sharp pain. Stop if you feel pinching, numbness, or tingling."
 },
 {
-  id: "yoga-supine-final-stretch", name: "Supine Full-Body Stretch", region: "balance", type: "yoga",
+  id: "yoga-supine-final-stretch", name: "Lying Full-Body Stretch", region: "balance", type: "yoga",
   equipment: ["none"], position: "Lying on your back", level: 1,
   muscles: "Whole body",
   helps: [],

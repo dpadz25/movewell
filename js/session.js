@@ -83,6 +83,7 @@
     this.confirm("Continue your session?",
       "You were partway through “" + saved.routineName + "”. Pick up where you left off?",
       () => {
+        this.renameOldVersions(saved.items);
         this._sess = saved;
         if (this._sess.idx >= this._sess.items.length) this._sess.idx = this._sess.items.length - 1;
         this._openSessionUI();

@@ -62,7 +62,16 @@
           if (m) b.region = b.region + "-" + m[1].toLowerCase();
         });
       }
+      // older saves use version names that have since been reworded
+      this.state.routines.forEach(r => this.renameOldVersions((r.items || []).concat(r.warmupItems)));
       this.syncCustomExercises();
+    },
+    renameOldVersions(items) {
+      const renamed = { "band-external-rotation|Isometric at Doorway": "Doorway Hold" };
+      items.forEach(it => {
+        const now = it && renamed[it.exId + "|" + it.variant];
+        if (now) it.variant = now;
+      });
     },
     save() {
       localStorage.setItem(STORE_KEY, JSON.stringify(this.state));
@@ -877,6 +886,7 @@
               this.state = Object.assign(this.defaultState(), data);
               this.state.profile = Object.assign(this.defaultState().profile, this.state.profile);
               if (!Array.isArray(this.state.customExercises)) this.state.customExercises = [];
+              (this.state.routines || []).forEach(r => this.renameOldVersions((r.items || []).concat(r.warmupItems || [])));
               this.syncCustomExercises();
               this.save(); this.applyAppearance(); this.closeModal(); this.refresh();
               this.toast("Backup restored");

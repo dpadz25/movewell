@@ -15,16 +15,77 @@
         else if (!ex.equipment.includes(f.equip)) return false;
       }
       if (f.level && ex.level !== f.level) return false;
-      if (q) {
-        const hay = (ex.name + " " + ex.muscles + " " + this.region(ex.region).name + " " + this.typeMeta(ex.type).name + " " + (ex.alias || "") + " " +
-          ex.helps.map(h => this.condition(h).name + " " + (this.condition(h).aka || "")).join(" ") + " " +
-          ex.equipment.map(q => this.equip(q).name).join(" ") + " " +
-          (ex.variations || []).map(v => v.name).join(" ")).toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
       return true;
     });
   };
+
+  // ---------- search that also finds versions ----------
+  const words = str => String(str || "").toLowerCase().replace(/['\u2019]/g, "").split(/[^a-z0-9]+/).filter(Boolean);
+  const squash = str => words(str).join("");
+  // every word, plus each neighbouring pair joined, so "push down" and "pushdown" find each other
+  const haystack = str => { const w = words(str); return w.concat(w.slice(1).map((x, i) => w[i] + x)).join(" "); };
+
+  // hidden nicknames (js/data/nicknames.js). The typed text must be the start of a nickname,
+  // so a short common word like "curl" does not drag in unrelated exercises.
+  // returns 0 for the whole nickname, 2 for the start of one, null for no match
+  const nicknameRank = (id, typed) => {
+    const trim = x => x.replace(/s$/, "");
+    let best = null;
+    ((window.NICKNAMES || {})[id] || []).forEach(n => {
+      const nick = squash(n);
+      if (trim(nick) === trim(typed)) best = 0;
+      else if (best === null && typed.length >= 6 && nick.startsWith(typed)) best = 2;
+    });
+    return best;
+  };
+
+  // returns rows of { ex, v }: v is set when the row is one version of that exercise.
+  // With nothing typed, it is simply every exercise, no versions.
+  App.searchExercises = function (list, query) {
+    const q = words(query);
+    if (!q.length) return list.map(ex => ({ ex }));
+    // a typed plural also finds the singular name ("heel raises" finds "Heel Raise")
+    const inHay = (hay, w) => hay.includes(w) || (w.length > 3 && w.endsWith("s") && !w.endsWith("ss") && hay.includes(w.slice(0, -1)));
+    const has = hay => q.every(w => inHay(hay, w));
+    const rank = name => squash(name) === q.join("") ? 0 : has(haystack(name)) ? 1 : 2;
+    // a version that is also its own exercise (Preacher Curl) is only listed once
+    const taken = new Set(window.EXERCISES.map(ex => squash(ex.name)));
+    const rows = [];
+    list.forEach(ex => {
+      const versions = ex.variations || [];
+      const gear = ex.muscles + " " + ex.equipment.map(x => this.equip(x).name).join(" ");
+      const all = [ex.name, gear, this.region(ex.region).name, this.typeMeta(ex.type).name, ex.alias || "",
+        ex.helps.map(h => this.condition(h).name + " " + (this.condition(h).aka || "")).join(" "),
+        versions.map(v => v.name).join(" ")].join(" ");
+      const nick = nicknameRank(ex.id, q.join(""));
+      const found = has(haystack(all));
+      if (found || nick !== null) rows.push({ ex, rank: Math.min(found ? rank(ex.name) : 2, nick === null ? 2 : nick) });
+      versions.forEach(v => {
+        if (taken.has(squash(v.name))) return;
+        const vNick = nicknameRank(ex.id + "|" + v.name, q.join(""));
+        // otherwise at least one typed word has to be about the version itself
+        const own = haystack(v.name);
+        const found = q.some(w => inHay(own, w)) && has(haystack(v.name + " " + ex.name + " " + gear));
+        if (!found && vNick === null) return;
+        const named = found ? Math.min(rank(v.name), rank(v.name + " " + ex.name)) : 2;
+        rows.push({ ex, v, rank: vNick === null ? named : Math.min(named, vNick) });
+      });
+    });
+    // full exercises come before versions on a tie; otherwise the usual order is kept
+    return rows.sort((x, y) => x.rank - y.rank || !!x.v - !!y.v);
+  };
+
+  // a new routine entry, optionally for one version of the exercise
+  App.newRoutineItem = function (ex, variant) {
+    const d = ex.dose;
+    const item = { exId: ex.id, sets: d.sets || 1, reps: d.reps || 0, hold: d.hold || 0, timeSec: d.timeSec || 0, perSide: !!d.perSide };
+    if (variant) {
+      item.variant = variant;
+      if (this.isOneSided(variant)) item.perSide = true;
+    }
+    return item;
+  };
+  App.isOneSided = name => /\b(single|one)[ -](arm|leg|side)\b/i.test(name || "");
 
   // body areas that come in a left and a right
   const PAIRED = ["shoulder", "arms", "elbow", "wrist", "hip", "knee", "ankle-foot"];
@@ -50,7 +111,7 @@
   App.renderLibrary = function () {
     const f = this._lib;
     const u = this._libUi = this._libUi || { areaOpen: false, filtersOpen: false, mapOn: false, view: "front", side: "", zone: null, moreEquip: false };
-    const list = this.filteredExercises();
+    const list = this.searchExercises(this.filteredExercises(), f.q);
     const filterCount = (f.type ? 1 : 0) + (f.equip ? 1 : 0) + (f.level ? 1 : 0);
     const sel = this.libSelection();
     const opt = (group, value, label, on) =>
@@ -145,10 +206,10 @@
       ${u.areaOpen ? areaPanel : ""}
       ${u.filtersOpen ? filterPanel : ""}
       <div class="lib-list-head">
-        <div class="filter-count">${list.length} exercise${list.length === 1 ? "" : "s"}</div>
+        <div class="filter-count">${this.libCountText(list.length, f.q)}</div>
         <button class="lib-create" id="lib-create">${this.icon("plus")} Make your own</button>
       </div>
-      <div class="ex-grid" id="lib-list">${list.map(ex => this.exItemHtml(ex)).join("") || `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches those choices.<br>Try removing one of them.</p></div>`}</div>
+      <div class="ex-grid" id="lib-list">${list.map(x => this.exItemHtml(x.ex, x.v)).join("") || `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches those choices.<br>Try removing one of them.</p></div>`}</div>
     `;
 
     const scroll = document.getElementById("library-scroll");
@@ -209,11 +270,11 @@
   // re-render just count + list (keeps keyboard focus while typing in search)
   App.renderLibraryListOnly = function () {
     const scroll = document.getElementById("library-scroll");
-    const list = this.filteredExercises();
+    const list = this.searchExercises(this.filteredExercises(), this._lib.q);
     const count = scroll.querySelector(".filter-count");
-    if (count) count.textContent = `${list.length} exercise${list.length === 1 ? "" : "s"}`;
+    if (count) count.textContent = this.libCountText(list.length, this._lib.q);
     const box = scroll.querySelector("#lib-list");
-    if (box) box.innerHTML = list.map(ex => this.exItemHtml(ex)).join("") ||
+    if (box) box.innerHTML = list.map(x => this.exItemHtml(x.ex, x.v)).join("") ||
       `<div class="empty-state"><div class="empty-icon">${this.icon("search")}</div><p>Nothing matches.</p></div>`;
   };
 
@@ -223,10 +284,25 @@
     this.showPage("library");
   };
 
-  App.exItemHtml = function (ex) {
+  // typed searches can list versions too, so call them results rather than exercises
+  App.libCountText = function (n, q) {
+    const word = String(q || "").trim() ? "result" : "exercise";
+    return `${n} ${word}${n === 1 ? "" : "s"}`;
+  };
+
+  App.exItemHtml = function (ex, v) {
     const t = this.typeMeta(ex.type);
     const r = this.region(ex.region);
     const levelNames = { 1: "Gentle", 2: "Moderate", 3: "Advanced" };
+    if (v) return `
+      <div class="ex-item" onclick="App.openExerciseDetail('${ex.id}', { variant: ${ex.variations.indexOf(v)} })">
+        <div class="ex-item-icon tile ${r.color || ""}">${this.icon(r.icon)}</div>
+        <div class="ex-item-info">
+          <div class="ex-item-name">${this.esc(v.name)}</div>
+          <div class="ex-item-version">Version of ${this.esc(ex.name)}</div>
+        </div>
+        <div class="ex-item-chev">${this.icon("chevR")}</div>
+      </div>`;
     return `
       <div class="ex-item" onclick="App.openExerciseDetail('${ex.id}')">
         <div class="ex-item-icon tile ${r.color || ""}">${this.icon(r.icon)}</div>
@@ -258,13 +334,16 @@
     const ex = this.ex(id);
     if (!ex) return;
     opts = opts || {};
-    this.pushView("exd:" + id + (opts.hideAdd ? ":h" : ""), () => this.openExerciseDetail(id, opts));
+    const v = opts.variant != null ? (ex.variations || [])[opts.variant] : null;
+    const name = v ? v.name : ex.name;
+    this.pushView("exd:" + id + (v ? ":v" + opts.variant : "") + (opts.hideAdd ? ":h" : ""), () => this.openExerciseDetail(id, opts));
     const t = this.typeMeta(ex.type);
     const r = this.region(ex.region);
     const levelNames = { 1: "Gentle", 2: "Moderate", 3: "Advanced" };
-    const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(ex.name + " exercise how to");
+    const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(name + " exercise how to");
 
-    this.openModal(ex.name, `
+    this.openModal(name, `
+      ${v ? `<div class="exd-variation"><strong>Version of ${this.esc(ex.name)}</strong><span>${this.esc(v.note)}<br>The steps below are for the standard exercise.</span></div>` : ""}
       <div class="exd-tags">
         ${ex.custom ? `<span class="tag pink">${this.icon("pencil")} Custom</span>` : ""}
         <span class="tag ${t.color}">${t.name}</span>
@@ -278,7 +357,7 @@
       </div>` : ""}
       <div class="exd-block">
         <h3>Suggested Amount</h3>
-        <div style="font-size:1.05rem;font-weight:700;color:var(--accent-strong)">${this.doseText(ex.dose)}</div>
+        <div style="font-size:1.05rem;font-weight:700;color:var(--accent-strong)">${this.doseText(v && this.isOneSided(name) ? Object.assign({}, ex.dose, { perSide: true }) : ex.dose)}</div>
       </div>
       <a class="video-link" href="${yt}" target="_blank" rel="noopener">${this.icon("video")} Watch a video demonstration</a>
       ${ex.howTo && ex.howTo.length ? `
@@ -306,7 +385,7 @@
     `);
     const body = document.getElementById("modal-body");
     const add = body.querySelector("#exd-add");
-    if (add) add.onclick = () => this.pickRoutineFor(ex.id);
+    if (add) add.onclick = () => this.pickRoutineFor(ex.id, v ? v.name : "");
     const edit = body.querySelector("#exd-edit");
     if (edit) edit.onclick = () => this.openExerciseBuilder(ex.id);
     const del = body.querySelector("#exd-delete");
@@ -490,11 +569,11 @@
   };
 
   // choose which routine to add an exercise to
-  App.pickRoutineFor = function (exId) {
+  App.pickRoutineFor = function (exId, variant) {
     const ex = this.ex(exId);
-    this.pushView("pickfor:" + exId, () => this.pickRoutineFor(exId));
+    this.pushView("pickfor:" + exId + ":" + (variant || ""), () => this.pickRoutineFor(exId, variant));
     const routines = this.state.routines;
-    this.openModal("Add “" + ex.name + "” to…", `
+    this.openModal("Add “" + (variant || ex.name) + "” to…", `
       ${routines.length ? routines.map(r => `
         <div class="ex-item" data-r="${r.id}">
           <div class="ex-item-icon tile accent">${this.icon("clipboard")}</div>
@@ -507,14 +586,11 @@
     const body = document.getElementById("modal-body");
     body.querySelectorAll(".ex-item[data-r]").forEach(n => n.onclick = () => {
       const r = this.state.routines.find(x => x.id === n.dataset.r);
-      r.items.push({
-        exId, sets: ex.dose.sets || 1, reps: ex.dose.reps || 0, hold: ex.dose.hold || 0,
-        timeSec: ex.dose.timeSec || 0, perSide: !!ex.dose.perSide
-      });
+      r.items.push(this.newRoutineItem(ex, variant));
       this.save(); this.closeModal();
       this.toast("Added to " + r.name);
       this.refresh();
     });
-    body.querySelector("#pick-new-routine").onclick = () => this.createBlankRoutine(exId);
+    body.querySelector("#pick-new-routine").onclick = () => this.createBlankRoutine(exId, variant);
   };
 })();
