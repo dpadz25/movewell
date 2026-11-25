@@ -1369,3 +1369,7 @@ html[data-density="roomy"] .upnext-start { width: 100%; margin-top: 0.7rem; }
 .ver-row-text span { font-size: 0.9rem; color: var(--muted); }
 .ver-row-text .ver-row-extra { font-weight: 800; }
 .ver-row .icn { width: 1.4rem; height: 1.4rem; flex-shrink: 0; color: var(--accent-strong); }
+
+/* at the largest text sizes the plus and minus drop under their label instead of being cut off */
+.stepper-row { flex-wrap: wrap; }
+.stepper-row > .stepper { margin-left: auto; }
