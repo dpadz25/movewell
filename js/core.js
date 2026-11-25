@@ -943,21 +943,20 @@
     obSteps() {
       const g = this._obData.goal;
       // before the goal is picked we count one middle step, so the dots only change if they pick "both"
-      return ["name", "look", "goal", "care"]
+      return ["name", "look", "goal"]
         .concat(g === "fitness" || g === "both" || !g ? ["fit"] : [])
         .concat(g === "rehab" || g === "both" ? ["pain"] : [])
-        .concat(["done"]);
+        .concat(["care", "done"]);
     },
     obDots(n, total) {
-      return `<div class="ob-dots" role="progressbar" aria-valuemin="1" aria-valuemax="${total}" aria-valuenow="${n}" aria-label="Step ${n} of ${total}">${Array.from({ length: total }, (_, i) => `<i class="${i + 1 === n ? "on" : i + 1 < n ? "done" : ""}"></i>`).join("")}</div>`;
+      return `<div class="ob-progress"><div class="ob-dots" role="progressbar" aria-valuemin="1" aria-valuemax="${total}" aria-valuenow="${n}" aria-label="Step ${n} of ${total}">${Array.from({ length: total }, (_, i) => `<i class="${i + 1 === n ? "on" : i + 1 < n ? "done" : ""}"></i>`).join("")}</div><span class="ob-count" aria-hidden="true">Step ${n} of ${total}</span></div>`;
     },
-    obHead(key, opts) {
-      opts = opts || {};
+    obHead(key) {
       const steps = this.obSteps(), n = steps.indexOf(key) + 1;
       return `<div class="ob-head">
         ${n > 1 ? `<button class="ob-back" id="ob-back" aria-label="Back">${this.icon("arrowLeft")}</button>` : `<span></span>`}
         ${this.obDots(n, steps.length)}
-        ${opts.skip ? `<button class="ob-skip" id="ob-skip">Skip</button>` : `<span></span>`}
+        <span></span>
       </div>`;
     },
     obGo(key, dir) {
@@ -1022,9 +1021,8 @@
       d.groups = d.groups || [];
       const ob = document.getElementById("onboard");
       ob.dataset.step = n;
-      const bindHead = (back, skip) => {
+      const bindHead = back => {
         const bb = inner.querySelector("#ob-back"); if (bb) bb.onclick = back;
-        const sk = inner.querySelector("#ob-skip"); if (sk) sk.onclick = skip;
       };
       if (n === "name") {
         inner.innerHTML = `
@@ -1041,7 +1039,7 @@
           <label class="ob-name ob-rise d3"><span>What should we call you? <em class="ob-opt">(optional)</em></span>
             <input type="text" id="ob-name" placeholder="Your first name" autocomplete="given-name" value="${this.esc(d.name)}">
           </label>
-          <button class="btn big grad ob-next ob-rise d3" id="ob-next1">Continue</button>
+          <div class="ob-foot"><button class="btn big grad ob-next ob-rise d3" id="ob-next1">Continue</button></div>
         `;
         const go = () => { d.name = inner.querySelector("#ob-name").value.trim(); this.obGo("name", 1); };
         inner.querySelector("#ob-next1").onclick = go;
@@ -1060,7 +1058,7 @@
           <div class="ob-care ob-stag">
             ${lines.map(l => `<div class="ob-plan"><span class="ob-plan-dot">${this.icon(l[0])}</span><span>${l[1]}</span></div>`).join("")}
           </div>
-          <button class="btn big grad ob-next" id="ob-next-care">I understand</button>
+          <div class="ob-foot"><button class="btn big grad ob-next" id="ob-next-care">I understand</button></div>
         `;
         inner.querySelector("#ob-next-care").onclick = () => this.obGo("care", 1);
         bindHead(() => this.obGo("care", -1));
@@ -1073,7 +1071,7 @@
         ];
         inner.innerHTML = `
           ${this.obHead("goal")}
-          <h1 class="ob-title">${d.name ? "What brings you to MoveWell, " + this.esc(d.name) + "?" : "What brings you to MoveWell?"}</h1>
+          <h1 class="ob-title">${d.name ? "What brings you here, " + this.esc(d.name) + "?" : "What brings you here?"}</h1>
           <p class="ob-lead">This helps us show you what matters to you. You can change it later in Settings.</p>
           <div class="ob-goal-list ob-stag" role="radiogroup" aria-label="Your goal">
             ${opts.map(o => `<button class="ob-why ${d.goal === o[0] ? "on" : ""}" role="radio" aria-checked="${d.goal === o[0]}" data-goal="${o[0]}">
@@ -1082,7 +1080,7 @@
               <span class="ob-check">${this.icon("check")}</span>
             </button>`).join("")}
           </div>
-          <button class="btn big grad ob-next" id="ob-next-goal" ${d.goal ? "" : "disabled"}>${d.goal ? "Continue" : "Pick one to continue"}</button>
+          <div class="ob-foot"><button class="btn big grad ob-next" id="ob-next-goal" ${d.goal ? "" : "disabled"}>${d.goal ? "Continue" : "Pick one to continue"}</button></div>
         `;
         inner.querySelectorAll(".ob-why").forEach(b => b.onclick = () => {
           d.goal = b.dataset.goal;
@@ -1095,7 +1093,7 @@
       if (n === "fit") {
         const render = () => {
           inner.innerHTML = `
-            ${this.obHead("fit", { skip: true })}
+            ${this.obHead("fit")}
             <h1 class="ob-title">What would you like to do?</h1>
             <p class="ob-lead">Pick as many as you like. We will start you off with a routine or two and suggest more.</p>
             <div class="ob-goals ob-stag">
@@ -1108,7 +1106,7 @@
                 </button>`;
               }).join("")}
             </div>
-            <button class="btn big grad ob-next" id="ob-next-fit">${d.fitGoals.length ? "Continue" : "Skip for now"}</button>
+            <div class="ob-foot"><button class="btn big grad ob-next" id="ob-next-fit">${d.fitGoals.length ? "Continue" : "Skip for now"}</button></div>
           `;
           inner.querySelectorAll(".ob-goal").forEach(b => b.onclick = () => {
             const k = b.dataset.f;
@@ -1118,7 +1116,6 @@
           });
           inner.querySelector("#ob-next-fit").onclick = () => this.obGo("fit", 1);
           inner.querySelector("#ob-back").onclick = () => this.obGo("fit", -1);
-          inner.querySelector("#ob-skip").onclick = () => { d.fitGoals = []; this.obGo("fit", 1); };
         };
         render();
       }
@@ -1132,7 +1129,7 @@
           const per = Math.max(1, Math.floor(3 / Math.max(1, picked.length)));
           const shown = d.showMore ? all : picked.flatMap(g => g.conditions.filter(c => c !== "general").slice(0, per));
           inner.innerHTML = `
-            ${this.obHead("pain", { skip: true })}
+            ${this.obHead("pain")}
             <h1 class="ob-title">Where would you like to focus?</h1>
             <p class="ob-lead">Pick any areas you like. We will suggest an easy routine to begin with for each one.</p>
             <div class="ob-goals ob-stag">
@@ -1155,7 +1152,7 @@
                   ${all.length > shown.length || d.showMore ? `<button class="lib-chip ob-chip ob-chip-more" id="ob-showmore" aria-expanded="${!!d.showMore}">${d.showMore ? "Show fewer" : "Show more"}</button>` : ""}
                 </div>
               </div>` : ""}
-            <button class="btn big grad ob-next" id="ob-next2">${d.groups.length ? "Continue" : "Skip for now"}</button>
+            <div class="ob-foot"><button class="btn big grad ob-next" id="ob-next2">${d.groups.length ? "Continue" : "Skip for now"}</button></div>
           `;
           inner.querySelectorAll(".ob-goal").forEach(b => b.onclick = () => {
             const id = b.dataset.g;
@@ -1196,7 +1193,7 @@
             const again = inner.querySelector("#ob-showmore"); if (again) again.focus({ preventScroll: true });
           };
           inner.querySelector("#ob-next2").onclick = () => this.obGo("pain", 1);
-          bindHead(() => this.obGo("pain", -1), () => { d.groups = []; d.conditions = []; this.obGo("pain", 1); });
+          bindHead(() => this.obGo("pain", -1));
         };
         render2();
       }
@@ -1214,7 +1211,7 @@
             ${[["forest", "Green"], ["pink", "Pink"]].map(([id, label]) => `
               <button class="ob-color ${d.theme === id ? "on" : ""}" role="radio" aria-checked="${d.theme === id}" data-theme="${id}"><span class="sw sw-${id}"></span>${label}</button>`).join("")}
           </div>
-          <button class="btn big grad ob-next" id="ob-next3">Continue</button>
+          <div class="ob-foot"><button class="btn big grad ob-next" id="ob-next3">Continue</button></div>
         `;
         inner.querySelectorAll(".ob-size").forEach(b => b.onclick = () => {
           d.textSize = b.dataset.ts;
@@ -1241,7 +1238,7 @@
             ${plan.map(t => `<div class="ob-plan"><span class="ob-plan-dot">${this.icon("check")}</span><span>${this.esc(t.name)}</span></div>`).join("")}
             ${ideas.length ? `<p class="ob-ideas">Other plans that may fit you: ${ideas.map(t => this.esc(t.name)).join(", ")}. Find them any time under <strong>Routines</strong>, then <strong>New routine</strong>.</p>` : ""}
           </div>
-          <button class="btn big grad ob-next ob-glow" id="ob-finish">Start using MoveWell</button>
+          <div class="ob-foot"><button class="btn big grad ob-next ob-glow" id="ob-finish">Start using MoveWell</button></div>
         `;
         inner.querySelector("#ob-finish").onclick = () => this.finishOnboarding();
         bindHead(() => this.obGo("done", -1));
