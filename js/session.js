@@ -114,6 +114,7 @@
           <button class="menu-item" data-x="help">${this.icon("alert")}<span>When to stop and get help</span></button>
         </div>
         <div class="exd-caution" style="margin-top:0.9rem">${this.icon("alert")}<span>Sharp pain, or pain that does not ease with rest? Stop and call your therapist or doctor.</span></div>`);
+      this.pointModalAtHeart();
     } else {
       this.openModal("Paused", `
         <p class="sp-note" style="margin:0 0 0.9rem">You have done ${doneCount} of ${s.items.length} exercises. Take your time.</p>
@@ -157,6 +158,20 @@
       }
     });
   };
+  // shows the open pop-up as a bubble under the heart; if the words do not fit
+  // (large text, short phone) it stays a normal bottom panel
+  App.pointModalAtHeart = function () {
+    const heart = document.getElementById("session-hurts");
+    if (heart.hidden) return;
+    const modal = document.getElementById("modal"), body = document.getElementById("modal-body");
+    const r = heart.getBoundingClientRect();
+    modal.style.setProperty("--pop-top", (r.bottom + 12) + "px");
+    modal.style.setProperty("--pop-x", (r.left + r.width / 2) + "px");
+    modal.classList.add("pop");
+    if (body.scrollHeight > body.clientHeight + 1) modal.classList.remove("pop");
+  };
+  window.addEventListener("resize", () => document.getElementById("modal").classList.remove("pop"));
+
   App.teardownSession = function () {
     clearInterval(this._sessClockT);
     this.stopHoldTimer();
@@ -220,7 +235,6 @@
     const canLinkNext = !yoga && !it.warmup && !it.groupId && nxt && !nxt.warmup && !nxt.groupId;
     const version = (it.variant && (ex.variations || []).find(v => v.name === it.variant)) || {};
     const variantNote = version.note || "";
-    const caution = version.caution || ex.caution; // a version's own caution comes first
     const yt = "https://www.youtube.com/results?search_query=" + encodeURIComponent(displayName + " exercise how to");
     const shortPoseName = n => n.replace(/\s*\(.*$/, "");
 
@@ -299,20 +313,19 @@
         <button class="btn big sp-main" id="log-set">${this.icon("check")} Done with set ${it.perSide ? doneSets + 1 : done + 1}${sideLabel ? " (" + sideLabel + ")" : ""}</button>`;
     }
 
-    const cue = (ex.tips && ex.tips[0]) || caution || "";
+    // the tip and cautions live at the bottom of "How to do it", so logging a set needs no scrolling
+    const tip = (ex.tips && ex.tips[0]) || "";
+    const cautions = [...new Set([version.caution, ex.caution].filter(Boolean))]; // a version's own caution comes first
     document.getElementById("session-body").innerHTML = `
       <section class="sp-panel tone-${tone}" aria-label="${this.esc(displayName)}">
         <div class="sp-chips">${chips}</div>
         <h1 class="sp-name session-ex-name">${this.esc(displayName)}</h1>
-        <div class="sp-goal">Goal: ${this.doseText(it)}</div>
+        <div class="sp-goal${yoga || (!isTimed && it.hold > 0) ? " keep" : ""}">Goal: ${this.doseText(it)}</div>
         <div class="sp-center">${centerHtml}</div>
         ${underHtml}
       </section>
       <div class="sp-actions">${actionHtml}</div>
       ${gMembers ? `<div class="ss-session-note">${this.icon("link")}<span>Alternates with <strong>${partnerNames}</strong>. No rest between them.</span></div>` : ""}
-      ${cue ? `<div class="sp-cue">${this.icon("bulb")}<span>${this.esc(cue)}</span></div>` : ""}
-      ${caution && caution !== cue ? `<button class="sp-care" id="sp-care" aria-expanded="false">${this.icon("alert")}<span>${this.esc(caution)}</span></button>` : ""}
-      <div id="sets-done" class="sp-sets-done">${this.setsDoneHtml(it)}</div>
       <button class="session-howto-toggle" id="howto-toggle" aria-expanded="${it._howtoOpen ? "true" : "false"}"><span style="display:inline-flex;align-items:center;gap:0.5rem">${this.icon("book")} How to do it</span><span id="howto-chev" style="display:inline-flex">${it._howtoOpen ? this.icon("chevU") : this.icon("chevD")}</span></button>
       <div class="session-howto${it._howtoOpen ? " open" : ""}" id="howto">
         ${(ex.variations && ex.variations.length) ? `
@@ -323,12 +336,13 @@
         </div>`}` : ""}
         ${it.variant && variantNote ? `<p class="sp-note">${this.esc(variantNote)}</p>` : ""}
         <ol class="exd-steps">${ex.howTo.map(x => `<li>${this.esc(x)}</li>`).join("")}</ol>
-        ${ex.caution ? `<div class="exd-caution" style="margin-top:0.5rem">${this.icon("alert")}<span>${this.esc(ex.caution)}</span></div>` : ""}
         <div class="sess-muscles" style="margin-top:0.6rem">${this.icon("person")}<span><strong>Muscles:</strong> ${this.muscleDetail(ex.muscles)}</span></div>
         <a class="video-link" href="${yt}" target="_blank" rel="noopener" style="margin-top:0.6rem">${this.icon("video")} Watch a video</a>
         ${canLinkNext ? `<button class="ss-link-inline" id="sess-ss-link">${this.icon("link")} Pair with next: ${this.esc(nxt.variant || (this.ex(nxt.exId) || {}).name)}</button>` : ""}
+        ${tip && !cautions.includes(tip) ? `<div class="sp-sub sp-tip-head">Tip</div><p class="sp-tip">${this.esc(tip)}</p>` : ""}
+        ${cautions.map(x => `<div class="exd-caution sp-howto-caution">${this.icon("alert")}<span>${this.esc(x)}</span></div>`).join("")}
       </div>
-      ${this.wantsRehab() ? `<button class="link-quiet sp-hurts" id="sess-hurts">${this.icon("heart")} This hurts</button>` : ""}
+      <div id="sets-done" class="sp-sets-done">${this.setsDoneHtml(it)}</div>
     `;
 
     const isLast = s.idx === total - 1;
@@ -376,11 +390,10 @@
       this.renderSessionStep();
       this.toast("Superset linked. You'll alternate between the two.");
     };
-    // the take-care line shows two lines by default; a tap opens the rest
-    const care = body.querySelector("#sp-care");
-    if (care) care.onclick = () => { care.classList.toggle("open"); care.setAttribute("aria-expanded", care.classList.contains("open")); };
-    const hurts = body.querySelector("#sess-hurts");
-    if (hurts) hurts.onclick = () => this.exitSession("hurt");
+    // the heart in the top bar (hidden for people who only chose fitness goals)
+    const hurts = document.getElementById("session-hurts");
+    hurts.hidden = !this.wantsRehab();
+    hurts.onclick = () => this.exitSession("hurt");
     body.querySelector("#howto-toggle").onclick = () => {
       const h = body.querySelector("#howto");
       h.classList.toggle("open");
@@ -670,7 +683,7 @@
       const firstLeft = s.items.findIndex(i => !i.warmup && i.logged.length === 0);
       this._pauseOpen = true;
       this.openModal("Not quite a full session", `
-        <p class="sp-note" style="margin:0 0 0.9rem">You did ${doneMain} of ${main.length} exercises. A session is saved once ${need} are done. If something hurts, tap This hurts instead.</p>
+        <p class="sp-note" style="margin:0 0 0.9rem">You did ${doneMain} of ${main.length} exercises. A session is saved once ${need} are done. ${this.wantsRehab() ? "If something hurts, go back and tap the heart at the top." : ""}</p>
         <button class="btn big" id="fin-back">${this.icon("arrowLeft")} Go back</button>
         <div class="menu-list" style="margin-top:0.7rem">
           <button class="menu-item" id="fin-quit">${this.icon("close")}<span>End without saving</span></button>

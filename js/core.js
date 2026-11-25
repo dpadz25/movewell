@@ -237,6 +237,7 @@
     openModal(title, bodyHtml) {
       document.getElementById("modal-title").textContent = title;
       document.getElementById("modal-body").innerHTML = bodyHtml;
+      document.getElementById("modal").classList.remove("pop");
       document.getElementById("modal").classList.add("open");
       document.getElementById("modal-body").scrollTop = this._keepScroll || 0;
       this._keepScroll = 0;
@@ -246,7 +247,7 @@
     },
     closeModal() {
       this._modalStack = [];
-      document.getElementById("modal").classList.remove("open");
+      document.getElementById("modal").classList.remove("open", "pop");
       // a pause menu closed any way (X, backdrop, Keep going) puts the session screen back in a clean state
       if (this._pauseOpen) { this._pauseOpen = false; if (this._sess) this.renderSessionStep(); }
     },
@@ -374,7 +375,7 @@
       }
       // small text has room for denser layouts, large text gets roomier ones
       const px = parseFloat(getComputedStyle(html).fontSize) || 18;
-      html.setAttribute("data-density", px <= 15.5 ? "compact" : px >= 23 ? "roomy" : "");
+      html.setAttribute("data-density", px <= 15.5 ? "compact" : px >= 23 ? "roomy" : px >= 20 ? "snug" : "");
     },
 
     applyAppearance() {
@@ -599,7 +600,7 @@
     },
 
     // ---------- SAFETY: get-help screen, high-pain card, surgery question ----------
-    // Never opens on its own. Reached from Settings, the "This hurts" sheet, condition pages, and the pain card.
+    // Never opens on its own. Reached from Settings, the "This hurts" pop-up, condition pages, and the pain card.
     openHelpSheet() {
       this.pushView("help", () => this.openHelpSheet());
       const list = items => `<ul>${items.map(x => `<li>${x}</li>`).join("")}</ul>`;

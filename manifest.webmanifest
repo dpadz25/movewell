@@ -4,6 +4,7 @@
   "description": "Your personal movement companion, from therapy stretches to gym lifts.",
   "start_url": "./index.html",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#f6f4ee",
   "theme_color": "#4d7c43",
   "icons": [

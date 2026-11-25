@@ -237,7 +237,8 @@ input.stepper-input { font-family: var(--font-num); border-radius: 16px; }
 
 /* ============ SESSION ============ */
 .session { background: var(--bg); }
-.session-top { background: transparent; border-bottom: 0; padding-top: calc(0.8rem + env(safe-area-inset-top)); }
+.session-top { background: transparent; border-bottom: 0; padding-top: max(0.6rem, calc(0.25rem + env(safe-area-inset-top))); padding-bottom: 0.45rem; }
+#session-exit { flex: none; }
 .session-progress-text { color: var(--text); }
 .session-clock { font-family: var(--font-num); color: var(--muted); }
 .session-progressbar { height: 8px; margin: 0 1.1rem; border-radius: 4px; background: var(--border); overflow: hidden; }
@@ -248,7 +249,7 @@ input.stepper-input { font-family: var(--font-num); border-radius: 16px; }
 
 .hold-timer-display { font-family: var(--font-num); font-weight: 800; letter-spacing: -0.04em; font-size: 5rem; }
 .prev-hint { border-radius: 999px; }
-.session-nav { background: transparent; border-top: 0; padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+.session-nav { background: transparent; border-top: 0; }
 
 /* rest between sets: calm blue panel */
 
@@ -370,12 +371,12 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 
 /* ============ SESSION (phase 2 markup) ============ */
 .session-top { gap: 0.8rem; }
-.session-body { padding: 0.6rem 1.1rem 1.4rem; }
+.session-body { padding: 0.55rem 1.1rem 1.4rem; }
 .sp-panel {
   --tone: var(--accent);
-  background: var(--tone); color: #fff; border-radius: 32px; padding: 1.1rem 1.1rem 1.2rem;
+  background: var(--tone); color: #fff; border-radius: 26px; padding: 0.85rem 1rem 0.95rem;
   text-align: center; box-shadow: 0 16px 36px rgba(30, 40, 25, 0.18);
-  display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
   animation: calm-rise .45s cubic-bezier(.2,.8,.2,1) both;
 }
 .sp-panel.tone-coral { --tone: #B4482E; }
@@ -384,13 +385,13 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 .sp-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem; }
 .sp-chip { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.7rem; border-radius: 999px; background: rgba(255,255,255,.2); }
 .sp-chip .icn { width: 1em; height: 1em; }
-.sp-name.session-ex-name { color: #fff; margin: 0.2rem 0 0; font-size: 1.75rem; }
+.sp-name.session-ex-name { color: #fff; margin: 0; font-size: 1.55rem; }
 .sp-goal { font-weight: 700; opacity: 0.95; font-size: 0.98rem; }
-.sp-center { width: 100%; padding: 0.6rem 0 0.2rem; display: flex; flex-direction: column; align-items: center; }
-.sp-big { font-family: var(--font-num); font-weight: 800; font-size: 5.6rem; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: #fff; }
+.sp-center { width: 100%; padding: 0.2rem 0 0; display: flex; flex-direction: column; align-items: center; }
+.sp-big { font-family: var(--font-num); font-weight: 800; font-size: 4.8rem; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: #fff; }
 .sp-panel .hold-timer { padding: 0; }
-.sp-panel .hold-timer-display { color: #fff; font-size: 5.6rem; margin: 0; }
-.sp-big-label { font-weight: 700; font-size: 1rem; margin-top: 0.3rem; }
+.sp-panel .hold-timer-display { color: #fff; font-size: 4.8rem; margin: 0; }
+.sp-big-label { font-weight: 700; font-size: 1rem; }
 .sp-counter { width: 100%; display: grid; grid-template-columns: 3.6rem 1fr 3.6rem; align-items: center; }
 .sp-round-btn {
   width: 3.6rem; height: 3.6rem; border-radius: 50%; cursor: pointer;
@@ -400,10 +401,10 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 .sp-round-btn.solid { background: #fff; color: var(--tone); border: 0; box-shadow: 0 8px 20px rgba(0,0,0,.15); }
 .sp-round-btn .icn { width: 1.6rem; height: 1.6rem; stroke-width: 2.6; }
 .sp-round-btn:active { transform: scale(0.94); }
-.sp-dots-label { font-size: 0.88rem; font-weight: 700; margin-top: 0.3rem; }
-.sp-dots { display: flex; justify-content: center; gap: 0.55rem; margin-top: 0.3rem; }
+.sp-dots-label { font-size: 0.88rem; font-weight: 700; margin-top: 0.15rem; }
+.sp-dots { display: flex; justify-content: center; gap: 0.55rem; margin-top: 0.15rem; }
 .sp-dot {
-  width: 1.9rem; height: 1.9rem; border-radius: 50%; box-sizing: border-box; border: 2px solid #fff;
+  width: 1.6rem; height: 1.6rem; border-radius: 50%; box-sizing: border-box; border: 2px solid #fff;
   display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: #fff;
 }
 .sp-dot.done { background: #fff; color: var(--tone); }
@@ -415,7 +416,7 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 .sp-breath span { inset: 1.6rem; background: rgba(255,255,255,.16); }
 @keyframes calm-breathe { 0%,100% { transform: scale(.62); } 50% { transform: scale(1); } }
 
-.sp-actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.6rem; margin: 1rem 0 0.4rem; }
+.sp-actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.6rem; margin: 0.6rem 0 0.4rem; }
 .sp-actions:empty { display: none; }
 .sp-main { min-height: 3.8rem; font-size: 1.12rem; }
 .sp-quiet { background: none; border: 0; color: var(--muted); font-weight: 700; text-decoration: underline; cursor: pointer; min-height: 2.75rem; font-size: 0.92rem; }
@@ -423,8 +424,6 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 .sp-weight-label { font-weight: 800; }
 .sp-weight input.stepper-input { width: 4.4rem; font-size: 1.4rem; min-height: 3rem; }
 .sp-actions .prev-hint { align-self: center; border: 0; background: var(--accent-dim); color: var(--accent-strong); font-weight: 800; padding: 0.6rem 1rem; min-height: 2.75rem; }
-.sp-cue { display: flex; gap: 0.7rem; align-items: flex-start; background: var(--card); border-radius: 22px; padding: 0.9rem 1rem; box-shadow: var(--shadow); margin: 0.6rem 0; font-size: 0.98rem; }
-.sp-cue .icn { color: #B5671C; flex-shrink: 0; margin-top: 0.1rem; }
 .sp-sets-done:empty { display: none; }
 .sp-sets-done { background: var(--card); border-radius: 22px; padding: 0.5rem 1rem; box-shadow: var(--shadow); margin-bottom: 0.6rem; }
 .sp-sub { font-weight: 800; margin-bottom: 0.5rem; }
@@ -433,13 +432,13 @@ html[data-dark="1"] .streak-chip { color: #F3C987; background: #3A2D16; }
 .session-howto { padding-top: 0.8rem; }
 
 .session-nav {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 0;
-  padding: 0.4rem 1.1rem calc(0.9rem + env(safe-area-inset-bottom));
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 0;
+  padding: 0.3rem 1.1rem max(0.5rem, env(safe-area-inset-bottom));
 }
-.sp-nav-btn { background: none; border: 0; cursor: pointer; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 0.35rem; font-weight: 700; font-size: 0.85rem; padding: 0; }
+.sp-nav-btn { background: none; border: 0; cursor: pointer; color: var(--text); display: flex; flex-direction: column; align-items: center; gap: 0.15rem; font-weight: 700; font-size: 0.85rem; padding: 0; }
 .sp-nav-btn[disabled] { opacity: 0.35; cursor: default; }
-.sp-nav-circle { width: 3.6rem; height: 3.6rem; border-radius: 50%; background: var(--card); box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; margin: 0.6rem 0; transition: transform .15s ease; }
-.sp-nav-btn.primary .sp-nav-circle { width: 4.8rem; height: 4.8rem; margin: 0; background: var(--surface2); }
+.sp-nav-circle { width: max(3rem, 48px); height: max(3rem, 48px); border-radius: 50%; background: var(--card); box-shadow: var(--shadow); display: flex; align-items: center; justify-content: center; transition: transform .15s ease; }
+.sp-nav-btn.primary .sp-nav-circle { width: max(3.3rem, 52px); height: max(3.3rem, 52px); background: var(--surface2); }
 .sp-nav-btn.primary.ready .sp-nav-circle { background: var(--accent); color: #fff; box-shadow: 0 12px 26px var(--accent-shadow); }
 .sp-nav-btn.primary { font-weight: 800; }
 .sp-nav-btn:active .sp-nav-circle { transform: scale(0.94); }
@@ -1187,9 +1186,18 @@ html[data-density="roomy"] .ob-field-grid { flex-wrap: wrap; }
 html[data-density="roomy"] .ob-field-grid > div { flex: 1 1 40%; }
 /* the session counter and arrows stay big but stop crowding each other */
 html[data-density="roomy"] .sp-counter { grid-template-columns: 2.9rem 1fr 2.9rem; gap: 0.3rem; }
-html[data-density="roomy"] .sp-big { font-size: 3.2rem; }
-html[data-density="roomy"] .sp-nav-circle { width: 2.9rem; height: 2.9rem; margin: 0.3rem 0; }
-html[data-density="roomy"] .sp-nav-btn.primary .sp-nav-circle { width: 3.6rem; height: 3.6rem; }
+html[data-density="roomy"] .sp-panel { padding: 0.45rem 0.8rem 0.5rem; }
+html[data-density="roomy"] .sp-name.session-ex-name { font-size: 1.25rem; }
+html[data-density="roomy"] .sp-big,
+html[data-density="roomy"] .sp-panel .hold-timer-display { font-size: 2.8rem; }
+/* the biggest sizes drop the extras so the Done button stays on screen */
+html[data-density="roomy"] .sp-chips,
+html[data-density="roomy"] .sp-goal:not(.keep),
+html[data-density="roomy"] .sp-dots-label + .sp-dots { display: none; }
+html[data-density="roomy"] .sp-actions { margin-top: 0.3rem; }
+html[data-density="roomy"] .sp-nav-circle,
+html[data-density="roomy"] .sp-nav-btn.primary .sp-nav-circle { width: 2.4rem; height: 2.4rem; }
+html[data-density="roomy"] .session-hurts { width: 2.1rem; height: 2.1rem; }
 html[data-density="roomy"] .sp-nav-btn { font-size: 0.75rem; }
 
 /* ============ ROUTINES LIST ============ */
@@ -1329,11 +1337,6 @@ html[data-density="roomy"] .upnext-start { width: 100%; margin-top: 0.7rem; }
 .help-box li, .help-box p { font-size: 1rem; margin: 0 0 0.35rem; }
 .help-box.urgent { background: var(--red-dim); color: var(--red); }
 .help-box.soon { background: var(--yellow-dim); color: var(--yellow); }
-.sp-care { display: flex; gap: 0.6rem; align-items: flex-start; width: 100%; text-align: left; background: none; border: 0; cursor: pointer; font: inherit; font-size: 0.92rem; color: var(--muted); padding: 0.2rem 0.5rem 0.7rem; min-height: 2.75rem; }
-.sp-care .icn { flex-shrink: 0; margin-top: 0.1rem; color: var(--yellow); }
-.sp-care span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.sp-care.open span { display: block; }
-.sp-hurts { display: flex; align-items: center; gap: 0.4rem; margin: 0.5rem auto 0; }
 
 /* exercise screen: essentials first, longer reading folded away */
 .exd-of { font-weight: 800; color: var(--muted); margin-bottom: 0.35rem; }
@@ -1373,3 +1376,42 @@ html[data-density="roomy"] .upnext-start { width: 100%; margin-top: 0.7rem; }
 /* at the largest text sizes the plus and minus drop under their label instead of being cut off */
 .stepper-row { flex-wrap: wrap; }
 .stepper-row > .stepper { margin-left: auto; }
+
+/* ============ SESSION: heart button, its pop-up, and How to do it extras ============ */
+.session-hurts { flex: none; width: max(2.75rem, 44px); height: max(2.75rem, 44px); border: 0; border-radius: 50%; background: var(--card); box-shadow: var(--shadow); color: var(--red); display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; }
+.session-hurts[hidden] { display: none; }
+.session-hurts .icn { width: 1.25rem; height: 1.25rem; }
+.sp-tip-head { margin-top: 0.9rem; }
+.sp-tip { margin-bottom: 0.9rem; }
+.sp-howto-caution { margin: 0 0 0.6rem; }
+.modal-tip { display: none; }
+.modal.pop .modal-sheet { top: var(--pop-top); bottom: auto; width: calc(100% - 1.5rem); max-height: calc(100% - var(--pop-top) - env(safe-area-inset-bottom) - 0.5rem); border-radius: 24px; animation: none; }
+.modal.pop .modal-sheet::before { display: none; }
+.modal.pop .modal-head { padding-top: 0.8rem; }
+.modal.pop .modal-body { padding-top: 0.4rem; padding-bottom: 0.4rem; }
+.modal.pop .modal-tip { display: block; position: absolute; z-index: 1; top: calc(var(--pop-top) - 8px); left: calc(var(--pop-x) - 9px); width: 18px; height: 18px; border-radius: 3px; background: var(--bg); transform: rotate(45deg); }
+/* large text and short phones: tighten the exercise screen so the Done button stays on screen */
+html[data-density="snug"] .sp-dots-label + .sp-dots { display: none; }
+html[data-density="snug"] .sp-weight { padding: 0.3rem 0.35rem 0.3rem 0.7rem; gap: 0.3rem; flex-wrap: nowrap; }
+html[data-density="snug"] .sp-weight-label { min-width: 0; line-height: 1.2; }
+html[data-density="snug"] .sp-weight .stepper { gap: 0.1rem; }
+html[data-density="snug"] .sp-weight .stepper button { width: max(2.4rem, 48px); height: max(2.4rem, 48px); }
+html[data-density="snug"] .sp-weight input.stepper-input { width: 3.2rem; }
+@media (max-height: 700px) { .sp-dots-label + .sp-dots { display: none; } }
+
+/* ============ SIDEWAYS PHONE ============ */
+/* iPhone cannot lock a web app upright, so a sideways phone gets this cover instead.
+   Touch screens only and short ones only, so iPads and computers are left alone. */
+.turn-upright { display: none; }
+@media (orientation: landscape) and (min-aspect-ratio: 13/10) and (max-height: 500px) and (pointer: coarse) {
+  .turn-upright {
+    display: flex; position: fixed; inset: 0; z-index: 800; background: var(--bg); color: var(--text);
+    overflow-y: auto; text-align: center;
+    padding: max(0.75rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  }
+  .turn-upright-inner { margin: auto; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+  .turn-upright-icon { width: 4.5rem; height: 4.5rem; border-radius: 50%; background: var(--accent-dim); color: var(--accent-strong); display: flex; align-items: center; justify-content: center; }
+  .turn-upright-icon svg { width: 2.6rem; height: 2.6rem; }
+  .turn-upright-title { margin: 0; font-size: 1.5rem; font-weight: 800; }
+  .turn-upright-text { margin: 0; font-size: 1.05rem; }
+}
